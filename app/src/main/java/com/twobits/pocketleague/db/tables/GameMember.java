@@ -77,10 +77,6 @@ public class GameMember implements Comparable<GameMember> {
 		if (!(o instanceof GameMember))
 			return false;
 		GameMember another = (GameMember) o;
-		if (id == another.id) {
-			return true;
-		} else {
-			return false;
-		}
+        return id == another.id;
 	}
 }

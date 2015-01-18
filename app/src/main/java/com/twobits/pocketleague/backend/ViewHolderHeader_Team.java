@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ViewHolderHeader_Team {
 	private String name;
-	private List<ViewHolder_Team> teamList = new ArrayList<ViewHolder_Team>();
+	private List<ViewHolder_Team> teamList = new ArrayList<>();
 	  
 	public String getName() {
 		return name;

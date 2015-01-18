@@ -9,7 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="45dp"
         android:gravity="center_vertical"
-        android:paddingLeft="35sp"
+        android:paddingStart="35sp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
         android:background="@color/DkBlue"

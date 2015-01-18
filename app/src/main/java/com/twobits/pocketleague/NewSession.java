@@ -45,9 +45,9 @@ public class NewSession extends MenuContainerActivity {
 	ListView lv_roster;
 	CheckBox cb_isFavorite;
 
-	List<Team> teams = new ArrayList<Team>();
-	List<Integer> teamIdxList = new ArrayList<Integer>();
-	List<String> teamNames = new ArrayList<String>();
+	List<Team> teams = new ArrayList<>();
+	List<Integer> teamIdxList = new ArrayList<>();
+	List<String> teamNames = new ArrayList<>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class NewSession extends MenuContainerActivity {
 		lv_roster = (ListView) findViewById(R.id.newSession_teamSelection);
 		cb_isFavorite = (CheckBox) findViewById(R.id.newSession_isFavorite);
 
-		List<String> sessionTypes = new ArrayList<String>();
+		List<String> sessionTypes = new ArrayList<>();
 		for (SessionType st : SessionType.values()) {
 			sessionTypes.add(st.toString());
 		}
@@ -75,7 +75,7 @@ public class NewSession extends MenuContainerActivity {
 				Arrays.asList(SessionType.values()));
 		sp_sessionType.setAdapter(stAdapter);
 
-		List<String> ruleSetDescriptions = new ArrayList<String>();
+		List<String> ruleSetDescriptions = new ArrayList<>();
 		GameType currentGameType = getCurrentGameType();
 		for (GameRule gr : currentGameType.toGameRules()) {
 			ruleSetDescriptions.add(gr.toRuleSet().getDescription());
@@ -87,7 +87,7 @@ public class NewSession extends MenuContainerActivity {
 
 		try {
 			List<Venue> venues = Venue.getDao(this).queryForAll();
-			List<String> venueNames = new ArrayList<String>();
+			List<String> venueNames = new ArrayList<>();
 			for (Venue v : venues) {
 				venueNames.add(v.getName());
 			}
@@ -149,7 +149,7 @@ public class NewSession extends MenuContainerActivity {
 	}
 
 	public void updateRosterCheckList() {
-		lv_roster.setAdapter(new ArrayAdapter<String>(this,
+		lv_roster.setAdapter(new ArrayAdapter<>(this,
 				android.R.layout.simple_list_item_multiple_choice, teamNames));
 	}
 
@@ -182,7 +182,7 @@ public class NewSession extends MenuContainerActivity {
 				game_rule, session_type, team_size, current_venue);
 		newSession.setIsFavorite(is_favorite);
 
-		List<Team> roster = new ArrayList<Team>();
+		List<Team> roster = new ArrayList<>();
 		for (Integer teamIdx : teamIdxList) {
 			roster.add(teams.get(teamIdx));
 		}

@@ -85,7 +85,7 @@ public class PocketLeague extends MenuContainerActivity implements
 	}
 
 	private NavDrawerItem[] makeDrawerItemArray() {
-		List<NavDrawerItem> items = new ArrayList<NavDrawerItem>();
+		List<NavDrawerItem> items = new ArrayList<>();
 		String[] mLabels = getResources().getStringArray(R.array.menuItems);
 		TypedArray mIcons = getResources().obtainTypedArray(R.array.menuIcons);
 
@@ -97,7 +97,7 @@ public class PocketLeague extends MenuContainerActivity implements
 		items.add(6, new NavDrawerItem());
 		mIcons.recycle();
 		// items.get(0).counter = 3;
-		return items.toArray(new NavDrawerItem[0]);
+		return items.toArray(new NavDrawerItem[items.size()]);
 	}
 
 	/* Called whenever we call invalidateOptionsMenu() */

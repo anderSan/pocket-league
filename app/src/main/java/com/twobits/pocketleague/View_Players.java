@@ -30,8 +30,8 @@ import java.util.List;
 public class View_Players extends OrmLiteFragment {
 	private static final String LOGTAG = "View_Players";
 
-	private LinkedHashMap<String, ViewHolderHeader_Player> sHash = new LinkedHashMap<String, ViewHolderHeader_Player>();
-	private List<ViewHolderHeader_Player> statusList = new ArrayList<ViewHolderHeader_Player>();
+	private LinkedHashMap<String, ViewHolderHeader_Player> sHash = new LinkedHashMap<>();
+	private List<ViewHolderHeader_Player> statusList = new ArrayList<>();
 	private ListAdapter_Player playerAdapter;
 	private ExpandableListView elv;
 	private View rootView;

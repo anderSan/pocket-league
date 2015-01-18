@@ -7,7 +7,7 @@ import com.twobits.pocketleague.enums.SessionType;
 public class ViewHolderHeader_Session {
 	private String name;
 	private SessionType session_type;
-	private ArrayList<ViewHolder_Session> sessionList = new ArrayList<ViewHolder_Session>();
+	private ArrayList<ViewHolder_Session> sessionList = new ArrayList<>();
 
 	public String getName() {
 		return name;

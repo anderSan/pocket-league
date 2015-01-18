@@ -24,7 +24,7 @@ public class BracketHolder implements View.OnClickListener {
 	public Context context;
 	private Session s;
 	private RelativeLayout rl;
-	public List<SessionMember> sMembers = new ArrayList<SessionMember>();
+	public List<SessionMember> sMembers = new ArrayList<>();
 	private Boolean isDoubleElim;
 	private Bracket wBr; // winners bracket
 	private Bracket lBr; // losers bracket
@@ -88,7 +88,7 @@ public class BracketHolder implements View.OnClickListener {
 
 	public void refreshBrackets() {
 		// get all the completed games for the session
-		List<Game> sGamesList = new ArrayList<Game>();
+		List<Game> sGamesList = new ArrayList<>();
 		try {
 			Log.i(LOGTAG, "session id is " + s.getId());
 			sGamesList = gDao.queryBuilder().orderBy(Game.ID_IN_SESSION, true)
@@ -126,7 +126,7 @@ public class BracketHolder implements View.OnClickListener {
 		while (sMembers.size() < Math.pow(2, n)) {
 			sMembers.add(dummy_sMember);
 		}
-		List<SessionMember> tempRoster = new ArrayList<SessionMember>();
+		List<SessionMember> tempRoster = new ArrayList<>();
 		for (Integer i = 0; i < n - 1; i++) {
 			tempRoster.clear();
 			for (Integer j = 0; j < sMembers.size() / Math.pow(2, i + 1); j++) {

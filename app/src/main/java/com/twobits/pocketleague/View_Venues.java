@@ -31,8 +31,8 @@ import com.twobits.pocketleague.db.tables.Venue;
 public class View_Venues extends OrmLiteFragment {
 	private static final String LOGTAG = "View_Venues";
 
-	private LinkedHashMap<String, ViewHolderHeader_Venue> sHash = new LinkedHashMap<String, ViewHolderHeader_Venue>();
-	private List<ViewHolderHeader_Venue> statusList = new ArrayList<ViewHolderHeader_Venue>();
+	private LinkedHashMap<String, ViewHolderHeader_Venue> sHash = new LinkedHashMap<>();
+	private List<ViewHolderHeader_Venue> statusList = new ArrayList<>();
 	private ListAdapter_Venue venueAdapter;
 	private ExpandableListView elv;
 	private View rootView;

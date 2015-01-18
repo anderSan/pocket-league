@@ -147,7 +147,7 @@ public class Game {
 	// Additional methods
 	// =========================================================================
 	public Team getWinner() {
-		List<GameMember> game_members = new ArrayList<GameMember>();
+		List<GameMember> game_members = new ArrayList<>();
 		for (GameMember gm : game_members) {
 			// try {
 			// Dao<GameMember, Long> gmDao = GameMember.getDao(context);

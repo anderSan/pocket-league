@@ -31,8 +31,8 @@ import java.util.List;
 public class View_Teams extends OrmLiteFragment {
 	private static final String LOGTAG = "View_Teams";
 
-	private LinkedHashMap<String, ViewHolderHeader_Team> sHash = new LinkedHashMap<String, ViewHolderHeader_Team>();
-	private List<ViewHolderHeader_Team> statusList = new ArrayList<ViewHolderHeader_Team>();
+	private LinkedHashMap<String, ViewHolderHeader_Team> sHash = new LinkedHashMap<>();
+	private List<ViewHolderHeader_Team> statusList = new ArrayList<>();
 	private ListAdapter_Team teamAdapter;
 	private ExpandableListView elv;
 	private View rootView;

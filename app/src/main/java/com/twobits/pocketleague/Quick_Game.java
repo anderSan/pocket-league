@@ -30,7 +30,7 @@ public class Quick_Game extends MenuContainerActivity {
 
 	private ListView lv;
 	private ListAdapter_GameScore scoreAdapter;
-	List<ViewHolder_GameScore> game_scores = new ArrayList<ViewHolder_GameScore>();
+	List<ViewHolder_GameScore> game_scores = new ArrayList<>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

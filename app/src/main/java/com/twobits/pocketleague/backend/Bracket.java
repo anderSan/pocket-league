@@ -35,13 +35,13 @@ public class Bracket {
 	public int lastMatchId;
 	private int nLeafs;
 	private Map<Long, Integer> smIdMap = new HashMap<>();
-	private Map<Integer, SessionMember> smSeedMap = new HashMap<Integer, SessionMember>();
-	private List<Integer> matchIds = new ArrayList<Integer>();
-	private List<Integer> sm1Idcs = new ArrayList<Integer>();
-	private List<BrNodeType> sm1Types = new ArrayList<BrNodeType>();
-	private List<Integer> sm2Idcs = new ArrayList<Integer>();
-	private List<BrNodeType> sm2Types = new ArrayList<BrNodeType>();
-	private List<Long> gameIds = new ArrayList<Long>();
+	private Map<Integer, SessionMember> smSeedMap = new HashMap<>();
+	private List<Integer> matchIds = new ArrayList<>();
+	private List<Integer> sm1Idcs = new ArrayList<>();
+	private List<BrNodeType> sm1Types = new ArrayList<>();
+	private List<Integer> sm2Idcs = new ArrayList<>();
+	private List<BrNodeType> sm2Types = new ArrayList<>();
+	private List<Long> gameIds = new ArrayList<>();
 	private RelativeLayout rl;
 
 	public Bracket(List<SessionMember> sMembers, RelativeLayout rl) {
@@ -371,7 +371,7 @@ public class Bracket {
 		}
 		tv.setBackgroundResource(BrDrawable.map.get(drwStr));
 		tv.getBackground().setColorFilter(drwColor, Mode.MULTIPLY);
-		tv.setGravity(Gravity.RIGHT);
+		tv.setGravity(Gravity.END);
 		tv.setTextAppearance(context, android.R.style.TextAppearance_Medium);
 
 		return tv;
@@ -569,11 +569,7 @@ public class Bracket {
 
 	private boolean isUpperView(int viewId) {
 		assert viewId >= 1000;
-		if (viewId < 2000) {
-			return true;
-		} else {
-			return false;
-		}
+        return viewId < 2000;
 	}
 
 	private boolean smLost(int smIdx) {
@@ -630,12 +626,12 @@ public class Bracket {
 	}
 
 	private void seed() {
-		List<Integer> idA = new ArrayList<Integer>();
+		List<Integer> idA = new ArrayList<>();
 		idA.add(1);
 		idA.add(1);
-		List<Integer> idB = new ArrayList<Integer>();
+		List<Integer> idB = new ArrayList<>();
 		idB.add(2);
-		List<Integer> idC = new ArrayList<Integer>();
+		List<Integer> idC = new ArrayList<>();
 		idC.add(1);
 		idC.add(3);
 		idA.addAll(idB);
@@ -789,7 +785,7 @@ public class Bracket {
 			// + g.getFirstPlayer().getFirstName() + " vs "
 			// + g.getSecondPlayer().getFirstName());
 
-			List<GameMember> gMembers = new ArrayList<GameMember>();
+			List<GameMember> gMembers = new ArrayList<>();
 			for (GameMember gm : g.getGameMembers()) {
 				gMembers.add(gm);
 			}
@@ -871,11 +867,7 @@ public class Bracket {
 
 	public Boolean hasView(int viewId) {
 		int matchId = viewId % BrNodeType.MOD - matchIdOffset;
-		if (matchIds.contains(matchId)) {
-			return true;
-		} else {
-			return false;
-		}
+        return matchIds.contains(matchId);
 	}
 
 	private Boolean hasSm(int idx, int smIdx) {

@@ -16,7 +16,7 @@ import com.twobits.pocketleague.R;
 public class ListAdapter_GameType extends ArrayAdapter<ViewHolder_GameType> {
 	private Context context;
 	private int layoutResourceId;
-	private List<ViewHolder_GameType> gametype_list = new ArrayList<ViewHolder_GameType>();
+	private List<ViewHolder_GameType> gametype_list = new ArrayList<>();
 
 	public ListAdapter_GameType(Context context, int layoutResourceId,
 			List<ViewHolder_GameType> data) {

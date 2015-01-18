@@ -22,7 +22,7 @@ public final class BrDrawable {
 
 	public static final Map<String, Integer> map;
 	static {
-		Map<String, Integer> tempMap = new HashMap<String, Integer>();
+		Map<String, Integer> tempMap = new HashMap<>();
 		tempMap.put("upper", UP);
 		tempMap.put("lower", LW);
 		tempMap.put("upper_eliminated", UP_EL);

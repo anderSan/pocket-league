@@ -41,15 +41,15 @@ public class NewGame extends MenuContainerActivity {
 	long p1Id;
 	long p2Id;
 
-	List<Player> players = new ArrayList<Player>();
-	List<Session> sessions = new ArrayList<Session>();
-	List<Venue> venues = new ArrayList<Venue>();
+	List<Player> players = new ArrayList<>();
+	List<Session> sessions = new ArrayList<>();
+	List<Venue> venues = new ArrayList<>();
 
-	List<String> player_names = new ArrayList<String>();
-	List<String> session_names = new ArrayList<String>();
-	List<String> venue_names = new ArrayList<String>();
-	List<String> ruleset_descriptions = new ArrayList<String>();
-	List<Integer> ruleset_ids = new ArrayList<Integer>();
+	List<String> player_names = new ArrayList<>();
+	List<String> session_names = new ArrayList<>();
+	List<String> venue_names = new ArrayList<>();
+	List<String> ruleset_descriptions = new ArrayList<>();
+	List<Integer> ruleset_ids = new ArrayList<>();
 
 	Dao<Player, Long> pDao;
 	Dao<Session, Long> sDao;
@@ -193,19 +193,19 @@ public class NewGame extends MenuContainerActivity {
 		// ruleSetIds.add(rs.getId());
 		// }
 
-		ArrayAdapter<String> pAdapter = new ArrayAdapter<String>(this,
+		ArrayAdapter<String> pAdapter = new ArrayAdapter<>(this,
 				android.R.layout.simple_spinner_dropdown_item, player_names);
 		pAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		ArrayAdapter<String> sAdapter = new ArrayAdapter<String>(this,
+		ArrayAdapter<String> sAdapter = new ArrayAdapter<>(this,
 				android.R.layout.simple_spinner_dropdown_item, session_names);
 		sAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		ArrayAdapter<String> vAdapter = new ArrayAdapter<String>(this,
+		ArrayAdapter<String> vAdapter = new ArrayAdapter<>(this,
 				android.R.layout.simple_spinner_dropdown_item, venue_names);
 		vAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		ArrayAdapter<String> rsAdapter = new ArrayAdapter<String>(this,
+		ArrayAdapter<String> rsAdapter = new ArrayAdapter<>(this,
 				android.R.layout.simple_spinner_dropdown_item,
 				ruleset_descriptions);
 		rsAdapter

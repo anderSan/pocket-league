@@ -12,9 +12,9 @@
     	android:id="@+id/newSession_isFavorite"
     	android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:layout_alignParentRight="true"
+    	android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-    	android:layout_marginLeft="16dp"
+    	android:layout_marginStart="16dp"
     	style="?android:attr/starStyle"
     	/>
     
@@ -23,7 +23,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@id/newSession_isFavorite"
+        android:layout_toStartOf="@id/newSession_isFavorite"
         android:hint="SessionName (required)"
         android:inputType="text"
         android:imeOptions="actionDone"
@@ -35,7 +35,7 @@
          android:id="@+id/newSession_sessionType"
          android:layout_width="fill_parent"
          android:layout_height="wrap_content"
-         android:layout_alignParentLeft="true"
+         android:layout_alignParentStart="true"
          android:layout_below="@id/editText_sessionName"
          />
     
@@ -43,7 +43,7 @@
         android:id="@+id/newSession_ruleSet"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@id/newSession_sessionType"
         />
     
@@ -51,7 +51,7 @@
         android:id="@+id/newSession_venues"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@id/newSession_ruleSet"
         />
     
@@ -59,7 +59,7 @@
 	    android:id="@+id/tv_header"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentStart="true"
 	    android:layout_below="@id/newSession_venues"
 	    android:layout_marginTop="16dp"
 	    android:layout_marginBottom="8dp"
@@ -70,7 +70,7 @@
 	    android:id="@+id/tv_num_selected"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_alignParentRight="true"
+	    android:layout_alignParentEnd="true"
 	    android:layout_alignBaseline="@id/tv_header"
 	    android:layout_marginTop="16dp"
 	    android:layout_marginBottom="8dp"
@@ -91,7 +91,7 @@
     	android:id="@+id/newSession_teamSelection"
     	android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
-    	android:layout_alignParentLeft="true"
+    	android:layout_alignParentStart="true"
     	android:layout_below="@id/tv_header"
     	android:layout_above="@id/button_createSession"
     	android:choiceMode="multipleChoice"

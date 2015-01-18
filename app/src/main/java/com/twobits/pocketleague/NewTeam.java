@@ -34,9 +34,9 @@ public class NewTeam extends MenuContainerActivity {
 	ListView lv_roster;
 	CheckBox cb_isFavorite;
 
-	List<Player> players = new ArrayList<Player>();
-	List<Integer> playerIdxList = new ArrayList<Integer>();
-	List<String> playerNames = new ArrayList<String>();
+	List<Player> players = new ArrayList<>();
+	List<Integer> playerIdxList = new ArrayList<>();
+	List<String> playerNames = new ArrayList<>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +101,7 @@ public class NewTeam extends MenuContainerActivity {
 
 	public void updateRosterCheckList() {
 		lv_roster
-				.setAdapter(new ArrayAdapter<String>(this,
+				.setAdapter(new ArrayAdapter<>(this,
 						android.R.layout.simple_list_item_multiple_choice,
 						playerNames));
 	}

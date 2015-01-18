@@ -116,8 +116,7 @@ public class Team {
 		return exists(name, context);
 	}
 
-	public static boolean exists(String name, Context context)
-			throws SQLException {
+	public static boolean exists(String name, Context context) {
 		if (name == null) {
 			return false;
 		}
@@ -125,11 +124,7 @@ public class Team {
 		try {
 			List<Team> tList = getDao(context).queryBuilder().where()
 					.eq(Team.NAME, name).query();
-			if (tList.isEmpty()) {
-				return false;
-			} else {
-				return true;
-			}
+            return !tList.isEmpty();
 		} catch (SQLException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 			return false;

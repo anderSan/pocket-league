@@ -30,7 +30,7 @@ public class View_GameTypes extends OrmLiteFragment {
 	private static final String LOGTAG = "View_GameTypes";
 
 	private ListAdapter_GameType gameTypeAdapter;
-	private List<ViewHolder_GameType> gametypes_list = new ArrayList<ViewHolder_GameType>();
+	private List<ViewHolder_GameType> gametypes_list = new ArrayList<>();
 	private GridView gv;
 	private Switch viewAllGames;
 	private View rootView;

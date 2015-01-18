@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ViewHolderHeader_Venue {
 	private String name;
-	private List<ViewHolder_Venue> venueList = new ArrayList<ViewHolder_Venue>();
+	private List<ViewHolder_Venue> venueList = new ArrayList<>();
 	  
 	public String getName() {
 		return name;

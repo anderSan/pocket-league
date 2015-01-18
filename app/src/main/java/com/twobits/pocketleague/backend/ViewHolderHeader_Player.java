@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ViewHolderHeader_Player {
 	private String name;
-	private List<ViewHolder_Player> playerList = new ArrayList<ViewHolder_Player>();
+	private List<ViewHolder_Player> playerList = new ArrayList<>();
 
 	public String getName() {
 		return name;

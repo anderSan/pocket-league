@@ -16,7 +16,7 @@ import java.util.List;
 public class ListAdapter_GameScore extends ArrayAdapter<ViewHolder_GameScore> {
 	private Context context;
 	private int layoutResourceId;
-	private List<ViewHolder_GameScore> gamescore_list = new ArrayList<ViewHolder_GameScore>();
+	private List<ViewHolder_GameScore> gamescore_list = new ArrayList<>();
 	private ScoreType scoretype;
 
 	public ListAdapter_GameScore(Context context, int layoutResourceId,

@@ -242,19 +242,14 @@ public class Player implements Comparable<Player> {
 		if (!(o instanceof Player))
 			return false;
 		Player another = (Player) o;
-		if (id == another.id) {
-			return true;
-		} else {
-			return false;
-		}
+        return id == another.id;
 	}
 
 	public boolean exists(Context context) throws SQLException {
 		return exists(nickname, context);
 	}
 
-	public static boolean exists(String nickname, Context context)
-			throws SQLException {
+	public static boolean exists(String nickname, Context context) {
 		if (nickname == null) {
 			return false;
 		}
@@ -262,11 +257,7 @@ public class Player implements Comparable<Player> {
 		try {
 			List<Player> pList = getDao(context).queryBuilder().where()
 					.eq(Player.NICK_NAME, nickname).query();
-			if (pList.isEmpty()) {
-				return false;
-			} else {
-				return true;
-			}
+            return !pList.isEmpty();
 		} catch (SQLException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 			return false;

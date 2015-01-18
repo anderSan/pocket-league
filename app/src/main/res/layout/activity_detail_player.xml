@@ -19,9 +19,9 @@
     	android:id="@+id/pDet_isFavorite"
     	android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:layout_alignParentRight="true"
+    	android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-    	android:layout_marginLeft="16dp"
+    	android:layout_marginStart="16dp"
     	style="?android:attr/starStyle"
     	/>
     
@@ -29,16 +29,16 @@
     	android:id="@+id/pDet_isActive"
     	android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:layout_alignParentRight="true"
+    	android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-    	android:layout_marginLeft="16dp"
+    	android:layout_marginStart="16dp"
     	android:textOn="Active"
     	android:textOff="Retired"
     	/>
     
     <TextView
         android:id="@+id/pDet_id"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
     
     <TextView
         android:id="@+id/pDet_height"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/pDet_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
     
     <TextView
         android:id="@+id/pDet_weight"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/pDet_height"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
     
     <TextView
         android:id="@+id/pDet_handed"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/pDet_weight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
     
     <TextView
         android:id="@+id/pDet_footed"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/pDet_handed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

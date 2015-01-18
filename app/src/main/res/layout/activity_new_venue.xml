@@ -12,9 +12,9 @@
     	android:id="@+id/newVenue_isFavorite"
     	android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:layout_alignParentRight="true"
+    	android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-    	android:layout_marginLeft="16dp"
+    	android:layout_marginStart="16dp"
     	style="?android:attr/starStyle"
     	/>
      
@@ -22,7 +22,7 @@
         android:id="@+id/editText_venueName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:ems="10"
         android:hint="Venue name (required)"

@@ -35,8 +35,8 @@ import java.util.List;
 public class View_Sessions extends OrmLiteFragment {
 	private static final String LOGTAG = "View_Sessions";
 
-	private LinkedHashMap<String, ViewHolderHeader_Session> sHash = new LinkedHashMap<String, ViewHolderHeader_Session>();
-	private ArrayList<ViewHolderHeader_Session> statusList = new ArrayList<ViewHolderHeader_Session>();
+	private LinkedHashMap<String, ViewHolderHeader_Session> sHash = new LinkedHashMap<>();
+	private ArrayList<ViewHolderHeader_Session> statusList = new ArrayList<>();
 	private ListAdapter_Session sessionAdapter;
 	private ExpandableListView elv;
 	private Switch sw_open;

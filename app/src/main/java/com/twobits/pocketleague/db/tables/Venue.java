@@ -61,9 +61,9 @@ public class Venue {
 		return d;
 	}
 
-	public static List<Venue> getAll(Context context) throws SQLException {
+	public static List<Venue> getAll(Context context) {
 		Dao<Venue, Long> d = Venue.getDao(context);
-		List<Venue> venues = new ArrayList<Venue>();
+		List<Venue> venues = new ArrayList<>();
 		for (Venue v : d) {
 			venues.add(v);
 		}

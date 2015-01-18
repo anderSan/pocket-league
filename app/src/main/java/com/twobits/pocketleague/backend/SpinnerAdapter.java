@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 public class SpinnerAdapter extends ArrayAdapter<String> {
 	private Context context;
 	private int layoutResourceId;
-	private List<String> strings = new ArrayList<String>();
+	private List<String> strings = new ArrayList<>();
 	private List<?> tags;
 
 	public SpinnerAdapter(Context context, int layoutResourceId,
