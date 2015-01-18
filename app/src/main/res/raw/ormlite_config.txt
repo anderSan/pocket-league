@@ -1,0 +1,285 @@
+#
+# generated on 2015/01/17 07:32:29
+#
+# --table-start--
+dataClass=com.twobits.pocketleague.db.tables.Game
+tableName=game
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=id_in_session
+uniqueCombo=true
+# --field-end--
+# --field-start--
+fieldName=session
+foreign=true
+uniqueCombo=true
+# --field-end--
+# --field-start--
+fieldName=venue
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=date_played
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=is_complete
+# --field-end--
+# --field-start--
+fieldName=is_tracked
+# --field-end--
+# --field-start--
+fieldName=game_members
+foreignCollection=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.twobits.pocketleague.db.tables.GameMember
+tableName=gamemember
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=game
+canBeNull=false
+foreign=true
+uniqueCombo=true
+# --field-end--
+# --field-start--
+fieldName=team
+canBeNull=false
+foreign=true
+uniqueCombo=true
+# --field-end--
+# --field-start--
+fieldName=score
+canBeNull=false
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.twobits.pocketleague.db.tables.Player
+tableName=player
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=nickname
+canBeNull=false
+unique=true
+# --field-end--
+# --field-start--
+fieldName=first_name
+# --field-end--
+# --field-start--
+fieldName=last_name
+# --field-end--
+# --field-start--
+fieldName=is_left_handed
+# --field-end--
+# --field-start--
+fieldName=is_right_handed
+# --field-end--
+# --field-start--
+fieldName=is_left_footed
+# --field-end--
+# --field-start--
+fieldName=is_right_footed
+# --field-end--
+# --field-start--
+fieldName=height_cm
+# --field-end--
+# --field-start--
+fieldName=weight_kg
+# --field-end--
+# --field-start--
+fieldName=image_bytes
+dataPersister=BYTE_ARRAY
+# --field-end--
+# --field-start--
+fieldName=color
+# --field-end--
+# --field-start--
+fieldName=is_active
+# --field-end--
+# --field-start--
+fieldName=is_favorite
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.twobits.pocketleague.db.tables.Session
+tableName=session
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=name
+canBeNull=false
+unique=true
+# --field-end--
+# --field-start--
+fieldName=game_type
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=game_rule
+# --field-end--
+# --field-start--
+fieldName=session_type
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=team_size
+# --field-end--
+# --field-start--
+fieldName=is_active
+# --field-end--
+# --field-start--
+fieldName=is_favorite
+# --field-end--
+# --field-start--
+fieldName=current_venue
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=games
+foreignCollection=true
+# --field-end--
+# --field-start--
+fieldName=session_members
+foreignCollection=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.twobits.pocketleague.db.tables.SessionMember
+tableName=sessionmember
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=session
+canBeNull=false
+foreign=true
+uniqueCombo=true
+# --field-end--
+# --field-start--
+fieldName=team
+foreign=true
+uniqueCombo=true
+# --field-end--
+# --field-start--
+fieldName=team_seed
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=team_rank
+canBeNull=false
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.twobits.pocketleague.db.tables.Team
+tableName=team
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=name
+canBeNull=false
+uniqueCombo=true
+# --field-end--
+# --field-start--
+fieldName=team_size
+uniqueCombo=true
+# --field-end--
+# --field-start--
+fieldName=color
+# --field-end--
+# --field-start--
+fieldName=is_active
+# --field-end--
+# --field-start--
+fieldName=is_favorite
+# --field-end--
+# --field-start--
+fieldName=team_members
+foreignCollection=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.twobits.pocketleague.db.tables.TeamMember
+tableName=teammember
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=team
+canBeNull=false
+foreign=true
+uniqueCombo=true
+# --field-end--
+# --field-start--
+fieldName=player
+foreign=true
+uniqueCombo=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.twobits.pocketleague.db.tables.Venue
+tableName=venue
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=name
+canBeNull=false
+unique=true
+# --field-end--
+# --field-start--
+fieldName=latitude
+# --field-end--
+# --field-start--
+fieldName=longitude
+# --field-end--
+# --field-start--
+fieldName=zipCode
+# --field-end--
+# --field-start--
+fieldName=is_active
+# --field-end--
+# --field-start--
+fieldName=is_favorite
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
