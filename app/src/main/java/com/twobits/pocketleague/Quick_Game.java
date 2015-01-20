@@ -13,6 +13,7 @@ import com.twobits.pocketleague.backend.ViewHolder_GameScore;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.GameMember;
 import com.twobits.pocketleague.db.tables.Session;
+import com.twobits.pocketleague.db.tables.Team;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 
 
 public class Quick_Game extends MenuContainerActivity {
+    private static String LOGTAG = "Quick_Game";
 	Long gId;
 	Game g;
 	Session s;
@@ -71,13 +73,8 @@ public class Quick_Game extends MenuContainerActivity {
 	private void refreshMemberListing() {
 		ViewHolder_GameScore gs;
 		for (GameMember gm : g.getGameMembers()) {
-			try {
-				gmDao.refresh(gm);
-			} catch (SQLException e) {
-				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-			}
-			gs = new ViewHolder_GameScore(gm.getTeam().getTeamName());
-			game_scores.add(gs);
+            gs = new ViewHolder_GameScore(gm.getTeam().getTeamName());
+            game_scores.add(gs);
 		}
 		scoreAdapter.notifyDataSetChanged();
 	}

@@ -21,7 +21,7 @@ public class GameMember implements Comparable<GameMember> {
 	@DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true)
 	private Game game;
 
-	@DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true)
+	@DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true, foreignAutoRefresh = true)
 	private Team team;
 
 	@DatabaseField(canBeNull = false)
