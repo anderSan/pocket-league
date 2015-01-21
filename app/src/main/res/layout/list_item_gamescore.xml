@@ -11,4 +11,13 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/memberScore"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/tv_memberName" />
+
 </RelativeLayout>

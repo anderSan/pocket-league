@@ -59,6 +59,14 @@ public class GameMember implements Comparable<GameMember> {
 		return team;
 	}
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
 	// =========================================================================
 	// Additional methods
 	// =========================================================================

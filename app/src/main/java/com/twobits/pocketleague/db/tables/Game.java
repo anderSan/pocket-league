@@ -1,11 +1,5 @@
 package com.twobits.pocketleague.db.tables;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
@@ -13,8 +7,14 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.twobits.pocketleague.gameslibrary.ScoreType;
 import com.twobits.pocketleague.db.DatabaseHelper;
+import com.twobits.pocketleague.gameslibrary.ScoreType;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 @DatabaseTable
 public class Game {
@@ -127,9 +127,9 @@ public class Game {
 		return is_complete;
 	}
 
-	// public void setIsComplete(boolean is_complete) {
-	// this.is_complete = is_complete;
-	// }
+	public void setIsComplete(boolean is_complete) {
+	    this.is_complete = is_complete;
+	}
 
 	public boolean getIsTracked() {
 		return is_tracked;
@@ -147,27 +147,21 @@ public class Game {
 	// Additional methods
 	// =========================================================================
 	public Team getWinner() {
-		List<GameMember> game_members = new ArrayList<>();
+		List<GameMember> game_member_list = new ArrayList<>();
 		for (GameMember gm : game_members) {
-			// try {
-			// Dao<GameMember, Long> gmDao = GameMember.getDao(context);
-			// gmDao.update(gm);
-			game_members.add(gm);
-			// } catch (SQLException e) {
-			// Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG)
-			// .show();
-			// }
+			game_member_list.add(gm);
 		}
-		Collections.sort(game_members);
+		Collections.sort(game_member_list);
+
 		ScoreType scoretype = session.getRuleSet().getScoreType();
 		Team winner;
 		switch (scoretype) {
 		default:
-			winner = game_members.get(game_members.size()).getTeam();
+			winner = game_member_list.get(game_member_list.size()-1).getTeam();
 			break;
 		case POINTS_INVERSE:
 		case TIME_INVERSE:
-			winner = game_members.get(0).getTeam();
+			winner = game_member_list.get(0).getTeam();
 			break;
 		}
 		return winner;

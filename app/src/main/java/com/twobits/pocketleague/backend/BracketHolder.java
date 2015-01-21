@@ -95,6 +95,7 @@ public class BracketHolder implements View.OnClickListener {
 					.where().eq(Game.SESSION, s.getId()).query();
 			for (Game g : sGamesList) {
 				gDao.refresh(g);
+                sDao.refresh(g.getSession());
 			}
 		} catch (SQLException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();

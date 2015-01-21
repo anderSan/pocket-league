@@ -7,13 +7,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
+import com.twobits.pocketleague.backend.Item_GameScore;
 import com.twobits.pocketleague.backend.ListAdapter_GameScore;
 import com.twobits.pocketleague.backend.MenuContainerActivity;
-import com.twobits.pocketleague.backend.ViewHolder_GameScore;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.GameMember;
 import com.twobits.pocketleague.db.tables.Session;
-import com.twobits.pocketleague.db.tables.Team;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class Quick_Game extends MenuContainerActivity {
 
 	private ListView lv;
 	private ListAdapter_GameScore scoreAdapter;
-	List<ViewHolder_GameScore> game_scores = new ArrayList<>();
+	List<Item_GameScore> game_scores = new ArrayList<>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,15 +70,34 @@ public class Quick_Game extends MenuContainerActivity {
 	}
 
 	private void refreshMemberListing() {
-		ViewHolder_GameScore gs;
+		Item_GameScore gs;
 		for (GameMember gm : g.getGameMembers()) {
-            gs = new ViewHolder_GameScore(gm.getTeam().getTeamName());
+            gs = new Item_GameScore(gm.getTeam().getTeamName(), gm.getScore());
             game_scores.add(gs);
 		}
 		scoreAdapter.notifyDataSetChanged();
 	}
 
 	public void doneButtonPushed(View v) {
+        ListAdapter_GameScore scoreAdapter = (ListAdapter_GameScore) lv.getAdapter();
+        int ii = 0;
+        for (GameMember gm : g.getGameMembers()) {
+            int score = scoreAdapter.getItem(ii).getMemberScore();
+            ii++;
+            gm.setScore(score);
+            log(gm.getTeam().getTeamName() + "'s score is " + Integer.toString(score));
+            try {
+                gmDao.update(gm);
+            } catch (SQLException e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
 
+        try {
+            g.setIsComplete(true);
+            gDao.update(g);
+        } catch (SQLException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
 	}
 }

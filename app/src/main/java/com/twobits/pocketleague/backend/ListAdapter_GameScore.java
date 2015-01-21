@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.twobits.pocketleague.R;
@@ -13,14 +14,14 @@ import com.twobits.pocketleague.gameslibrary.ScoreType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListAdapter_GameScore extends ArrayAdapter<ViewHolder_GameScore> {
+public class ListAdapter_GameScore extends ArrayAdapter<Item_GameScore> {
 	private Context context;
 	private int layoutResourceId;
-	private List<ViewHolder_GameScore> gamescore_list = new ArrayList<>();
+	private List<Item_GameScore> gamescore_list = new ArrayList<>();
 	private ScoreType scoretype;
 
 	public ListAdapter_GameScore(Context context, int layoutResourceId,
-			List<ViewHolder_GameScore> data, ScoreType scoretype) {
+			List<Item_GameScore> data, ScoreType scoretype) {
 		super(context, layoutResourceId, data);
 		this.context = context;
 		this.layoutResourceId = layoutResourceId;
@@ -29,23 +30,35 @@ public class ListAdapter_GameScore extends ArrayAdapter<ViewHolder_GameScore> {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View itemView;
-		TextView textView;
+	public View getView(final int position, View convertView, ViewGroup parent) {
+        ViewHolder_GameScore holder;
 
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			itemView = new View(context);
-			itemView = inflater.inflate(R.layout.list_item_gamescore, null);
+			convertView = inflater.inflate(R.layout.list_item_gamescore, null);
+
+            holder = new ViewHolder_GameScore();
+            holder.member_name = (TextView) convertView.findViewById(R.id.tv_memberName);
+            holder.member_score = (EditText) convertView.findViewById(R.id.memberScore);
+            convertView.setTag(holder);
 		} else {
-			itemView = convertView;
+			holder = (ViewHolder_GameScore) convertView.getTag();
 		}
 
-		textView = (TextView) itemView.findViewById(R.id.tv_memberName);
-		textView.setText(gamescore_list.get(position).getMemberName());
+		holder.member_name.setText(gamescore_list.get(position).getMemberName());
+        holder.member_score.setText(Integer.toString(gamescore_list.get(position).getMemberScore()));
 
-		return itemView;
+        holder.member_score.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus){
+                    int new_score = Integer.parseInt(((EditText) v).getText().toString());
+                    gamescore_list.get(position).setMemberScore(new_score);
+                }
+            }
+        });
+
+		return convertView;
 	}
 
 	@Override
@@ -54,7 +67,7 @@ public class ListAdapter_GameScore extends ArrayAdapter<ViewHolder_GameScore> {
 	}
 
 	@Override
-	public ViewHolder_GameScore getItem(int position) {
+	public Item_GameScore getItem(int position) {
 		return super.getItem(position);
 	}
 
@@ -62,4 +75,10 @@ public class ListAdapter_GameScore extends ArrayAdapter<ViewHolder_GameScore> {
 	public long getItemId(int position) {
 		return super.getItemId(position);
 	}
+}
+
+class ViewHolder_GameScore {
+    int position;
+    TextView member_name;
+    EditText member_score;
 }
