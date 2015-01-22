@@ -10,4 +10,6 @@ public interface NavigationInterface {
     public void viewPlayerDetails(Long pId);
 
     public void viewTeamDetails(Long tId);
+
+    public void viewVenueDetails(Long vId);
 }

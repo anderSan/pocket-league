@@ -108,8 +108,7 @@ public class View_Venues extends OrmLiteFragment {
 		try {
 			venueDao = getHelper().getVenueDao();
 			for (Venue v : venueDao) {
-				addVenue(v.getIsActive(), String.valueOf(v.getId()),
-						v.getName());
+				addVenue(v.getIsActive(), String.valueOf(v.getId()), v.getName());
 			}
 		} catch (SQLException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -134,11 +133,10 @@ public class View_Venues extends OrmLiteFragment {
 			Toast.makeText(context, "Selected " + venueInfo.getName(),
 					Toast.LENGTH_SHORT).show();
 
-			// load the game in progress screen
+			// load the venue detail screen
 			Long vId = Long.valueOf(venueInfo.getId());
-			Intent intent = new Intent(context, Detail_Venue.class);
-			intent.putExtra("VID", vId);
-			startActivity(intent);
+
+            mNav.viewVenueDetails(vId);
 			return false;
 		}
 	};

@@ -250,4 +250,15 @@ public class PocketLeague extends MenuContainerActivity implements
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
+
+    public void viewVenueDetails(Long vId) {
+        Fragment fragment = new Detail_Venue();
+
+        Bundle args = new Bundle();
+        args.putLong("VID", vId);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+    }
 }
