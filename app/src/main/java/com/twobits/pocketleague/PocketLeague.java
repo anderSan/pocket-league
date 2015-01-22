@@ -239,4 +239,15 @@ public class PocketLeague extends MenuContainerActivity implements
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
+
+    public void viewTeamDetails(Long tId) {
+        Fragment fragment = new Detail_Team();
+
+        Bundle args = new Bundle();
+        args.putLong("TID", tId);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+    }
 }

@@ -8,4 +8,6 @@ public interface NavigationInterface {
 	public void viewSessions();
 
     public void viewPlayerDetails(Long pId);
+
+    public void viewTeamDetails(Long tId);
 }

@@ -1,11 +1,16 @@
 package com.twobits.pocketleague;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -13,6 +18,7 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.MenuContainerActivity;
+import com.twobits.pocketleague.db.OrmLiteFragment;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.db.tables.TeamMember;
@@ -20,8 +26,11 @@ import com.twobits.pocketleague.db.tables.TeamMember;
 import java.sql.SQLException;
 import java.util.List;
 
-public class Detail_Team extends MenuContainerActivity {
+public class Detail_Team extends OrmLiteFragment {
 	private static final String LOGTAG = "Detail_Team";
+    private View rootView;
+    private Context context;
+
 	Long tId;
 	Team t;
 	Dao<Team, Long> tDao;
@@ -34,48 +43,57 @@ public class Detail_Team extends MenuContainerActivity {
 	CheckBox cb_isFavorite;
 	Switch sw_isActive;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+    }
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_detail_team);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+		rootView = inflater.inflate(R.layout.activity_detail_team, container, false);
 
-		Intent intent = getIntent();
-		tId = intent.getLongExtra("TID", -1);
+        Bundle args = getArguments();
+        tId = args.getLong("TID", -1);
 
-		tDao = Team.getDao(this);
-		pDao = Player.getDao(this);
-		tmDao = TeamMember.getDao(this);
+		tDao = Team.getDao(context);
+		pDao = Player.getDao(context);
+		tmDao = TeamMember.getDao(context);
 
-		tv_teamName = (TextView) findViewById(R.id.tDet_name);
-		tv_teamId = (TextView) findViewById(R.id.tDet_id);
-		tv_members = (TextView) findViewById(R.id.tDet_members);
-		cb_isFavorite = (CheckBox) findViewById(R.id.tDet_isFavorite);
+		tv_teamName = (TextView) rootView.findViewById(R.id.tDet_name);
+		tv_teamId = (TextView) rootView.findViewById(R.id.tDet_id);
+		tv_members = (TextView) rootView.findViewById(R.id.tDet_members);
+		cb_isFavorite = (CheckBox) rootView.findViewById(R.id.tDet_isFavorite);
 		cb_isFavorite.setOnClickListener(favoriteClicked);
-		sw_isActive = (Switch) findViewById(R.id.tDet_isActive);
+		sw_isActive = (Switch) rootView.findViewById(R.id.tDet_isActive);
 		sw_isActive.setOnClickListener(activeClicked);
+
+        return rootView;
 	}
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        context = getActivity();
+    }
+
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		MenuItem fav = menu.add(R.string.menu_modify);
 		fav.setIcon(R.drawable.ic_action_edit);
 		fav.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		Intent intent = new Intent(this, NewTeam.class);
+		Intent intent = new Intent(context, NewTeam.class);
 		intent.putExtra("TID", tId);
-
 		fav.setIntent(intent);
-		return super.onCreateOptionsMenu(menu);
+
+        mNav.setTitle(t.getTeamName());
 	}
 
 	@Override
-	protected void onRestart() {
-		super.onRestart();
-		refreshDetails();
-	}
-
-	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		refreshDetails();
 	}
@@ -100,7 +118,7 @@ public class Detail_Team extends MenuContainerActivity {
 							memberNicks.length() - 2) + ".";
 				}
 			} catch (SQLException e) {
-				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+				Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 			}
 		}
 

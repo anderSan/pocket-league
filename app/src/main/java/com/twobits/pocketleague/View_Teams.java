@@ -135,11 +135,10 @@ public class View_Teams extends OrmLiteFragment {
 			Toast.makeText(context, "Selected " + teamInfo.getTeamName(),
 					Toast.LENGTH_SHORT).show();
 
-			// load the game in progress screen
+			// load the team detail screen
 			Long tId = Long.valueOf(teamInfo.getId());
-			Intent intent = new Intent(context, Detail_Team.class);
-			intent.putExtra("TID", tId);
-			startActivity(intent);
+
+            mNav.viewTeamDetails(tId);
 			return false;
 		}
 	};
