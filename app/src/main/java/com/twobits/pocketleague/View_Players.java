@@ -46,9 +46,8 @@ public class View_Players extends OrmLiteFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.activity_view_listing, container,
-				false);
+                             Bundle savedInstanceState) {
+		rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 
 		elv = (ExpandableListView) rootView.findViewById(R.id.dbListing);
 		playerAdapter = new ListAdapter_Player(context, statusList);
@@ -134,11 +133,10 @@ public class View_Players extends OrmLiteFragment {
 			Toast.makeText(context, "Selected " + playerInfo.getName(),
 					Toast.LENGTH_SHORT).show();
 
-			// load the game in progress screen
+			// load the player detail screen
 			Long pId = Long.valueOf(playerInfo.getId());
-			Intent intent = new Intent(context, Detail_Player.class);
-			intent.putExtra("PID", pId);
-			startActivity(intent);
+
+			mNav.viewPlayerDetails(pId);
 			return false;
 		}
 	};

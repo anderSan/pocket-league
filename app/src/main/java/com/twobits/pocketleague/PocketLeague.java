@@ -139,8 +139,7 @@ public class PocketLeague extends MenuContainerActivity implements
 	private class DrawerItemClickListener implements
 			ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			String label = (String) view.getTag();
 			selectItem(position, label);
 		}
@@ -183,8 +182,7 @@ public class PocketLeague extends MenuContainerActivity implements
 
 		if (fragment != null) {
 			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction()
-					.replace(R.id.content_frame, fragment).commit();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
 			// update selected item and title, then close the drawer
 			mDrawerList.setItemChecked(position, true);
@@ -194,7 +192,7 @@ public class PocketLeague extends MenuContainerActivity implements
 	}
 
 	@Override
-	public void setTitle(CharSequence title) {
+	public void setTitle(String title) {
 		GameType currentGameType = getCurrentGameType();
 		mTitle = "(" + currentGameType.toString() + ") " + title;
 
@@ -230,4 +228,15 @@ public class PocketLeague extends MenuContainerActivity implements
 	public void viewSessions() {
 		selectItem(1, "Sessions");
 	}
+
+    public void viewPlayerDetails(Long pId) {
+        Fragment fragment = new Detail_Player();
+
+        Bundle args = new Bundle();
+        args.putLong("PID", pId);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+    }
 }

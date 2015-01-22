@@ -2,25 +2,35 @@ package com.twobits.pocketleague;
 
 import java.sql.SQLException;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.ArgumentHolder;
 import com.twobits.pocketleague.backend.MenuContainerActivity;
 import com.twobits.pocketleague.db.DatabaseCommonQueue;
+import com.twobits.pocketleague.db.OrmLiteFragment;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Team;
 
-public class Detail_Player extends MenuContainerActivity {
+public class Detail_Player extends OrmLiteFragment {
 	private static final String LOGTAG = "Detail_Player";
+    private View rootView;
+    private Context context;
+
 	Long pId;
 	Player p;
 	Team t;
@@ -37,49 +47,58 @@ public class Detail_Player extends MenuContainerActivity {
 	Switch sw_isActive;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_detail_player);
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+    }
 
-		Intent intent = getIntent();
-		pId = intent.getLongExtra("PID", -1);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.activity_detail_player, container, false);
 
-		pDao = Player.getDao(this);
-		tDao = Team.getDao(this);
+        Bundle args = getArguments();
+        pId = args.getLong("PID", -1);
 
-		tv_playerName = (TextView) findViewById(R.id.pDet_name);
-		tv_playerId = (TextView) findViewById(R.id.pDet_id);
-		tv_height = (TextView) findViewById(R.id.pDet_height);
-		tv_weight = (TextView) findViewById(R.id.pDet_weight);
-		tv_handed = (TextView) findViewById(R.id.pDet_handed);
-		tv_footed = (TextView) findViewById(R.id.pDet_footed);
-		cb_isFavorite = (CheckBox) findViewById(R.id.pDet_isFavorite);
+		pDao = Player.getDao(context);
+		tDao = Team.getDao(context);
+
+		tv_playerName = (TextView) rootView.findViewById(R.id.pDet_name);
+		tv_playerId = (TextView) rootView.findViewById(R.id.pDet_id);
+		tv_height = (TextView) rootView.findViewById(R.id.pDet_height);
+		tv_weight = (TextView) rootView.findViewById(R.id.pDet_weight);
+		tv_handed = (TextView) rootView.findViewById(R.id.pDet_handed);
+		tv_footed = (TextView) rootView.findViewById(R.id.pDet_footed);
+		cb_isFavorite = (CheckBox) rootView.findViewById(R.id.pDet_isFavorite);
 		cb_isFavorite.setOnClickListener(favoriteClicked);
-		sw_isActive = (Switch) findViewById(R.id.pDet_isActive);
+		sw_isActive = (Switch) rootView.findViewById(R.id.pDet_isActive);
 		sw_isActive.setOnClickListener(activeClicked);
+
+        return rootView;
 	}
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        context = getActivity();
+    }
+
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		MenuItem fav = menu.add(R.string.menu_modify);
 		fav.setIcon(R.drawable.ic_action_edit);
 		fav.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		Intent intent = new Intent(this, NewPlayer.class);
+		Intent intent = new Intent(context, NewPlayer.class);
 		intent.putExtra("PID", pId);
-
 		fav.setIntent(intent);
-		return super.onCreateOptionsMenu(menu);
+
+        mNav.setTitle(p.getNickName());
 	}
 
 	@Override
-	protected void onRestart() {
-		super.onRestart();
-		refreshDetails();
-	}
-
-	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		refreshDetails();
 	}
@@ -88,9 +107,9 @@ public class Detail_Player extends MenuContainerActivity {
 		if (pId != -1) {
 			try {
 				p = pDao.queryForId(pId);
-				t = DatabaseCommonQueue.findPlayerSoloTeam(this, p);
+				t = DatabaseCommonQueue.findPlayerSoloTeam(context, p);
 			} catch (SQLException e) {
-				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+				Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 			}
 		}
 
