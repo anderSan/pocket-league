@@ -14,28 +14,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         />
-    
-    <CheckBox 
-    	android:id="@+id/pDet_isFavorite"
-    	android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    	android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-    	android:layout_marginStart="16dp"
-    	style="?android:attr/starStyle"
-    	/>
-    
-    <Switch 
-    	android:id="@+id/pDet_isActive"
-    	android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    	android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-    	android:layout_marginStart="16dp"
-    	android:textOn="Active"
-    	android:textOff="Retired"
-    	/>
-    
+
     <TextView
         android:id="@+id/pDet_id"
         android:layout_alignParentStart="true"
@@ -75,5 +54,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
-    
+
 </RelativeLayout>

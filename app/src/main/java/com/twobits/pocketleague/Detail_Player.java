@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.ArgumentHolder;
@@ -44,7 +45,7 @@ public class Detail_Player extends OrmLiteFragment {
 	TextView tv_handed;
 	TextView tv_footed;
 	CheckBox cb_isFavorite;
-	Switch sw_isActive;
+	ToggleButton tb_isActive;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,10 +71,12 @@ public class Detail_Player extends OrmLiteFragment {
 		tv_weight = (TextView) rootView.findViewById(R.id.pDet_weight);
 		tv_handed = (TextView) rootView.findViewById(R.id.pDet_handed);
 		tv_footed = (TextView) rootView.findViewById(R.id.pDet_footed);
-		cb_isFavorite = (CheckBox) rootView.findViewById(R.id.pDet_isFavorite);
-		cb_isFavorite.setOnClickListener(favoriteClicked);
-		sw_isActive = (Switch) rootView.findViewById(R.id.pDet_isActive);
-		sw_isActive.setOnClickListener(activeClicked);
+        cb_isFavorite = new CheckBox(context, null, android.R.attr.starStyle);
+        cb_isFavorite.setOnClickListener(favoriteClicked);
+		tb_isActive = new ToggleButton(context);
+        tb_isActive.setTextOn(getString(R.string.active));
+        tb_isActive.setTextOff(getString(R.string.retired));
+		tb_isActive.setOnClickListener(activeClicked);
 
         return rootView;
 	}
@@ -86,13 +89,25 @@ public class Detail_Player extends OrmLiteFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		MenuItem fav = menu.add(R.string.menu_modify);
-		fav.setIcon(R.drawable.ic_action_edit);
-		fav.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		MenuItem edit_player = menu.add(R.string.menu_modify);
+		edit_player.setIcon(R.drawable.ic_action_edit);
+		edit_player.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 		Intent intent = new Intent(context, NewPlayer.class);
 		intent.putExtra("PID", pId);
-		fav.setIntent(intent);
+		edit_player.setIntent(intent);
+
+        MenuItem favorite_player = menu.add(R.string.menu_favorite);
+        favorite_player.setTitle(R.string.menu_favorite);
+        favorite_player.setActionView(cb_isFavorite);
+        favorite_player.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        MenuItem active_player = menu.add(R.string.menu_active);
+        active_player.setActionView(tb_isActive);
+        active_player.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         mNav.setTitle(p.getNickName());
 	}
@@ -139,7 +154,7 @@ public class Detail_Player extends OrmLiteFragment {
 		}
 
 		cb_isFavorite.setChecked(p.getIsFavorite());
-		sw_isActive.setChecked(p.getIsActive());
+		tb_isActive.setChecked(p.getIsActive());
 	}
 
 	private OnClickListener favoriteClicked = new OnClickListener() {
@@ -158,7 +173,7 @@ public class Detail_Player extends OrmLiteFragment {
 		@Override
 		public void onClick(View v) {
 			if (pId != -1) {
-				boolean is_active = ((Switch) v).isChecked();
+				boolean is_active = ((ToggleButton) v).isChecked();
 				p.setIsActive(is_active);
 				t.setIsActive(is_active);
 				updatePlayer();

@@ -30,8 +30,13 @@
 	<string name="title_activity_menu_container">MenuContainerActivity</string>
 
 	<string name="menu_about">About</string>
+    <string name="menu_active">Active</string>
 	<string name="menu_add">Add</string>
 	<string name="menu_modify">Edit</string>
+    <string name="menu_favorite">Favorite</string>
+
+    <string name="active">Active</string>
+    <string name="retired">Retired</string>
 	
 	<string name="team_member_header"><u>Team members:</u></string>
 	<string name="button_newGame">New Game</string>
