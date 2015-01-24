@@ -15,18 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListAdapter_GameScore extends ArrayAdapter<Item_GameScore> {
+    private static final String LOGTAG = "ListAdapter_GameScore";
 	private Context context;
-	private int layoutResourceId;
 	private List<Item_GameScore> gamescore_list = new ArrayList<>();
-	private ScoreType scoretype;
+    private ScoreType score_type;
 
-	public ListAdapter_GameScore(Context context, int layoutResourceId,
-			List<Item_GameScore> data, ScoreType scoretype) {
+	public ListAdapter_GameScore(Context context, int layoutResourceId, List<Item_GameScore> data,
+                                 ScoreType score_type) {
 		super(context, layoutResourceId, data);
 		this.context = context;
-		this.layoutResourceId = layoutResourceId;
 		this.gamescore_list = data;
-		this.scoretype = scoretype;
+        this.score_type = score_type;
 	}
 
 	@Override

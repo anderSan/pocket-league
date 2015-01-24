@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
@@ -12,98 +13,58 @@ import com.twobits.pocketleague.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListAdapter_Session extends BaseExpandableListAdapter {
+public class ListAdapter_Session extends ArrayAdapter<Item_Session> {
+    private static final String LOGTAG = "ListAdapter_Session";
 	private Context context;
-	private ArrayList<ViewHolderHeader_Session> statusList;
+	private List<Item_Session> session_list;
 
-	public ListAdapter_Session(Context context,
-			ArrayList<ViewHolderHeader_Session> statusList) {
+	public ListAdapter_Session(Context context, int layoutResourceId, List<Item_Session> data) {
+        super(context, layoutResourceId, data);
 		this.context = context;
-		this.statusList = statusList;
+		this.session_list = data;
 	}
 
 	@Override
-	public Object getChild(int groupPosition, int childPosition) {
-		ArrayList<ViewHolder_Session> sessionList = statusList.get(
-				groupPosition).getSessionList();
-		return sessionList.get(childPosition);
+	public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder_Session holder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.list_item_session, null);
+
+            holder = new ViewHolder_Session();
+            holder.s_id = (TextView) convertView.findViewById(R.id.tv_s_id);
+            holder.s_name = (TextView) convertView.findViewById(R.id.tv_s_name);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder_Session) convertView.getTag();
+        }
+
+        holder.s_id.setText(session_list.get(position).getId());
+        holder.s_name.setText(session_list.get(position).getName());
+
+		return convertView;
 	}
 
-	@Override
-	public long getChildId(int groupPosition, int childPosition) {
-		return childPosition;
-	}
+    @Override
+    public int getCount() {
+        return session_list.size();
+    }
 
-	@Override
-	public View getChildView(int groupPosition, int childPosition,
-			boolean isLastChild, View view, ViewGroup parent) {
+    @Override
+    public Item_Session getItem(int position) {
+        return super.getItem(position);
+    }
 
-		ViewHolder_Session sessionInfo = (ViewHolder_Session) getChild(
-				groupPosition, childPosition);
-		if (view == null) {
-			LayoutInflater infalInflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = infalInflater.inflate(R.layout.list_item_session, null);
-		}
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
+}
 
-		TextView sessionId = (TextView) view
-				.findViewById(R.id.textView_sessionId);
-		sessionId.setText(sessionInfo.getId().trim());
-
-		TextView name = (TextView) view.findViewById(R.id.textView_sessionName);
-		name.setText(sessionInfo.getName().trim());
-
-		return view;
-	}
-
-	@Override
-	public int getChildrenCount(int groupPosition) {
-
-		List<ViewHolder_Session> sessionList = statusList.get(groupPosition)
-				.getSessionList();
-		return sessionList.size();
-
-	}
-
-	@Override
-	public Object getGroup(int groupPosition) {
-		return statusList.get(groupPosition);
-	}
-
-	@Override
-	public int getGroupCount() {
-		return statusList.size();
-	}
-
-	@Override
-	public long getGroupId(int groupPosition) {
-		return groupPosition;
-	}
-
-	@Override
-	public View getGroupView(int groupPosition, boolean isLastChild, View view,
-			ViewGroup parent) {
-
-		ViewHolderHeader_Session statusInfo = (ViewHolderHeader_Session) getGroup(groupPosition);
-		if (view == null) {
-			LayoutInflater inf = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inf.inflate(R.layout.list_header, null);
-		}
-
-		TextView heading = (TextView) view.findViewById(R.id.heading);
-		heading.setText(statusInfo.getName().trim());
-
-		return view;
-	}
-
-	@Override
-	public boolean hasStableIds() {
-		return true;
-	}
-
-	@Override
-	public boolean isChildSelectable(int groupPosition, int childPosition) {
-		return true;
-	}
+class ViewHolder_Session {
+    int position;
+    TextView s_id;
+    TextView s_name;
 }

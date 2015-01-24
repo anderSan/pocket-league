@@ -4,7 +4,7 @@
     android:layout_height="wrap_content" >
 
     <TextView
-        android:id="@+id/textView_playerId"
+        android:id="@+id/tv_p_id"
         android:layout_width="wrap_content"
 		android:layout_height="35sp"
 		android:gravity="end|center_vertical"
@@ -14,26 +14,26 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView_name"
+        android:id="@+id/tv_p_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/textView_playerId"
-        android:layout_alignBaseline="@id/textView_playerId"
-        android:hint="player_name"
+        android:layout_toEndOf="@id/tv_p_id"
+        android:layout_alignBaseline="@id/tv_p_id"
+        android:hint="name"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView_nickName"
+        android:id="@+id/tv_p_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/textView_name"
+        android:layout_toEndOf="@id/tv_p_name"
         android:layout_marginStart="10dp"
-        android:layout_alignBaseline="@+id/textView_playerId"
-        android:hint="nick"
+        android:layout_alignBaseline="@+id/tv_p_id"
+        android:hint="nickname"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
     <TextView
-        android:id="@+id/textView_playerColor"
+        android:id="@+id/tv_p_color"
         android:layout_width="15dp"
         android:layout_height="35sp"
         android:layout_marginStart="10dp"

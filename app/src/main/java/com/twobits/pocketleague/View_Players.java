@@ -10,32 +10,28 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
+import com.twobits.pocketleague.backend.Item_Player;
 import com.twobits.pocketleague.backend.ListAdapter_Player;
-import com.twobits.pocketleague.backend.ViewHolderHeader_Player;
-import com.twobits.pocketleague.backend.ViewHolder_Player;
 import com.twobits.pocketleague.db.OrmLiteFragment;
 import com.twobits.pocketleague.db.tables.Player;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class View_Players extends OrmLiteFragment {
 	private static final String LOGTAG = "View_Players";
+    private View rootView;
+    private Context context;
 
-	private LinkedHashMap<String, ViewHolderHeader_Player> sHash = new LinkedHashMap<>();
-	private List<ViewHolderHeader_Player> statusList = new ArrayList<>();
-	private ListAdapter_Player playerAdapter;
-	private ExpandableListView elv;
-	private View rootView;
-	private Context context;
+    private ListView lv;
+	private ListAdapter_Player player_adapter;
+    private List<Item_Player> player_list = new ArrayList<>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,12 +45,11 @@ public class View_Players extends OrmLiteFragment {
                              Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 
-		elv = (ExpandableListView) rootView.findViewById(R.id.dbListing);
-		playerAdapter = new ListAdapter_Player(context, statusList);
-		elv.setAdapter(playerAdapter);
-		expandAll();
-		elv.setOnChildClickListener(elvItemClicked);
-		elv.setOnGroupClickListener(elvGroupClicked);
+		lv = (ListView) rootView.findViewById(R.id.dbListing);
+		player_adapter = new ListAdapter_Player(context, R.layout.list_item_player, player_list);
+		lv.setAdapter(player_adapter);
+        lv.setOnItemClickListener(lvItemClicked);
+
 		return rootView;
 	}
 
@@ -77,108 +72,30 @@ public class View_Players extends OrmLiteFragment {
 		refreshPlayersListing();
 	}
 
-	private void expandAll() {
-		// method to expand all groups
-		int count = playerAdapter.getGroupCount();
-		for (int i = 0; i < count; i++) {
-			elv.expandGroup(i);
-		}
-	}
-
-	private void collapseAll() {
-		// method to collapse all groups
-		int count = playerAdapter.getGroupCount();
-		for (int i = 0; i < count; i++) {
-			elv.collapseGroup(i);
-		}
-	}
-
 	protected void refreshPlayersListing() {
-		sHash.clear();
-		statusList.clear();
+        player_adapter.clear();
 
-		// add all the statii to the headers
-		addStatus("Active");
-		addStatus("Retired");
-
-		// add all the players
-		Dao<Player, Long> playerDao = null;
 		try {
-			playerDao = getHelper().getPlayerDao();
-			for (Player p : playerDao) {
-				addPlayer(p.getIsActive(), String.valueOf(p.getId()),
-						p.getColor(), p.getFirstName() + " " + p.getLastName(),
-						"(" + p.getNickName() + ")");
+            Dao<Player, Long> pDao = getHelper().getPlayerDao();
+			for (Player p : pDao) {
+                player_adapter.add(new Item_Player(String.valueOf(p.getId()),
+                        p.getFirstName() + " " + p.getLastName(), p.getNickName(), p.getColor()));
 			}
 		} catch (SQLException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 			loge("Retrieval of players failed. ", e);
 		}
 
-		expandAll();
-		playerAdapter.notifyDataSetChanged(); // required in case the list has
-												// changed
+//		player_adapter.notifyDataSetChanged(); // required in case the list has changed
 	}
 
-	private OnChildClickListener elvItemClicked = new OnChildClickListener() {
-		public boolean onChildClick(ExpandableListView parent, View v,
-				int groupPosition, int childPosition, long id) {
+	private AdapterView.OnItemClickListener lvItemClicked = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Long pId = Long.valueOf(player_list.get(position).getId());
 
-			// get the group header
-			ViewHolderHeader_Player statusInfo = statusList.get(groupPosition);
-			// get the child info
-			ViewHolder_Player playerInfo = statusInfo.getPlayerList().get(
-					childPosition);
-			// display it or do something with it
-			Toast.makeText(context, "Selected " + playerInfo.getName(),
-					Toast.LENGTH_SHORT).show();
-
-			// load the player detail screen
-			Long pId = Long.valueOf(playerInfo.getId());
-
-			mNav.viewPlayerDetails(pId);
-			return false;
-		}
-	};
-
-	private OnGroupClickListener elvGroupClicked = new OnGroupClickListener() {
-		public boolean onGroupClick(ExpandableListView parent, View v,
-				int groupPosition, long id) {
-
-			// ViewHolderHeader_Player statusInfo =
-			// statusList.get(groupPosition);
-			// Toast.makeText(context, "Tapped " + statusInfo.getName(),
-			// Toast.LENGTH_SHORT).show();
-			return false;
-		}
-	};
-
-	private void addStatus(String statusName) {
-		ViewHolderHeader_Player vhh_Player = new ViewHolderHeader_Player();
-		vhh_Player.setName(statusName);
-		statusList.add(vhh_Player);
-		sHash.put(statusName, vhh_Player);
-	}
-
-	private void addPlayer(Boolean isActive, String playerId,
-			Integer playerColor, String playerName, String playerNick) {
-		// find the index of the player header
-		String sortBy;
-		if (isActive) {
-			sortBy = "Active";
-		} else {
-			sortBy = "Retired";
-		}
-		ViewHolderHeader_Player statusInfo = sHash.get(sortBy);
-		List<ViewHolder_Player> playerList = statusInfo.getPlayerList();
-
-		// create a new child and add that to the group
-		ViewHolder_Player playerInfo = new ViewHolder_Player();
-		playerInfo.setId(playerId);
-		playerInfo.setColor(playerColor);
-		playerInfo.setName(playerName);
-		playerInfo.setNickName(playerNick);
-		playerList.add(playerInfo);
-		statusInfo.setPlayerList(playerList);
-	}
+            String name = player_list.get(position).getNickname();
+            Toast.makeText(context, "Selected " + name, Toast.LENGTH_SHORT).show();
+            mNav.viewPlayerDetails(pId);
+        }
+    };
 }

@@ -2,25 +2,10 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent" >
     
-    <Switch 
-    	android:id="@+id/sw_showActive"
-    	android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    	android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-    	android:layout_marginStart="16dp"
-    	android:layout_marginBottom="8dp"
-    	android:textOn="Active"
-    	android:textOff="Retired"
-    	android:checked="true"
-    	/>
-    
-	<ExpandableListView
+	<ListView
 	    android:id="@+id/dbListing"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_above="@id/sw_showActive"
-		android:layout_marginBottom="16dp"
 		/>
 
 </RelativeLayout>
