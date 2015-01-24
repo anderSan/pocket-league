@@ -2,41 +2,37 @@ package com.twobits.pocketleague;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.ListAdapter_Venue;
-import com.twobits.pocketleague.backend.ViewHolderHeader_Venue;
-import com.twobits.pocketleague.backend.ViewHolder_Venue;
+import com.twobits.pocketleague.backend.Item_Venue;
 import com.twobits.pocketleague.db.OrmLiteFragment;
 import com.twobits.pocketleague.db.tables.Venue;
 
 public class View_Venues extends OrmLiteFragment {
 	private static final String LOGTAG = "View_Venues";
+    private View rootView;
+    private Context context;
 
-	private LinkedHashMap<String, ViewHolderHeader_Venue> sHash = new LinkedHashMap<>();
-	private List<ViewHolderHeader_Venue> statusList = new ArrayList<>();
-	private ListAdapter_Venue venueAdapter;
-	private ExpandableListView elv;
-	private View rootView;
-	private Context context;
+    private ListView lv;
+    private ListAdapter_Venue venue_adapter;
+    private List<Item_Venue> venue_list = new ArrayList<>();
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,16 +43,14 @@ public class View_Venues extends OrmLiteFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.activity_view_listing, container,
-				false);
+			                 Bundle savedInstanceState) {
+		rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 
-		elv = (ExpandableListView) rootView.findViewById(R.id.dbListing);
-		venueAdapter = new ListAdapter_Venue(context, statusList);
-		elv.setAdapter(venueAdapter);
-		expandAll();
-		elv.setOnChildClickListener(elvItemClicked);
-		elv.setOnGroupClickListener(elvGroupClicked);
+        lv = (ListView) rootView.findViewById(R.id.dbListing);
+        venue_adapter = new ListAdapter_Venue(context, R.layout.list_item_venue, venue_list);
+        lv.setAdapter(venue_adapter);
+        lv.setOnItemClickListener(lvItemClicked);
+
 		return rootView;
 	}
 
@@ -79,107 +73,29 @@ public class View_Venues extends OrmLiteFragment {
 		refreshVenuesListing();
 	}
 
-	private void expandAll() {
-		// method to expand all groups
-		int count = venueAdapter.getGroupCount();
-		for (int i = 0; i < count; i++) {
-			elv.expandGroup(i);
-		}
-	}
-
-	private void collapseAll() {
-		// method to collapse all groups
-		int count = venueAdapter.getGroupCount();
-		for (int i = 0; i < count; i++) {
-			elv.collapseGroup(i);
-		}
-	}
-
 	protected void refreshVenuesListing() {
-		sHash.clear();
-		statusList.clear();
+        venue_adapter.clear();
 
-		// add all the statii to the headers
-		addStatus("Active");
-		addStatus("Inactive");
-
-		// add all the venues
-		Dao<Venue, Long> venueDao = null;
 		try {
-			venueDao = getHelper().getVenueDao();
-			for (Venue v : venueDao) {
-				addVenue(v.getIsActive(), String.valueOf(v.getId()), v.getName());
+            Dao<Venue, Long> vDao = getHelper().getVenueDao();
+			for (Venue v : vDao) {
+                venue_adapter.add(new Item_Venue(String.valueOf(v.getId()), v.getName()));
 			}
 		} catch (SQLException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-			Log.e(View_GameTypes.class.getName(), "Retrieval of venues failed", e);
+			loge("Retrieval of venues failed", e);
 		}
 
-		expandAll();
-		venueAdapter.notifyDataSetChanged(); // required in case the list has
-												// changed
+		venue_adapter.notifyDataSetChanged(); // required in case the list has changed
 	}
 
-	private OnChildClickListener elvItemClicked = new OnChildClickListener() {
-		public boolean onChildClick(ExpandableListView parent, View v,
-				int groupPosition, int childPosition, long id) {
+    private AdapterView.OnItemClickListener lvItemClicked = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Long vId = Long.valueOf(venue_list.get(position).getId());
 
-			// get the group header
-			ViewHolderHeader_Venue statusInfo = statusList.get(groupPosition);
-			// get the child info
-			ViewHolder_Venue venueInfo = statusInfo.getVenueList().get(
-					childPosition);
-			// display it or do something with it
-			Toast.makeText(context, "Selected " + venueInfo.getName(),
-					Toast.LENGTH_SHORT).show();
-
-			// load the venue detail screen
-			Long vId = Long.valueOf(venueInfo.getId());
-
+            String name = venue_list.get(position).getName();
+            Toast.makeText(context, "Selected " + name, Toast.LENGTH_SHORT).show();
             mNav.viewVenueDetails(vId);
-			return false;
-		}
-	};
-	private OnGroupClickListener elvGroupClicked = new OnGroupClickListener() {
-		public boolean onGroupClick(ExpandableListView parent, View v,
-				int groupPosition, long id) {
-
-			// ViewHolderHeader_Venue statusInfo =
-			// statusList.get(groupPosition);
-			// Toast.makeText(context, "Tapped " + statusInfo.getName(),
-			// Toast.LENGTH_SHORT).show();
-			return false;
-		}
-	};
-
-	private void addStatus(String statusName) {
-		ViewHolderHeader_Venue vhh_Venue = new ViewHolderHeader_Venue();
-		vhh_Venue.setName(statusName);
-		statusList.add(vhh_Venue);
-		sHash.put(statusName, vhh_Venue);
-	}
-
-	private void addVenue(Boolean isActive, String venueId, String venueName) {
-		// find the index of the session header
-		String sortBy;
-		if (isActive) {
-			sortBy = "Active";
-		} else {
-			sortBy = "Inactive";
-		}
-		ViewHolderHeader_Venue statusInfo = sHash.get(sortBy);
-		try {
-			List<ViewHolder_Venue> venueList = statusInfo.getVenueList();
-
-			// create a new child and add that to the group
-			ViewHolder_Venue venueInfo = new ViewHolder_Venue();
-			venueInfo.setId(venueId);
-			venueInfo.setName(venueName);
-			venueList.add(venueInfo);
-			statusInfo.setVenueList(venueList);
-		} catch (NullPointerException e) {
-			loge("The header " + sortBy + " does not exist", e);
-		}
-	}
-
+        }
+    };
 }

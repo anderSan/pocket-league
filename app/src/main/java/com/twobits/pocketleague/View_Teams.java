@@ -10,33 +10,28 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
+import com.twobits.pocketleague.backend.Item_Team;
 import com.twobits.pocketleague.backend.ListAdapter_Team;
-import com.twobits.pocketleague.backend.ViewHolderHeader_Team;
-import com.twobits.pocketleague.backend.ViewHolder_Team;
 import com.twobits.pocketleague.db.OrmLiteFragment;
 import com.twobits.pocketleague.db.tables.Team;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-
 
 public class View_Teams extends OrmLiteFragment {
 	private static final String LOGTAG = "View_Teams";
+    private View rootView;
+    private Context context;
 
-	private LinkedHashMap<String, ViewHolderHeader_Team> sHash = new LinkedHashMap<>();
-	private List<ViewHolderHeader_Team> statusList = new ArrayList<>();
-	private ListAdapter_Team teamAdapter;
-	private ExpandableListView elv;
-	private View rootView;
-	private Context context;
+    private ListView lv;
+    private ListAdapter_Team team_adapter;
+    private List<Item_Team> team_list = new ArrayList<>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,17 +42,15 @@ public class View_Teams extends OrmLiteFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.activity_view_listing, container,
-				false);
+			                 Bundle savedInstanceState) {
+		rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 
-		elv = (ExpandableListView) rootView.findViewById(R.id.dbListing);
-		teamAdapter = new ListAdapter_Team(context, statusList);
-		elv.setAdapter(teamAdapter);
-		expandAll();
-		elv.setOnChildClickListener(elvItemClicked);
-		elv.setOnGroupClickListener(elvGroupClicked);
-		return rootView;
+		lv = (ListView) rootView.findViewById(R.id.dbListing);
+		team_adapter = new ListAdapter_Team(context, R.layout.list_item_team, team_list);
+		lv.setAdapter(team_adapter);
+		lv.setOnItemClickListener(lvItemClicked);
+
+        return rootView;
 	}
 
 	@Override
@@ -79,109 +72,30 @@ public class View_Teams extends OrmLiteFragment {
 		refreshTeamsListing();
 	}
 
-	private void expandAll() {
-		// method to expand all groups
-		int count = teamAdapter.getGroupCount();
-		for (int i = 0; i < count; i++) {
-			elv.expandGroup(i);
-		}
-	}
-
-	private void collapseAll() {
-		// method to collapse all groups
-		int count = teamAdapter.getGroupCount();
-		for (int i = 0; i < count; i++) {
-			elv.collapseGroup(i);
-		}
-	}
-
 	protected void refreshTeamsListing() {
-		sHash.clear();
-		statusList.clear();
+		team_adapter.clear();
 
-		// add all the statii to the headers
-		addStatus("Active");
-		addStatus("Retired");
-
-		// add all the teams
 		try {
 			Dao<Team, Long> teamDao = getHelper().getTeamDao();
-			List<Team> allTeams = teamDao.queryBuilder().where()
-					.ne(Team.TEAM_SIZE, 1).query();
+			List<Team> allTeams = teamDao.queryBuilder().where().ne(Team.TEAM_SIZE, 1).query();
 			for (Team t : allTeams) {
-				addTeam(t.getIsActive(), String.valueOf(t.getId()),
-						t.getTeamName());
+				team_adapter.add(new Item_Team(String.valueOf(t.getId()), t.getTeamName()));
 			}
 		} catch (SQLException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 			loge("Retrieval of teams failed. ", e);
 		}
 
-		expandAll();
-		teamAdapter.notifyDataSetChanged(); // required in case the list has
-											// changed
+//		team_adapter.notifyDataSetChanged(); // required in case the list has changed
 	}
 
-	private OnChildClickListener elvItemClicked = new OnChildClickListener() {
-		public boolean onChildClick(ExpandableListView parent, View v,
-				int groupPosition, int childPosition, long id) {
+    private AdapterView.OnItemClickListener lvItemClicked = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Long tId = Long.valueOf(team_list.get(position).getId());
 
-			// get the group header
-			ViewHolderHeader_Team statusInfo = statusList.get(groupPosition);
-			// get the child info
-			ViewHolder_Team teamInfo = statusInfo.getTeamList().get(
-					childPosition);
-			// display it or do something with it
-			Toast.makeText(context, "Selected " + teamInfo.getTeamName(),
-					Toast.LENGTH_SHORT).show();
-
-			// load the team detail screen
-			Long tId = Long.valueOf(teamInfo.getId());
-
+            String name = team_list.get(position).getName();
+            Toast.makeText(context, "Selected " + name, Toast.LENGTH_SHORT).show();
             mNav.viewTeamDetails(tId);
-			return false;
-		}
-	};
-
-	private OnGroupClickListener elvGroupClicked = new OnGroupClickListener() {
-		public boolean onGroupClick(ExpandableListView parent, View v,
-				int groupPosition, long id) {
-
-			// ViewHolderHeader_Team statusInfo = statusList.get(groupPosition);
-			// Toast.makeText(context, "Tapped " + statusInfo.getName(),
-			// Toast.LENGTH_SHORT).show();
-			return false;
-		}
-	};
-
-	private void addStatus(String statusName) {
-		ViewHolderHeader_Team vhh_Team = new ViewHolderHeader_Team();
-		vhh_Team.setName(statusName);
-		statusList.add(vhh_Team);
-		sHash.put(statusName, vhh_Team);
-	}
-
-	private void addTeam(boolean isActive, String teamId, String teamName) {
-		// find the index of the session header
-		String sortBy;
-		if (isActive) {
-			sortBy = "Active";
-		} else {
-			sortBy = "Retired";
-		}
-		ViewHolderHeader_Team statusInfo = sHash.get(sortBy);
-		try {
-			List<ViewHolder_Team> teamList = statusInfo.getTeamList();
-
-			// create a new child and add that to the group
-			ViewHolder_Team teamInfo = new ViewHolder_Team();
-			teamInfo.setId(teamId);
-			teamInfo.setTeamName(teamName);
-			teamList.add(teamInfo);
-			statusInfo.setTeamList(teamList);
-		} catch (NullPointerException e) {
-			loge("The header " + sortBy + " does not exist", e);
-		}
-	}
-
+        }
+    };
 }

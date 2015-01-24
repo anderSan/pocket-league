@@ -4,104 +4,66 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.twobits.pocketleague.R;
 
 import java.util.List;
 
-public class ListAdapter_Team extends BaseExpandableListAdapter {
+public class ListAdapter_Team extends ArrayAdapter<Item_Team> {
+    private static final String LOGTAG = "ListAdapter_Team";
 	private Context context;
-	private List<ViewHolderHeader_Team> statusList;
+	private List<Item_Team> team_list;
 
-	public ListAdapter_Team(Context context,
-			List<ViewHolderHeader_Team> statusList) {
-		this.context = context;
-		this.statusList = statusList;
+	public ListAdapter_Team(Context context, int layoutResourceId, List<Item_Team> data) {
+		super(context, layoutResourceId, data);
+        this.context = context;
+		this.team_list = data;
 	}
 
 	@Override
-	public Object getChild(int groupPosition, int childPosition) {
-		List<ViewHolder_Team> teamList = statusList.get(groupPosition)
-				.getTeamList();
-		return teamList.get(childPosition);
+	public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder_Team holder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.list_item_team, null);
+
+            holder = new ViewHolder_Team();
+            holder.t_id = (TextView) convertView.findViewById(R.id.tv_t_id);
+            holder.t_name = (TextView) convertView.findViewById(R.id.tv_t_name);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder_Team) convertView.getTag();
+        }
+
+        holder.t_id.setText(team_list.get(position).getId());
+        holder.t_name.setText(team_list.get(position).getName());
+
+        return convertView;
 	}
 
-	@Override
-	public long getChildId(int groupPosition, int childPosition) {
-		return childPosition;
-	}
+    @Override
+    public int getCount() {
+        return team_list.size();
+    }
 
-	@Override
-	public View getChildView(int groupPosition, int childPosition,
-			boolean isLastChild, View view, ViewGroup parent) {
+    @Override
+    public Item_Team getItem(int position) {
+        return super.getItem(position);
+    }
 
-		ViewHolder_Team teamInfo = (ViewHolder_Team) getChild(groupPosition,
-				childPosition);
-		if (view == null) {
-			LayoutInflater infalInflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = infalInflater.inflate(R.layout.list_item_team, null);
-		}
-
-		TextView teamId = (TextView) view.findViewById(R.id.textView_teamId);
-		teamId.setText(teamInfo.getId().trim());
-
-		TextView name = (TextView) view.findViewById(R.id.textView_name);
-		name.setText(teamInfo.getTeamName().trim());
-
-		return view;
-	}
-
-	@Override
-	public int getChildrenCount(int groupPosition) {
-
-		List<ViewHolder_Team> teamList = statusList.get(groupPosition)
-				.getTeamList();
-		return teamList.size();
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
 
 	}
 
-	@Override
-	public Object getGroup(int groupPosition) {
-		return statusList.get(groupPosition);
-	}
-
-	@Override
-	public int getGroupCount() {
-		return statusList.size();
-	}
-
-	@Override
-	public long getGroupId(int groupPosition) {
-		return groupPosition;
-	}
-
-	@Override
-	public View getGroupView(int groupPosition, boolean isLastChild, View view,
-			ViewGroup parent) {
-
-		ViewHolderHeader_Team statusInfo = (ViewHolderHeader_Team) getGroup(groupPosition);
-		if (view == null) {
-			LayoutInflater inf = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inf.inflate(R.layout.list_header, null);
-		}
-
-		TextView heading = (TextView) view.findViewById(R.id.heading);
-		heading.setText(statusInfo.getName().trim());
-
-		return view;
-	}
-
-	@Override
-	public boolean hasStableIds() {
-		return true;
-	}
-
-	@Override
-	public boolean isChildSelectable(int groupPosition, int childPosition) {
-		return true;
-	}
+class ViewHolder_Team {
+    int position;
+    TextView t_id;
+    TextView t_name;
 }

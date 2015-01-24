@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
@@ -11,98 +12,58 @@ import com.twobits.pocketleague.R;
 
 import java.util.List;
 
-public class ListAdapter_Venue extends BaseExpandableListAdapter {
+public class ListAdapter_Venue extends ArrayAdapter<Item_Venue> {
 	private static final String LOGTAG = "ListAdapter_Venue";
 	private Context context;
-	private List<ViewHolderHeader_Venue> statusList;
+	private List<Item_Venue> venue_list;
 
-	public ListAdapter_Venue(Context context,
-			List<ViewHolderHeader_Venue> statusList) {
+	public ListAdapter_Venue(Context context, int layoutResourceId, List<Item_Venue> data) {
+        super(context, layoutResourceId, data);
 		this.context = context;
-		this.statusList = statusList;
+		this.venue_list = data;
 	}
 
-	@Override
-	public Object getChild(int groupPosition, int childPosition) {
-		List<ViewHolder_Venue> venueList = statusList.get(groupPosition)
-				.getVenueList();
-		return venueList.get(childPosition);
-	}
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder_Venue holder;
 
-	@Override
-	public long getChildId(int groupPosition, int childPosition) {
-		return childPosition;
-	}
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.list_item_venue, null);
 
-	@Override
-	public View getChildView(int groupPosition, int childPosition,
-			boolean isLastChild, View view, ViewGroup parent) {
+            holder = new ViewHolder_Venue();
+            holder.v_id = (TextView) convertView.findViewById(R.id.tv_v_id);
+            holder.v_name = (TextView) convertView.findViewById(R.id.tv_v_name);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder_Venue) convertView.getTag();
+        }
 
-		ViewHolder_Venue venueInfo = (ViewHolder_Venue) getChild(groupPosition,
-				childPosition);
-		if (view == null) {
-			LayoutInflater infalInflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = infalInflater.inflate(R.layout.list_item_venue, null);
-		}
+        holder.v_id.setText(venue_list.get(position).getId());
+        holder.v_name.setText(venue_list.get(position).getName());
 
-		TextView venueId = (TextView) view.findViewById(R.id.textView_venueId);
-		venueId.setText(venueInfo.getId().trim());
-		TextView venueName = (TextView) view
-				.findViewById(R.id.textView_venueName);
-		venueName.setText(venueInfo.getName().trim());
+        return convertView;
+    }
 
-		return view;
-	}
+    @Override
+    public int getCount() {
+        return venue_list.size();
+    }
 
-	@Override
-	public int getChildrenCount(int groupPosition) {
+    @Override
+    public Item_Venue getItem(int position) {
+        return super.getItem(position);
+    }
 
-		List<ViewHolder_Venue> venueList = statusList.get(groupPosition)
-				.getVenueList();
-		return venueList.size();
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
+}
 
-	}
-
-	@Override
-	public Object getGroup(int groupPosition) {
-		return statusList.get(groupPosition);
-	}
-
-	@Override
-	public int getGroupCount() {
-		return statusList.size();
-	}
-
-	@Override
-	public long getGroupId(int groupPosition) {
-		return groupPosition;
-	}
-
-	@Override
-	public View getGroupView(int groupPosition, boolean isLastChild, View view,
-			ViewGroup parent) {
-
-		ViewHolderHeader_Venue statusInfo = (ViewHolderHeader_Venue) getGroup(groupPosition);
-		if (view == null) {
-			LayoutInflater inf = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inf.inflate(R.layout.list_header, null);
-		}
-
-		TextView heading = (TextView) view.findViewById(R.id.heading);
-		heading.setText(statusInfo.getName().trim());
-
-		return view;
-	}
-
-	@Override
-	public boolean hasStableIds() {
-		return true;
-	}
-
-	@Override
-	public boolean isChildSelectable(int groupPosition, int childPosition) {
-		return true;
-	}
+class ViewHolder_Venue {
+    int position;
+    TextView v_id;
+    TextView v_name;
 }

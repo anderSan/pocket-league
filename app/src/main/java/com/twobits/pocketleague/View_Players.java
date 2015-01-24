@@ -30,7 +30,7 @@ public class View_Players extends OrmLiteFragment {
     private Context context;
 
     private ListView lv;
-	private ListAdapter_Player player_adapter;
+    private ListAdapter_Player player_adapter;
     private List<Item_Player> player_list = new ArrayList<>();
 
 	@Override
