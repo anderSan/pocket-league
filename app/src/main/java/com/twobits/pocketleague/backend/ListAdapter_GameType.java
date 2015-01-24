@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.twobits.pocketleague.R;
 
-public class ListAdapter_GameType extends ArrayAdapter<ViewHolder_GameType> {
+public class ListAdapter_GameType extends ArrayAdapter<Item_GameType> {
 	private Context context;
 	private int layoutResourceId;
-	private List<ViewHolder_GameType> gametype_list = new ArrayList<>();
+	private List<Item_GameType> gametype_list = new ArrayList<>();
 
 	public ListAdapter_GameType(Context context, int layoutResourceId,
-			List<ViewHolder_GameType> data) {
+			List<Item_GameType> data) {
 		super(context, layoutResourceId, data);
 		this.context = context;
 		this.layoutResourceId = layoutResourceId;
@@ -58,7 +58,7 @@ public class ListAdapter_GameType extends ArrayAdapter<ViewHolder_GameType> {
 	}
 
 	@Override
-	public ViewHolder_GameType getItem(int position) {
+	public Item_GameType getItem(int position) {
 		return super.getItem(position);
 	}
 

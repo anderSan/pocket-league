@@ -21,7 +21,7 @@ public class AboutPage extends OrmLiteFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.activity_about_page, container,
+		rootView = inflater.inflate(R.layout.fragment_about_page, container,
 				false);
 
 		return rootView;

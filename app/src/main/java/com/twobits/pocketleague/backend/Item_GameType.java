@@ -2,10 +2,22 @@ package com.twobits.pocketleague.backend;
 
 import com.twobits.pocketleague.gameslibrary.GameType;
 
-public class ViewHolder_GameType {
+public class Item_GameType {
 	private GameType gametype;
 	public String name;
 	private int drawable_id;
+
+    public Item_GameType(GameType gametype) {
+        this.gametype = gametype;
+        this.name = gametype.toString();
+        this.drawable_id = gametype.toDrawableId();
+    }
+
+    public Item_GameType(GameType gametype, String name, int drawable_id) {
+        this.gametype = gametype;
+        this.name = name;
+        this.drawable_id = drawable_id;
+    }
 
 	public GameType getGameType() {
 		return gametype;
