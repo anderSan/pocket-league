@@ -7,10 +7,12 @@ import com.twobits.pocketleague.gameslibrary.Rulesets.Polishhorseshoes.PolishSin
 import com.twobits.pocketleague.gameslibrary.Rulesets.Undefined.Undefined;
 
 public enum GameRule {
+    CRICKET(new Cricket()),
+    DISC_GOLF(new Undefined()),
     EIGHTBALL(new EightBall()),
     NINEBALL(new NineBall()),
-    CRICKET(new Cricket()),
     POLISH_SINGLES(new PolishSingles()),
+    SPADES(new Undefined()),
     UNDEFINED(new Undefined());
 
     private RuleSet ruleset;
