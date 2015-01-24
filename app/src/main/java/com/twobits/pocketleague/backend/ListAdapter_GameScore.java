@@ -40,6 +40,15 @@ public class ListAdapter_GameScore extends ArrayAdapter<Item_GameScore> {
             holder = new ViewHolder_GameScore();
             holder.member_name = (TextView) convertView.findViewById(R.id.tv_memberName);
             holder.member_score = (EditText) convertView.findViewById(R.id.memberScore);
+            holder.member_score.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus){
+                        int new_score = Integer.parseInt(((EditText) v).getText().toString());
+                        gamescore_list.get(position).setMemberScore(new_score);
+                    }
+                }
+            });
+
             convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder_GameScore) convertView.getTag();
@@ -47,15 +56,6 @@ public class ListAdapter_GameScore extends ArrayAdapter<Item_GameScore> {
 
 		holder.member_name.setText(gamescore_list.get(position).getMemberName());
         holder.member_score.setText(Integer.toString(gamescore_list.get(position).getMemberScore()));
-
-        holder.member_score.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus){
-                    int new_score = Integer.parseInt(((EditText) v).getText().toString());
-                    gamescore_list.get(position).setMemberScore(new_score);
-                }
-            }
-        });
 
 		return convertView;
 	}

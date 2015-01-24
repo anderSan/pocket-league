@@ -26,19 +26,10 @@ import java.util.List;
 
 public class View_Players extends OrmLiteFragment {
 	private static final String LOGTAG = "View_Players";
-    private View rootView;
-    private Context context;
 
     private ListView lv;
     private ListAdapter_Player player_adapter;
     private List<Item_Player> player_list = new ArrayList<>();
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
-		setRetainInstance(true);
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,12 +42,6 @@ public class View_Players extends OrmLiteFragment {
         lv.setOnItemClickListener(lvItemClicked);
 
 		return rootView;
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		context = getActivity();
 	}
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

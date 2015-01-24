@@ -5,23 +5,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseExpandableListAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.twobits.pocketleague.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ListAdapter_Session extends ArrayAdapter<Item_Session> {
     private static final String LOGTAG = "ListAdapter_Session";
 	private Context context;
 	private List<Item_Session> session_list;
+    private View.OnClickListener cbClicked;
 
-	public ListAdapter_Session(Context context, int layoutResourceId, List<Item_Session> data) {
+	public ListAdapter_Session(Context context, int layoutResourceId, List<Item_Session> data,
+                               View.OnClickListener cbClicked) {
         super(context, layoutResourceId, data);
 		this.context = context;
 		this.session_list = data;
+        this.cbClicked = cbClicked;
 	}
 
 	@Override
@@ -34,15 +36,20 @@ public class ListAdapter_Session extends ArrayAdapter<Item_Session> {
             convertView = inflater.inflate(R.layout.list_item_session, null);
 
             holder = new ViewHolder_Session();
-            holder.s_id = (TextView) convertView.findViewById(R.id.tv_s_id);
             holder.s_name = (TextView) convertView.findViewById(R.id.tv_s_name);
+            holder.s_type = (TextView) convertView.findViewById(R.id.tv_s_type);
+            holder.s_isfavorite = (CheckBox) convertView.findViewById(R.id.cb_s_isfavorite);
+            holder.s_isfavorite.setOnClickListener(cbClicked);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder_Session) convertView.getTag();
         }
 
-        holder.s_id.setText(session_list.get(position).getId());
-        holder.s_name.setText(session_list.get(position).getName());
+        Item_Session item = session_list.get(position);
+        holder.s_name.setText(item.getName());
+        holder.s_type.setText(item.getSessionType().toString());
+        holder.s_isfavorite.setChecked(item.getIsFavorite());
+        holder.s_isfavorite.setTag(item.getId());
 
 		return convertView;
 	}
@@ -64,7 +71,8 @@ public class ListAdapter_Session extends ArrayAdapter<Item_Session> {
 }
 
 class ViewHolder_Session {
-    int position;
-    TextView s_id;
+    long sId;
     TextView s_name;
+    TextView s_type;
+    CheckBox s_isfavorite;
 }

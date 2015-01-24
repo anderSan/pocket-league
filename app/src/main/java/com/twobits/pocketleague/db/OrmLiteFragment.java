@@ -2,8 +2,11 @@ package com.twobits.pocketleague.db;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.twobits.pocketleague.backend.NavigationInterface;
@@ -12,11 +15,20 @@ import com.twobits.pocketleague.gameslibrary.GameType;
 public class OrmLiteFragment extends Fragment {
 	public static String LOGTAG = "OrmLiteFragment";
 	public static final String APP_PREFS = "PocketLeaguePreferences";
-	public NavigationInterface mNav;
+    public View rootView;
+    public Context context;
+    public NavigationInterface mNav;
 
 	private SharedPreferences settings;
 	public SharedPreferences.Editor prefs_editor;
 	private DatabaseHelper databaseHelper = null;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+    }
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -30,6 +42,7 @@ public class OrmLiteFragment extends Fragment {
 			throw new ClassCastException(activity.toString()
 					+ " must implement NavigationInterface");
 		}
+        context = getActivity();
 	}
 
 	protected DatabaseHelper getHelper() {

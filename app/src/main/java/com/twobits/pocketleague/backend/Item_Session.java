@@ -3,37 +3,35 @@ package com.twobits.pocketleague.backend;
 import com.twobits.pocketleague.enums.SessionType;
 
 public class Item_Session {
-	public String id;
-	public String name;
-    public SessionType session_type;
+	private long sId;
+	private String name;
+    private SessionType session_type;
+    private boolean is_favorite;
 
-    public Item_Session(String id, String name, SessionType session_type){
-        this.id = id;
+    public Item_Session(long sId, String name, SessionType session_type, boolean is_favorite){
+        this.sId = sId;
         this.name = name;
         this.session_type = session_type;
+        this.is_favorite = is_favorite;
     }
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+	public long getId() {
+		return sId;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
     public SessionType getSessionType() {
         return session_type;
     }
 
-    public void setSessionType(SessionType session_type) {
-        this.session_type = session_type;
+    public boolean getIsFavorite() {
+        return is_favorite;
+    }
+
+    public void setIsFavorite(boolean is_favorite) {
+        this.is_favorite = is_favorite;
     }
 }
