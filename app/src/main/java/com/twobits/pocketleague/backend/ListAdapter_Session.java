@@ -71,7 +71,6 @@ public class ListAdapter_Session extends ArrayAdapter<Item_Session> {
 }
 
 class ViewHolder_Session {
-    long sId;
     TextView s_name;
     TextView s_type;
     CheckBox s_isfavorite;

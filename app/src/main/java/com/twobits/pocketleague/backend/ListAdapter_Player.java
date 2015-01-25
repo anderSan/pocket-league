@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.twobits.pocketleague.R;
@@ -15,11 +16,14 @@ public class ListAdapter_Player extends ArrayAdapter<Item_Player> {
 	private static final String LOGTAG = "ListAdapter_Player";
 	private Context context;
 	private List<Item_Player> player_list;
+    private View.OnClickListener cbClicked;
 
-	public ListAdapter_Player(Context context, int layoutResourceId, List<Item_Player> data) {
+	public ListAdapter_Player(Context context, int layoutResourceId, List<Item_Player> data,
+                              View.OnClickListener cbClicked) {
         super(context, layoutResourceId, data);
 		this.context = context;
 		this.player_list = data;
+        this.cbClicked = cbClicked;
 	}
 
 	@Override
@@ -32,19 +36,22 @@ public class ListAdapter_Player extends ArrayAdapter<Item_Player> {
             convertView = inflater.inflate(R.layout.list_item_player, null);
 
             holder = new ViewHolder_Player();
-            holder.p_id = (TextView) convertView.findViewById(R.id.tv_p_id);
+            holder.p_color = (TextView) convertView.findViewById(R.id.tv_p_color);
             holder.p_name = (TextView) convertView.findViewById(R.id.tv_p_name);
             holder.p_nickname = (TextView) convertView.findViewById(R.id.tv_p_nickname);
-            holder.p_color = (TextView) convertView.findViewById(R.id.tv_p_color);
+            holder.p_isfavorite = (CheckBox) convertView.findViewById(R.id.cb_p_isfavorite);
+            holder.p_isfavorite.setOnClickListener(cbClicked);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder_Player) convertView.getTag();
         }
 
-        holder.p_id.setText(player_list.get(position).getId());
-        holder.p_name.setText(player_list.get(position).getName());
-        holder.p_nickname.setText(player_list.get(position).getNickname());
-        holder.p_color.setBackgroundColor(player_list.get(position).getColor());
+        Item_Player item = player_list.get(position);
+        holder.p_color.setBackgroundColor(item.getColor());
+        holder.p_name.setText(item.getName());
+        holder.p_nickname.setText(item.getNickname());
+        holder.p_isfavorite.setChecked(item.getIsFavorite());
+        holder.p_isfavorite.setTag(item.getId());
 
 		return convertView;
 	}
@@ -66,9 +73,9 @@ public class ListAdapter_Player extends ArrayAdapter<Item_Player> {
 }
 
 class ViewHolder_Player {
-    int position;
-    TextView p_id;
+    TextView p_color;
     TextView p_name;
     TextView p_nickname;
-    TextView p_color;
+    CheckBox p_isfavorite;
+
 }
