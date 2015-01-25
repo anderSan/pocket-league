@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class View_Sessions extends OrmLiteFragment {
-    public static final String LOGTAG = "View_Sessions";
+    static final String LOGTAG = "View_Sessions";
 
     ListView lv;
     private ListAdapter_Session session_adapter;

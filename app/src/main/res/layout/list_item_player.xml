@@ -6,7 +6,7 @@
     <TextView
         android:id="@+id/tv_p_color"
         android:layout_width="15dp"
-        android:layout_height="45dip"
+        android:layout_height="45dp"
         android:layout_marginEnd="10dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"

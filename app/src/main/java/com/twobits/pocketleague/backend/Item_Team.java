@@ -1,28 +1,25 @@
 package com.twobits.pocketleague.backend;
 
 public class Item_Team {
-	public String id;
-	public String name;
+    public long tId;
+    public String name;
+    private boolean is_favorite;
 
-    public Item_Team(String id, String name) {
-        this.id = id;
+    public Item_Team(long tId, String name, boolean is_favorite) {
+        this.tId = tId;
         this.name = name;
+        this.is_favorite = is_favorite;
     }
 
-	public String getId() {
-		return id;
-	}
+    public long getId() {
+        return tId;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String teamName) {
-		this.name = teamName;
-	}
-
+    public boolean getIsFavorite() {
+        return is_favorite;
+    }
 }

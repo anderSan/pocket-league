@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="5dip"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeight" >
 
-    <TextView
-        android:id="@+id/tv_v_id"
+    <CheckBox
+        android:id="@+id/cb_v_isfavorite"
+        android:layout_marginEnd="10dip"
         android:layout_width="wrap_content"
-		android:layout_height="45sp"
-		android:gravity="end|center_vertical"
-		android:paddingStart="8dp"
-        android:paddingEnd="16dp"
-        android:hint="vid"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:focusable="false"
+        style="?android:attr/starStyle"
+        />
 
     <TextView
         android:id="@+id/tv_v_name"
-        android:layout_width="fill_parent"
+        android:layout_marginStart="5dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/tv_v_id"
-        android:layout_alignBaseline="@+id/tv_v_id"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/cb_v_isfavorite"
+        android:layout_centerVertical="true"
         android:hint="Venue Name"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceListItem"
+        />
 
 </RelativeLayout>

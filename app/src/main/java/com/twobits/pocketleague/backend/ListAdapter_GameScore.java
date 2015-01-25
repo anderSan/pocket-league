@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListAdapter_GameScore extends ArrayAdapter<Item_GameScore> {
-    private static final String LOGTAG = "ListAdapter_GameScore";
+    public static final String LOGTAG = "ListAdapter_GameScore";
 	private Context context;
 	private List<Item_GameScore> gamescore_list = new ArrayList<>();
     private ScoreType score_type;

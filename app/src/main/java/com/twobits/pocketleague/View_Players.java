@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class View_Players extends OrmLiteFragment {
-    public static final String LOGTAG = "View_Players";
+    static final String LOGTAG = "View_Players";
 
     ListView lv;
     private ListAdapter_Player player_adapter;
