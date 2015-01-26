@@ -37,6 +37,7 @@ public class View_Teams extends OrmLiteFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			                 Bundle savedInstanceState) {
+        mNav.setTitle("Teams");
 		rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 
 		lv = (ListView) rootView.findViewById(R.id.dbListing);

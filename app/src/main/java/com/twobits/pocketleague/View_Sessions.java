@@ -35,6 +35,7 @@ public class View_Sessions extends OrmLiteFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mNav.setTitle("Sessions");
         rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 
         lv = (ListView) rootView.findViewById(R.id.dbListing);
