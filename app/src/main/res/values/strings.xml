@@ -44,4 +44,14 @@
 	<string name="pDet_computeStats">Get Offensive Stats</string>
 	<string name="pDet_computeDefensiveStats">Get Defensive Stats</string>
 
+    <string name="flaticon_acknowledgment">Game icons made by
+        <a href="http://www.freepik.com" title="Freepik">Freepik</a>,
+        <a href="http://www.icons8.com" title="Icons8">Icons8</a>,
+        <a href="http://linhpham.me/miu" title="Linh Pham">Linh Pham</a>,
+        <a href="http://yanlu.de" title="Yannick">Yannick</a>, and
+        <a href="http://www.zurb.com" title="Zurb">Zurb</a>
+        from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>
+        and are licensed under
+        <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>.</string>
+
 </resources>

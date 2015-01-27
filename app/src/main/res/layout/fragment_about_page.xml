@@ -24,4 +24,19 @@
 		android:layout_height="wrap_content"
 		android:text="Phillip Anderson, Michael Cannamela" />
 
+    <QuickContactBadge
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/quickContactBadge"/>
+
+    <TextView
+        android:id="@+id/tv_flaticon_acknowledgment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="bottom"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/flaticon_acknowledgment"
+        />
+
 </LinearLayout>
