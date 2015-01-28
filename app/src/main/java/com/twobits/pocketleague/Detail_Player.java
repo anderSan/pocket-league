@@ -2,8 +2,6 @@ package com.twobits.pocketleague;
 
 import java.sql.SQLException;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,23 +12,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.ArgumentHolder;
-import com.twobits.pocketleague.backend.MenuContainerActivity;
+import com.twobits.pocketleague.backend.Fragment_Detail;
 import com.twobits.pocketleague.db.DatabaseCommonQueue;
-import com.twobits.pocketleague.db.OrmLiteFragment;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Team;
 
-public class Detail_Player extends OrmLiteFragment {
-	private static final String LOGTAG = "Detail_Player";
-    private View rootView;
-    private Context context;
+public class Detail_Player extends Fragment_Detail {
+	static final String LOGTAG = "Detail_Player";
 
 	Long pId;
 	Player p;
@@ -44,15 +37,6 @@ public class Detail_Player extends OrmLiteFragment {
 	TextView tv_weight;
 	TextView tv_handed;
 	TextView tv_footed;
-	CheckBox cb_isFavorite;
-	ToggleButton tb_isActive;
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        setRetainInstance(true);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,53 +55,45 @@ public class Detail_Player extends OrmLiteFragment {
 		tv_weight = (TextView) rootView.findViewById(R.id.pDet_weight);
 		tv_handed = (TextView) rootView.findViewById(R.id.pDet_handed);
 		tv_footed = (TextView) rootView.findViewById(R.id.pDet_footed);
-        cb_isFavorite = new CheckBox(context, null, android.R.attr.starStyle);
-        cb_isFavorite.setOnClickListener(favoriteClicked);
-		tb_isActive = new ToggleButton(context);
-        tb_isActive.setTextOn(getString(R.string.active));
-        tb_isActive.setTextOff(getString(R.string.retired));
-		tb_isActive.setOnClickListener(activeClicked);
+
+        setModifyClicked(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(context, NewPlayer.class);
+                intent.putExtra("PID", pId);
+                startActivity(intent);
+                return false;
+            }
+        });
+
+        setFavoriteClicked(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pId != -1) {
+                    boolean is_favorite = ((CheckBox) v).isChecked();
+                    p.setIsFavorite(is_favorite);
+                    t.setIsFavorite(is_favorite);
+                    updatePlayer();
+                }
+            }
+        });
+
+        setActiveClicked(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pId != -1) {
+                    boolean is_active = ((ToggleButton) v).isChecked();
+                    p.setIsActive(is_active);
+                    t.setIsActive(is_active);
+                    updatePlayer();
+                }
+            }
+        });
 
         return rootView;
 	}
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        context = getActivity();
-    }
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		MenuItem edit_player = menu.add(R.string.menu_modify);
-		edit_player.setIcon(R.drawable.ic_action_edit);
-		edit_player.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM
-                | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-		Intent intent = new Intent(context, NewPlayer.class);
-		intent.putExtra("PID", pId);
-		edit_player.setIntent(intent);
-
-        MenuItem favorite_player = menu.add(R.string.menu_favorite);
-        favorite_player.setTitle(R.string.menu_favorite);
-        favorite_player.setActionView(cb_isFavorite);
-        favorite_player.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM
-                | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        MenuItem active_player = menu.add(R.string.menu_active);
-        active_player.setActionView(tb_isActive);
-        active_player.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM
-                | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        mNav.setTitle(p.getNickName());
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		refreshDetails();
-	}
-
 	public void refreshDetails() {
 		if (pId != -1) {
 			try {
@@ -127,6 +103,8 @@ public class Detail_Player extends OrmLiteFragment {
 				Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 			}
 		}
+
+        mNav.setTitle(p.getNickName());
 
 		tv_playerName.setText(p.getNickName() + " (" + p.getFirstName() + ' '
 				+ p.getLastName() + ")");
@@ -153,33 +131,9 @@ public class Detail_Player extends OrmLiteFragment {
 			tv_footed.setText("R");
 		}
 
-		cb_isFavorite.setChecked(p.getIsFavorite());
-		tb_isActive.setChecked(p.getIsActive());
+		mi_isFavorite.setChecked(p.getIsFavorite());
+		mi_isActive.setChecked(p.getIsActive());
 	}
-
-	private OnClickListener favoriteClicked = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			if (pId != -1) {
-				boolean is_favorite = ((CheckBox) v).isChecked();
-				p.setIsFavorite(is_favorite);
-				t.setIsFavorite(is_favorite);
-				updatePlayer();
-			}
-		}
-	};
-
-	private OnClickListener activeClicked = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			if (pId != -1) {
-				boolean is_active = ((ToggleButton) v).isChecked();
-				p.setIsActive(is_active);
-				t.setIsActive(is_active);
-				updatePlayer();
-			}
-		}
-	};
 
 	private void updatePlayer() {
 		try {

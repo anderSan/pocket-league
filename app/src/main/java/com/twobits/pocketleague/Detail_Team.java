@@ -1,7 +1,5 @@
 package com.twobits.pocketleague;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,10 +13,10 @@ import android.widget.CheckBox;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.backend.MenuContainerActivity;
-import com.twobits.pocketleague.db.OrmLiteFragment;
+import com.twobits.pocketleague.backend.Fragment_Detail;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.db.tables.TeamMember;
@@ -26,10 +24,8 @@ import com.twobits.pocketleague.db.tables.TeamMember;
 import java.sql.SQLException;
 import java.util.List;
 
-public class Detail_Team extends OrmLiteFragment {
-	private static final String LOGTAG = "Detail_Team";
-    private View rootView;
-    private Context context;
+public class Detail_Team extends Fragment_Detail {
+	static final String LOGTAG = "Detail_Team";
 
 	Long tId;
 	Team t;
@@ -40,15 +36,6 @@ public class Detail_Team extends OrmLiteFragment {
 	TextView tv_teamName;
 	TextView tv_teamId;
 	TextView tv_members;
-	CheckBox cb_isFavorite;
-	Switch sw_isActive;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        setRetainInstance(true);
-    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,39 +52,41 @@ public class Detail_Team extends OrmLiteFragment {
 		tv_teamName = (TextView) rootView.findViewById(R.id.tDet_name);
 		tv_teamId = (TextView) rootView.findViewById(R.id.tDet_id);
 		tv_members = (TextView) rootView.findViewById(R.id.tDet_members);
-		cb_isFavorite = (CheckBox) rootView.findViewById(R.id.tDet_isFavorite);
-		cb_isFavorite.setOnClickListener(favoriteClicked);
-		sw_isActive = (Switch) rootView.findViewById(R.id.tDet_isActive);
-		sw_isActive.setOnClickListener(activeClicked);
+
+        setModifyClicked(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(context, NewTeam.class);
+                intent.putExtra("TID", tId);
+                startActivity(intent);
+                return false;
+            }
+        });
+
+        setFavoriteClicked(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tId != -1) {
+                    t.setIsFavorite(((CheckBox) v).isChecked());
+                    updateTeam();
+                }
+            }
+        });
+
+        setActiveClicked(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tId != -1) {
+                    t.setIsActive(((ToggleButton) v).isChecked());
+                    updateTeam();
+                }
+            }
+        });
 
         return rootView;
 	}
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        context = getActivity();
-    }
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		MenuItem fav = menu.add(R.string.menu_modify);
-		fav.setIcon(R.drawable.ic_action_edit);
-		fav.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-		Intent intent = new Intent(context, NewTeam.class);
-		intent.putExtra("TID", tId);
-		fav.setIntent(intent);
-
-        mNav.setTitle(t.getTeamName());
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		refreshDetails();
-	}
-
 	public void refreshDetails() {
 		String memberNicks = "";
 		if (tId != -1) {
@@ -122,32 +111,15 @@ public class Detail_Team extends OrmLiteFragment {
 			}
 		}
 
+        mNav.setTitle(t.getTeamName());
+
 		tv_teamName.setText(t.getTeamName());
 		tv_teamId.setText(String.valueOf(t.getId()));
 		tv_members.setText(memberNicks);
-		cb_isFavorite.setChecked(t.getIsFavorite());
-		sw_isActive.setChecked(t.getIsActive());
+
+		mi_isFavorite.setChecked(t.getIsFavorite());
+		mi_isActive.setChecked(t.getIsActive());
 	}
-
-	private OnClickListener favoriteClicked = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			if (tId != -1) {
-				t.setIsFavorite(((CheckBox) v).isChecked());
-				updateTeam();
-			}
-		}
-	};
-
-	private OnClickListener activeClicked = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			if (tId != -1) {
-				t.setIsActive(((Switch) v).isChecked());
-				updateTeam();
-			}
-		}
-	};
 
 	private void updateTeam() {
 		try {

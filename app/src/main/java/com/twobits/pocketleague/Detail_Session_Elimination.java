@@ -13,7 +13,7 @@ import com.twobits.pocketleague.enums.SessionType;
 import java.sql.SQLException;
 
 public class Detail_Session_Elimination extends Detail_Session_Base {
-	private static final String LOGTAG = "Detail_Session_DblElim";
+	static final String LOGTAG = "Detail_Session_DblElim";
 	private BracketHolder bracketHolder = null;
 
 	public void createSessionLayout() {

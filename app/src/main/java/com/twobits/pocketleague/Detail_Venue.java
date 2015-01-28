@@ -1,7 +1,5 @@
 package com.twobits.pocketleague;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,18 +13,17 @@ import android.widget.CheckBox;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.backend.MenuContainerActivity;
+import com.twobits.pocketleague.backend.Fragment_Detail;
 import com.twobits.pocketleague.db.OrmLiteFragment;
 import com.twobits.pocketleague.db.tables.Venue;
 
 import java.sql.SQLException;
 
-public class Detail_Venue extends OrmLiteFragment {
-	private static final String LOGTAG = "Detail_Venue";
-    private View rootView;
-    private Context context;
+public class Detail_Venue extends Fragment_Detail {
+	static final String LOGTAG = "Detail_Venue";
 
 	Long vId;
 	Venue v;
@@ -34,15 +31,6 @@ public class Detail_Venue extends OrmLiteFragment {
 
 	TextView tv_venueName;
 	TextView tv_venueId;
-	CheckBox cb_isFavorite;
-	Switch sw_isActive;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        setRetainInstance(true);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,75 +44,58 @@ public class Detail_Venue extends OrmLiteFragment {
 
 		tv_venueName = (TextView) rootView.findViewById(R.id.vDet_name);
 		tv_venueId = (TextView) rootView.findViewById(R.id.vDet_id);
-		cb_isFavorite = (CheckBox) rootView.findViewById(R.id.vDet_isFavorite);
-		cb_isFavorite.setOnClickListener(favoriteClicked);
-		sw_isActive = (Switch) rootView.findViewById(R.id.vDet_isActive);
-		sw_isActive.setOnClickListener(activeClicked);
+
+        setModifyClicked(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(context, NewVenue.class);
+                intent.putExtra("VID", vId);
+                startActivity(intent);
+                return false;
+            }
+        });
+
+        setFavoriteClicked(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (vId != -1) {
+                    v.setIsFavorite(((CheckBox) view).isChecked());
+                    updateVenue();
+                }
+            }
+        });
+
+        setActiveClicked(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (vId != -1) {
+                    v.setIsActive(((ToggleButton) view).isChecked());
+                    updateVenue();
+                }
+            }
+        });
 
         return rootView;
 	}
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        context = getActivity();
-    }
+	public void refreshDetails() {
+        if (vId != -1) {
+            try {
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		MenuItem fav = menu.add(R.string.menu_modify);
-		fav.setIcon(R.drawable.ic_action_edit);
-		fav.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-		Intent intent = new Intent(context, NewVenue.class);
-		intent.putExtra("VID", vId);
-        fav.setIntent(intent);
+                v = vDao.queryForId(vId);
+            } catch (SQLException e) {
+                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
 
         mNav.setTitle(v.getName());
+
+        tv_venueName.setText(v.getName());
+        tv_venueId.setText(String.valueOf(v.getId()));
+
+        mi_isFavorite.setChecked(v.getIsFavorite());
+        mi_isActive.setChecked(v.getIsActive());
     }
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		refreshDetails();
-	}
-
-	public void refreshDetails() {
-		if (vId != -1) {
-			try {
-
-				v = vDao.queryForId(vId);
-			} catch (SQLException e) {
-				Toast.makeText(context, e.getMessage(),
-						Toast.LENGTH_LONG).show();
-			}
-		}
-
-		tv_venueName.setText(v.getName());
-		tv_venueId.setText(String.valueOf(v.getId()));
-		cb_isFavorite.setChecked(v.getIsFavorite());
-		sw_isActive.setChecked(v.getIsActive());
-	}
-
-	private OnClickListener favoriteClicked = new OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			if (vId != -1) {
-				v.setIsFavorite(((CheckBox) view).isChecked());
-				updateVenue();
-			}
-		}
-	};
-
-	private OnClickListener activeClicked = new OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			if (vId != -1) {
-				v.setIsActive(((Switch) view).isChecked());
-				updateVenue();
-			}
-		}
-	};
 
 	private void updateVenue() {
 		try {
