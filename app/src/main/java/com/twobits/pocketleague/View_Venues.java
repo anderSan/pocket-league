@@ -38,6 +38,7 @@ public class View_Venues extends OrmLiteFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			                 Bundle savedInstanceState) {
         mNav.setTitle("Venues");
+        mNav.setDrawerItemChecked(5);
 		rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 
         lv = (ListView) rootView.findViewById(R.id.dbListing);

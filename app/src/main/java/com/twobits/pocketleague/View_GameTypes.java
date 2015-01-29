@@ -44,6 +44,7 @@ public class View_GameTypes extends OrmLiteFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
         mNav.setTitle("Select Game");
+        mNav.setDrawerItemChecked(2);
 		rootView = inflater.inflate(R.layout.fragment_view_gametypes, container, false);
 
 		gv = (GridView) rootView.findViewById(R.id.gametypes_view);

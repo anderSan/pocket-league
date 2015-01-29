@@ -36,6 +36,7 @@ public class View_Sessions extends OrmLiteFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mNav.setTitle("Sessions");
+        mNav.setDrawerItemChecked(0);
         rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 
         lv = (ListView) rootView.findViewById(R.id.dbListing);

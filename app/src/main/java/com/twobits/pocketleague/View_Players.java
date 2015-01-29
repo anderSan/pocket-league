@@ -35,6 +35,7 @@ public class View_Players extends OrmLiteFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mNav.setTitle("Players");
+        mNav.setDrawerItemChecked(3);
         rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 
         lv = (ListView) rootView.findViewById(R.id.dbListing);

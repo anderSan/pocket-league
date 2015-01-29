@@ -185,7 +185,10 @@ public class PocketLeague extends MenuContainerActivity implements NavigationInt
         // fragment.setArguments(args);
 
         if (fragment != null) {
-            mFragmentManager.popBackStack();
+            if (mFragmentManager.getBackStackEntryCount() > 0) {
+                String f_name = mFragmentManager.getBackStackEntryAt(0).getName();
+                mFragmentManager.popBackStack(f_name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
             if (!label.equals("Sessions")) {
                 FragmentTransaction ft = mFragmentManager.beginTransaction();
                 ft.replace(R.id.content_frame, fragment);
@@ -193,8 +196,6 @@ public class PocketLeague extends MenuContainerActivity implements NavigationInt
                 ft.commit();
             }
 
-            // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(position, true);
             mDrawerLayout.closeDrawer(mDrawerList);
         }
     }
@@ -205,6 +206,10 @@ public class PocketLeague extends MenuContainerActivity implements NavigationInt
         mTitle = "(" + currentGameType.toString() + ") " + title;
 
         getActionBar().setTitle(mTitle);
+    }
+
+    public void setDrawerItemChecked(int position) {
+        mDrawerList.setItemChecked(position, true);
     }
 
     /**
