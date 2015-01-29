@@ -14,31 +14,10 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         />
-    
-    <CheckBox 
-    	android:id="@+id/vDet_isFavorite"
-    	android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    	android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-    	android:layout_marginLeft="16dp"
-    	style="?android:attr/starStyle"
-    	/>
-    
-    <Switch 
-    	android:id="@+id/vDet_isActive"
-    	android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    	android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-    	android:layout_marginLeft="16dp"
-    	android:textOn="Active"
-    	android:textOff="Retired"
-    	/>
-    
+
     <TextView
         android:id="@+id/vDet_id"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -3,21 +3,17 @@ package com.twobits.pocketleague;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.Fragment_Detail;
-import com.twobits.pocketleague.db.OrmLiteFragment;
 import com.twobits.pocketleague.db.tables.Venue;
 
 import java.sql.SQLException;
