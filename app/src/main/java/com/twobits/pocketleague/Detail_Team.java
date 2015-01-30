@@ -1,5 +1,6 @@
 package com.twobits.pocketleague;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,22 +35,8 @@ public class Detail_Team extends Fragment_Detail {
 	TextView tv_teamId;
 	TextView tv_members;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.activity_detail_team, container, false);
-
-        Bundle args = getArguments();
-        tId = args.getLong("TID", -1);
-
-		tDao = Team.getDao(context);
-		pDao = Player.getDao(context);
-		tmDao = TeamMember.getDao(context);
-
-		tv_teamName = (TextView) rootView.findViewById(R.id.tDet_name);
-		tv_teamId = (TextView) rootView.findViewById(R.id.tDet_id);
-		tv_members = (TextView) rootView.findViewById(R.id.tDet_members);
-
+    @Override
+    public void onAttach(Activity activity) {
         setModifyClicked(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -79,6 +66,24 @@ public class Detail_Team extends Fragment_Detail {
                 }
             }
         });
+        super.onAttach(activity);
+    }
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+		rootView = inflater.inflate(R.layout.activity_detail_team, container, false);
+
+        Bundle args = getArguments();
+        tId = args.getLong("TID", -1);
+
+		tDao = Team.getDao(context);
+		pDao = Player.getDao(context);
+		tmDao = TeamMember.getDao(context);
+
+		tv_teamName = (TextView) rootView.findViewById(R.id.tDet_name);
+		tv_teamId = (TextView) rootView.findViewById(R.id.tDet_id);
+		tv_members = (TextView) rootView.findViewById(R.id.tDet_members);
 
         return rootView;
 	}

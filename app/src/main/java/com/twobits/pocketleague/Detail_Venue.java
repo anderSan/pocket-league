@@ -1,5 +1,6 @@
 package com.twobits.pocketleague;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,18 +30,7 @@ public class Detail_Venue extends Fragment_Detail {
 	TextView tv_venueId;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_detail_venue, container, false);
-
-        Bundle args = getArguments();
-        vId = args.getLong("VID", -1);
-
-		vDao = Venue.getDao(context);
-
-		tv_venueName = (TextView) rootView.findViewById(R.id.vDet_name);
-		tv_venueId = (TextView) rootView.findViewById(R.id.vDet_id);
-
+    public void onAttach(Activity activity) {
         setModifyClicked(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -70,6 +60,21 @@ public class Detail_Venue extends Fragment_Detail {
                 }
             }
         });
+        super.onAttach(activity);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.activity_detail_venue, container, false);
+
+        Bundle args = getArguments();
+        vId = args.getLong("VID", -1);
+
+		vDao = Venue.getDao(context);
+
+		tv_venueName = (TextView) rootView.findViewById(R.id.vDet_name);
+		tv_venueId = (TextView) rootView.findViewById(R.id.vDet_id);
 
         return rootView;
 	}

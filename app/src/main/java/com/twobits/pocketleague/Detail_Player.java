@@ -2,6 +2,7 @@ package com.twobits.pocketleague;
 
 import java.sql.SQLException;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -39,23 +40,7 @@ public class Detail_Player extends Fragment_Detail {
 	TextView tv_footed;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_detail_player, container, false);
-
-        Bundle args = getArguments();
-        pId = args.getLong("PID", -1);
-
-		pDao = Player.getDao(context);
-		tDao = Team.getDao(context);
-
-		tv_playerName = (TextView) rootView.findViewById(R.id.pDet_name);
-		tv_playerId = (TextView) rootView.findViewById(R.id.pDet_id);
-		tv_height = (TextView) rootView.findViewById(R.id.pDet_height);
-		tv_weight = (TextView) rootView.findViewById(R.id.pDet_weight);
-		tv_handed = (TextView) rootView.findViewById(R.id.pDet_handed);
-		tv_footed = (TextView) rootView.findViewById(R.id.pDet_footed);
-
+    public void onAttach(Activity activity) {
         setModifyClicked(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -89,6 +74,26 @@ public class Detail_Player extends Fragment_Detail {
                 }
             }
         });
+        super.onAttach(activity);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.activity_detail_player, container, false);
+
+        Bundle args = getArguments();
+        pId = args.getLong("PID", -1);
+
+		pDao = Player.getDao(context);
+		tDao = Team.getDao(context);
+
+		tv_playerName = (TextView) rootView.findViewById(R.id.pDet_name);
+		tv_playerId = (TextView) rootView.findViewById(R.id.pDet_id);
+		tv_height = (TextView) rootView.findViewById(R.id.pDet_height);
+		tv_weight = (TextView) rootView.findViewById(R.id.pDet_weight);
+		tv_handed = (TextView) rootView.findViewById(R.id.pDet_handed);
+		tv_footed = (TextView) rootView.findViewById(R.id.pDet_footed);
 
         return rootView;
 	}

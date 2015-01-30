@@ -12,6 +12,7 @@ import com.twobits.pocketleague.R;
 import com.twobits.pocketleague.db.OrmLiteFragment;
 
 public class Fragment_Detail extends OrmLiteFragment {
+    public static final String LOGTAG = "Fragment_Detail";
     public MenuItem mi_modify;
     public CheckBox mi_isFavorite;
     public ToggleButton mi_isActive;
