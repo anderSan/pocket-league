@@ -15,27 +15,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         />
     
-    <CheckBox 
-    	android:id="@+id/sDet_isFavorite"
-    	android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    	android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-    	android:layout_marginStart="16dp"
-    	style="?android:attr/starStyle"
-    	/>
-    
-    <Switch 
-    	android:id="@+id/sDet_isActive"
-    	android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    	android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-    	android:layout_marginStart="16dp"
-    	android:textOn="Open"
-    	android:textOff="Closed"
-    	/>
-    
     <TextView
         android:id="@+id/sDet_id"
         android:layout_alignParentStart="true"
@@ -57,7 +36,7 @@
     	android:layout_width="match_parent"
     	android:layout_height="wrap_content"
     	android:layout_below="@id/sDet_ruleSet"
-    	android:layout_above="@id/sDet_isActive"
+    	android:layout_above="@id/sDet_id"
     	android:layout_marginTop="20dp"
     	/>
     

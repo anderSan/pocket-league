@@ -20,6 +20,7 @@ import com.twobits.pocketleague.backend.MenuContainerActivity;
 import com.twobits.pocketleague.backend.NavDrawerAdapter;
 import com.twobits.pocketleague.backend.NavDrawerItem;
 import com.twobits.pocketleague.backend.NavigationInterface;
+import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
 import java.util.ArrayList;
@@ -240,6 +241,28 @@ public class PocketLeague extends MenuContainerActivity implements NavigationInt
 
     public void viewSessions() {
         selectItem(0, "Sessions");
+    }
+
+    public void viewSessionDetails(Long sId, SessionType session_type) {
+
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) session_type.toClass().newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        Bundle args = new Bundle();
+        args.putLong("SID", sId);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.content_frame, fragment).addToBackStack(null);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.commit();
     }
 
     public void viewPlayerDetails(Long pId) {

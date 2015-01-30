@@ -97,9 +97,10 @@ public class List_Sessions extends Fragment_TopList {
             SessionType session_type = session_list.get(position).getSessionType();
 
             //            mNav.viewSessionDetails(sId);
-            Intent intent = new Intent(context, session_type.toClass());
-            intent.putExtra("SID", sId);
-            startActivity(intent);
+//            Intent intent = new Intent(context, session_type.toClass());
+//            intent.putExtra("SID", sId);
+//            startActivity(intent);
+            mNav.viewSessionDetails(sId, session_type);
         }
     };
 

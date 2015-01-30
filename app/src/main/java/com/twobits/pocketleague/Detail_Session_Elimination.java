@@ -1,7 +1,9 @@
 package com.twobits.pocketleague;
 
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -16,12 +18,13 @@ public class Detail_Session_Elimination extends Detail_Session_Base {
 	static final String LOGTAG = "Detail_Session_DblElim";
 	private BracketHolder bracketHolder = null;
 
-	public void createSessionLayout() {
-		setContentView(R.layout.activity_detail_session_singleelim);
-		ScrollView sv = (ScrollView) findViewById(R.id.scrollView1);
+	public void createSessionLayout(LayoutInflater inflater, ViewGroup container) {
+		rootView = inflater.inflate(R.layout.activity_detail_session_singleelim, container, false);
+		ScrollView sv = (ScrollView) rootView.findViewById(R.id.scrollView1);
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//		DisplayMetrics metrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		rootView.getMeasuredWidth();
 
 		boolean isDblElim = s.getSessionType() == SessionType.DBL_ELIM;
 		bracketHolder = new BracketHolder(sv, s, isDblElim) {
@@ -32,15 +35,14 @@ public class Detail_Session_Elimination extends Detail_Session_Base {
 						+ mInfo.getCreatable() + ", view: "
 						+ mInfo.getViewable() + ", marquee: " + mInfo.title
 						+ ", " + mInfo.subtitle);
-				mActionMode = Detail_Session_Elimination.this
-						.startActionMode(new ActionBarCallBack());
+				mActionMode = rootView.startActionMode(new ActionBarCallBack());
 				v.setSelected(true);
 			}
 		};
 	}
 
 	@Override
-	protected void onPause() {
+	public void onPause() {
 		super.onPause();
 
 		// TODO: move this to bracket.java
@@ -49,8 +51,7 @@ public class Detail_Session_Elimination extends Detail_Session_Base {
 				smDao.update(sm);
 			}
 		} catch (SQLException e) {
-			Toast.makeText(getApplicationContext(), e.getMessage(),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 

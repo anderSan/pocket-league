@@ -1,16 +1,23 @@
 package com.twobits.pocketleague.backend;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.j256.ormlite.dao.Dao;
+import com.twobits.pocketleague.NewPlayer;
 import com.twobits.pocketleague.NewSession;
 import com.twobits.pocketleague.Quick_Game;
 import com.twobits.pocketleague.R;
@@ -22,76 +29,86 @@ import com.twobits.pocketleague.db.tables.Team;
 
 import java.sql.SQLException;
 
-public class Detail_Session_Base extends MenuContainerActivity {
+public class Detail_Session_Base extends Fragment_Detail {
 	private static final String LOGTAG = "Detail_Session";
+
 	public Long sId;
 	public Session s;
+
 	public Dao<Session, Long> sDao;
 	public Dao<SessionMember, Long> smDao;
 	public Dao<GameMember, Long> gmDao;
+
 	public MatchInfo mInfo;
 	public ActionMode mActionMode;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onAttach(Activity activity) {
+        setModifyClicked(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(context, NewPlayer.class);
+                intent.putExtra("SID", sId);
+                startActivity(intent);
+                return false;
+            }
+        });
 
-		Intent intent = getIntent();
-		sId = intent.getLongExtra("SID", -1);
+        setFavoriteClicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sId != -1) {
+                    boolean is_favorite = ((CheckBox) v).isChecked();
+                    s.setIsFavorite(is_favorite);
+//                    updateSession();
+                }
+            }
+        });
+        super.onAttach(activity);
+    }
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Bundle args = getArguments();
+		sId = args.getLong("SID", -1);
 
 		if (sId != -1) {
 			try {
-				sDao = Session.getDao(this);
-				smDao = SessionMember.getDao(this);
-				gmDao = GameMember.getDao(this);
+				sDao = Session.getDao(context);
+				smDao = SessionMember.getDao(context);
+				gmDao = GameMember.getDao(context);
 
 				s = sDao.queryForId(sId);
 			} catch (SQLException e) {
-				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+				Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 			}
 		}
-		createSessionLayout();
+
+        createSessionLayout(inflater, container);
+
+        return rootView;
 	}
 
-	public void createSessionLayout() {
-		setContentView(R.layout.activity_detail_session);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem fav = menu.add(R.string.menu_modify);
-		fav.setIcon(R.drawable.ic_action_edit);
-		fav.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-		Intent intent = new Intent(this, NewSession.class);
-		intent.putExtra("SID", sId);
-
-		fav.setIntent(intent);
-		return super.onCreateOptionsMenu(menu);
+	public void createSessionLayout(LayoutInflater inflater, ViewGroup container) {
+		rootView = inflater.inflate(R.layout.activity_detail_session, container, false);
 	}
 
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		refreshBaseDetails();
-		refreshDetails();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
 	}
 
 	public void refreshBaseDetails() {
-		TextView sName = (TextView) findViewById(R.id.sDet_name);
-		TextView sId = (TextView) findViewById(R.id.sDet_id);
-		TextView sessionRuleSet = (TextView) findViewById(R.id.sDet_ruleSet);
-		Switch sIsActive = (Switch) findViewById(R.id.sDet_isActive);
+		TextView sName = (TextView) rootView.findViewById(R.id.sDet_name);
+		TextView sId = (TextView) rootView.findViewById(R.id.sDet_id);
+		TextView sessionRuleSet = (TextView) rootView.findViewById(R.id.sDet_ruleSet);
 
 		sName.setText(s.getSessionName());
 		sId.setText(String.valueOf(s.getId()));
 		sessionRuleSet.setText(s.getRuleSet().getName());
-		sIsActive.setChecked(s.getIsActive());
+        mi_isFavorite.setChecked(s.getIsFavorite());
 	}
 
 	public void refreshDetails() {
@@ -153,10 +170,10 @@ public class Detail_Session_Base extends MenuContainerActivity {
 	}
 
 	private void createMatch() {
-		Intent intent = new Intent(this, Quick_Game.class);
-		Dao<Game, Long> gDao = Game.getDao(this);
-		Dao<GameMember, Long> gmDao = GameMember.getDao(this);
-		Dao<Team, Long> tDao = Team.getDao(this);
+		Intent intent = new Intent(context, Quick_Game.class);
+		Dao<Game, Long> gDao = Game.getDao(context);
+		Dao<GameMember, Long> gmDao = GameMember.getDao(context);
+		Dao<Team, Long> tDao = Team.getDao(context);
 
 		Game g = new Game(s, mInfo.getIdInSession(), s.getCurrentVenue(), false);
 		GameMember t1 = new GameMember(g, mInfo.getTeam1());
@@ -168,7 +185,7 @@ public class Detail_Session_Base extends MenuContainerActivity {
 			gmDao.create(t1);
 			gmDao.create(t2);
 		} catch (SQLException e) {
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 
 		intent.putExtra("gId", g.getId());
@@ -187,7 +204,7 @@ public class Detail_Session_Base extends MenuContainerActivity {
 	}
 
 	private void loadMatch(long game_id) {
-		Intent intent = new Intent(this, Quick_Game.class);
+		Intent intent = new Intent(context, Quick_Game.class);
 		intent.putExtra("gId", game_id);
 		startActivity(intent);
 	}
