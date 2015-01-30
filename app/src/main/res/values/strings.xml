@@ -37,6 +37,10 @@
 
     <string name="active">Active</string>
     <string name="retired">Retired</string>
+    <string name="open">Open</string>
+    <string name="closed">Closed</string>
+    <string name="inactive">Inactive</string>
+
 	
 	<string name="team_member_header"><u>Team members:</u></string>
 	<string name="button_newGame">New Game</string>

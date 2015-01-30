@@ -1,10 +1,9 @@
 package com.twobits.pocketleague;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,22 +13,34 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
+import com.twobits.pocketleague.backend.Fragment_TopList;
 import com.twobits.pocketleague.backend.Item_Player;
 import com.twobits.pocketleague.backend.ListAdapter_Player;
-import com.twobits.pocketleague.db.OrmLiteFragment;
 import com.twobits.pocketleague.db.tables.Player;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class View_Players extends OrmLiteFragment {
-    static final String LOGTAG = "View_Players";
+public class List_Players extends Fragment_TopList {
+    public String LOGTAG = "List_Players";
 
     ListView lv;
     private ListAdapter_Player player_adapter;
     private List<Item_Player> player_list = new ArrayList<>();
     private Dao<Player, Long> pDao = null;
+
+    @Override
+    public void onAttach(Activity activity) {
+        setAddClicked(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(context, NewPlayer.class));
+                return false;
+            }
+        });
+        super.onAttach(activity);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,25 +58,22 @@ public class View_Players extends OrmLiteFragment {
         return rootView;
     }
 
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem fav = menu.add("New Player");
-        fav.setIcon(R.drawable.ic_menu_add);
-        fav.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        fav.setIntent(new Intent(context, NewPlayer.class));
-    }
-
     @Override
-    public void onResume() {
-        super.onResume();
-        refreshListing();
-    }
-
-    protected void refreshListing() {
+    public void refreshListing() {
         player_adapter.clear();
 
         try {
+            List<Player> players;
             pDao = getHelper().getPlayerDao();
-            for (Player p : pDao) {
+
+            if (show_favorites) {
+                players = pDao.queryBuilder().where().eq(Player.IS_FAVORITE, show_favorites)
+                        .and().eq(Player.IS_ACTIVE, show_actives).query();
+            } else {
+                players = pDao.queryBuilder().where().eq(Player.IS_ACTIVE, show_actives).query();
+            }
+
+            for (Player p : players) {
                 player_adapter.add(new Item_Player(p.getId(), p.getFullName(), p.getNickName(),
                         p.getColor(), p.getIsFavorite()));
             }
@@ -74,12 +82,12 @@ public class View_Players extends OrmLiteFragment {
             loge("Retrieval of players failed. ", e);
         }
 
-        //		player_adapter.notifyDataSetChanged(); // required in case the list has changed
+//		player_adapter.notifyDataSetChanged(); // required in case the list has changed
     }
 
     private AdapterView.OnItemClickListener lvItemClicked = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Long pId = Long.valueOf(player_list.get(position).getId());
+            Long pId = player_list.get(position).getId();
             mNav.viewPlayerDetails(pId);
         }
     };

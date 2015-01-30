@@ -1,10 +1,9 @@
 package com.twobits.pocketleague;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
+import com.twobits.pocketleague.backend.Fragment_TopList;
 import com.twobits.pocketleague.backend.Item_Session;
 import com.twobits.pocketleague.backend.ListAdapter_Session;
-import com.twobits.pocketleague.db.OrmLiteFragment;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.enums.SessionType;
 
@@ -24,13 +23,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class View_Sessions extends OrmLiteFragment {
-    static final String LOGTAG = "View_Sessions";
+public class List_Sessions extends Fragment_TopList {
+    static final String LOGTAG = "List_Sessions";
 
     ListView lv;
     private ListAdapter_Session session_adapter;
     private List<Item_Session> session_list = new ArrayList<>();
     private Dao<Session, Long> sDao = null;
+
+    @Override
+    public void onAttach(Activity activity) {
+        setAddClicked(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(context, NewSession.class));
+                return false;
+            }
+        });
+        super.onAttach(activity);
+        mi_isActive.setTextOn(getString(R.string.open));
+        mi_isActive.setTextOff(getString(R.string.closed));
+        mi_isActive.setChecked(show_actives); // to update text state.
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,26 +63,22 @@ public class View_Sessions extends OrmLiteFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem fav = menu.add("New Session");
-        fav.setIcon(R.drawable.ic_menu_add);
-        fav.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        fav.setIntent(new Intent(context, NewSession.class));
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        refreshListing();
-    }
-
-    protected void refreshListing() {
+    public void refreshListing() {
         session_adapter.clear();
 
         try {
+            List<Session> sessions;
             sDao = getHelper().getSessionDao();
-            List<Session> sessions = sDao.queryBuilder().where().eq(Session.IS_ACTIVE,
-                    true).and().eq(Session.GAME_TYPE, getCurrentGameType()).query();
+
+            if (show_favorites) {
+                sessions = sDao.queryBuilder().where().eq(Session.GAME_TYPE, getCurrentGameType())
+                        .and().eq(Session.IS_FAVORITE, show_favorites)
+                        .and().eq(Session.IS_ACTIVE, show_actives).query();
+            } else {
+                sessions = sDao.queryBuilder().where().eq(Session.GAME_TYPE, getCurrentGameType())
+                        .and().eq(Session.IS_ACTIVE, show_actives).query();
+            }
+
             for (Session s : sessions) {
                 session_adapter.add(new Item_Session(s.getId(), s.getSessionName(),
                         s.getSessionType(), s.getIsFavorite()));

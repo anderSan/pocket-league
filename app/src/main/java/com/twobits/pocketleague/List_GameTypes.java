@@ -1,44 +1,30 @@
 package com.twobits.pocketleague;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-import com.twobits.pocketleague.backend.ListAdapter_GameType;
+import com.twobits.pocketleague.backend.Fragment_TopList;
 import com.twobits.pocketleague.backend.Item_GameType;
-import com.twobits.pocketleague.db.OrmLiteFragment;
+import com.twobits.pocketleague.backend.ListAdapter_GameType;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class View_GameTypes extends OrmLiteFragment {
-	private static final String LOGTAG = "View_GameTypes";
-    private View rootView;
-    private Context context;
+public class List_GameTypes extends Fragment_TopList {
+	public static final String LOGTAG = "List_GameTypes";
 
     private GridView gv;
 	private ListAdapter_GameType gametype_adapter;
 	private List<Item_GameType> gametypes_list = new ArrayList<>();
-
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
-		setRetainInstance(true);
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,33 +42,19 @@ public class View_GameTypes extends OrmLiteFragment {
 		return rootView;
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		context = getActivity();
-	}
-
+    @Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		MenuItem fav = menu.add("New Game");
-		fav.setIcon(R.drawable.ic_menu_add);
-		fav.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		fav.setIntent(new Intent(context, NewGame.class));
+
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		refreshGameTypesListing();
-	}
-
-	protected void refreshGameTypesListing() {
+	public void refreshListing() {
 		gametypes_list.clear();
 
 		for (GameType gt : GameType.values()) {
 			gametypes_list.add(new Item_GameType(gt));
 		}
 
-		gametype_adapter.notifyDataSetChanged(); // required if list has changed
+//		gametype_adapter.notifyDataSetChanged(); // required if list has changed
 	}
 
 	private OnItemClickListener gvItemClicked = new OnItemClickListener() {

@@ -80,11 +80,11 @@ public class PocketLeague extends MenuContainerActivity implements NavigationInt
         if (savedInstanceState == null) {
             if (getCurrentGameType() == GameType.UNDEFINED) {
                 mFragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, new View_GameTypes()).commit();
+                        .replace(R.id.content_frame, new List_GameTypes()).commit();
                 mDrawerList.setItemChecked(2, true);
             } else {
                 mFragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, new View_Sessions()).commit();
+                        .replace(R.id.content_frame, new List_Sessions()).commit();
                 mDrawerList.setItemChecked(0, true);
             }
         }
@@ -160,22 +160,22 @@ public class PocketLeague extends MenuContainerActivity implements NavigationInt
                 fragment = new DbSettings();
                 break;
             case "Games": // games
-                fragment = new View_GameTypes();
+                fragment = new List_GameTypes();
                 break;
             case "Players": // players
-                fragment = new View_Players();
+                fragment = new List_Players();
                 break;
             case "Preferences": // preferences
                 fragment = new Preferences();
                 break;
             case "Sessions": // sessions
-                fragment = new View_Sessions();
+                fragment = new List_Sessions();
                 break;
             case "Teams": // teams
-                fragment = new View_Teams();
+                fragment = new List_Teams();
                 break;
             case "Venues": // venues
-                fragment = new View_Venues();
+                fragment = new List_Venues();
                 break;
         }
         // update the main content by replacing fragments
