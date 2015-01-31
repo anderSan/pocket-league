@@ -23,28 +23,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class List_Teams extends Fragment_TopList {
-	static final String LOGTAG = "List_Teams";
-
     private ListView lv;
     private ListAdapter_Team team_adapter;
     private List<Item_Team> team_list = new ArrayList<>();
     private Dao<Team, Long> tDao = null;
 
-    @Override
-    public void onAttach(Activity activity) {
-        setAddClicked(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(context, NewTeam.class));
-                return false;
-            }
-        });
-        super.onAttach(activity);
+    public List_Teams() {
+        LOGTAG = "List_Teams";
     }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			                 Bundle savedInstanceState) {
+        setAddClicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(context, NewTeam.class));
+            }
+        });
+
         mNav.setTitle("Teams");
         mNav.setDrawerItemChecked(4);
 		rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
@@ -53,6 +50,8 @@ public class List_Teams extends Fragment_TopList {
 		team_adapter = new ListAdapter_Team(context, R.layout.list_item_team, team_list, cbClicked);
 		lv.setAdapter(team_adapter);
 		lv.setOnItemClickListener(lvItemClicked);
+
+        setupBarButtons();
 
         return rootView;
 	}

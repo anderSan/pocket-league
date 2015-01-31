@@ -23,28 +23,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class List_Players extends Fragment_TopList {
-    public String LOGTAG = "List_Players";
-
     ListView lv;
     private ListAdapter_Player player_adapter;
     private List<Item_Player> player_list = new ArrayList<>();
     private Dao<Player, Long> pDao = null;
 
-    @Override
-    public void onAttach(Activity activity) {
-        setAddClicked(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(context, NewPlayer.class));
-                return false;
-            }
-        });
-        super.onAttach(activity);
+    public List_Players() {
+        LOGTAG = "List_Players";
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setAddClicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(context, NewPlayer.class));
+            }
+        });
+
         mNav.setTitle("Players");
         mNav.setDrawerItemChecked(3);
         rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
@@ -54,6 +51,8 @@ public class List_Players extends Fragment_TopList {
                 cbClicked);
         lv.setAdapter(player_adapter);
         lv.setOnItemClickListener(lvItemClicked);
+
+        setupBarButtons();
 
         return rootView;
     }

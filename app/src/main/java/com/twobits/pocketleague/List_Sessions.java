@@ -24,31 +24,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class List_Sessions extends Fragment_TopList {
-    static final String LOGTAG = "List_Sessions";
-
     ListView lv;
     private ListAdapter_Session session_adapter;
     private List<Item_Session> session_list = new ArrayList<>();
     private Dao<Session, Long> sDao = null;
 
-    @Override
-    public void onAttach(Activity activity) {
-        setAddClicked(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(context, NewSession.class));
-                return false;
-            }
-        });
-        super.onAttach(activity);
-        mi_isActive.setTextOn(getString(R.string.open));
-        mi_isActive.setTextOff(getString(R.string.closed));
-        mi_isActive.setChecked(show_actives); // to update text state.
+    public List_Sessions() {
+        LOGTAG = "List_Sessions";
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setAddClicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(context, NewSession.class));
+            }
+        });
+
         mNav.setTitle("Sessions");
         mNav.setDrawerItemChecked(0);
         rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
@@ -58,6 +52,8 @@ public class List_Sessions extends Fragment_TopList {
                 session_list, cbClicked);
         lv.setAdapter(session_adapter);
         lv.setOnItemClickListener(lvItemClicked);
+
+        setupBarButtons(getString(R.string.open), getString(R.string.closed));
 
         return rootView;
     }

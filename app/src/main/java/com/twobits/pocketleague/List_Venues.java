@@ -23,30 +23,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class List_Venues extends Fragment_TopList {
-	static final String LOGTAG = "List_Venues";
-
     private ListView lv;
     private ListAdapter_Venue venue_adapter;
     private List<Item_Venue> venue_list = new ArrayList<>();
     private Dao<Venue, Long> vDao = null;
 
-    @Override
-    public void onAttach(Activity activity) {
-        setAddClicked(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(context, NewVenue.class));
-                return false;
-            }
-        });
-        super.onAttach(activity);
-        mi_isActive.setTextOff(getString(R.string.inactive));
-        mi_isActive.setChecked(show_actives); // to update text state.
+    public List_Venues() {
+        LOGTAG = "List_Venues";
     }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			                 Bundle savedInstanceState) {
+        setAddClicked(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(context, NewVenue.class));
+            }
+        });
         mNav.setTitle("Venues");
         mNav.setDrawerItemChecked(5);
 		rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
@@ -55,6 +49,8 @@ public class List_Venues extends Fragment_TopList {
         venue_adapter = new ListAdapter_Venue(context, R.layout.list_item_venue, venue_list, cbClicked);
         lv.setAdapter(venue_adapter);
         lv.setOnItemClickListener(lvItemClicked);
+
+        setupBarButtons(getString(R.string.open), getString(R.string.closed));
 
 		return rootView;
 	}
