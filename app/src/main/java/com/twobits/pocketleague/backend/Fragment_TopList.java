@@ -87,7 +87,7 @@ public abstract class Fragment_TopList extends OrmLiteFragment {
     }
 
     public void setupBarButtons(String active_on, String active_off) {
-        bar_add = (ImageButton) rootView.findViewById(R.id.bar_modify);
+        bar_add = (ImageButton) rootView.findViewById(R.id.bar_add);
         bar_add.setOnClickListener(addClicked);
         bar_isFavorite = (ToggleButton) rootView.findViewById(R.id.bar_favorite);
         bar_isFavorite.setOnClickListener(favoriteClicked);

@@ -3,20 +3,23 @@ package com.twobits.pocketleague;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.twobits.pocketleague.backend.MenuContainerActivity;
 import com.twobits.pocketleague.backend.NavDrawerAdapter;
 import com.twobits.pocketleague.backend.NavDrawerItem;
 import com.twobits.pocketleague.backend.NavigationInterface;
@@ -26,7 +29,7 @@ import com.twobits.pocketleague.gameslibrary.GameType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PocketLeague extends MenuContainerActivity implements NavigationInterface {
+public class PocketLeague extends ActionBarActivity implements NavigationInterface {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -36,13 +39,25 @@ public class PocketLeague extends MenuContainerActivity implements NavigationInt
     NavDrawerItem[] mDrawerItems;
     FragmentManager mFragmentManager;
 
+    public static final String APP_PREFS = "PocketLeaguePreferences";
+
+    private SharedPreferences settings;
+    private SharedPreferences.Editor prefs_editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        settings = this.getSharedPreferences(APP_PREFS, 0);
+        prefs_editor = settings.edit();
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         setContentView(R.layout.activity_pocket_league);
 
         mFragmentManager = getFragmentManager();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
 
         mTitle = mDrawerTitle = getTitle();
         mDrawerItems = makeDrawerItemArray();
@@ -57,7 +72,7 @@ public class PocketLeague extends MenuContainerActivity implements NavigationInt
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         //		getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
@@ -67,12 +82,12 @@ public class PocketLeague extends MenuContainerActivity implements NavigationInt
                 R.string.drawer_open, /* "open drawer" description for accessibility */
                 R.string.drawer_close /* "close drawer" description for accessibility */) {
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
+                getSupportActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
+                getSupportActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -136,6 +151,9 @@ public class PocketLeague extends MenuContainerActivity implements NavigationInt
             // Toast.LENGTH_LONG).show();
             // }
             // return true;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -206,7 +224,7 @@ public class PocketLeague extends MenuContainerActivity implements NavigationInt
         GameType currentGameType = getCurrentGameType();
         mTitle = "(" + currentGameType.toString() + ") " + title;
 
-        getActionBar().setTitle(mTitle);
+        getSupportActionBar().setTitle(mTitle);
     }
 
     public void setDrawerItemChecked(int position) {
@@ -237,6 +255,24 @@ public class PocketLeague extends MenuContainerActivity implements NavigationInt
         // GameInProgress.class);
         // intent.putExtra("GID", gId);
         // startActivity(intent);
+    }
+
+    public String getPreference(String pref_name, String pref_default) {
+        return settings.getString(pref_name, pref_default);
+    }
+
+    public void setPreference(String pref_name, String pref_value) {
+        prefs_editor.putString(pref_name, pref_value);
+        prefs_editor.commit();
+    }
+
+    public GameType getCurrentGameType() {
+        return GameType.valueOf(getPreference("currentGameType",
+                GameType.UNDEFINED.name()));
+    }
+
+    public void setCurrentGameType(GameType gametype) {
+        setPreference("currentGameType", gametype.name());
     }
 
     public void viewSessions() {
