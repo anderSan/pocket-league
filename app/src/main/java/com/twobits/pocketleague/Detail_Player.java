@@ -1,18 +1,11 @@
 package com.twobits.pocketleague;
 
-import java.sql.SQLException;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -23,9 +16,9 @@ import com.twobits.pocketleague.db.DatabaseCommonQueue;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Team;
 
-public class Detail_Player extends Fragment_Detail {
-	static final String LOGTAG = "Detail_Player";
+import java.sql.SQLException;
 
+public class Detail_Player extends Fragment_Detail {
 	Long pId;
 	Player p;
 	Team t;
@@ -39,15 +32,19 @@ public class Detail_Player extends Fragment_Detail {
 	TextView tv_handed;
 	TextView tv_footed;
 
+    public Detail_Player() {
+        LOGTAG = "Detail_Player";
+    }
+
     @Override
-    public void onAttach(Activity activity) {
-        setModifyClicked(new MenuItem.OnMenuItemClickListener() {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        setModifyClicked(new OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public void onClick(View v) {
                 Intent intent = new Intent(context, NewPlayer.class);
                 intent.putExtra("PID", pId);
                 startActivity(intent);
-                return false;
             }
         });
 
@@ -55,7 +52,7 @@ public class Detail_Player extends Fragment_Detail {
             @Override
             public void onClick(View v) {
                 if (pId != -1) {
-                    boolean is_favorite = ((CheckBox) v).isChecked();
+                    boolean is_favorite = ((ToggleButton) v).isChecked();
                     p.setIsFavorite(is_favorite);
                     t.setIsFavorite(is_favorite);
                     updatePlayer();
@@ -74,12 +71,7 @@ public class Detail_Player extends Fragment_Detail {
                 }
             }
         });
-        super.onAttach(activity);
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_detail_player, container, false);
 
         Bundle args = getArguments();
@@ -95,11 +87,14 @@ public class Detail_Player extends Fragment_Detail {
 		tv_handed = (TextView) rootView.findViewById(R.id.pDet_handed);
 		tv_footed = (TextView) rootView.findViewById(R.id.pDet_footed);
 
+        setupBarButtons();
+
         return rootView;
 	}
 
     @Override
 	public void refreshDetails() {
+
 		if (pId != -1) {
 			try {
 				p = pDao.queryForId(pId);
@@ -136,8 +131,8 @@ public class Detail_Player extends Fragment_Detail {
 			tv_footed.setText("R");
 		}
 
-		mi_isFavorite.setChecked(p.getIsFavorite());
-		mi_isActive.setChecked(p.getIsActive());
+		bar_isFavorite.setChecked(p.getIsFavorite());
+		bar_isActive.setChecked(p.getIsActive());
 	}
 
 	private void updatePlayer() {

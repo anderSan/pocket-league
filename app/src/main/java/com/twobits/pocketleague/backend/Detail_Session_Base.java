@@ -1,6 +1,5 @@
 package com.twobits.pocketleague.backend;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ActionMode;
@@ -11,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -30,8 +28,6 @@ import com.twobits.pocketleague.db.tables.Team;
 import java.sql.SQLException;
 
 public class Detail_Session_Base extends Fragment_Detail {
-	private static final String LOGTAG = "Detail_Session";
-
 	public Long sId;
 	public Session s;
 
@@ -42,15 +38,19 @@ public class Detail_Session_Base extends Fragment_Detail {
 	public MatchInfo mInfo;
 	public ActionMode mActionMode;
 
-    @Override
-    public void onAttach(Activity activity) {
-        setModifyClicked(new MenuItem.OnMenuItemClickListener() {
+    public Detail_Session_Base() {
+        LOGTAG = "Detail_Session";
+    }
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        setModifyClicked(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(context, NewPlayer.class);
+            public void onClick(View v) {
+                Intent intent = new Intent(context, NewSession.class);
                 intent.putExtra("SID", sId);
                 startActivity(intent);
-                return false;
             }
         });
 
@@ -58,18 +58,13 @@ public class Detail_Session_Base extends Fragment_Detail {
             @Override
             public void onClick(View v) {
                 if (sId != -1) {
-                    boolean is_favorite = ((CheckBox) v).isChecked();
+                    boolean is_favorite = ((ToggleButton) v).isChecked();
                     s.setIsFavorite(is_favorite);
-//                    updateSession();
+                    updateSession();
                 }
             }
         });
-        super.onAttach(activity);
-    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
         Bundle args = getArguments();
 		sId = args.getLong("SID", -1);
 
@@ -86,6 +81,8 @@ public class Detail_Session_Base extends Fragment_Detail {
 		}
 
         createSessionLayout(inflater, container);
+        setupBarButtons();
+        bar_isActive.setVisibility(View.GONE);
 
         return rootView;
 	}
@@ -108,7 +105,7 @@ public class Detail_Session_Base extends Fragment_Detail {
 		sName.setText(s.getSessionName());
 		sId.setText(String.valueOf(s.getId()));
 		sessionRuleSet.setText(s.getRuleSet().getName());
-        mi_isFavorite.setChecked(s.getIsFavorite());
+        bar_isFavorite.setChecked(s.getIsFavorite());
 	}
 
 	public void refreshDetails() {
@@ -208,4 +205,13 @@ public class Detail_Session_Base extends Fragment_Detail {
 		intent.putExtra("gId", game_id);
 		startActivity(intent);
 	}
+
+    private void updateSession() {
+        try {
+            sDao.update(s);
+        } catch (SQLException e) {
+            loge("Could not update session", e);
+            e.printStackTrace();
+        }
+    }
 }

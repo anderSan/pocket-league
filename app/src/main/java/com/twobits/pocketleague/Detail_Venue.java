@@ -1,14 +1,11 @@
 package com.twobits.pocketleague;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -20,8 +17,6 @@ import com.twobits.pocketleague.db.tables.Venue;
 import java.sql.SQLException;
 
 public class Detail_Venue extends Fragment_Detail {
-	static final String LOGTAG = "Detail_Venue";
-
 	Long vId;
 	Venue v;
 	Dao<Venue, Long> vDao;
@@ -29,15 +24,19 @@ public class Detail_Venue extends Fragment_Detail {
 	TextView tv_venueName;
 	TextView tv_venueId;
 
+    public Detail_Venue() {
+        LOGTAG = "Detail_Venue";
+    }
+
     @Override
-    public void onAttach(Activity activity) {
-        setModifyClicked(new MenuItem.OnMenuItemClickListener() {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        setModifyClicked(new OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public void onClick(View v) {
                 Intent intent = new Intent(context, NewVenue.class);
                 intent.putExtra("VID", vId);
                 startActivity(intent);
-                return false;
             }
         });
 
@@ -45,7 +44,7 @@ public class Detail_Venue extends Fragment_Detail {
             @Override
             public void onClick(View view) {
                 if (vId != -1) {
-                    v.setIsFavorite(((CheckBox) view).isChecked());
+                    v.setIsFavorite(((ToggleButton) view).isChecked());
                     updateVenue();
                 }
             }
@@ -60,24 +59,23 @@ public class Detail_Venue extends Fragment_Detail {
                 }
             }
         });
-        super.onAttach(activity);
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_detail_venue, container, false);
 
         Bundle args = getArguments();
         vId = args.getLong("VID", -1);
 
-		vDao = Venue.getDao(context);
+        vDao = Venue.getDao(context);
 
-		tv_venueName = (TextView) rootView.findViewById(R.id.vDet_name);
-		tv_venueId = (TextView) rootView.findViewById(R.id.vDet_id);
+        tv_venueName = (TextView) rootView.findViewById(R.id.vDet_name);
+        tv_venueId = (TextView) rootView.findViewById(R.id.vDet_id);
+
+        setupBarButtons();
+        bar_isActive.setTextOn(getString(R.string.open));
+        bar_isActive.setTextOff(getString(R.string.closed));
 
         return rootView;
-	}
+      }
 
 	public void refreshDetails() {
         if (vId != -1) {
@@ -94,8 +92,8 @@ public class Detail_Venue extends Fragment_Detail {
         tv_venueName.setText(v.getName());
         tv_venueId.setText(String.valueOf(v.getId()));
 
-        mi_isFavorite.setChecked(v.getIsFavorite());
-        mi_isActive.setChecked(v.getIsActive());
+        bar_isFavorite.setChecked(v.getIsFavorite());
+        bar_isActive.setChecked(v.getIsActive());
     }
 
 	private void updateVenue() {

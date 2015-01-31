@@ -12,8 +12,8 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.twobits.pocketleague.backend.NavigationInterface;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
-public class OrmLiteFragment extends Fragment {
-	public static String LOGTAG = "OrmLiteFragment";
+public abstract class OrmLiteFragment extends Fragment {
+	protected String LOGTAG = "OrmLiteFragment";
 	public static final String APP_PREFS = "PocketLeaguePreferences";
     public View rootView;
     public Context context;

@@ -1,14 +1,11 @@
 package com.twobits.pocketleague;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -23,8 +20,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Detail_Team extends Fragment_Detail {
-	static final String LOGTAG = "Detail_Team";
-
 	Long tId;
 	Team t;
 	Dao<Team, Long> tDao;
@@ -35,15 +30,19 @@ public class Detail_Team extends Fragment_Detail {
 	TextView tv_teamId;
 	TextView tv_members;
 
-    @Override
-    public void onAttach(Activity activity) {
-        setModifyClicked(new MenuItem.OnMenuItemClickListener() {
+    public Detail_Team() {
+        LOGTAG = "Detail_Team";
+    }
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        setModifyClicked(new OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public void onClick(View v) {
                 Intent intent = new Intent(context, NewTeam.class);
                 intent.putExtra("TID", tId);
                 startActivity(intent);
-                return false;
             }
         });
 
@@ -51,7 +50,7 @@ public class Detail_Team extends Fragment_Detail {
             @Override
             public void onClick(View v) {
                 if (tId != -1) {
-                    t.setIsFavorite(((CheckBox) v).isChecked());
+                    t.setIsFavorite(((ToggleButton) v).isChecked());
                     updateTeam();
                 }
             }
@@ -66,12 +65,7 @@ public class Detail_Team extends Fragment_Detail {
                 }
             }
         });
-        super.onAttach(activity);
-    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.activity_detail_team, container, false);
 
         Bundle args = getArguments();
@@ -84,6 +78,8 @@ public class Detail_Team extends Fragment_Detail {
 		tv_teamName = (TextView) rootView.findViewById(R.id.tDet_name);
 		tv_teamId = (TextView) rootView.findViewById(R.id.tDet_id);
 		tv_members = (TextView) rootView.findViewById(R.id.tDet_members);
+
+        setupBarButtons();
 
         return rootView;
 	}
@@ -119,8 +115,8 @@ public class Detail_Team extends Fragment_Detail {
 		tv_teamId.setText(String.valueOf(t.getId()));
 		tv_members.setText(memberNicks);
 
-		mi_isFavorite.setChecked(t.getIsFavorite());
-		mi_isActive.setChecked(t.getIsActive());
+		bar_isFavorite.setChecked(t.getIsFavorite());
+		bar_isActive.setChecked(t.getIsActive());
 	}
 
 	private void updateTeam() {

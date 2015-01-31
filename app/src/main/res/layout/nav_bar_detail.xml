@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/CadetBlue">
+
+    <ImageButton
+        android:id="@+id/bar_modify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/menu_modify"
+        android:src="@drawable/ic_action_edit"/>
+
+    <ToggleButton
+        android:id="@+id/bar_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textOn="@string/menu_favorite"
+        android:textOff="@string/menu_favorite"
+        />
+
+    <ToggleButton
+        android:id="@+id/bar_active"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="New ToggleButton"
+        android:textOn="@string/active"
+        android:textOff="@string/retired"
+        />
+
+</LinearLayout>
