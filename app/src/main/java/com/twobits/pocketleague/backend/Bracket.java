@@ -105,7 +105,7 @@ public class Bracket {
 	}
 
 	public void buildBracket(Context context, OnClickListener mListener) {
-		buildBracket(context, 150, -1, -1, mListener);
+		buildBracket(context, 100, -1, -1, mListener);
 	}
 
 	public void buildBracket(Context context, int tierWidth, int aboveViewId,

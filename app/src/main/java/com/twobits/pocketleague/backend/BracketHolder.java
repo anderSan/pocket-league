@@ -74,7 +74,7 @@ public class BracketHolder implements View.OnClickListener {
 			lBr.changeOffsets(wBr.lastHeaderId, 0);
 			lBr.labelText = "Losers Bracket";
 			lBr.seedFromParentBracket(wBr);
-			lBr.buildBracket(context, 82, wBr.lowestViewId(), 1, this);
+			lBr.buildBracket(context, 64, wBr.lowestViewId(), 1, this);
 
 			fBr = new Bracket(sMembers.size(), true, rl);
 			fBr.changeOffsets(lBr.lastHeaderId, lBr.lastMatchId + 1);
