@@ -19,17 +19,31 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+import com.twobits.pocketleague.backend.DaoInterface;
 import com.twobits.pocketleague.backend.NavDrawerAdapter;
 import com.twobits.pocketleague.backend.NavDrawerItem;
 import com.twobits.pocketleague.backend.NavigationInterface;
+import com.twobits.pocketleague.db.DatabaseHelper;
+import com.twobits.pocketleague.db.tables.Game;
+import com.twobits.pocketleague.db.tables.GameMember;
+import com.twobits.pocketleague.db.tables.Player;
+import com.twobits.pocketleague.db.tables.Session;
+import com.twobits.pocketleague.db.tables.SessionMember;
+import com.twobits.pocketleague.db.tables.Team;
+import com.twobits.pocketleague.db.tables.TeamMember;
+import com.twobits.pocketleague.db.tables.Venue;
 import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PocketLeague extends ActionBarActivity implements NavigationInterface {
+public class PocketLeague extends ActionBarActivity implements NavigationInterface, DaoInterface {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -43,10 +57,82 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
 
     private SharedPreferences settings;
     private SharedPreferences.Editor prefs_editor;
+    private DatabaseHelper databaseHelper = null;
+    Dao<Game, Long> gDao;
+    Dao<GameMember, Long> gmDao;
+    Dao<Player, Long> pDao;
+    Dao<Session, Long> sDao;
+    Dao<SessionMember, Long> smDao;
+    Dao<Team, Long> tDao;
+    Dao<TeamMember, Long> tmDao;
+    Dao<Venue, Long> vDao;
+
+
+    public Dao<Game, Long> getGameDao(){
+        return gDao;
+    }
+
+    public Dao<GameMember, Long> getGameMemberDao(){
+         return gmDao;
+    }
+
+    public Dao<Player, Long> getPlayerDao(){
+        return pDao;
+    }
+
+    public Dao<Session, Long> getSessionDao(){
+        return sDao;
+    }
+
+    public Dao<SessionMember, Long> getSessionMemberDao(){
+        return smDao;
+    }
+
+    public Dao<Team, Long> getTeamDao(){
+        return tDao;
+    }
+
+    public Dao<TeamMember, Long> getTeamMemberDao(){
+        return tmDao;
+    }
+
+    public Dao<Venue, Long> getVenueDao(){
+        return vDao;
+    }
+
+    protected DatabaseHelper getHelper() {
+        if (databaseHelper == null) {
+            databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+        }
+        return databaseHelper;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (databaseHelper != null) {
+            OpenHelperManager.releaseHelper();
+            databaseHelper = null;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            gDao = getHelper().getGameDao();
+            gmDao = getHelper().getGameMemberDao();
+            pDao = getHelper().getPlayerDao();
+            sDao = getHelper().getSessionDao();
+            smDao = getHelper().getSessionMemberDao();
+            tDao = getHelper().getTeamDao();
+            tmDao = getHelper().getTeamMemberDao();
+            vDao = getHelper().getVenueDao();
+        } catch (SQLException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+
         settings = this.getSharedPreferences(APP_PREFS, 0);
         prefs_editor = settings.edit();
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -103,6 +189,18 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
                         .replace(R.id.content_frame, new List_Sessions()).commit();
                 mDrawerList.setItemChecked(0, true);
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+            mDrawerLayout.closeDrawer(mDrawerList);
+        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
     }
 

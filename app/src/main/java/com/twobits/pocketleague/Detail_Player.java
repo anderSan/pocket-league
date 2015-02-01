@@ -33,7 +33,7 @@ public class Detail_Player extends Fragment_Detail {
 	TextView tv_footed;
 
     public Detail_Player() {
-        LOGTAG = "Detail_Player";
+        LOGTAG = getClass().getSimpleName();
     }
 
     @Override
@@ -77,8 +77,8 @@ public class Detail_Player extends Fragment_Detail {
         Bundle args = getArguments();
         pId = args.getLong("PID", -1);
 
-		pDao = Player.getDao(context);
-		tDao = Team.getDao(context);
+        pDao = mDao.getPlayerDao();
+        tDao = mDao.getTeamDao();
 
 		tv_playerName = (TextView) rootView.findViewById(R.id.pDet_name);
 		tv_playerId = (TextView) rootView.findViewById(R.id.pDet_id);

@@ -65,7 +65,7 @@ public class Detail_Venue extends Fragment_Detail {
         Bundle args = getArguments();
         vId = args.getLong("VID", -1);
 
-        vDao = Venue.getDao(context);
+        vDao = mDao.getVenueDao();
 
         tv_venueName = (TextView) rootView.findViewById(R.id.vDet_name);
         tv_venueId = (TextView) rootView.findViewById(R.id.vDet_id);

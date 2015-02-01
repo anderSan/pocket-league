@@ -71,9 +71,9 @@ public class Detail_Team extends Fragment_Detail {
         Bundle args = getArguments();
         tId = args.getLong("TID", -1);
 
-		tDao = Team.getDao(context);
-		pDao = Player.getDao(context);
-		tmDao = TeamMember.getDao(context);
+        tDao = mDao.getTeamDao();
+        pDao = mDao.getPlayerDao();
+        tmDao = mDao.getTeamMemberDao();
 
 		tv_teamName = (TextView) rootView.findViewById(R.id.tDet_name);
 		tv_teamId = (TextView) rootView.findViewById(R.id.tDet_id);
