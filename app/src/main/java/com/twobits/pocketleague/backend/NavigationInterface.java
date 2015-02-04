@@ -21,11 +21,11 @@ public interface NavigationInterface {
 
     public void viewVenueDetails(Long vId);
 
-//    public void modifySession(Long sId);
+    public void modifySession(Long sId);
 
     public void modifyPlayer(Long pId);
 
     public void modifyTeam(Long tId);
 
-//    public void modifyVenue(Long vId);
+    public void modifyVenue(Long vId);
 }

@@ -33,7 +33,7 @@ public class List_Sessions extends Fragment_TopList {
         setAddClicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(context, NewSession.class));
+                mNav.modifySession(null);
             }
         });
 
@@ -85,11 +85,6 @@ public class List_Sessions extends Fragment_TopList {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             long sId = session_list.get(position).getId();
             SessionType session_type = session_list.get(position).getSessionType();
-
-            //            mNav.viewSessionDetails(sId);
-//            Intent intent = new Intent(context, session_type.toClass());
-//            intent.putExtra("SID", sId);
-//            startActivity(intent);
             mNav.viewSessionDetails(sId, session_type);
         }
     };

@@ -14,7 +14,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.NewSession;
+import com.twobits.pocketleague.Modify_Session;
 import com.twobits.pocketleague.Quick_Game;
 import com.twobits.pocketleague.R;
 import com.twobits.pocketleague.db.tables.Game;
@@ -42,9 +42,7 @@ public class Detail_Session_Base extends Fragment_Detail {
         setModifyClicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, NewSession.class);
-                intent.putExtra("SID", sId);
-                startActivity(intent);
+                mNav.modifySession(sId);
             }
         });
 

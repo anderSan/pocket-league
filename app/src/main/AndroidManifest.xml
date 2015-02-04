@@ -50,14 +50,6 @@
             android:label="@string/title_activity_new_game" >
         </activity>
         <activity
-            android:name="com.twobits.pocketleague.NewSession"
-            android:label="@string/title_activity_new_session" >
-        </activity>
-        <activity
-            android:name="com.twobits.pocketleague.NewVenue"
-            android:label="@string/title_activity_new_venue" >
-        </activity>
-        <activity
             android:name="com.twobits.pocketleague.Quick_Game"
             android:label="@string/title_activity_quick_game"
             android:parentActivityName="com.twobits.pocketleague.PocketLeague" >

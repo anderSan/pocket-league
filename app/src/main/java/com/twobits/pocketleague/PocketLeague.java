@@ -399,6 +399,22 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         ft.commit();
     }
 
+    public void modifySession(Long sId) {
+        Fragment fragment = new Modify_Session();
+
+        Bundle args = new Bundle();
+        if (sId != null) {
+            args.putLong("SID", sId);
+        }
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.content_frame, fragment).addToBackStack(null);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.commit();
+    }
+
     public void viewPlayerDetails(Long pId) {
         Fragment fragment = new Detail_Player();
 
@@ -467,5 +483,21 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment)
                 .addToBackStack(null).commit();
+    }
+
+    public void modifyVenue(Long vId) {
+        Fragment fragment = new Modify_Venue();
+
+        Bundle args = new Bundle();
+        if (vId != null) {
+            args.putLong("VID", vId);
+        }
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.content_frame, fragment).addToBackStack(null);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.commit();
     }
 }

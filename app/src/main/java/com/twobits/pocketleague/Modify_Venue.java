@@ -1,20 +1,21 @@
 package com.twobits.pocketleague;
 
-import java.sql.SQLException;
-
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.backend.MenuContainerActivity;
+import com.twobits.pocketleague.backend.Fragment_Edit;
 import com.twobits.pocketleague.db.tables.Venue;
 
-public class NewVenue extends MenuContainerActivity {
+import java.sql.SQLException;
+
+public class Modify_Venue extends Fragment_Edit {
 	Long vId;
 	Venue v;
 	Dao<Venue, Long> vDao;
@@ -24,21 +25,31 @@ public class NewVenue extends MenuContainerActivity {
 	CheckBox cb_isFavorite;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_new_venue);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_modify_venue, container, false);
 
-		vDao = Venue.getDao(this);
+        Bundle args = getArguments();
+        vId = args.getLong("VID", -1);
 
-		btn_create = (Button) findViewById(R.id.button_createVenue);
-		tv_name = (TextView) findViewById(R.id.editText_venueName);
-		cb_isFavorite = (CheckBox) findViewById(R.id.newVenue_isFavorite);
+		vDao = mData.getVenueDao();
 
-		Intent intent = getIntent();
-		vId = intent.getLongExtra("VID", -1);
+		btn_create = (Button) rootView.findViewById(R.id.button_createVenue);
+		tv_name = (TextView) rootView.findViewById(R.id.editText_venueName);
+		cb_isFavorite = (CheckBox) rootView.findViewById(R.id.newVenue_isFavorite);
+
+        btn_create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doneButtonPushed();
+            }
+        });
+
 		if (vId != -1) {
 			loadVenueValues();
 		}
+
+        return rootView;
 	}
 
 	private void loadVenueValues() {
@@ -48,14 +59,14 @@ public class NewVenue extends MenuContainerActivity {
 			tv_name.setText(v.getName());
 			cb_isFavorite.setChecked(v.getIsFavorite());
 		} catch (SQLException e) {
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 
-	public void doneButtonPushed(View view) {
+	public void doneButtonPushed() {
 		String venue_name = tv_name.getText().toString().trim();
 		if (venue_name.isEmpty()) {
-			Toast.makeText(this, "Venue name is required.", Toast.LENGTH_LONG)
+			Toast.makeText(context, "Venue name is required.", Toast.LENGTH_LONG)
 					.show();
 		} else {
 			Boolean is_favorite = cb_isFavorite.isChecked();
@@ -73,11 +84,11 @@ public class NewVenue extends MenuContainerActivity {
 
 		try {
 			vDao.create(newVenue);
-			Toast.makeText(this, "Venue created!", Toast.LENGTH_SHORT).show();
-			finish();
+			Toast.makeText(context, "Venue created!", Toast.LENGTH_SHORT).show();
+			mNav.onBackPressed();
 		} catch (SQLException e) {
 			loge("Could not create venue", e);
-			Toast.makeText(this, "Could not create venue.", Toast.LENGTH_SHORT)
+			Toast.makeText(context, "Could not create venue.", Toast.LENGTH_SHORT)
 					.show();
 		}
 	}
@@ -87,12 +98,12 @@ public class NewVenue extends MenuContainerActivity {
 		v.setIsFavorite(is_favorite);
 		try {
 			vDao.update(v);
-			Toast.makeText(this, "Venue modified.", Toast.LENGTH_SHORT).show();
-			finish();
+			Toast.makeText(context, "Venue modified.", Toast.LENGTH_SHORT).show();
+			mNav.onBackPressed();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			loge("Could not modify venue", e);
-			Toast.makeText(this, "Could not modify venue.", Toast.LENGTH_SHORT)
+			Toast.makeText(context, "Could not modify venue.", Toast.LENGTH_SHORT)
 					.show();
 		}
 	}

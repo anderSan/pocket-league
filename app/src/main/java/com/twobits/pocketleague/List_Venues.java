@@ -32,7 +32,7 @@ public class List_Venues extends Fragment_TopList {
         setAddClicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(context, NewVenue.class));
+                mNav.modifyVenue(null);
             }
         });
         mNav.setTitle("Venues");

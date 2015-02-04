@@ -30,9 +30,7 @@ public class Detail_Venue extends Fragment_Detail {
         setModifyClicked(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, NewVenue.class);
-                intent.putExtra("VID", vId);
-                startActivity(intent);
+                mNav.modifyVenue(vId);
             }
         });
 

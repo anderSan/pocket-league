@@ -1,14 +1,9 @@
 package com.twobits.pocketleague;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -20,21 +15,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.gameslibrary.GameRule;
-import com.twobits.pocketleague.gameslibrary.GameType;
-import com.twobits.pocketleague.backend.MenuContainerActivity;
+import com.twobits.pocketleague.backend.Fragment_Edit;
 import com.twobits.pocketleague.backend.SpinnerAdapter;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.SessionMember;
 import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.db.tables.Venue;
 import com.twobits.pocketleague.enums.SessionType;
+import com.twobits.pocketleague.gameslibrary.GameRule;
+import com.twobits.pocketleague.gameslibrary.GameType;
 
-public class NewSession extends MenuContainerActivity {
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class Modify_Session extends Fragment_Edit {
 	Long sId;
 	Session s;
 	Dao<Session, Long> sDao;
 	Dao<SessionMember, Long> smDao;
+    Dao<Team, Long> tDao;
+    Dao<Venue, Long> vDao;
 
 	Button btn_create;
 	TextView tv_name;
@@ -50,63 +53,75 @@ public class NewSession extends MenuContainerActivity {
 	List<String> teamNames = new ArrayList<>();
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_new_session);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+		rootView = inflater.inflate(R.layout.fragment_modify_session, container, false);
 
-		sDao = Session.getDao(this);
-		smDao = SessionMember.getDao(this);
+        Bundle args = getArguments();
+        sId = args.getLong("SID", -1);
 
-		btn_create = (Button) findViewById(R.id.button_createSession);
-		tv_name = (TextView) findViewById(R.id.editText_sessionName);
-		sp_sessionType = (Spinner) findViewById(R.id.newSession_sessionType);
-		sp_ruleSet = (Spinner) findViewById(R.id.newSession_ruleSet);
-		sp_venues = (Spinner) findViewById(R.id.newSession_venues);
-		tv_num_selected = (TextView) findViewById(R.id.tv_num_selected);
-		lv_roster = (ListView) findViewById(R.id.newSession_teamSelection);
-		cb_isFavorite = (CheckBox) findViewById(R.id.newSession_isFavorite);
+		sDao = mData.getSessionDao();
+		smDao = mData.getSessionMemberDao();
+        tDao = mData.getTeamDao();
+        vDao = mData.getVenueDao();
+
+		btn_create = (Button) rootView.findViewById(R.id.button_createSession);
+		tv_name = (TextView) rootView.findViewById(R.id.editText_sessionName);
+		sp_sessionType = (Spinner) rootView.findViewById(R.id.newSession_sessionType);
+		sp_ruleSet = (Spinner) rootView.findViewById(R.id.newSession_ruleSet);
+		sp_venues = (Spinner) rootView.findViewById(R.id.newSession_venues);
+		tv_num_selected = (TextView) rootView.findViewById(R.id.tv_num_selected);
+		lv_roster = (ListView) rootView.findViewById(R.id.newSession_teamSelection);
+		cb_isFavorite = (CheckBox) rootView.findViewById(R.id.newSession_isFavorite);
+
+        btn_create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doneButtonPushed();
+            }
+        });
 
 		List<String> sessionTypes = new ArrayList<>();
 		for (SessionType st : SessionType.values()) {
 			sessionTypes.add(st.toString());
 		}
-		ArrayAdapter<String> stAdapter = new SpinnerAdapter(this,
+		ArrayAdapter<String> stAdapter = new SpinnerAdapter(context,
 				android.R.layout.simple_spinner_item, sessionTypes,
 				Arrays.asList(SessionType.values()));
 		sp_sessionType.setAdapter(stAdapter);
 
 		List<String> ruleSetDescriptions = new ArrayList<>();
-		GameType currentGameType = getCurrentGameType();
+		GameType currentGameType = mData.getCurrentGameType();
 		for (GameRule gr : currentGameType.toGameRules()) {
 			ruleSetDescriptions.add(gr.toRuleSet().getDescription());
 		}
-		ArrayAdapter<String> rsAdapter = new SpinnerAdapter(this,
+		ArrayAdapter<String> rsAdapter = new SpinnerAdapter(context,
 				android.R.layout.simple_spinner_item, ruleSetDescriptions,
 				currentGameType.toGameRules());
 		sp_ruleSet.setAdapter(rsAdapter);
 
 		try {
-			List<Venue> venues = Venue.getDao(this).queryForAll();
+			List<Venue> venues = vDao.queryForAll();
 			List<String> venueNames = new ArrayList<>();
 			for (Venue v : venues) {
 				venueNames.add(v.getName());
 			}
-			ArrayAdapter<String> vAdapter = new SpinnerAdapter(this,
+			ArrayAdapter<String> vAdapter = new SpinnerAdapter(context,
 					android.R.layout.simple_spinner_dropdown_item, venueNames,
 					venues);
 			sp_venues.setAdapter(vAdapter);
 		} catch (SQLException e) {
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 
 		try {
-			teams = Team.getDao(this).queryForAll();
+			teams = tDao.queryForAll();
 			teamNames.clear();
 			for (Team t : teams) {
 				teamNames.add(t.getTeamName());
 			}
 		} catch (SQLException e) {
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 
 		updateRosterCheckList();
@@ -123,11 +138,11 @@ public class NewSession extends MenuContainerActivity {
 			}
 		});
 
-		Intent intent = getIntent();
-		sId = intent.getLongExtra("SID", -1);
 		if (sId != -1) {
 			loadSessionValues();
 		}
+
+        return rootView;
 	}
 
 	private void loadSessionValues() {
@@ -144,19 +159,19 @@ public class NewSession extends MenuContainerActivity {
 			// could happen!
 			teamNames.clear();
 		} catch (SQLException e) {
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 
 	public void updateRosterCheckList() {
-		lv_roster.setAdapter(new ArrayAdapter<>(this,
+		lv_roster.setAdapter(new ArrayAdapter<>(context,
 				android.R.layout.simple_list_item_multiple_choice, teamNames));
 	}
 
-	public void doneButtonPushed(View view) {
+	public void doneButtonPushed() {
 		String session_name = tv_name.getText().toString().trim();
 		if (session_name.isEmpty()) {
-			Toast.makeText(this, "Session name is required.", Toast.LENGTH_LONG)
+			Toast.makeText(context, "Session name is required.", Toast.LENGTH_LONG)
 					.show();
 		} else {
 			SessionType session_type = (SessionType) sp_sessionType
@@ -178,7 +193,7 @@ public class NewSession extends MenuContainerActivity {
 	private void createSession(String session_name, GameRule game_rule,
 			SessionType session_type, Venue current_venue, boolean is_favorite) {
 		int team_size = teamIdxList.size();
-		Session newSession = new Session(session_name, getCurrentGameType(),
+		Session newSession = new Session(session_name, mData.getCurrentGameType(),
 				game_rule, session_type, team_size, current_venue);
 		newSession.setIsFavorite(is_favorite);
 
@@ -196,11 +211,11 @@ public class NewSession extends MenuContainerActivity {
 				smDao.create(sm);
 				seed++;
 			}
-			Toast.makeText(this, "Session created!", Toast.LENGTH_SHORT).show();
-			finish();
+			Toast.makeText(context, "Session created!", Toast.LENGTH_SHORT).show();
+			mNav.onBackPressed();
 		} catch (SQLException e) {
 			loge("Could not create session", e);
-			Toast.makeText(this, "Could not create session.",
+			Toast.makeText(context, "Could not create session.",
 					Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -213,13 +228,13 @@ public class NewSession extends MenuContainerActivity {
 
 		try {
 			sDao.update(s);
-			Toast.makeText(this, "Session modified.", Toast.LENGTH_SHORT)
+			Toast.makeText(context, "Session modified.", Toast.LENGTH_SHORT)
 					.show();
-			finish();
+			mNav.onBackPressed();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			loge("Could not modify session", e);
-			Toast.makeText(this, "Could not modify session.",
+			Toast.makeText(context, "Could not modify session.",
 					Toast.LENGTH_SHORT).show();
 		}
 	}
