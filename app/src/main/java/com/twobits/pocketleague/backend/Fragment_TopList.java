@@ -8,9 +8,8 @@ import android.widget.ImageButton;
 import android.widget.ToggleButton;
 
 import com.twobits.pocketleague.R;
-import com.twobits.pocketleague.db.OrmLiteFragment;
 
-public abstract class Fragment_TopList extends OrmLiteFragment {
+public abstract class Fragment_TopList extends Fragment_Base {
     public ImageButton bar_add;
     public ToggleButton bar_isFavorite;
     public ToggleButton bar_isActive;

@@ -1,10 +1,8 @@
 package com.twobits.pocketleague;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,10 +25,6 @@ public class List_Venues extends Fragment_TopList {
     private ListAdapter_Venue venue_adapter;
     private List<Item_Venue> venue_list = new ArrayList<>();
     private Dao<Venue, Long> vDao = null;
-
-    public List_Venues() {
-        LOGTAG = "List_Venues";
-    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,7 +55,7 @@ public class List_Venues extends Fragment_TopList {
 
 		try {
             List<Venue> venues;
-            vDao = getHelper().getVenueDao();
+            vDao = mData.getVenueDao();
 
             if (show_favorites) {
                 venues = vDao.queryBuilder().where().eq(Venue.IS_FAVORITE, show_favorites)

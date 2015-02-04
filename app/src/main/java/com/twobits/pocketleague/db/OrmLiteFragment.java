@@ -9,17 +9,17 @@ import android.util.Log;
 import android.view.View;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.twobits.pocketleague.backend.DaoInterface;
+import com.twobits.pocketleague.backend.DataInterface;
 import com.twobits.pocketleague.backend.NavigationInterface;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
 public abstract class OrmLiteFragment extends Fragment {
-	protected String LOGTAG = getClass().getSimpleName();;
+	protected String LOGTAG = getClass().getSimpleName();
 	public static final String APP_PREFS = "PocketLeaguePreferences";
     public View rootView;
     public Context context;
     public NavigationInterface mNav;
-    public DaoInterface mDao;
+    public DataInterface mDao;
 
 	private SharedPreferences settings;
 	public SharedPreferences.Editor prefs_editor;
@@ -45,10 +45,10 @@ public abstract class OrmLiteFragment extends Fragment {
 					+ " must implement NavigationInterface");
 		}
         try {
-            mDao = (DaoInterface) activity;
+            mDao = (DataInterface) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement DaoInterface");
+                    + " must implement DataInterface");
         }
         context = getActivity();
 	}

@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.backend.DaoInterface;
+import com.twobits.pocketleague.backend.DataInterface;
 import com.twobits.pocketleague.backend.NavDrawerAdapter;
 import com.twobits.pocketleague.backend.NavDrawerItem;
 import com.twobits.pocketleague.backend.NavigationInterface;
@@ -43,7 +43,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PocketLeague extends ActionBarActivity implements NavigationInterface, DaoInterface {
+public class PocketLeague extends ActionBarActivity implements NavigationInterface, DataInterface {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;

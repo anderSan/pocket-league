@@ -20,8 +20,6 @@ import java.util.List;
 
 
 public class List_GameTypes extends Fragment_TopList {
-	public static final String LOGTAG = "List_GameTypes";
-
     private GridView gv;
 	private ListAdapter_GameType gametype_adapter;
 	private List<Item_GameType> gametypes_list = new ArrayList<>();
@@ -62,7 +60,7 @@ public class List_GameTypes extends Fragment_TopList {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			GameType gt = (GameType) view.getTag();
-			setCurrentGameType(gt);
+			mData.setCurrentGameType(gt);
 			mNav.viewSessions();
 		}
 	};

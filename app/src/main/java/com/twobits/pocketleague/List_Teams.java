@@ -1,10 +1,8 @@
 package com.twobits.pocketleague;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,10 +25,6 @@ public class List_Teams extends Fragment_TopList {
     private ListAdapter_Team team_adapter;
     private List<Item_Team> team_list = new ArrayList<>();
     private Dao<Team, Long> tDao = null;
-
-    public List_Teams() {
-        LOGTAG = "List_Teams";
-    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +56,7 @@ public class List_Teams extends Fragment_TopList {
 
 		try {
             List<Team> teams;
-			tDao = getHelper().getTeamDao();
+			tDao = mData.getTeamDao();
 
             if (show_favorites) {
                 teams = tDao.queryBuilder().where().ne(Team.TEAM_SIZE, 1)

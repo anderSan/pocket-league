@@ -9,8 +9,9 @@ import com.twobits.pocketleague.db.tables.SessionMember;
 import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.db.tables.TeamMember;
 import com.twobits.pocketleague.db.tables.Venue;
+import com.twobits.pocketleague.gameslibrary.GameType;
 
-public interface DaoInterface {
+public interface DataInterface {
     public Dao<Game, Long> getGameDao();
 
     public Dao<GameMember, Long> getGameMemberDao();
@@ -26,4 +27,12 @@ public interface DaoInterface {
     public Dao<TeamMember, Long> getTeamMemberDao();
 
     public Dao<Venue, Long> getVenueDao();
+
+    public String getPreference(String pref_name, String pref_default);
+
+    public void setPreference(String pref_name, String pref_value);
+
+    public GameType getCurrentGameType();
+
+    public void setCurrentGameType(GameType gametype);
 }

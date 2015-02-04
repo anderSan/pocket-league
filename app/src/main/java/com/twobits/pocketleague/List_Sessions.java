@@ -1,10 +1,8 @@
 package com.twobits.pocketleague;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,10 +26,6 @@ public class List_Sessions extends Fragment_TopList {
     private ListAdapter_Session session_adapter;
     private List<Item_Session> session_list = new ArrayList<>();
     private Dao<Session, Long> sDao = null;
-
-    public List_Sessions() {
-        LOGTAG = "List_Sessions";
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,14 +58,14 @@ public class List_Sessions extends Fragment_TopList {
 
         try {
             List<Session> sessions;
-            sDao = getHelper().getSessionDao();
+            sDao = mData.getSessionDao();
 
             if (show_favorites) {
-                sessions = sDao.queryBuilder().where().eq(Session.GAME_TYPE, getCurrentGameType())
+                sessions = sDao.queryBuilder().where().eq(Session.GAME_TYPE, mData.getCurrentGameType())
                         .and().eq(Session.IS_FAVORITE, show_favorites)
                         .and().eq(Session.IS_ACTIVE, show_actives).query();
             } else {
-                sessions = sDao.queryBuilder().where().eq(Session.GAME_TYPE, getCurrentGameType())
+                sessions = sDao.queryBuilder().where().eq(Session.GAME_TYPE, mData.getCurrentGameType())
                         .and().eq(Session.IS_ACTIVE, show_actives).query();
             }
 
