@@ -1,8 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Detail_Session_Base" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <include
         android:id="@+id/detail_nav_bar"
@@ -19,7 +15,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         />
-    
+
     <TextView
         android:id="@+id/sDet_id"
         android:layout_alignParentStart="true"
@@ -34,15 +30,6 @@
         android:layout_below="@id/sDet_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-		/>
-     
-    <ScrollView
-    	android:id="@+id/scrollView1"
-    	android:layout_width="match_parent"
-    	android:layout_height="wrap_content"
-    	android:layout_below="@id/sDet_ruleSet"
-    	android:layout_above="@id/detail_nav_bar"
-    	android:layout_marginTop="20dp"
-    	/>
-    
-</RelativeLayout>
+        />
+
+</merge>

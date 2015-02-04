@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.twobits.pocketleague.R;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.GameMember;
 import com.twobits.pocketleague.db.tables.SessionMember;
@@ -265,7 +266,7 @@ public class Bracket {
 		tv.setHeight(2);
 		// tv.setId(1 + headerIdOffset);
 		tv.setPadding(10, 10, 10, 10);
-		tv.setBackgroundColor(Color.BLACK);
+		tv.setBackgroundColor(context.getResources().getColor(R.color.primary));
 		lp = new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.WRAP_CONTENT);

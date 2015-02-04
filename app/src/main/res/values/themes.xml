@@ -2,12 +2,16 @@
 <resources>
     <style name="AppTheme" parent="AppTheme.Base"/>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/LtRed</item>
-        <item name="colorPrimaryDark">@color/Red</item>
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/primary_dark</item>
+        <item name="colorPrimaryDark">@color/primary</item>
+
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">true</item>
+
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+
+        <item name="android:activatedBackgroundIndicator">@drawable/list_activated_background</item>
     </style>
 </resources>

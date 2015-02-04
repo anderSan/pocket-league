@@ -1,6 +1,5 @@
 package com.twobits.pocketleague;
 
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ public class Detail_Session_Elimination extends Detail_Session_Base {
 
     @Override
     public void createSessionLayout(LayoutInflater inflater, ViewGroup container) {
-		rootView = inflater.inflate(R.layout.activity_detail_session_singleelim, container, false);
+		rootView = inflater.inflate(R.layout.fragment_detail_session_elimination, container, false);
 		ScrollView sv = (ScrollView) rootView.findViewById(R.id.scrollView1);
 
 //		DisplayMetrics metrics = new DisplayMetrics();

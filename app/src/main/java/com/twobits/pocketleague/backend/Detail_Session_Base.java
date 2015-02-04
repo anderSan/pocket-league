@@ -14,7 +14,6 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.Modify_Session;
 import com.twobits.pocketleague.Quick_Game;
 import com.twobits.pocketleague.R;
 import com.twobits.pocketleague.db.tables.Game;
@@ -24,7 +23,7 @@ import com.twobits.pocketleague.db.tables.SessionMember;
 
 import java.sql.SQLException;
 
-public class Detail_Session_Base extends Fragment_Detail {
+public abstract class Detail_Session_Base extends Fragment_Detail {
 	public Long sId;
 	public Session s;
 
@@ -80,9 +79,7 @@ public class Detail_Session_Base extends Fragment_Detail {
         return rootView;
 	}
 
-	public void createSessionLayout(LayoutInflater inflater, ViewGroup container) {
-		rootView = inflater.inflate(R.layout.activity_detail_session, container, false);
-	}
+	public abstract void createSessionLayout(LayoutInflater inflater, ViewGroup container);
 
 	@Override
 	public void onResume() {
