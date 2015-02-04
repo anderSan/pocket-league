@@ -33,14 +33,11 @@ public class Detail_Session_Base extends Fragment_Detail {
 
 	public Dao<Session, Long> sDao;
 	public Dao<SessionMember, Long> smDao;
+    public Dao<Game, Long> gDao;
 	public Dao<GameMember, Long> gmDao;
 
 	public MatchInfo mInfo;
 	public ActionMode mActionMode;
-
-    public Detail_Session_Base() {
-        LOGTAG = "Detail_Session";
-    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,9 +67,10 @@ public class Detail_Session_Base extends Fragment_Detail {
 
 		if (sId != -1) {
 			try {
-				sDao = Session.getDao(context);
-				smDao = SessionMember.getDao(context);
-				gmDao = GameMember.getDao(context);
+				sDao = mData.getSessionDao();
+				smDao = mData.getSessionMemberDao();
+                gDao = mData.getGameDao();
+				gmDao = mData.getGameMemberDao();
 
 				s = sDao.queryForId(sId);
 			} catch (SQLException e) {
@@ -168,9 +166,6 @@ public class Detail_Session_Base extends Fragment_Detail {
 
 	private void createMatch() {
 		Intent intent = new Intent(context, Quick_Game.class);
-		Dao<Game, Long> gDao = Game.getDao(context);
-		Dao<GameMember, Long> gmDao = GameMember.getDao(context);
-		Dao<Team, Long> tDao = Team.getDao(context);
 
 		Game g = new Game(s, mInfo.getIdInSession(), s.getCurrentVenue(), false);
 		GameMember t1 = new GameMember(g, mInfo.getTeam1());

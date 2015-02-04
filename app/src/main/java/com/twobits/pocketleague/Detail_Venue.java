@@ -24,10 +24,6 @@ public class Detail_Venue extends Fragment_Detail {
 	TextView tv_venueName;
 	TextView tv_venueId;
 
-    public Detail_Venue() {
-        LOGTAG = "Detail_Venue";
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,7 +61,7 @@ public class Detail_Venue extends Fragment_Detail {
         Bundle args = getArguments();
         vId = args.getLong("VID", -1);
 
-        vDao = mDao.getVenueDao();
+        vDao = mData.getVenueDao();
 
         tv_venueName = (TextView) rootView.findViewById(R.id.vDet_name);
         tv_venueId = (TextView) rootView.findViewById(R.id.vDet_id);

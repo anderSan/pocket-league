@@ -100,7 +100,7 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         return vDao;
     }
 
-    protected DatabaseHelper getHelper() {
+    public DatabaseHelper getHelper() {
         if (databaseHelper == null) {
             databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
         }

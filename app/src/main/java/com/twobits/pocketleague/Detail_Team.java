@@ -30,10 +30,6 @@ public class Detail_Team extends Fragment_Detail {
 	TextView tv_teamId;
 	TextView tv_members;
 
-    public Detail_Team() {
-        LOGTAG = "Detail_Team";
-    }
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,9 +67,9 @@ public class Detail_Team extends Fragment_Detail {
         Bundle args = getArguments();
         tId = args.getLong("TID", -1);
 
-        tDao = mDao.getTeamDao();
-        pDao = mDao.getPlayerDao();
-        tmDao = mDao.getTeamMemberDao();
+        tDao = mData.getTeamDao();
+        pDao = mData.getPlayerDao();
+        tmDao = mData.getTeamMemberDao();
 
 		tv_teamName = (TextView) rootView.findViewById(R.id.tDet_name);
 		tv_teamId = (TextView) rootView.findViewById(R.id.tDet_id);

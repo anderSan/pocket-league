@@ -17,10 +17,6 @@ import java.sql.SQLException;
 public class Detail_Session_Elimination extends Detail_Session_Base {
 	private BracketHolder bracketHolder = null;
 
-    public Detail_Session_Elimination() {
-        LOGTAG = "Detail_Session_DblElim";
-    }
-
     @Override
     public void createSessionLayout(LayoutInflater inflater, ViewGroup container) {
 		rootView = inflater.inflate(R.layout.activity_detail_session_singleelim, container, false);

@@ -1,18 +1,7 @@
 package com.twobits.pocketleague;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,15 +22,25 @@ import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 import com.j256.ormlite.dao.Dao;
+import com.twobits.pocketleague.backend.Fragment_Base;
 import com.twobits.pocketleague.db.DatabaseHelper;
 import com.twobits.pocketleague.db.DbxInfo;
-import com.twobits.pocketleague.db.OrmLiteFragment;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.db.tables.TeamMember;
 import com.twobits.pocketleague.db.tables.Venue;
 
-public class DbSettings extends OrmLiteFragment {
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+public class DbSettings extends Fragment_Base {
 
 	private DbxAccountManager mDbxAcctMgr;
 	private static final String appKey = DbxInfo.appKey;
@@ -50,15 +49,8 @@ public class DbSettings extends OrmLiteFragment {
 	private Button dbxSaveButton;
 	private Button dbxLoadButton;
 	private TextView mTestOutput;
-	private View rootView;
-	private Context context;
 
 	private static final int REQUEST_LINK_TO_DBX = 0;
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -150,12 +142,6 @@ public class DbSettings extends OrmLiteFragment {
 		return rootView;
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		context = getActivity();
-	}
-
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		MenuItem fav = menu.add("New Player");
 		fav.setIcon(R.drawable.ic_menu_add);
@@ -209,7 +195,7 @@ public class DbSettings extends OrmLiteFragment {
 	}
 
 	public void clearTables() {
-		DatabaseHelper h = getHelper();
+		DatabaseHelper h = mData.getHelper();
 		h.dropAll();
 		h.createAll();
 	}
@@ -255,11 +241,11 @@ public class DbSettings extends OrmLiteFragment {
 		Venue v3 = new Venue("Oxford", true);
 
 		try {
-			Dao<Player, Long> playerDao = getHelper().getPlayerDao();
-			Dao<Team, Long> teamDao = getHelper().getTeamDao();
-			Dao<TeamMember, Long> tmDao = getHelper().getTeamMemberDao();
+			Dao<Player, Long> playerDao = mData.getPlayerDao();
+			Dao<Team, Long> teamDao = mData.getTeamDao();
+			Dao<TeamMember, Long> tmDao = mData.getTeamMemberDao();
 			// Dao<Session, Long> sessionDao = getHelper().getSessionDao();
-			Dao<Venue, Long> venueDao = getHelper().getVenueDao();
+			Dao<Venue, Long> venueDao = mData.getVenueDao();
 			for (Player p : players) {
 				playerDao.create(p);
 				Team t = new Team(p.getNickName(), 1, p.getColor(),
@@ -390,7 +376,7 @@ public class DbSettings extends OrmLiteFragment {
 	}
 
 	File getInternalPath() {
-		String dbPath = getHelper().getReadableDatabase().getPath();
+		String dbPath = mData.getHelper().getReadableDatabase().getPath();
 		File internalDB = new File(dbPath);
 		return internalDB;
 	}

@@ -1,16 +1,12 @@
 package com.twobits.pocketleague.backend;
 
-import android.app.Activity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ToggleButton;
 
 import com.twobits.pocketleague.R;
-import com.twobits.pocketleague.db.OrmLiteFragment;
 
-public abstract class Fragment_Detail extends OrmLiteFragment {
+public abstract class Fragment_Detail extends Fragment_Base {
     public ImageButton bar_modify;
     public ToggleButton bar_isFavorite;
     public ToggleButton bar_isActive;
@@ -29,27 +25,6 @@ public abstract class Fragment_Detail extends OrmLiteFragment {
 
     public void setActiveClicked(View.OnClickListener activeClicked) {
         this.activeClicked = activeClicked;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.detail_menu, menu);
-//        mi_modify = menu.findItem(R.id.menu_modify);
-//        bar_isFavorite = (CheckBox) menu.findItem(R.id.menu_favorite).getActionView();
-//        bar_isActive = (ToggleButton) menu.findItem(R.id.menu_active).getActionView();
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-//        bar_isFavorite = new CheckBox(context, null, android.R.attr.starStyle);
-//        bar_isFavorite.setOnClickListener(favoriteClicked);
-//
-//        bar_isActive = new ToggleButton(context);
-//        bar_isActive.setTextOn(getString(R.string.active));
-//        bar_isActive.setTextOff(getString(R.string.retired));
-//        bar_isActive.setOnClickListener(activeClicked);
     }
 
     @Override

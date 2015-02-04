@@ -1,6 +1,7 @@
 package com.twobits.pocketleague.backend;
 
 import com.j256.ormlite.dao.Dao;
+import com.twobits.pocketleague.db.DatabaseHelper;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.GameMember;
 import com.twobits.pocketleague.db.tables.Player;
@@ -12,6 +13,8 @@ import com.twobits.pocketleague.db.tables.Venue;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
 public interface DataInterface {
+    public DatabaseHelper getHelper();
+
     public Dao<Game, Long> getGameDao();
 
     public Dao<GameMember, Long> getGameMemberDao();

@@ -21,7 +21,6 @@ import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.Venue;
 
 public class Detail_Game extends MenuContainerActivity {
-	public static final String LOGTAG = "Detail_Game";
 	Long gId;
 	Game g;
 	Player[] p = new Player[2];

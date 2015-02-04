@@ -1,8 +1,5 @@
 package com.twobits.pocketleague.backend;
 
-import android.app.Activity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ToggleButton;
@@ -38,42 +35,6 @@ public abstract class Fragment_TopList extends Fragment_Base {
             refreshListing();
         }
     };
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        bar_add = menu.add(R.string.menu_add);
-//        bar_add.setOnMenuItemClickListener(addClicked);
-//        bar_add.setTitle(R.string.menu_add);
-//        bar_add.setIcon(R.drawable.ic_menu_add);
-//        bar_add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//
-//        MenuItem favorite_item = menu.add(R.string.menu_favorite);
-//        favorite_item.setTitle(R.string.menu_favorite);
-//        favorite_item.setActionView(bar_isFavorite);
-//        favorite_item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem
-//                .SHOW_AS_ACTION_WITH_TEXT);
-//
-//        MenuItem active_item = menu.add(R.string.menu_active);
-//        active_item.setTitle(R.string.menu_active);
-//        active_item.setActionView(bar_isActive);
-//        active_item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem
-//                .SHOW_AS_ACTION_WITH_TEXT);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-//        bar_isFavorite = new CheckBox(context, null, android.R.attr.starStyle);
-//        bar_isFavorite.setChecked(show_favorites);
-//        bar_isFavorite.setOnClickListener(favoriteClicked);
-//
-//        bar_isActive = new ToggleButton(context);
-//        bar_isActive.setTextOn(getString(R.string.active));
-//        bar_isActive.setTextOff(getString(R.string.retired));
-//        bar_isActive.setChecked(show_actives);
-//        bar_isActive.setOnClickListener(activeClicked);
-    }
 
     @Override
     public void onResume() {

@@ -32,10 +32,6 @@ public class Detail_Player extends Fragment_Detail {
 	TextView tv_handed;
 	TextView tv_footed;
 
-    public Detail_Player() {
-        LOGTAG = getClass().getSimpleName();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,8 +73,8 @@ public class Detail_Player extends Fragment_Detail {
         Bundle args = getArguments();
         pId = args.getLong("PID", -1);
 
-        pDao = mDao.getPlayerDao();
-        tDao = mDao.getTeamDao();
+        pDao = mData.getPlayerDao();
+        tDao = mData.getTeamDao();
 
 		tv_playerName = (TextView) rootView.findViewById(R.id.pDet_name);
 		tv_playerId = (TextView) rootView.findViewById(R.id.pDet_id);
