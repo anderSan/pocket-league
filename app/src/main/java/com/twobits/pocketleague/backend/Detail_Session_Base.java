@@ -9,13 +9,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.NewPlayer;
 import com.twobits.pocketleague.NewSession;
 import com.twobits.pocketleague.Quick_Game;
 import com.twobits.pocketleague.R;
@@ -23,7 +21,6 @@ import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.GameMember;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.SessionMember;
-import com.twobits.pocketleague.db.tables.Team;
 
 import java.sql.SQLException;
 

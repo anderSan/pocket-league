@@ -1,16 +1,17 @@
 package com.twobits.pocketleague;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.backend.MenuContainerActivity;
+import com.twobits.pocketleague.backend.Fragment_Edit;
 import com.twobits.pocketleague.db.DatabaseCommonQueue;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Team;
@@ -21,8 +22,7 @@ import java.sql.SQLException;
 import yuku.ambilwarna.AmbilWarnaDialog;
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener;
 
-
-public class NewPlayer extends MenuContainerActivity {
+public class Modify_Player extends Fragment_Edit {
 	Long pId;
 	Player p;
 	Team t;
@@ -44,37 +44,47 @@ public class NewPlayer extends MenuContainerActivity {
 	CheckBox cb_isFavorite;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_new_player);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_modify_player, container, false);
 
-		pDao = Player.getDao(this);
-		tDao = Team.getDao(this);
-		tmDao = TeamMember.getDao(this);
+        Bundle args = getArguments();
+        pId = args.getLong("PID", -1);
 
-		btn_create = (Button) findViewById(R.id.button_createPlayer);
-		tv_nick = (TextView) findViewById(R.id.editText_nickname);
-		tv_name = (TextView) findViewById(R.id.editText_playerName);
-		tv_weight = (TextView) findViewById(R.id.editText_weight);
-		tv_height = (TextView) findViewById(R.id.editText_height);
-		cb_lh = (CheckBox) findViewById(R.id.checkBox_leftHanded);
-		cb_rh = (CheckBox) findViewById(R.id.checkBox_rightHanded);
-		cb_lf = (CheckBox) findViewById(R.id.checkBox_leftFooted);
-		cb_rf = (CheckBox) findViewById(R.id.checkBox_rightFooted);
-		btn_color = (Button) findViewById(R.id.newPlayer_colorPicker);
-		cb_isFavorite = (CheckBox) findViewById(R.id.newPlayer_isFavorite);
+		pDao = mData.getPlayerDao();
+		tDao = mData.getTeamDao();
+		tmDao = mData.getTeamMemberDao();
 
-		Intent intent = getIntent();
-		pId = intent.getLongExtra("PID", -1);
-		if (pId != -1) {
-			loadPlayerValues();
-		}
+		btn_create = (Button) rootView.findViewById(R.id.button_createPlayer);
+		tv_nick = (TextView) rootView.findViewById(R.id.editText_nickname);
+		tv_name = (TextView) rootView.findViewById(R.id.editText_playerName);
+		tv_weight = (TextView) rootView.findViewById(R.id.editText_weight);
+		tv_height = (TextView) rootView.findViewById(R.id.editText_height);
+		cb_lh = (CheckBox) rootView.findViewById(R.id.checkBox_leftHanded);
+		cb_rh = (CheckBox) rootView.findViewById(R.id.checkBox_rightHanded);
+		cb_lf = (CheckBox) rootView.findViewById(R.id.checkBox_leftFooted);
+		cb_rf = (CheckBox) rootView.findViewById(R.id.checkBox_rightFooted);
+		btn_color = (Button) rootView.findViewById(R.id.newPlayer_colorPicker);
+		cb_isFavorite = (CheckBox) rootView.findViewById(R.id.newPlayer_isFavorite);
+
+        btn_create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doneButtonPushed();
+            }
+        });
+
+        if (pId != -1) {
+            loadPlayerValues();
+        }
+
+        return rootView;
 	}
 
 	private void loadPlayerValues() {
 		try {
 			p = pDao.queryForId(pId);
-			t = DatabaseCommonQueue.findPlayerSoloTeam(this, p);
+			t = DatabaseCommonQueue.findPlayerSoloTeam(context, p);
 			btn_create.setText("Modify");
 			tv_nick.setText(p.getNickName());
 			tv_name.setText(p.getFirstName() + " " + p.getLastName());
@@ -88,16 +98,15 @@ public class NewPlayer extends MenuContainerActivity {
 			player_color = p.getColor();
 			cb_isFavorite.setChecked(p.getIsFavorite());
 		} catch (SQLException e) {
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 
-	public void doneButtonPushed(View view) {
+	public void doneButtonPushed() {
 
 		String nickname = tv_nick.getText().toString().trim();
 		if (nickname.isEmpty()) {
-			Toast.makeText(this, "Nickname is required.", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(context, "Nickname is required.", Toast.LENGTH_LONG).show();
 		} else {
 			String[] names = tv_name.getText().toString().split("\\s+", 2);
 			String first_name = names[0];
@@ -147,25 +156,25 @@ public class NewPlayer extends MenuContainerActivity {
 		TeamMember newTeamMember = new TeamMember(newTeam, newPlayer);
 
 		try {
-			if (newPlayer.exists(this) || newTeam.exists(this)) {
-				Toast.makeText(this, "Player already exists.",
+			if (newPlayer.exists(context) || newTeam.exists(context)) {
+				Toast.makeText(context, "Player already exists.",
 						Toast.LENGTH_SHORT).show();
 			} else {
 				try {
 					pDao.create(newPlayer);
 					tDao.create(newTeam);
 					tmDao.create(newTeamMember);
-					Toast.makeText(this, "Player created!", Toast.LENGTH_SHORT)
+					Toast.makeText(context, "Player created!", Toast.LENGTH_SHORT)
 							.show();
-					finish();
+					mNav.onBackPressed();
 				} catch (SQLException ee) {
 					loge("Could not create player", ee);
-					Toast.makeText(this, "Could not create player.",
+					Toast.makeText(context, "Could not create player.",
 							Toast.LENGTH_SHORT).show();
 				}
 			}
 		} catch (SQLException e) {
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 			loge("Could not test for existence of player or team", e);
 		}
 	}
@@ -191,11 +200,11 @@ public class NewPlayer extends MenuContainerActivity {
 		try {
 			pDao.update(p);
 			tDao.update(t);
-			Toast.makeText(this, "Player modified.", Toast.LENGTH_SHORT).show();
-			finish();
+			Toast.makeText(context, "Player modified.", Toast.LENGTH_SHORT).show();
+			mNav.onBackPressed();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			Toast.makeText(this, "Could not modify player.", Toast.LENGTH_SHORT)
+			Toast.makeText(context, "Could not modify player.", Toast.LENGTH_SHORT)
 					.show();
 		}
 	}
@@ -205,7 +214,7 @@ public class NewPlayer extends MenuContainerActivity {
 		// rectangle on the left of the arrow.
 		// for example, 0xff000000 is black, 0xff0000ff is blue. Please be aware
 		// of the initial 0xff which is the alpha.
-		AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, player_color,
+		AmbilWarnaDialog dialog = new AmbilWarnaDialog(context, player_color,
 				new OnAmbilWarnaListener() {
 					@Override
 					public void onOk(AmbilWarnaDialog dialog, int color) {

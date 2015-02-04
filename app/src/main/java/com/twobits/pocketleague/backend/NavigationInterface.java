@@ -7,6 +7,8 @@ public interface NavigationInterface {
 
     public void setDrawerItemChecked(int position);
 
+    public void onBackPressed();
+
 	public void loadGame(long gId);
 
 	public void viewSessions();
@@ -18,4 +20,12 @@ public interface NavigationInterface {
     public void viewTeamDetails(Long tId);
 
     public void viewVenueDetails(Long vId);
+
+//    public void modifySession(Long sId);
+
+    public void modifyPlayer(Long pId);
+
+    public void modifyTeam(Long tId);
+
+//    public void modifyVenue(Long vId);
 }

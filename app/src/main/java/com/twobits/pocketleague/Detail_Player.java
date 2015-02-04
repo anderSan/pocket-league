@@ -38,9 +38,7 @@ public class Detail_Player extends Fragment_Detail {
         setModifyClicked(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, NewPlayer.class);
-                intent.putExtra("PID", pId);
-                startActivity(intent);
+                mNav.modifyPlayer(pId);
             }
         });
 

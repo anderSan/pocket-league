@@ -142,13 +142,6 @@ public class DbSettings extends Fragment_Base {
 		return rootView;
 	}
 
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		MenuItem fav = menu.add("New Player");
-		fav.setIcon(R.drawable.ic_menu_add);
-		fav.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		fav.setIntent(new Intent(context, NewPlayer.class));
-	}
-
 	@Override
 	public void onResume() {
 		super.onResume();

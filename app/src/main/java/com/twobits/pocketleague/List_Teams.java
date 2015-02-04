@@ -1,6 +1,5 @@
 package com.twobits.pocketleague;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,7 @@ public class List_Teams extends Fragment_TopList {
         setAddClicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(context, NewTeam.class));
+                mNav.modifyTeam(null);
             }
         });
 

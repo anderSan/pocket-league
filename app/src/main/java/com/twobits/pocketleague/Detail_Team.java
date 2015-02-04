@@ -36,9 +36,7 @@ public class Detail_Team extends Fragment_Detail {
         setModifyClicked(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, NewTeam.class);
-                intent.putExtra("TID", tId);
-                startActivity(intent);
+                mNav.modifyTeam(tId);
             }
         });
 
