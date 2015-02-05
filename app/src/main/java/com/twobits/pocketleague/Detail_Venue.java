@@ -81,7 +81,7 @@ public class Detail_Venue extends Fragment_Detail {
             }
         }
 
-        mNav.setTitle(v.getName());
+        mNav.setTitle(v.getName(), "Venue Details");
 
         tv_venueName.setText(v.getName());
         tv_venueId.setText(String.valueOf(v.getId()));

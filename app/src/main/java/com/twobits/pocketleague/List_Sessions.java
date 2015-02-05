@@ -37,7 +37,7 @@ public class List_Sessions extends Fragment_TopList {
             }
         });
 
-        mNav.setTitle("Sessions");
+        mNav.setTitle("Sessions", "for " + mData.getCurrentGameType().toString());
         mNav.setDrawerItemChecked(0);
         rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 

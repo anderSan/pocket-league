@@ -50,6 +50,7 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
+    private CharSequence mSubTitle;
     NavDrawerItem[] mDrawerItems;
     FragmentManager mFragmentManager;
 
@@ -164,16 +165,18 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
                 mDrawerLayout, /* DrawerLayout object */
-                //		R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+                toolbar,
                 R.string.drawer_open, /* "open drawer" description for accessibility */
                 R.string.drawer_close /* "close drawer" description for accessibility */) {
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(mTitle);
+                getSupportActionBar().setSubtitle(mSubTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
                 getSupportActionBar().setTitle(mDrawerTitle);
+                getSupportActionBar().setSubtitle("");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -319,10 +322,19 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
 
     @Override
     public void setTitle(String title) {
-        GameType currentGameType = getCurrentGameType();
-        mTitle = "(" + currentGameType.toString() + ") " + title;
+        setTitle(title, "");
+    }
 
-        getSupportActionBar().setTitle(mTitle);
+    @Override
+    public void setTitle(String title, String subtitle) {
+        if (title != null) {
+            mTitle = title;
+            getSupportActionBar().setTitle(mTitle);
+        }
+        if (subtitle != null) {
+            mSubTitle = subtitle;
+            getSupportActionBar().setSubtitle(mSubTitle);
+        }
     }
 
     public void setDrawerItemChecked(int position) {

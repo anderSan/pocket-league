@@ -88,6 +88,8 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 	}
 
 	public void refreshBaseDetails() {
+        mNav.setTitle(s.getSessionName(), s.getSessionType().toString());
+
 		TextView sName = (TextView) rootView.findViewById(R.id.sDet_name);
 		TextView sId = (TextView) rootView.findViewById(R.id.sDet_id);
 		TextView sessionRuleSet = (TextView) rootView.findViewById(R.id.sDet_ruleSet);

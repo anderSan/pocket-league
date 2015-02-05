@@ -103,7 +103,7 @@ public class Detail_Team extends Fragment_Detail {
 			}
 		}
 
-        mNav.setTitle(t.getTeamName());
+        mNav.setTitle(t.getTeamName(), "Team Details");
 
 		tv_teamName.setText(t.getTeamName());
 		tv_teamId.setText(String.valueOf(t.getId()));

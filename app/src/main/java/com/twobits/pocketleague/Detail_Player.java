@@ -98,7 +98,7 @@ public class Detail_Player extends Fragment_Detail {
 			}
 		}
 
-        mNav.setTitle(p.getNickName());
+        mNav.setTitle(p.getNickName(), "Player Details");
 
 		tv_playerName.setText(p.getNickName() + " (" + p.getFirstName() + ' '
 				+ p.getLastName() + ")");

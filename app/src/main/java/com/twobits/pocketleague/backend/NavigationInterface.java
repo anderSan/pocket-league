@@ -5,6 +5,8 @@ import com.twobits.pocketleague.enums.SessionType;
 public interface NavigationInterface {
     public void setTitle(String title);
 
+    public void setTitle(String title, String subtitle);
+
     public void setDrawerItemChecked(int position);
 
     public void onBackPressed();
