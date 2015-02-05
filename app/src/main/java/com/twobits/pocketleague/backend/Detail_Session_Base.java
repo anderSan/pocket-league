@@ -1,6 +1,5 @@
 package com.twobits.pocketleague.backend;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.Quick_Game;
 import com.twobits.pocketleague.R;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.GameMember;
@@ -33,7 +31,6 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 	public Dao<GameMember, Long> gmDao;
 
 	public MatchInfo mInfo;
-	public ActionMode mActionMode;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -159,8 +156,6 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 	}
 
 	private void createMatch() {
-		Intent intent = new Intent(context, Quick_Game.class);
-
 		Game g = new Game(s, mInfo.getIdInSession(), s.getCurrentVenue(), false);
 		GameMember t1 = new GameMember(g, mInfo.getTeam1());
 		GameMember t2 = new GameMember(g, mInfo.getTeam2());
@@ -174,8 +169,7 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 
-		intent.putExtra("gId", g.getId());
-		startActivity(intent);
+		mNav.loadGame(g.getId());
 
 		// load a game that is in progress
 		// Intent intent = new Intent(v.getContext(), GameInProgress.class);
@@ -190,9 +184,7 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 	}
 
 	private void loadMatch(long game_id) {
-		Intent intent = new Intent(context, Quick_Game.class);
-		intent.putExtra("gId", game_id);
-		startActivity(intent);
+		mNav.loadGame(game_id);
 	}
 
     private void updateSession() {

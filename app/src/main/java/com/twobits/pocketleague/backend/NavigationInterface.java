@@ -11,7 +11,7 @@ public interface NavigationInterface {
 
     public void onBackPressed();
 
-	public void loadGame(long gId);
+	public void loadGame(Long gId);
 
 	public void viewSessions();
 

@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.DataInterface;
+import com.twobits.pocketleague.backend.Fragment_Base;
 import com.twobits.pocketleague.backend.NavDrawerAdapter;
 import com.twobits.pocketleague.backend.NavDrawerItem;
 import com.twobits.pocketleague.backend.NavigationInterface;
@@ -175,6 +176,8 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
             }
 
             public void onDrawerOpened(View drawerView) {
+                ((Fragment_Base) getFragmentManager()
+                        .findFragmentById(R.id.content_frame)).closeContextualActionBar();
                 getSupportActionBar().setTitle(mDrawerTitle);
                 getSupportActionBar().setSubtitle("");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -196,9 +199,10 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
     }
 
     @Override
-    public void onBackPressed()
-    {
-        if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+    public void onBackPressed() {
+        if (((Fragment_Base) getFragmentManager().findFragmentById(R.id.content_frame))
+                .closeContextualActionBar()) {
+        } else if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
             mDrawerLayout.closeDrawer(mDrawerList);
         } else if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
@@ -360,13 +364,6 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    public void loadGame(long gId) {
-        // Intent intent = new Intent(getApplicationContext(),
-        // GameInProgress.class);
-        // intent.putExtra("GID", gId);
-        // startActivity(intent);
-    }
-
     public String getPreference(String pref_name, String pref_default) {
         return settings.getString(pref_name, pref_default);
     }
@@ -383,6 +380,22 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
 
     public void setCurrentGameType(GameType gametype) {
         setPreference("currentGameType", gametype.name());
+    }
+
+    public void loadGame(Long gId) {
+        Fragment fragment = new Quick_Game();
+
+        Bundle args = new Bundle();
+        if (gId != null) {
+            args.putLong("GID", gId);
+        }
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.content_frame, fragment).addToBackStack(null);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.commit();
     }
 
     public void viewSessions() {

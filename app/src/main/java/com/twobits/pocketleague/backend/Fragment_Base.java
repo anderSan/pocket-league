@@ -5,14 +5,16 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.View;
 
-public class Fragment_Base extends Fragment {
+public abstract class Fragment_Base extends Fragment {
     protected String LOGTAG = getClass().getSimpleName();
     public View rootView;
     public Context context;
     public NavigationInterface mNav;
     public DataInterface mData;
+    public ActionMode mActionMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,14 @@ public class Fragment_Base extends Fragment {
         }
 
         context = getActivity();
+    }
+
+    public boolean closeContextualActionBar() {
+        if (mActionMode != null) {
+            mActionMode.finish();
+            return true;
+        }
+        return false;
     }
 
     public void log(String msg) {
