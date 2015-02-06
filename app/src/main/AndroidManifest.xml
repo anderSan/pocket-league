@@ -40,24 +40,6 @@
             android:exported="false"
             android:label="Dropbox Sync" />
 
-        <activity
-            android:name="com.twobits.pocketleague.backend.MenuContainerActivity"
-            android:label="@string/title_activity_menu_container"
-            android:parentActivityName="com.twobits.pocketleague.PocketLeague" >
-        </activity>
-        <activity
-            android:name="com.twobits.pocketleague.NewGame"
-            android:label="@string/title_activity_new_game" >
-        </activity>
-        <activity
-            android:name="com.twobits.pocketleague.Quick_Game"
-            android:label="@string/title_activity_quick_game"
-            android:parentActivityName="com.twobits.pocketleague.PocketLeague" >
-        </activity>
-        <activity
-            android:name="com.twobits.pocketleague.Detail_Game"
-            android:label="@string/title_activity_detail_game" >
-        </activity>
     </application>
 
 </manifest>

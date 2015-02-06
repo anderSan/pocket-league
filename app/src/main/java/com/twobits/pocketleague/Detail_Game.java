@@ -1,70 +1,61 @@
 package com.twobits.pocketleague;
 
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.backend.MenuContainerActivity;
+import com.twobits.pocketleague.backend.Fragment_Detail;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.Venue;
 
-public class Detail_Game extends MenuContainerActivity {
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+public class Detail_Game extends Fragment_Detail {
 	Long gId;
 	Game g;
 	Player[] p = new Player[2];
 	Dao<Game, Long> gDao;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_detail_game);
+    TextView game_p1;
+    TextView game_p2;
+    TextView game_id;
+    TextView game_session;
+    TextView game_venue;
+    TextView game_date;
 
-		Intent intent = getIntent();
-		gId = intent.getLongExtra("GID", -1);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem fav = menu.add(R.string.menu_modify);
-		fav.setIcon(R.drawable.ic_action_edit);
-		fav.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-		// Intent intent = new Intent(this, GameInProgress.class);
-		// intent.putExtra("GID", gId);
-
-		// fav.setIntent(intent);
-		return super.onCreateOptionsMenu(menu);
-	}
 
 	@Override
-	protected void onRestart() {
-		super.onRestart();
-		refreshDetails();
-	}
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                  Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.activity_detail_game, container, false);
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		refreshDetails();
+        Bundle args = getArguments();
+        gId = args.getLong("GID", -1);
+
+        gDao = mData.getGameDao();
+
+        game_p1 = (TextView) rootView.findViewById(R.id.gDet_p1);
+        game_p2 = (TextView) rootView.findViewById(R.id.gDet_p2);
+        game_id = (TextView) rootView.findViewById(R.id.gDet_id);
+        game_session = (TextView) rootView.findViewById(R.id.gDet_session);
+        game_venue = (TextView) rootView.findViewById(R.id.gDet_venue);
+        game_date = (TextView) rootView.findViewById(R.id.gDet_date);
+
+        return rootView;
 	}
 
 	public void refreshDetails() {
 		if (gId != -1) {
 			try {
-				Context context = getApplicationContext();
-				gDao = Game.getDao(context);
 				Dao<Player, Long> playerDao = Player.getDao(context);
 				Dao<Session, Long> sessionDao = Session.getDao(context);
 				Dao<Venue, Long> venueDao = Venue.getDao(context);
@@ -79,25 +70,16 @@ public class Detail_Game extends MenuContainerActivity {
 				// p[0] = g.getFirstPlayer();
 				// p[1] = g.getSecondPlayer();
 			} catch (SQLException e) {
-				Toast.makeText(getApplicationContext(), e.getMessage(),
+				Toast.makeText(context, e.getMessage(),
 						Toast.LENGTH_LONG).show();
 			}
 		}
 
-		TextView gameP1 = (TextView) findViewById(R.id.gDet_p1);
-		gameP1.setText(p[0].getNickName());
-
-		TextView gameP2 = (TextView) findViewById(R.id.gDet_p2);
-		gameP2.setText(p[1].getNickName());
-
-		TextView gameId = (TextView) findViewById(R.id.gDet_id);
-		gameId.setText(String.valueOf(g.getId()));
-
-		TextView gameSession = (TextView) findViewById(R.id.gDet_session);
-		gameSession.setText(g.getSession().getSessionName());
-
-		TextView gameVenue = (TextView) findViewById(R.id.gDet_venue);
-		gameVenue.setText(g.getVenue().getName());
+		game_p1.setText(p[0].getNickName());
+		game_p2.setText(p[1].getNickName());
+		game_id.setText(String.valueOf(g.getId()));
+		game_session.setText(g.getSession().getSessionName());
+		game_venue.setText(g.getVenue().getName());
 
 		// TextView gameRuleSet = (TextView) findViewById(R.id.gDet_ruleSet);
 		// gameRuleSet.setText("(" + RuleType.map.get(g.ruleSetId).getId() +
@@ -110,8 +92,8 @@ public class Detail_Game extends MenuContainerActivity {
 
 		DateFormat df = new SimpleDateFormat("EEE MMM dd, yyyy @HH:mm",
 				Locale.US);
-		TextView gameDate = (TextView) findViewById(R.id.gDet_date);
-		gameDate.setText(df.format(g.getDatePlayed()));
+
+		game_date.setText(df.format(g.getDatePlayed()));
 	}
 
 	// public void deleteGame(View view) {

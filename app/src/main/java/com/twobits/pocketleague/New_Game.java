@@ -1,10 +1,11 @@
 package com.twobits.pocketleague;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -13,7 +14,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.backend.MenuContainerActivity;
+import com.twobits.pocketleague.backend.Fragment_Base;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.Venue;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NewGame extends MenuContainerActivity {
+public class New_Game extends Fragment_Base {
 	Spinner spinner_p1;
 	Spinner spinner_p2;
 	Spinner spinner_session;
@@ -56,15 +57,19 @@ public class NewGame extends MenuContainerActivity {
 	Dao<Venue, Long> vDao;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_new_game);
-		intent = getIntent();
-		spinner_p1 = (Spinner) findViewById(R.id.spinner_player1);
-		spinner_p2 = (Spinner) findViewById(R.id.spinner_player2);
-		spinner_session = (Spinner) findViewById(R.id.spinner_session);
-		spinner_venue = (Spinner) findViewById(R.id.spinner_venue);
-		spinner_ruleSet = (Spinner) findViewById(R.id.spinner_ruleSet);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.activity_new_game, container, false);
+
+        Bundle args = getArguments();
+        p1Id = args.getLong("p1", -1);
+        p2Id = args.getLong("p2", -1);
+
+		spinner_p1 = (Spinner) rootView.findViewById(R.id.spinner_player1);
+		spinner_p2 = (Spinner) rootView.findViewById(R.id.spinner_player2);
+		spinner_session = (Spinner) rootView.findViewById(R.id.spinner_session);
+		spinner_venue = (Spinner) rootView.findViewById(R.id.spinner_venue);
+		spinner_ruleSet = (Spinner) rootView.findViewById(R.id.spinner_ruleSet);
 
 		refreshSpinners();
 
@@ -75,11 +80,13 @@ public class NewGame extends MenuContainerActivity {
 		spinner_ruleSet.setOnItemSelectedListener(mRuleSetSelectedHandler);
 
 		spinner_p2.setSelection(1);
-		if (intent.hasExtra("p1") && intent.hasExtra("p2")) {
+		if (p1Id != -1 && p2Id != -1) {
 			if (p1Id > p2Id) {
 				swapPlayers();
 			}
 		}
+
+        return rootView;
 	}
 
 	private OnItemSelectedListener mPlayerOneSelectedHandler = new OnItemSelectedListener() {
@@ -139,7 +146,6 @@ public class NewGame extends MenuContainerActivity {
 	};
 
 	public void refreshSpinners() {
-		Context context = getApplicationContext();
 		try {
 			pDao = Player.getDao(context);
 			sDao = Session.getDao(context);
@@ -193,23 +199,21 @@ public class NewGame extends MenuContainerActivity {
 		// ruleSetIds.add(rs.getId());
 		// }
 
-		ArrayAdapter<String> pAdapter = new ArrayAdapter<>(this,
+		ArrayAdapter<String> pAdapter = new ArrayAdapter<String>(context,
 				android.R.layout.simple_spinner_dropdown_item, player_names);
 		pAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		ArrayAdapter<String> sAdapter = new ArrayAdapter<>(this,
+		ArrayAdapter<String> sAdapter = new ArrayAdapter<String>(context,
 				android.R.layout.simple_spinner_dropdown_item, session_names);
 		sAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		ArrayAdapter<String> vAdapter = new ArrayAdapter<>(this,
+		ArrayAdapter<String> vAdapter = new ArrayAdapter<String>(context,
 				android.R.layout.simple_spinner_dropdown_item, venue_names);
 		vAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		ArrayAdapter<String> rsAdapter = new ArrayAdapter<>(this,
-				android.R.layout.simple_spinner_dropdown_item,
-				ruleset_descriptions);
-		rsAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		ArrayAdapter<String> rsAdapter = new ArrayAdapter<String>(context,
+				android.R.layout.simple_spinner_dropdown_item, ruleset_descriptions);
+		rsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 		spinner_p1.setAdapter(pAdapter);
 		spinner_p2.setAdapter(pAdapter);
