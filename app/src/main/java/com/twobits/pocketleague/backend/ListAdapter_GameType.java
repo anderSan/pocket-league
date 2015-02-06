@@ -18,8 +18,7 @@ public class ListAdapter_GameType extends ArrayAdapter<Item_GameType> {
 	private int layoutResourceId;
 	private List<Item_GameType> gametype_list = new ArrayList<>();
 
-	public ListAdapter_GameType(Context context, int layoutResourceId,
-			List<Item_GameType> data) {
+	public ListAdapter_GameType(Context context, int layoutResourceId, List<Item_GameType> data) {
 		super(context, layoutResourceId, data);
 		this.context = context;
 		this.layoutResourceId = layoutResourceId;
@@ -36,8 +35,7 @@ public class ListAdapter_GameType extends ArrayAdapter<Item_GameType> {
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			gridView = new View(context);
-			gridView = inflater.inflate(R.layout.grid_item, null);
+			gridView = inflater.inflate(R.layout.grid_item, parent, false);
 			gridView.setTag(gametype_list.get(position).getGameType());
 		} else {
 			gridView = convertView;
@@ -55,15 +53,5 @@ public class ListAdapter_GameType extends ArrayAdapter<Item_GameType> {
 	@Override
 	public int getCount() {
 		return gametype_list.size();
-	}
-
-	@Override
-	public Item_GameType getItem(int position) {
-		return super.getItem(position);
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return super.getItemId(position);
 	}
 }

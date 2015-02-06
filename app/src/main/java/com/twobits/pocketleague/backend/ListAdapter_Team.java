@@ -33,7 +33,7 @@ public class ListAdapter_Team extends ArrayAdapter<Item_Team> {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context
                     .LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_team, null);
+            convertView = inflater.inflate(R.layout.list_item_team, parent, false);
 
             holder = new ViewHolder_Team();
             holder.t_name = (TextView) convertView.findViewById(R.id.tv_t_name);
@@ -56,17 +56,6 @@ public class ListAdapter_Team extends ArrayAdapter<Item_Team> {
     public int getCount() {
         return team_list.size();
     }
-
-    @Override
-    public Item_Team getItem(int position) {
-        return super.getItem(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
-    }
-
 }
 
 class ViewHolder_Team {

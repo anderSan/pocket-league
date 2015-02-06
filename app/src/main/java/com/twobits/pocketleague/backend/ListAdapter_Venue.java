@@ -33,7 +33,7 @@ public class ListAdapter_Venue extends ArrayAdapter<Item_Venue> {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context
                     .LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_venue, null);
+            convertView = inflater.inflate(R.layout.list_item_venue, parent, false);
 
             holder = new ViewHolder_Venue();
             holder.v_name = (TextView) convertView.findViewById(R.id.tv_v_name);
@@ -55,16 +55,6 @@ public class ListAdapter_Venue extends ArrayAdapter<Item_Venue> {
     @Override
     public int getCount() {
         return venue_list.size();
-    }
-
-    @Override
-    public Item_Venue getItem(int position) {
-        return super.getItem(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
     }
 }
 

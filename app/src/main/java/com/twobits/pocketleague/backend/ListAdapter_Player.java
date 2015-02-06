@@ -33,7 +33,7 @@ public class ListAdapter_Player extends ArrayAdapter<Item_Player> {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_player, null);
+            convertView = inflater.inflate(R.layout.list_item_player, parent, false);
 
             holder = new ViewHolder_Player();
             holder.p_color = (TextView) convertView.findViewById(R.id.tv_p_color);
@@ -59,16 +59,6 @@ public class ListAdapter_Player extends ArrayAdapter<Item_Player> {
     @Override
     public int getCount() {
         return player_list.size();
-    }
-
-    @Override
-    public Item_Player getItem(int position) {
-        return super.getItem(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
     }
 }
 

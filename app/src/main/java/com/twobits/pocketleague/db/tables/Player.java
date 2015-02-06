@@ -248,7 +248,7 @@ public class Player implements Comparable<Player> {
         return id == another.id;
     }
 
-    public boolean exists(Context context) throws SQLException {
+    public boolean exists(Context context) {
         return exists(nickname, context);
     }
 

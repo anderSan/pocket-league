@@ -112,7 +112,7 @@ public class Team {
 	// Additional methods
 	// =========================================================================
 
-	public boolean exists(Context context) throws SQLException {
+	public boolean exists(Context context) {
 		return exists(name, context);
 	}
 

@@ -35,14 +35,4 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
 	public int getCount() {
 		return strings.size();
 	}
-
-	@Override
-	public String getItem(int position) {
-		return super.getItem(position);
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return super.getItemId(position);
-	}
 }

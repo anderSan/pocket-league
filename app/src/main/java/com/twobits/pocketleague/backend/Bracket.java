@@ -515,8 +515,7 @@ public class Bracket {
 		Integer topOfTier = getTopMatchOfTier(tier);
 		Integer topOfPrevTier = getTopMatchOfTier(tier - 1);
 
-		Integer topParentMatch = topOfPrevTier + 2 * (matchIdx - topOfTier);
-		return topParentMatch;
+		return topOfPrevTier + 2 * (matchIdx - topOfTier);
 	}
 
 	private int getChildViewId(int bracketIdx) {
@@ -689,7 +688,7 @@ public class Bracket {
 		if (ii > 0) {
 			while (idxA < sm1Idcs.size() - 1) {
 				for (int jj = 0; jj < ii / 2; jj++) {
-					idxB = (int) (idxA + ii - 1 - jj);
+					idxB = (idxA + ii - 1 - jj);
 					Collections.swap(sm1Idcs, idxA + jj, idxB);
 				}
 				idxA += (9 * ii) / 4;

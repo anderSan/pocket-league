@@ -33,7 +33,7 @@ public class ListAdapter_Session extends ArrayAdapter<Item_Session> {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_session, null);
+            convertView = inflater.inflate(R.layout.list_item_session, parent, false);
 
             holder = new ViewHolder_Session();
             holder.s_name = (TextView) convertView.findViewById(R.id.tv_s_name);
@@ -57,16 +57,6 @@ public class ListAdapter_Session extends ArrayAdapter<Item_Session> {
     @Override
     public int getCount() {
         return session_list.size();
-    }
-
-    @Override
-    public Item_Session getItem(int position) {
-        return super.getItem(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
     }
 }
 
