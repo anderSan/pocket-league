@@ -3,16 +3,17 @@ package com.twobits.pocketleague.gameslibrary;
 import java.util.Arrays;
 import java.util.List;
 
-public enum GameType {BILLIARDS("Billiards", R.drawable.billiards,
-                        Arrays.asList(GameRule.EIGHTBALL, GameRule.NINEBALL)),
-                      CARDS("Cards", R.drawable.cards, Arrays.asList(GameRule.SPADES)),
-                      DARTS("Darts", R.drawable.darts, Arrays.asList(GameRule.CRICKET)),
-                      GOLF("Golf", R.drawable.golf, Arrays.asList(GameRule.DISC_GOLF)),
-                      POLISH_HORSESHOES("Polish Horseshoes", R.drawable.polishhorseshoes,
-                        Arrays.asList(GameRule.POLISH_SINGLES)),
+public enum GameType {
+    BILLIARDS("Billiards", R.drawable.billiards, Arrays.asList(GameRule.EIGHTBALL,
+            GameRule.NINEBALL)),
+    CARDS("Cards", R.drawable.cards, Arrays.asList(GameRule.SPADES)),
+    DARTS("Darts", R.drawable.darts, Arrays.asList(GameRule.DARTS_CRICKET)),
+    DISC_GOLF("Disc Golf", R.drawable.golf, Arrays.asList(GameRule.DISC_GOLF)),
+    GOLF("Golf", R.drawable.golf, Arrays.asList(GameRule.GOLF)),
+    POLISH_HORSESHOES("Polish Horseshoes", R.drawable.polishhorseshoes,
+            Arrays.asList(GameRule.POLISH_SINGLES, GameRule.POLISH_DOUBLES)),
     // TRIVIA("Trivia", R.drawable.test2, Arrays.asList()),
-                      UNDEFINED("Undefined", R.drawable.undefined,
-                        Arrays.asList(GameRule.UNDEFINED));
+    UNDEFINED("Undefined", R.drawable.undefined, Arrays.asList(GameRule.UNDEFINED));
 
     private String gametype_label;
     private int drawable_id;

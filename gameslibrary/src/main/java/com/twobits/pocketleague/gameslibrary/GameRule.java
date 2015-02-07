@@ -3,15 +3,20 @@ package com.twobits.pocketleague.gameslibrary;
 import com.twobits.pocketleague.gameslibrary.Rulesets.Billiards.EightBall;
 import com.twobits.pocketleague.gameslibrary.Rulesets.Billiards.NineBall;
 import com.twobits.pocketleague.gameslibrary.Rulesets.Darts.Cricket;
+import com.twobits.pocketleague.gameslibrary.Rulesets.DiscGolf;
+import com.twobits.pocketleague.gameslibrary.Rulesets.Golf;
+import com.twobits.pocketleague.gameslibrary.Rulesets.Polishhorseshoes.PolishDoubles;
 import com.twobits.pocketleague.gameslibrary.Rulesets.Polishhorseshoes.PolishSingles;
 import com.twobits.pocketleague.gameslibrary.Rulesets.Undefined.Undefined;
 
 public enum GameRule {
-    CRICKET(new Cricket()),
-    DISC_GOLF(new Undefined()),
+    DARTS_CRICKET(new Cricket()),
+    DISC_GOLF(new DiscGolf()),
     EIGHTBALL(new EightBall()),
+    GOLF(new Golf()),
     NINEBALL(new NineBall()),
     POLISH_SINGLES(new PolishSingles()),
+    POLISH_DOUBLES(new PolishDoubles()),
     SPADES(new Undefined()),
     UNDEFINED(new Undefined());
 

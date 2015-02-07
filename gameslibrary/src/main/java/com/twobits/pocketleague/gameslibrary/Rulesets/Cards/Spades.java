@@ -1,20 +1,20 @@
-package com.twobits.pocketleague.gameslibrary.Rulesets.Darts;
+package com.twobits.pocketleague.gameslibrary.Rulesets.Cards;
 
 import com.twobits.pocketleague.gameslibrary.GameType;
 import com.twobits.pocketleague.gameslibrary.RuleSet;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
-public class Cricket implements RuleSet {
+public class Spades implements RuleSet {
 	public GameType getGameType() {
-		return GameType.DARTS;
+		return GameType.CARDS;
 	}
 
 	public String getName() {
-		return "Cricket";
+		return "Spades";
 	}
 
 	public String getDescription() {
-		return "Cricket rules for darts.";
+		return "Spades.";
 	}
 
 	public boolean allowed_nTeams(int n_teams) {
@@ -22,7 +22,7 @@ public class Cricket implements RuleSet {
 	}
 
 	public boolean allowed_teamSize(int team_size) {
-        return team_size == 1 || team_size == 2;
+        return team_size == 2;
 	}
 
 	public ScoreType getScoreType() {

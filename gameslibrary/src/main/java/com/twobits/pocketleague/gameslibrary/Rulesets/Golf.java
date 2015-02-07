@@ -1,24 +1,24 @@
-package com.twobits.pocketleague.gameslibrary.Rulesets.Darts;
+package com.twobits.pocketleague.gameslibrary.Rulesets;
 
 import com.twobits.pocketleague.gameslibrary.GameType;
 import com.twobits.pocketleague.gameslibrary.RuleSet;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
-public class Cricket implements RuleSet {
+public class Golf implements RuleSet {
 	public GameType getGameType() {
-		return GameType.DARTS;
+		return GameType.GOLF;
 	}
 
 	public String getName() {
-		return "Cricket";
+		return "Golf";
 	}
 
 	public String getDescription() {
-		return "Cricket rules for darts.";
+		return "Basic Golf.";
 	}
 
 	public boolean allowed_nTeams(int n_teams) {
-        return n_teams == 2;
+        return n_teams >= 1;
 	}
 
 	public boolean allowed_teamSize(int team_size) {
@@ -26,7 +26,7 @@ public class Cricket implements RuleSet {
 	}
 
 	public ScoreType getScoreType() {
-		return ScoreType.POINTS;
+		return ScoreType.POINTS_INVERSE;
 	}
 
 	public boolean detailedRuleSet() {
