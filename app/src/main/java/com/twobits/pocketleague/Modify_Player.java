@@ -155,28 +155,22 @@ public class Modify_Player extends Fragment_Edit {
 		Team newTeam = new Team(nickname, 1, player_color, is_favorite);
 		TeamMember newTeamMember = new TeamMember(newTeam, newPlayer);
 
-		try {
-			if (newPlayer.exists(context) || newTeam.exists(context)) {
-				Toast.makeText(context, "Player already exists.",
-						Toast.LENGTH_SHORT).show();
-			} else {
-				try {
-					pDao.create(newPlayer);
-					tDao.create(newTeam);
-					tmDao.create(newTeamMember);
-					Toast.makeText(context, "Player created!", Toast.LENGTH_SHORT)
-							.show();
-					mNav.onBackPressed();
-				} catch (SQLException ee) {
-					loge("Could not create player", ee);
-					Toast.makeText(context, "Could not create player.",
-							Toast.LENGTH_SHORT).show();
-				}
-			}
-		} catch (SQLException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-			loge("Could not test for existence of player or team", e);
-		}
+        if (newPlayer.exists(context) || newTeam.exists(context)) {
+            Toast.makeText(context, "Player already exists.", Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                pDao.create(newPlayer);
+                tDao.create(newTeam);
+                tmDao.create(newTeamMember);
+                Toast.makeText(context, "Player created!", Toast.LENGTH_SHORT)
+                        .show();
+                mNav.onBackPressed();
+            } catch (SQLException ee) {
+                loge("Could not create player", ee);
+                Toast.makeText(context, "Could not create player.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
 	}
 
 	private void modifyPlayer(String nickname, String first_name,

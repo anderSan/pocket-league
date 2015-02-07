@@ -135,33 +135,28 @@ public class Modify_Team extends Fragment_Edit {
 	private void createTeam(String team_name, int team_color, boolean is_favorite) {
 		Team newTeam = new Team(team_name, playerIdxList.size(), team_color, is_favorite);
 
-		try {
-			if (playerIdxList.size() == 1) {
-				Toast.makeText(context, "Cannot create a team with one player.",
-						Toast.LENGTH_SHORT).show();
-			} else if (newTeam.exists(context)) {
-				Toast.makeText(context, "Team already exists.", Toast.LENGTH_SHORT).show();
-			} else {
-				try {
-					tDao.create(newTeam);
-					for (Integer playerIdx : playerIdxList) {
-						Player p = players.get(playerIdx);
-						TeamMember tm = new TeamMember(newTeam, p);
-						tmDao.create(tm);
-					}
-					Toast.makeText(context, "Team created!", Toast.LENGTH_SHORT)
-							.show();
-					mNav.onBackPressed();
-				} catch (SQLException ee) {
-					loge("Could not create team", ee);
-					Toast.makeText(context, "Could not create team.",
-							Toast.LENGTH_SHORT).show();
-				}
-			}
-		} catch (SQLException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-			loge("Could not test for existence of team", e);
-		}
+        if (playerIdxList.size() == 1) {
+            Toast.makeText(context, "Cannot create a team with one player.",
+                    Toast.LENGTH_SHORT).show();
+        } else if (newTeam.exists(context)) {
+            Toast.makeText(context, "Team already exists.", Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                tDao.create(newTeam);
+                for (Integer playerIdx : playerIdxList) {
+                    Player p = players.get(playerIdx);
+                    TeamMember tm = new TeamMember(newTeam, p);
+                    tmDao.create(tm);
+                }
+                Toast.makeText(context, "Team created!", Toast.LENGTH_SHORT)
+                        .show();
+                mNav.onBackPressed();
+            } catch (SQLException ee) {
+                loge("Could not create team", ee);
+                Toast.makeText(context, "Could not create team.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
 	}
 
 	private void modifyTeam(String team_name, int team_color, boolean is_active,
