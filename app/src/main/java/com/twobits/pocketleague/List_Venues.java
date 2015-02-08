@@ -23,7 +23,7 @@ public class List_Venues extends Fragment_TopList {
     private ListView lv;
     private ListAdapter_Venue venue_adapter;
     private List<Item_Venue> venue_list = new ArrayList<>();
-    private Dao<Venue, Long> vDao = null;
+    private Dao<Venue, Long> vDao;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

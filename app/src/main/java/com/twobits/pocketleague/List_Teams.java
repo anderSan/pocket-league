@@ -23,7 +23,7 @@ public class List_Teams extends Fragment_TopList {
     private ListView lv;
     private ListAdapter_Team team_adapter;
     private List<Item_Team> team_list = new ArrayList<>();
-    private Dao<Team, Long> tDao = null;
+    private Dao<Team, Long> tDao;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

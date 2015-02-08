@@ -13,7 +13,6 @@ import com.twobits.pocketleague.R;
 import java.util.List;
 
 public class ListAdapter_Session extends ArrayAdapter<Item_Session> {
-    public static final String LOGTAG = "ListAdapter_Session";
 	private Context context;
 	private List<Item_Session> session_list;
     private View.OnClickListener cbClicked;

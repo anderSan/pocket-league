@@ -23,7 +23,7 @@ public class List_Players extends Fragment_TopList {
     ListView lv;
     private ListAdapter_Player player_adapter;
     private List<Item_Player> player_list = new ArrayList<>();
-    private Dao<Player, Long> pDao = null;
+    private Dao<Player, Long> pDao;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

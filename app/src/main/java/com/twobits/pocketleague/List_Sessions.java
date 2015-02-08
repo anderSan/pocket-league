@@ -24,7 +24,7 @@ public class List_Sessions extends Fragment_TopList {
     ListView lv;
     private ListAdapter_Session session_adapter;
     private List<Item_Session> session_list = new ArrayList<>();
-    private Dao<Session, Long> sDao = null;
+    private Dao<Session, Long> sDao;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

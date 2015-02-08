@@ -13,7 +13,6 @@ import com.twobits.pocketleague.R;
 import java.util.List;
 
 public class ListAdapter_Venue extends ArrayAdapter<Item_Venue> {
-    public static final String LOGTAG = "ListAdapter_Venue";
     private Context context;
     private List<Item_Venue> venue_list;
     private View.OnClickListener cbClicked;
