@@ -105,7 +105,6 @@
     	android:layout_alignStart="@id/editText_nickname"
         android:layout_below="@id/checkBox_rightFooted"
     	android:background="@color/Black"
-    	android:onClick="showColorPicker"
     	/>
     
     <Button

@@ -18,6 +18,7 @@ import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.db.tables.TeamMember;
 
 import java.sql.SQLException;
+import java.util.Random;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener;
@@ -40,7 +41,7 @@ public class Modify_Player extends Fragment_Edit {
 	CheckBox cb_lf;
 	CheckBox cb_rf;
 	Button btn_color;
-	int player_color = Color.BLACK;
+	int player_color;
 	CheckBox cb_isFavorite;
 
 	@Override
@@ -67,6 +68,12 @@ public class Modify_Player extends Fragment_Edit {
 		btn_color = (Button) rootView.findViewById(R.id.newPlayer_colorPicker);
 		cb_isFavorite = (CheckBox) rootView.findViewById(R.id.newPlayer_isFavorite);
 
+        btn_color.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showColorPicker();
+            }
+        });
         btn_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +83,13 @@ public class Modify_Player extends Fragment_Edit {
 
         if (pId != -1) {
             loadPlayerValues();
+        } else {
+            Random rand = new Random();
+            int r = rand.nextInt();
+            int g = rand.nextInt();
+            int b = rand.nextInt();
+            player_color = Color.rgb(r, g, b);
+            btn_color.setBackgroundColor(player_color);
         }
 
         return rootView;
@@ -203,7 +217,7 @@ public class Modify_Player extends Fragment_Edit {
 		}
 	}
 
-	public void showColorPicker(View view) {
+	public void showColorPicker() {
 		// initialColor is the initially-selected color to be shown in the
 		// rectangle on the left of the arrow.
 		// for example, 0xff000000 is black, 0xff0000ff is blue. Please be aware
