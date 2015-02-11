@@ -36,7 +36,7 @@ public class Session {
 	private GameType game_type;
 
 	@DatabaseField
-	private GameRule game_rule;
+	private GameRule game_rules;
 
 	@DatabaseField(canBeNull = false)
 	private SessionType session_type;
@@ -62,12 +62,12 @@ public class Session {
 	public Session() {
 	}
 
-	public Session(String session_name, GameType game_type, GameRule game_rule,
+	public Session(String session_name, GameType game_type, GameRule game_rules,
 			SessionType session_type, int team_size, Venue current_venue) {
 		super();
 		this.name = session_name;
 		this.game_type = game_type;
-		this.game_rule = game_rule;
+		this.game_rules = game_rules;
 		this.session_type = session_type;
 		this.team_size = team_size;
 		this.current_venue = current_venue;
@@ -104,17 +104,17 @@ public class Session {
 		return game_type;
 	}
 
-	public void setGameType(GameType game_type) {
-		this.game_type = game_type;
-	}
+//	public void setGameType(GameType game_type) {
+//		this.game_type = game_type;
+//	}
 
 	public GameRule getGameRule() {
-		return game_rule;
+		return game_rules;
 	}
 
-	public void setGameRules(GameRule game_rule) {
-		this.game_rule = game_rule;
-	}
+//	public void setGameRules(GameRule game_rule) {
+//		this.game_rules = game_rule;
+//	}
 
 	public SessionType getSessionType() {
 		return session_type;
@@ -169,6 +169,6 @@ public class Session {
 	// =========================================================================
 
 	public RuleSet getRuleSet() {
-		return game_rule.toRuleSet();
+		return game_rules.toRuleSet();
 	}
 }

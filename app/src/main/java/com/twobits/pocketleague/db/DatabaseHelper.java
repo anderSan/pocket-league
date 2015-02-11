@@ -62,7 +62,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase sqliteDatabase,
 			ConnectionSource connectionSource) {
-		Log.i("DatabaseHelper.onCreate()", "Attempting to create db... ");
+		Log.i("DbHelper.onCreate()", "Attempting to create db... ");
 		try {
 			createAll(connectionSource);
 		} catch (SQLException e) {
@@ -75,7 +75,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void onUpgrade(final SQLiteDatabase sqliteDatabase,
 			final ConnectionSource connectionSource, int oldVer,
 			final int newVer) {
-		Log.i("DatabaseHelper.onUpgrade()",
+		Log.i("DbHelper.onUpgrade()",
 				"Attempting to upgrade from version " + oldVer + " to version "
 						+ newVer + ".");
 
@@ -101,7 +101,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private void increment_09(SQLiteDatabase sqliteDatabase,
 			ConnectionSource connectionSource) {
 		try {
-			Log.i("DatabaseHelper.increment_09",
+			Log.i("DbHelper.increment_09",
 					"Attempting to upgrade from version 09 to version 10.");
 			Dao<Game, Long> gDao = getGameDao();
 			Dao<Player, Long> pDao = getPlayerDao();
@@ -123,7 +123,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private void increment_10(SQLiteDatabase sqliteDatabase,
 			ConnectionSource connectionSource) {
 		try {
-			Log.i("DatabaseHelper.increment_10",
+			Log.i("DbHelper.increment_10",
 					"Attempting to upgrade from version 10 to version 11.");
 			// throw table
 			Dao<Game, Long> gDao = getGameDao();

@@ -8,11 +8,9 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.twobits.pocketleague.db.DatabaseHelper;
-import com.twobits.pocketleague.gameslibrary.ScoreType;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -147,23 +145,18 @@ public class Game {
 	// Additional methods
 	// =========================================================================
 	public Team getWinner() {
-		List<GameMember> game_member_list = new ArrayList<>();
-		for (GameMember gm : game_members) {
-			game_member_list.add(gm);
-		}
-		Collections.sort(game_member_list);
+        List<GameMember> winners = new ArrayList<>();
+        Team winner = null;
 
-		ScoreType scoretype = session.getRuleSet().getScoreType();
-		Team winner;
-		switch (scoretype) {
-		default:
-			winner = game_member_list.get(game_member_list.size()-1).getTeam();
-			break;
-		case POINTS_INVERSE:
-		case TIME_INVERSE:
-			winner = game_member_list.get(0).getTeam();
-			break;
+		for (GameMember gm : game_members) {
+            if (gm.getIsWinner()) {
+                winners.add(gm);
+            }
 		}
-		return winner;
+
+        if (winners.size() == 1) {
+            winner = winners.get(0).getTeam();
+        }
+        return winner;
 	}
 }

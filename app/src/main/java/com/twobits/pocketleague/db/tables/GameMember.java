@@ -10,10 +10,10 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.twobits.pocketleague.db.DatabaseHelper;
 
 @DatabaseTable
-public class GameMember implements Comparable<GameMember> {
+public class GameMember {
 	public static final String GAME = "game_id";
 	public static final String TEAM = "team_id";
-	public static final String SCORE = "score";
+	public static final String IS_WINNER = "is_winner";
 
 	@DatabaseField(generatedId = true)
 	private long id;
@@ -25,7 +25,7 @@ public class GameMember implements Comparable<GameMember> {
 	private Team team;
 
 	@DatabaseField(canBeNull = false)
-	private int score;
+	private boolean is_winner;
 
 	public GameMember() {
 	}
@@ -59,32 +59,11 @@ public class GameMember implements Comparable<GameMember> {
 		return team;
 	}
 
-    public int getScore() {
-        return score;
+    public boolean getIsWinner() {
+        return is_winner;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void setIsWinner(boolean is_winner) {
+        this.is_winner = is_winner;
     }
-
-	// =========================================================================
-	// Additional methods
-	// =========================================================================
-
-	public int compareTo(GameMember another) {
-		if (score < another.score) {
-			return -1;
-		} else if (score == another.score) {
-			return 0;
-		} else {
-			return 1;
-		}
-	}
-
-	public boolean equals(Object o) {
-		if (!(o instanceof GameMember))
-			return false;
-		GameMember another = (GameMember) o;
-        return id == another.id;
-	}
 }

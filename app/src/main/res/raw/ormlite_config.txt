@@ -1,5 +1,5 @@
 #
-# generated on 2015/01/21 12:29:29
+# generated on 2015/02/10 11:50:17
 #
 # --table-start--
 dataClass=com.twobits.pocketleague.db.tables.Game
@@ -61,7 +61,7 @@ uniqueCombo=true
 foreignAutoRefresh=true
 # --field-end--
 # --field-start--
-fieldName=score
+fieldName=is_winner
 canBeNull=false
 # --field-end--
 # --table-fields-end--
@@ -138,7 +138,7 @@ fieldName=game_type
 canBeNull=false
 # --field-end--
 # --field-start--
-fieldName=game_rule
+fieldName=game_rules
 # --field-end--
 # --field-start--
 fieldName=session_type
