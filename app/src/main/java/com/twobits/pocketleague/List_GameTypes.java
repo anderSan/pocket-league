@@ -45,7 +45,7 @@ public class List_GameTypes extends Fragment_TopList {
 
 	}
 
-	public void refreshListing() {
+	public void refreshDetails() {
 		gametypes_list.clear();
 
 		for (GameType gt : GameType.values()) {

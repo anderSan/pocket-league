@@ -12,4 +12,8 @@ public class Detail_Session_Ladder extends Detail_Session_Base {
         rootView = inflater.inflate(R.layout.fragment_detail_session_ladder, container, false);
     }
 
+    @Override
+    public void refreshDetails() {
+
+    }
 }

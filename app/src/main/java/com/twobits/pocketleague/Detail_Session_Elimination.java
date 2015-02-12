@@ -54,6 +54,7 @@ public class Detail_Session_Elimination extends Detail_Session_Base {
 		}
 	}
 
+    @Override
 	public void refreshDetails() {
 		if (bracketHolder != null) {
 			bracketHolder.refreshBrackets();

@@ -97,10 +97,6 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
         bar_isFavorite.setChecked(s.getIsFavorite());
 	}
 
-	public void refreshDetails() {
-
-	}
-
 	public class ActionBarCallBack implements ActionMode.Callback {
 		// Called when the action mode is created; startActionMode() was called
 		@Override
