@@ -42,6 +42,4 @@ public abstract class Fragment_Detail extends Fragment_Base {
         bar_isActive = (ToggleButton) rootView.findViewById(R.id.bar_active);
         bar_isActive.setOnClickListener(activeClicked);
     }
-
-    public abstract void refreshDetails();
 }

@@ -52,7 +52,7 @@ public class List_Sessions extends Fragment_TopList {
     }
 
     @Override
-    public void refreshListing() {
+    public void refreshDetails() {
         session_adapter.clear();
 
         try {

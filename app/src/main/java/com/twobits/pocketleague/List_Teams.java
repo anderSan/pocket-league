@@ -50,7 +50,7 @@ public class List_Teams extends Fragment_TopList {
 	}
 
     @Override
-	public void refreshListing() {
+	public void refreshDetails() {
 		team_adapter.clear();
 
 		try {

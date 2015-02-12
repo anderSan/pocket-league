@@ -49,7 +49,7 @@ public class List_Venues extends Fragment_TopList {
 	}
 
     @Override
-	public void refreshListing() {
+	public void refreshDetails() {
         venue_adapter.clear();
 
 		try {

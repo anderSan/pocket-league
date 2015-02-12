@@ -450,9 +450,10 @@ public class Bracket {
 				}
 				drwString += "_labeled";
 				if (smLost(sm1Idcs.get(idx))) {
-					tv.setPaintFlags(tv.getPaintFlags()
-							| Paint.STRIKE_THRU_TEXT_FLAG);
-				}
+					tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+				} else {
+                    tv.setPaintFlags(tv.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+                }
 			}
 			if (sm2Types.get(idx) == BrNodeType.NA) {
 				drwString = "endpoint";
@@ -487,9 +488,10 @@ public class Bracket {
 					}
 					drwString += "_labeled";
 					if (smLost(sm2Idcs.get(idx))) {
-						tv.setPaintFlags(tv.getPaintFlags()
-								| Paint.STRIKE_THRU_TEXT_FLAG);
-					}
+						tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+					} else {
+                        tv.setPaintFlags(tv.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+                    }
 				}
 				tv.setBackgroundResource(BrDrawable.map.get(drwString));
 				tv.getBackground().setColorFilter(drwColor, Mode.MULTIPLY);

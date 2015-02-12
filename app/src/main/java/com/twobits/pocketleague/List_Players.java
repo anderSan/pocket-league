@@ -51,7 +51,7 @@ public class List_Players extends Fragment_TopList {
     }
 
     @Override
-    public void refreshListing() {
+    public void refreshDetails() {
         player_adapter.clear();
 
         try {

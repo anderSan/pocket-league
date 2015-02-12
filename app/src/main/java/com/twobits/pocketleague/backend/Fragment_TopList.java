@@ -24,7 +24,7 @@ public abstract class Fragment_TopList extends Fragment_Base {
         @Override
         public void onClick(View v) {
             show_favorites = ((ToggleButton) v).isChecked();
-            refreshListing();
+            refreshDetails();
         }
     };
 
@@ -32,14 +32,14 @@ public abstract class Fragment_TopList extends Fragment_Base {
         @Override
         public void onClick(View v) {
             show_actives = ((ToggleButton) v).isChecked();
-            refreshListing();
+            refreshDetails();
         }
     };
 
     @Override
     public void onResume() {
         super.onResume();
-        refreshListing();
+        refreshDetails();
     }
 
     public void setupBarButtons() {
@@ -62,6 +62,4 @@ public abstract class Fragment_TopList extends Fragment_Base {
         bar_isActive.setOnClickListener(activeClicked);
         bar_isActive.setChecked(show_actives);
     }
-
-    public abstract void refreshListing();
 }
