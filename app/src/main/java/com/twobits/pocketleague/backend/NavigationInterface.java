@@ -11,6 +11,8 @@ public interface NavigationInterface {
 
     public void onBackPressed();
 
+    public void refreshFragment();
+
 	public void loadGame(Long gId);
 
 	public void viewSessions();

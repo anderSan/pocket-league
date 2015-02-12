@@ -1,5 +1,6 @@
 package com.twobits.pocketleague;
 
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -68,7 +69,6 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
     Dao<Team, Long> tDao;
     Dao<TeamMember, Long> tmDao;
     Dao<Venue, Long> vDao;
-
 
     public Dao<Game, Long> getGameDao(){
         return gDao;
@@ -209,6 +209,11 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void refreshFragment() {
+        Fragment_Base f = (Fragment_Base) getFragmentManager().findFragmentById(R.id.content_frame);
+        f.refreshDetails();
     }
 
     private NavDrawerItem[] makeDrawerItemArray() {
@@ -383,19 +388,18 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
     }
 
     public void loadGame(Long gId) {
-        Fragment fragment = new Quick_Game();
-
-        Bundle args = new Bundle();
-        if (gId != null) {
-            args.putLong("GID", gId);
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
         }
-        fragment.setArguments(args);
+        ft.addToBackStack(null);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.content_frame, fragment).addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
+        DialogFragment newFragment = Quick_Game.newInstance(gId);
+        newFragment.show(ft, "dialog");
     }
 
     public void viewSessions() {
