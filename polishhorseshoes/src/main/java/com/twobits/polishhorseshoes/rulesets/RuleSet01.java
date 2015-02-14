@@ -93,12 +93,13 @@ public class RuleSet01 extends RuleSet00 {
 
         boolean fireHit = isOnFire(t) && isStackHit(t);
         boolean broken = t.throwResult == ThrowResult.BROKEN;
-        boolean defFail = t.throwResult == ThrowResult.DROP && (isStackHit(t) || (t.throwType ==
-                ThrowType.STRIKE && t.deadType == DeadType.ALIVE));
+        boolean defFail = t.throwResult == ThrowResult.DROP && (isStackHit(t) ||
+                (t.throwType == ThrowType.STRIKE && t.deadType == DeadType.ALIVE));
 
         // defensive error will also quench
         boolean quenches = isDefensiveError(t) || fireHit || broken || defFail;
-        Log.i("QuenchDefense", "throw: " + t.throwIdx + ": fireHit: " + fireHit + ", broken: " + broken + ", defFail: " + defFail + ", quenches: " + quenches);
+        Log.i("QuenchDefense", "throw: " + t.throwIdx + ": fireHit: " + fireHit + ", " +
+                "broken: " + broken + ", defFail: " + defFail + ", quenches: " + quenches);
         return quenches;
     }
 

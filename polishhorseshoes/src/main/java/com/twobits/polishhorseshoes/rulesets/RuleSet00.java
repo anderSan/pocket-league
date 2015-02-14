@@ -560,7 +560,8 @@ public class RuleSet00 implements RuleSet {
                 if (t.defenseFireCount < 3) {
                     valid = false;
                     t.invalidMessage += "Fired-on but opponent not on fire. ";
-                } else if (t.isLineFault || t.isGoaltend || t.isTipped || t.isDrinkHit || t.deadType != DeadType.ALIVE) {
+                } else if (t.isLineFault || t.isGoaltend || t.isTipped || t.isDrinkHit || t
+                        .deadType != DeadType.ALIVE) {
                     valid = false;
                     t.invalidMessage += "Fired-on != any modifier. ";
                 } else if (t.throwResult != ThrowResult.NA) {
@@ -579,10 +580,14 @@ public class RuleSet00 implements RuleSet {
     }
 
     public boolean isOffensiveError(Throw t) {
-        return (t.isOffensiveBottleKnocked || t.isOffensivePoleKnocked || t.isOffensivePoleKnocked || t.isOffensiveBreakError || t.isOffensiveDrinkDropped || t.isLineFault);
+        return (t.isOffensiveBottleKnocked || t.isOffensivePoleKnocked ||
+                t.isOffensivePoleKnocked || t.isOffensiveBreakError || t.isOffensiveDrinkDropped
+                || t.isLineFault);
     }
 
     public boolean isDefensiveError(Throw t) {
-        return (t.isDefensiveBottleKnocked || t.isDefensivePoleKnocked || t.isDefensivePoleKnocked || t.isDefensiveBreakError || t.isDefensiveDrinkDropped || t.isDrinkHit);
+        return (t.isDefensiveBottleKnocked || t.isDefensivePoleKnocked ||
+                t.isDefensivePoleKnocked || t.isDefensiveBreakError || t.isDefensiveDrinkDropped
+                || t.isDrinkHit);
     }
 }

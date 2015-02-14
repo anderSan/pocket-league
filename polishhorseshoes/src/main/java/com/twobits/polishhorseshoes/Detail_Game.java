@@ -69,11 +69,11 @@ public class Detail_Game extends Activity_Base {
                 gDao = Game.getDao(context);
 
                 g = gDao.queryForId(gId);
-//                playerDao.refresh(g.getTeam_1_id());
-//                playerDao.refresh(g.getTeam_2_id());
-//
-//                sessionDao.refresh(g.getSession());
-//                venueDao.refresh(g.getVenue());
+                //                playerDao.refresh(g.getTeam_1_id());
+                //                playerDao.refresh(g.getTeam_2_id());
+                //
+                //                sessionDao.refresh(g.getSession());
+                //                venueDao.refresh(g.getVenue());
 
                 p[0] = g.getTeam_1_id();
                 p[1] = g.getTeam_2_id();
@@ -82,24 +82,24 @@ public class Detail_Game extends Activity_Base {
             }
         }
 
-//        TextView gameP1 = (TextView) findViewById(R.id.gDet_p1);
-//        gameP1.setText(p[0].getNickName());
-//
-//        TextView gameP2 = (TextView) findViewById(R.id.gDet_p2);
-//        gameP2.setText(p[1].getNickName());
+        //        TextView gameP1 = (TextView) findViewById(R.id.gDet_p1);
+        //        gameP1.setText(p[0].getNickName());
+        //
+        //        TextView gameP2 = (TextView) findViewById(R.id.gDet_p2);
+        //        gameP2.setText(p[1].getNickName());
 
         TextView gameId = (TextView) findViewById(R.id.gDet_id);
         gameId.setText(String.valueOf(g.getId()));
 
-//        TextView gameSession = (TextView) findViewById(R.id.gDet_session);
-//        gameSession.setText(g.getSession().getSessionName());
-//
-//        TextView gameVenue = (TextView) findViewById(R.id.gDet_venue);
-//        gameVenue.setText(g.getVenue().getName());
+        //        TextView gameSession = (TextView) findViewById(R.id.gDet_session);
+        //        gameSession.setText(g.getSession().getSessionName());
+        //
+        //        TextView gameVenue = (TextView) findViewById(R.id.gDet_venue);
+        //        gameVenue.setText(g.getVenue().getName());
 
         TextView gameRuleSet = (TextView) findViewById(R.id.gDet_ruleSet);
-        gameRuleSet.setText("(" + RuleType.map.get(g.ruleset_id).getId() + ") " + RuleType.map.get
-                (g.ruleset_id).getDescription());
+        gameRuleSet.setText("(" + RuleType.map.get(g.ruleset_id).getId() + ") " + RuleType.map
+                .get(g.ruleset_id).getDescription());
 
         TextView gameScore = (TextView) findViewById(R.id.gDet_score);
         gameScore.setText(String.valueOf(g.getTeam_1_score()) + "/" + String.valueOf(g
@@ -115,24 +115,25 @@ public class Detail_Game extends Activity_Base {
         alertDialogBuilder.setTitle("Delete this game?");
         alertDialogBuilder.setMessage("This action can not be undone.").setPositiveButton
                 ("Delete", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        try {
-                            Dao<Throw, Long> tDao = Throw.getDao(getApplicationContext());
-                            DeleteBuilder<Throw, Long> tdb = tDao.deleteBuilder();
-                            tdb.where().eq(Throw.GAME_ID, g.getId());
-                            tDao.delete(tdb.prepare());
+            public void onClick(DialogInterface dialog, int id) {
+                try {
+                    Dao<Throw, Long> tDao = Throw.getDao(getApplicationContext());
+                    DeleteBuilder<Throw, Long> tdb = tDao.deleteBuilder();
+                    tdb.where().eq(Throw.GAME_ID, g.getId());
+                    tDao.delete(tdb.prepare());
 
-                            gDao.deleteById(g.getId());
-                            finish();
-                        } catch (SQLException e) {
-                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                    gDao.deleteById(g.getId());
+                    finish();
+                } catch (SQLException e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
