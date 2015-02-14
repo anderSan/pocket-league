@@ -1,16 +1,11 @@
 package com.twobits.polishhorseshoes;
 
 import android.content.Context;
-import android.graphics.Color;
 
 import com.j256.ormlite.dao.Dao;
 import com.twobits.polishhorseshoes.db.Game;
-import com.twobits.polishhorseshoes.db.Player;
-import com.twobits.polishhorseshoes.db.Session;
 import com.twobits.polishhorseshoes.db.Throw;
-import com.twobits.polishhorseshoes.db.Venue;
 import com.twobits.polishhorseshoes.enums.RuleType;
-import com.twobits.polishhorseshoes.enums.SessionType;
 import com.twobits.polishhorseshoes.rulesets.RuleSet;
 
 import java.sql.SQLException;
@@ -21,40 +16,33 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 public class ActiveGame {
+    private String session_name;
+    private String[] team_names = new String[2];
+    private String venue_name;
+
 	private Context context;
 	private int activeIdx;
 
 	private long gId;
 	private Game g;
-	private Player[] p = new Player[2];
-	private Session s;
+
 	private ArrayList<Throw> tArray;
-	private Venue v;
+
 	public RuleSet ruleSet;
 
 	private Dao<Game, Long> gDao;
-	private Dao<Player, Long> pDao;
-	private Dao<Session, Long> sDao;
 	private Dao<Throw, Long> tDao;
-	private Dao<Venue, Long> vDao;
 
 	public ActiveGame(long gId, Context context, int testRuleSetId) {
 		super();
 
 		this.gId = gId;
 		gDao = Game.getDao(context);
-		pDao = Player.getDao(context);
-		sDao = Session.getDao(context);
 		tDao = Throw.getDao(context);
-		vDao = Venue.getDao(context);
 
 		if (gId != -1) {
 			try {
 				g = gDao.queryForId(gId);
-				sDao.refresh(g.getSession());
-				vDao.refresh(g.getVenue());
-				pDao.refresh(g.getFirstPlayer());
-				pDao.refresh(g.getSecondPlayer());
 
 				tArray = g.getThrowList(context);
 			} catch (SQLException e) {
@@ -62,23 +50,15 @@ public class ActiveGame {
 						+ g.getId() + ": ", e);
 			}
 
-			s = g.getSession();
-			v = g.getVenue();
-			p[0] = g.getFirstPlayer();
-			p[1] = g.getSecondPlayer();
-			ruleSet = RuleType.map.get(g.ruleSetId);
+            session_name = "The Session";
+			venue_name = "The Venue";
+			team_names[0] = "Team1 Name";
+			team_names[1] = "Team2 Name";
+			ruleSet = RuleType.map.get(g.ruleset_id);
 
 		} else {
 			// if no game ID is passed in, this is for testing (or an error)
 			// so create dummy objects which won't be saved to database
-			s = new Session("DummySession", SessionType.LEAGUE,
-					RuleType.rsNull, new Date(), false);
-			v = new Venue("DummyVenue", true);
-			p[0] = new Player("Dum", "Dumb", "P1", false, true, false, true,
-					15, 70, new byte[0], Color.RED);
-			p[1] = new Player("Bum", "Bumb", "P2", false, true, false, true,
-					15, 70, new byte[0], Color.BLUE);
-			g = new Game(p[0], p[1], s, v, RuleType.rs00, true, new Date());
 			ruleSet = RuleType.map.get(testRuleSetId);
 			tArray = new ArrayList<Throw>();
 		}
@@ -135,8 +115,8 @@ public class ActiveGame {
 				scores[0] = tmp[1];
 			}
 		}
-		g.setFirstPlayerScore(scores[0]);
-		g.setSecondPlayerScore(scores[1]);
+		g.setTeam_1_score(scores[0]);
+		g.setTeam_2_score(scores[1]);
 	}
 
 	private ArrayList<Long> getThrowIds() {
@@ -263,31 +243,23 @@ public class ActiveGame {
 	}
 
 	public Date getGameDate() {
-		return g.getDatePlayed();
+		return g.getDate_played();
 	}
 
 	public String getP1Name() {
-		return p[0].getDisplayName();
+		return team_names[0];
 	}
 
 	public String getP2Name() {
-		return p[1].getDisplayName();
-	}
-
-	public String getP1Nick() {
-		return p[0].getNickName();
-	}
-
-	public String getP2Nick() {
-		return p[1].getNickName();
+		return team_names[1];
 	}
 
 	public String getSessionName() {
-		return s.getSessionName();
+		return session_name;
 	}
 
 	public String getVenueName() {
-		return v.getName();
+		return venue_name;
 	}
 
 	public Context getContext() {

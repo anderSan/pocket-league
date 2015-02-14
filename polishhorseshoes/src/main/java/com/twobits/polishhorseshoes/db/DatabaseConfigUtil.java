@@ -1,10 +1,10 @@
-package com.pocketleague.manager.db;
+package com.twobits.polishhorseshoes.db;
 
 import com.j256.ormlite.android.apptools.OrmLiteConfigUtil;
 
 public class DatabaseConfigUtil extends OrmLiteConfigUtil {
 	private static final Class<?>[] classes = new Class[] {
-	    Player.class, PlayerStats.class, Game.class, Throw.class, SessionMember.class, Badge.class, Session.class, Venue.class
+	    Game.class, TeamStats.class, Throw.class
 	};
 	public static void main(String[] args) throws Exception {
 		writeConfigFile("ormlite_config.txt", classes);

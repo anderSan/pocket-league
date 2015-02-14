@@ -9,14 +9,14 @@ import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
-import com.pocketleague.manager.enums.DeadType;
-import com.pocketleague.manager.enums.ThrowType;
+import com.twobits.polishhorseshoes.enums.DeadType;
+import com.twobits.polishhorseshoes.enums.ThrowType;
 
 public class Throw implements Comparable<Throw> {
 	public static final String THROW_INDEX = "throwIdx";
 	public static final String GAME_ID = "game_id";
-	public static final String OFFENSIVE_PLAYER = "offensivePlayer_id";
-	public static final String DEFENSIVE_PLAYER = "defensivePlayer_id";
+	public static final String OFFENSIVE_TEAM = "offensiveTeam_id";
+	public static final String DEFENSIVE_TEAM = "defensiveTeam_id";
 
 	@DatabaseField(generatedId = true)
 	private long id;
@@ -27,11 +27,11 @@ public class Throw implements Comparable<Throw> {
 	@DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true)
 	private Game game;
 
-	@DatabaseField(canBeNull = false, foreign = true)
-	private Player offensivePlayer;
+	@DatabaseField(canBeNull = false)
+	private long offensiveTeam_id;
 
-	@DatabaseField(canBeNull = false, foreign = true)
-	private Player defensivePlayer;
+	@DatabaseField(canBeNull = false)
+	private long defensiveTeam_id;
 
 	@DatabaseField(canBeNull = false)
 	private Date timestamp;
@@ -107,26 +107,25 @@ public class Throw implements Comparable<Throw> {
 	Throw() {
 	}
 
-	public Throw(int throwIdx, Game game, Player offensivePlayer,
-			Player defensivePlayer, Date timestamp, int throwType,
+	public Throw(int throwIdx, Game game, long offensiveTeam_id,
+			long defensiveTeam_id, Date timestamp, int throwType,
 			int throwResult) {
 		super();
 		this.throwIdx = throwIdx;
 		this.game = game;
-		this.offensivePlayer = offensivePlayer;
-		this.defensivePlayer = defensivePlayer;
+		this.offensiveTeam_id = offensiveTeam_id;
+		this.defensiveTeam_id = defensiveTeam_id;
 		this.timestamp = timestamp;
 		this.throwType = throwType;
 		this.throwResult = throwResult;
 	}
 
-	public Throw(int throwIdx, Game game, Player offensivePlayer,
-			Player defensivePlayer, Date timestamp) {
+	public Throw(int throwIdx, Game game, long offensiveTeam_id, long defensiveTeam_id, Date timestamp) {
 		super();
 		this.throwIdx = throwIdx;
 		this.game = game;
-		this.offensivePlayer = offensivePlayer;
-		this.defensivePlayer = defensivePlayer;
+		this.offensiveTeam_id = offensiveTeam_id;
+		this.defensiveTeam_id = defensiveTeam_id;
 		this.timestamp = timestamp;
 		this.throwType = ThrowType.NOT_THROWN;
 	}
@@ -161,12 +160,12 @@ public class Throw implements Comparable<Throw> {
 		return game;
 	}
 
-	public Player getOffensivePlayer() {
-		return offensivePlayer;
+	public long getOffensiveTeamId() {
+		return offensiveTeam_id;
 	}
 
-	public Player getDefensivePlayer() {
-		return defensivePlayer;
+	public long getDefensiveTeamId() {
+		return defensiveTeam_id;
 	}
 
 	public boolean[] getOwnGoals() {

@@ -14,10 +14,7 @@ import android.widget.Toast;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.twobits.polishhorseshoes.db.Game;
-import com.twobits.polishhorseshoes.db.Player;
-import com.twobits.polishhorseshoes.db.Session;
 import com.twobits.polishhorseshoes.db.Throw;
-import com.twobits.polishhorseshoes.db.Venue;
 import com.twobits.polishhorseshoes.enums.RuleType;
 
 import java.sql.SQLException;
@@ -28,7 +25,7 @@ import java.util.Locale;
 public class Detail_Game extends Activity_Base {
     Long gId;
     Game g;
-    Player[] p = new Player[2];
+    long[] p = new long[2];
     Dao<Game, Long> gDao;
 
     @Override
@@ -70,50 +67,47 @@ public class Detail_Game extends Activity_Base {
             try {
                 Context context = getApplicationContext();
                 gDao = Game.getDao(context);
-                Dao<Player, Long> playerDao = Player.getDao(context);
-                Dao<Session, Long> sessionDao = Session.getDao(context);
-                Dao<Venue, Long> venueDao = Venue.getDao(context);
 
                 g = gDao.queryForId(gId);
-                playerDao.refresh(g.getFirstPlayer());
-                playerDao.refresh(g.getSecondPlayer());
+//                playerDao.refresh(g.getTeam_1_id());
+//                playerDao.refresh(g.getTeam_2_id());
+//
+//                sessionDao.refresh(g.getSession());
+//                venueDao.refresh(g.getVenue());
 
-                sessionDao.refresh(g.getSession());
-                venueDao.refresh(g.getVenue());
-
-                p[0] = g.getFirstPlayer();
-                p[1] = g.getSecondPlayer();
+                p[0] = g.getTeam_1_id();
+                p[1] = g.getTeam_2_id();
             } catch (SQLException e) {
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
 
-        TextView gameP1 = (TextView) findViewById(R.id.gDet_p1);
-        gameP1.setText(p[0].getNickName());
-
-        TextView gameP2 = (TextView) findViewById(R.id.gDet_p2);
-        gameP2.setText(p[1].getNickName());
+//        TextView gameP1 = (TextView) findViewById(R.id.gDet_p1);
+//        gameP1.setText(p[0].getNickName());
+//
+//        TextView gameP2 = (TextView) findViewById(R.id.gDet_p2);
+//        gameP2.setText(p[1].getNickName());
 
         TextView gameId = (TextView) findViewById(R.id.gDet_id);
         gameId.setText(String.valueOf(g.getId()));
 
-        TextView gameSession = (TextView) findViewById(R.id.gDet_session);
-        gameSession.setText(g.getSession().getSessionName());
-
-        TextView gameVenue = (TextView) findViewById(R.id.gDet_venue);
-        gameVenue.setText(g.getVenue().getName());
+//        TextView gameSession = (TextView) findViewById(R.id.gDet_session);
+//        gameSession.setText(g.getSession().getSessionName());
+//
+//        TextView gameVenue = (TextView) findViewById(R.id.gDet_venue);
+//        gameVenue.setText(g.getVenue().getName());
 
         TextView gameRuleSet = (TextView) findViewById(R.id.gDet_ruleSet);
-        gameRuleSet.setText("(" + RuleType.map.get(g.ruleSetId).getId() + ") " + RuleType.map.get
-                (g.ruleSetId).getDescription());
+        gameRuleSet.setText("(" + RuleType.map.get(g.ruleset_id).getId() + ") " + RuleType.map.get
+                (g.ruleset_id).getDescription());
 
         TextView gameScore = (TextView) findViewById(R.id.gDet_score);
-        gameScore.setText(String.valueOf(g.getFirstPlayerScore()) + "/" + String.valueOf(g
-                .getSecondPlayerScore()));
+        gameScore.setText(String.valueOf(g.getTeam_1_score()) + "/" + String.valueOf(g
+                .getTeam_2_score()));
 
         DateFormat df = new SimpleDateFormat("EEE MMM dd, yyyy @HH:mm", Locale.US);
         TextView gameDate = (TextView) findViewById(R.id.gDet_date);
-        gameDate.setText(df.format(g.getDatePlayed()));
+        gameDate.setText(df.format(g.getDate_played()));
     }
 
     public void deleteGame(View view) {

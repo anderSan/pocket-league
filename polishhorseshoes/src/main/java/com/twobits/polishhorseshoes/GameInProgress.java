@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-//import com.j256.ormlite.dao.Dao;
 import com.twobits.polishhorseshoes.db.Throw;
 import com.twobits.polishhorseshoes.enums.DeadType;
 import com.twobits.polishhorseshoes.enums.ThrowResult;
@@ -38,6 +37,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import com.j256.ormlite.dao.Dao;
 
 public class GameInProgress extends Activity_Base implements
 		ThrowTableFragment.OnTableRowClickedListener {
@@ -542,20 +543,20 @@ public class GameInProgress extends Activity_Base implements
 
 		// table header
 		tv = (TextView) findViewById(R.id.header_p1);
-		tv.setText(ag.getP1Nick());
+		tv.setText(ag.getP1Name());
 		tv.setTextColor(ThrowTableRow.tableTextColor);
 		tv.setTextSize(ThrowTableRow.tableTextSize);
-		
+
 		tv = (TextView) findViewById(R.id.hitpoints_p1);
 		tv.setText("hp");
 		tv.setTextColor(ThrowTableRow.tableTextColor);
 		tv.setTextSize(ThrowTableRow.tableTextSize);
 
 		tv = (TextView) findViewById(R.id.header_p2);
-		tv.setText(ag.getP2Nick());
+		tv.setText(ag.getP2Name());
 		tv.setTextColor(ThrowTableRow.tableTextColor);
 		tv.setTextSize(ThrowTableRow.tableTextSize);
-		
+
 		tv = (TextView) findViewById(R.id.hitpoints_p2);
 		tv.setText("hp");
 		tv.setTextColor(ThrowTableRow.tableTextColor);
@@ -717,14 +718,14 @@ public class GameInProgress extends Activity_Base implements
 		}
 		if (uiThrow.deadType > 0) {
 			deadViews[uiThrow.deadType - 1].setBackgroundColor(Color.RED);
-		} 
-		
+		}
+
 		TextView tv = null;
 		int hp1,hp2;
-		
+
 		hp1 = uiThrow.initialOffensivePlayerHitPoints;
 		hp2 = uiThrow.initialDefensivePlayerHitPoints;
-		
+
 		if (!uiThrow.isP1Throw()){
 			int tmp = hp1;
 			hp1 = hp2;
@@ -734,7 +735,7 @@ public class GameInProgress extends Activity_Base implements
 		tv.setText(""+hp1);
 		tv = (TextView) findViewById(R.id.hitpoints_p2);
 		tv.setText(""+hp2);
-		
+
 	}
 
 	private void setThrowButtonState(int throwType, ImageView iv) {
