@@ -9,9 +9,9 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.twobits.pocketleague.db.DatabaseHelper;
 import com.twobits.pocketleague.enums.SessionType;
-import com.twobits.pocketleague.gameslibrary.GameRule;
+import com.twobits.pocketleague.gameslibrary.GameDescriptor;
+import com.twobits.pocketleague.gameslibrary.GameSubtype;
 import com.twobits.pocketleague.gameslibrary.GameType;
-import com.twobits.pocketleague.gameslibrary.RuleSet;
 
 import java.sql.SQLException;
 
@@ -19,7 +19,7 @@ import java.sql.SQLException;
 public class Session {
 	public static final String NAME = "name";
 	public static final String GAME_TYPE = "game_type";
-	public static final String GAME_RULES = "game_rules";
+	public static final String GAME_SUBTYPE = "game_subtype";
 	public static final String SESSION_TYPE = "session_type";
 	public static final String TEAM_SIZE = "team_size";
 	public static final String IS_ACTIVE = "is_active";
@@ -36,7 +36,7 @@ public class Session {
 	private GameType game_type;
 
 	@DatabaseField
-	private GameRule game_rules;
+	private GameSubtype game_subtype;
 
 	@DatabaseField(canBeNull = false)
 	private SessionType session_type;
@@ -62,12 +62,12 @@ public class Session {
 	public Session() {
 	}
 
-	public Session(String session_name, GameType game_type, GameRule game_rules,
+	public Session(String session_name, GameType game_type, GameSubtype game_subtype,
 			SessionType session_type, int team_size, Venue current_venue) {
 		super();
 		this.name = session_name;
 		this.game_type = game_type;
-		this.game_rules = game_rules;
+		this.game_subtype = game_subtype;
 		this.session_type = session_type;
 		this.team_size = team_size;
 		this.current_venue = current_venue;
@@ -108,12 +108,12 @@ public class Session {
 //		this.game_type = game_type;
 //	}
 
-	public GameRule getGameRule() {
-		return game_rules;
+	public GameSubtype getGameSubtype() {
+		return game_subtype;
 	}
 
-//	public void setGameRules(GameRule game_rule) {
-//		this.game_rules = game_rule;
+//	public void setGameSubtype(GameSubtype game_subtype) {
+//		this.game_subtype = game_subtype;
 //	}
 
 	public SessionType getSessionType() {
@@ -168,7 +168,7 @@ public class Session {
 	// Additional methods
 	// =========================================================================
 
-	public RuleSet getRuleSet() {
-		return game_rules.toRuleSet();
+	public GameDescriptor getDescriptor() {
+		return game_subtype.toDescriptor();
 	}
 }

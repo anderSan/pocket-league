@@ -332,7 +332,7 @@ public class DatabaseUpgrader {
 	// String msg;
 	// List<Long> badThrows = new ArrayList<Long>();
 	// // TODO: make this dynamic once implemented in db
-	// RuleSet rs = RuleType.RS00;
+	// GameDescriptor rs = RuleType.RS00;
 	// for (Throw t : tDao) {
 	// if (!rs.isValid(t)) {
 	// msg = "bad throw: " + t.getId() + "- " + t.invalidMessage;

@@ -1,10 +1,10 @@
-package com.twobits.pocketleague.gameslibrary.Rulesets.Polishhorseshoes;
+package com.twobits.pocketleague.gameslibrary.Descriptors.Polishhorseshoes;
 
+import com.twobits.pocketleague.gameslibrary.GameDescriptor;
 import com.twobits.pocketleague.gameslibrary.GameType;
-import com.twobits.pocketleague.gameslibrary.RuleSet;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
-public class PolishDoubles implements RuleSet {
+public class PolishDoubles implements GameDescriptor {
 	public GameType getGameType() {
 		return GameType.POLISH_HORSESHOES;
 	}
@@ -29,7 +29,7 @@ public class PolishDoubles implements RuleSet {
 		return ScoreType.POINTS;
 	}
 
-	public boolean detailedRuleSet() {
-		return false;
-	}
+    public String actionString() {
+        return "com.twobits.polishhorseshoes.doubles.PLAY_GAME";
+    }
 }

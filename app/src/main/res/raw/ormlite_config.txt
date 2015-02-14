@@ -1,5 +1,5 @@
 #
-# generated on 2015/02/10 11:50:17
+# generated on 2015/02/14 09:45:44
 #
 # --table-start--
 dataClass=com.twobits.pocketleague.db.tables.Game
@@ -138,7 +138,7 @@ fieldName=game_type
 canBeNull=false
 # --field-end--
 # --field-start--
-fieldName=game_rules
+fieldName=game_subtype
 # --field-end--
 # --field-start--
 fieldName=session_type

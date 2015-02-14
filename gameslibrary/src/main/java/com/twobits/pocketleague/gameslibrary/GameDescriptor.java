@@ -1,6 +1,6 @@
 package com.twobits.pocketleague.gameslibrary;
 
-public interface RuleSet {
+public interface GameDescriptor {
     public GameType getGameType();
 
     public String getName();
@@ -13,5 +13,5 @@ public interface RuleSet {
 
     public ScoreType getScoreType();
 
-    public boolean detailedRuleSet();
+    public String actionString();
 }

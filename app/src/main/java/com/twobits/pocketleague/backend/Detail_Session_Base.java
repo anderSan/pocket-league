@@ -89,11 +89,11 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 
 		TextView sName = (TextView) rootView.findViewById(R.id.sDet_name);
 		TextView sId = (TextView) rootView.findViewById(R.id.sDet_id);
-		TextView sessionRuleSet = (TextView) rootView.findViewById(R.id.sDet_ruleSet);
+		TextView sessionGameType = (TextView) rootView.findViewById(R.id.sDet_gameType);
 
 		sName.setText(s.getSessionName());
 		sId.setText(String.valueOf(s.getId()));
-		sessionRuleSet.setText(s.getRuleSet().getName());
+		sessionGameType.setText(s.getDescriptor().getName());
         bar_isFavorite.setChecked(s.getIsFavorite());
 	}
 

@@ -1,35 +1,35 @@
-package com.twobits.pocketleague.gameslibrary.Rulesets.Cards;
+package com.twobits.pocketleague.gameslibrary.Descriptors.Undefined;
 
 import com.twobits.pocketleague.gameslibrary.GameType;
-import com.twobits.pocketleague.gameslibrary.RuleSet;
+import com.twobits.pocketleague.gameslibrary.GameDescriptor;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
-public class Spades implements RuleSet {
+public class Undefined implements GameDescriptor {
 	public GameType getGameType() {
-		return GameType.CARDS;
+		return GameType.UNDEFINED;
 	}
 
 	public String getName() {
-		return "Spades";
+		return "Undefined Game";
 	}
 
 	public String getDescription() {
-		return "Spades.";
+		return "N/A.";
 	}
 
 	public boolean allowed_nTeams(int n_teams) {
-        return n_teams == 2;
+		return false;
 	}
 
 	public boolean allowed_teamSize(int team_size) {
-        return team_size == 2;
+		return false;
 	}
 
 	public ScoreType getScoreType() {
 		return ScoreType.POINTS;
 	}
 
-	public boolean detailedRuleSet() {
-		return false;
-	}
+    public String actionString() {
+        return "com.twobits.undefined.PLAY_GAME";
+    }
 }

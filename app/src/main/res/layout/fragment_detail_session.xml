@@ -25,7 +25,7 @@
         />
     
      <TextView
-        android:id="@+id/sDet_ruleSet"
+        android:id="@+id/sDet_gameType"
         android:layout_alignParentStart="true"
         android:layout_below="@id/sDet_name"
         android:layout_width="wrap_content"

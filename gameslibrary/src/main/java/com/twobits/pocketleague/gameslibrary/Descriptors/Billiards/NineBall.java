@@ -1,10 +1,10 @@
-package com.twobits.pocketleague.gameslibrary.Rulesets.Billiards;
+package com.twobits.pocketleague.gameslibrary.Descriptors.Billiards;
 
+import com.twobits.pocketleague.gameslibrary.GameDescriptor;
 import com.twobits.pocketleague.gameslibrary.GameType;
-import com.twobits.pocketleague.gameslibrary.RuleSet;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
-public class NineBall implements RuleSet {
+public class NineBall implements GameDescriptor {
 	public GameType getGameType() {
 		return GameType.BILLIARDS;
 	}
@@ -29,7 +29,7 @@ public class NineBall implements RuleSet {
 		return ScoreType.BINARY;
 	}
 
-	public boolean detailedRuleSet() {
-		return false;
-	}
+    public String actionString() {
+        return "com.twobits.billiards.nineball.PLAY_GAME";
+    }
 }

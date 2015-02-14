@@ -4,25 +4,25 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum GameType {
-    BILLIARDS("Billiards", R.drawable.billiards, Arrays.asList(GameRule.EIGHTBALL,
-            GameRule.NINEBALL)),
-    CARDS("Cards", R.drawable.cards, Arrays.asList(GameRule.SPADES)),
-    DARTS("Darts", R.drawable.darts, Arrays.asList(GameRule.DARTS_CRICKET)),
-    DISC_GOLF("Disc Golf", R.drawable.golf, Arrays.asList(GameRule.DISC_GOLF)),
-    GOLF("Golf", R.drawable.golf, Arrays.asList(GameRule.GOLF)),
+    BILLIARDS("Billiards", R.drawable.billiards, Arrays.asList(GameSubtype.EIGHTBALL,
+            GameSubtype.NINEBALL)),
+    CARDS("Cards", R.drawable.cards, Arrays.asList(GameSubtype.SPADES)),
+    DARTS("Darts", R.drawable.darts, Arrays.asList(GameSubtype.DARTS_CRICKET)),
+    DISC_GOLF("Disc Golf", R.drawable.golf, Arrays.asList(GameSubtype.DISC_GOLF)),
+    GOLF("Golf", R.drawable.golf, Arrays.asList(GameSubtype.GOLF)),
     POLISH_HORSESHOES("Polish Horseshoes", R.drawable.polishhorseshoes,
-            Arrays.asList(GameRule.POLISH_SINGLES, GameRule.POLISH_DOUBLES)),
+            Arrays.asList(GameSubtype.POLISH_SINGLES, GameSubtype.POLISH_DOUBLES)),
     // TRIVIA("Trivia", R.drawable.test2, Arrays.asList()),
-    UNDEFINED("Undefined", R.drawable.undefined, Arrays.asList(GameRule.UNDEFINED));
+    UNDEFINED("Undefined", R.drawable.undefined, Arrays.asList(GameSubtype.UNDEFINED));
 
     private String gametype_label;
     private int drawable_id;
-    private List<GameRule> game_rules;
+    private List<GameSubtype> game_subtypes;
 
-    private GameType(String label, int drawable_id, List<GameRule> game_rules) {
+    private GameType(String label, int drawable_id, List<GameSubtype> game_subtypes) {
         this.gametype_label = label;
         this.drawable_id = drawable_id;
-        this.game_rules = game_rules;
+        this.game_subtypes = game_subtypes;
     }
 
     @Override
@@ -34,7 +34,7 @@ public enum GameType {
         return drawable_id;
     }
 
-    public List<GameRule> toGameRules() {
-        return game_rules;
+    public List<GameSubtype> toGameSubtype() {
+        return game_subtypes;
     }
 }

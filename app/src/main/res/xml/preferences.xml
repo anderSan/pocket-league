@@ -7,7 +7,7 @@
         <ListPreference
                 android:key="ruleset_preference"
                 android:title="Default Ruleset"
-                android:summary="This should say which ruleset is chosen."
+                android:summary="This should say which descriptor is chosen."
                 android:entries="@array/owngoals"
                 android:entryValues="@array/owngoals"
                 android:dialogTitle="Default Ruleset" />

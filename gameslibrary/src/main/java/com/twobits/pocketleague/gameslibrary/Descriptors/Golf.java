@@ -1,20 +1,20 @@
-package com.twobits.pocketleague.gameslibrary.Rulesets;
+package com.twobits.pocketleague.gameslibrary.Descriptors;
 
+import com.twobits.pocketleague.gameslibrary.GameDescriptor;
 import com.twobits.pocketleague.gameslibrary.GameType;
-import com.twobits.pocketleague.gameslibrary.RuleSet;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
-public class DiscGolf implements RuleSet {
+public class Golf implements GameDescriptor {
 	public GameType getGameType() {
-		return GameType.DISC_GOLF;
+		return GameType.GOLF;
 	}
 
 	public String getName() {
-		return "Disc Golf";
+		return "Golf";
 	}
 
 	public String getDescription() {
-		return "Disc Golf.";
+		return "Basic Golf.";
 	}
 
 	public boolean allowed_nTeams(int n_teams) {
@@ -29,7 +29,7 @@ public class DiscGolf implements RuleSet {
 		return ScoreType.POINTS_INVERSE;
 	}
 
-	public boolean detailedRuleSet() {
-		return false;
-	}
+    public String actionString() {
+        return "com.twobits.golf.PLAY_GAME";
+    }
 }

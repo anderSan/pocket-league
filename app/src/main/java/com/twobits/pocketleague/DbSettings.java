@@ -222,9 +222,9 @@ public class DbSettings extends Fragment_Base {
 								.getColor(R.color.Khaki), false) };
 
 		// Session s1 = new Session("league", GameType.POLISH_HORSESHOES,
-		// GameRule.POLISH_SINGLES, SessionType.LEAGUE, 1);
+		// GameSubtype.POLISH_SINGLES, SessionType.LEAGUE, 1);
 		// Session s2 = new Session("league", GameType.BILLIARDS,
-		// GameRule.EIGHTBALL, SessionType.LEAGUE, 1);
+		// GameSubtype.EIGHTBALL, SessionType.LEAGUE, 1);
 
 		Venue v1 = new Venue("Putnam St.", true);
 		Venue v2 = new Venue("Verndale", false);

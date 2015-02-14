@@ -113,11 +113,11 @@ public class New_Game extends Fragment_Base {
 		public void onItemSelected(AdapterView<?> parent, View v, int position,
 				long id) {
 			session_pos = position;
-			// if (sessions.get(position).getRuleSet() == -1) {
+			// if (sessions.get(position).getDescriptor() == -1) {
 			// spinner_ruleSet.setEnabled(true);
 			// } else {
 			// spinner_ruleSet.setEnabled(false);
-			// int selectedId = sessions.get(position).getRuleSet();
+			// int selectedId = sessions.get(position).getDescriptor();
 			// spinner_ruleSet.setSelection(ruleset_ids.indexOf(selectedId));
 			// ruleSet_pos = ruleset_ids.indexOf(selectedId);
 			// }
@@ -194,7 +194,7 @@ public class New_Game extends Fragment_Base {
 		for (Venue v : venues) {
 			venue_names.add(String.valueOf(v.getId()) + " " + v.getName());
 		}
-		// for (RuleSet rs : RuleType.map.values()) {
+		// for (GameDescriptor rs : RuleType.map.values()) {
 		// ruleSetDescriptions.add(rs.getDescription());
 		// ruleSetIds.add(rs.getId());
 		// }

@@ -1,20 +1,20 @@
-package com.twobits.pocketleague.gameslibrary.Rulesets.Billiards;
+package com.twobits.pocketleague.gameslibrary.Descriptors.Cards;
 
+import com.twobits.pocketleague.gameslibrary.GameDescriptor;
 import com.twobits.pocketleague.gameslibrary.GameType;
-import com.twobits.pocketleague.gameslibrary.RuleSet;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
-public class EightBall implements RuleSet {
+public class Spades implements GameDescriptor {
 	public GameType getGameType() {
-		return GameType.BILLIARDS;
+		return GameType.CARDS;
 	}
 
 	public String getName() {
-		return "8-ball";
+		return "Spades";
 	}
 
 	public String getDescription() {
-		return "Standard billiards rules for 8-ball.";
+		return "Spades.";
 	}
 
 	public boolean allowed_nTeams(int n_teams) {
@@ -22,14 +22,14 @@ public class EightBall implements RuleSet {
 	}
 
 	public boolean allowed_teamSize(int team_size) {
-        return team_size == 1 || team_size == 2;
+        return team_size == 2;
 	}
 
 	public ScoreType getScoreType() {
-		return ScoreType.BINARY;
+		return ScoreType.POINTS;
 	}
 
-	public boolean detailedRuleSet() {
-		return false;
-	}
+    public String actionString() {
+        return "com.twobits.cards.spades.PLAY_GAME";
+    }
 }

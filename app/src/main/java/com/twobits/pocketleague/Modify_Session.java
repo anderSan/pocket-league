@@ -22,7 +22,7 @@ import com.twobits.pocketleague.db.tables.SessionMember;
 import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.db.tables.Venue;
 import com.twobits.pocketleague.enums.SessionType;
-import com.twobits.pocketleague.gameslibrary.GameRule;
+import com.twobits.pocketleague.gameslibrary.GameSubtype;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
 import java.sql.SQLException;
@@ -92,12 +92,12 @@ public class Modify_Session extends Fragment_Edit {
 
 		List<String> ruleSetDescriptions = new ArrayList<>();
 		GameType currentGameType = mData.getCurrentGameType();
-		for (GameRule gr : currentGameType.toGameRules()) {
-			ruleSetDescriptions.add(gr.toRuleSet().getDescription());
+		for (GameSubtype gr : currentGameType.toGameSubtype()) {
+			ruleSetDescriptions.add(gr.toDescriptor().getDescription());
 		}
 		ArrayAdapter<String> rsAdapter = new SpinnerAdapter(context,
 				android.R.layout.simple_spinner_item, ruleSetDescriptions,
-				currentGameType.toGameRules());
+				currentGameType.toGameSubtype());
 		sp_ruleSet.setAdapter(rsAdapter);
 
 		try {
@@ -176,7 +176,7 @@ public class Modify_Session extends Fragment_Edit {
 		} else {
 			SessionType session_type = (SessionType) sp_sessionType
 					.getSelectedView().getTag();
-			GameRule game_rule = (GameRule) sp_ruleSet.getSelectedView()
+			GameSubtype game_rule = (GameSubtype) sp_ruleSet.getSelectedView()
 					.getTag();
 			Venue current_venue = (Venue) sp_venues.getSelectedView().getTag();
 			Boolean is_favorite = cb_isFavorite.isChecked();
@@ -190,7 +190,7 @@ public class Modify_Session extends Fragment_Edit {
 		}
 	}
 
-	private void createSession(String session_name, GameRule game_rule,
+	private void createSession(String session_name, GameSubtype game_rule,
 			SessionType session_type, Venue current_venue, boolean is_favorite) {
 		int team_size = teamIdxList.size();
 		Session newSession = new Session(session_name, mData.getCurrentGameType(),
