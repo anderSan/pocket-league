@@ -1,4 +1,4 @@
-package com.twobits.polishhorseshoes;
+package com.twobits.polishhorseshoes.backend;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -12,6 +12,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 
+import com.twobits.polishhorseshoes.GameInProgress;
+import com.twobits.polishhorseshoes.R;
 import com.twobits.polishhorseshoes.db.Throw;
 import com.twobits.polishhorseshoes.rulesets.RuleSet;
 

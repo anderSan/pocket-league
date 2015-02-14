@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
-import com.twobits.polishhorseshoes.ActiveGame;
+import com.twobits.polishhorseshoes.backend.ActiveGame;
 import com.twobits.polishhorseshoes.enums.RuleType;
 import com.twobits.polishhorseshoes.rulesets.RuleSet;
 

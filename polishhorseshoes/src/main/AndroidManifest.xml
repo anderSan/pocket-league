@@ -1,11 +1,43 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.twobits.polishhorseshoes">
+<manifest
+    package="com.twobits.polishhorseshoes"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <application android:allowBackup="true"
-                 android:label="@string/app_name"
-                 android:icon="@mipmap/ic_launcher"
-                 android:theme="@style/AppTheme">
+    <application
+        android:allowBackup="true"
+        tools:replace="android:icon"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name="com.twobits.polishhorseshoes.GameInProgress"
+            android:label="@string/title_activity_game_in_progress">
+            <intent-filter>
+                <action android:name="com.twobits.polishhorseshoes.singles.PLAY_GAME"/>
+                <action android:name="com.twobits.polishhorseshoes.doubles.PLAY_GAME"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.twobits.polishhorseshoes.Detail_Game"
+            android:label="@string/title_activity_detail_game">
+        </activity>
+
+        <activity
+            android:name="com.twobits.polishhorseshoes.AboutPage"
+            android:label="@string/title_activity_about_page">
+        </activity>
 
     </application>
 
 </manifest>
+
+
+
+
+
+
+
+

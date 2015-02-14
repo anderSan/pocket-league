@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -388,18 +389,22 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
     }
 
     public void loadGame(Long gId) {
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
+        Intent intent = new Intent("com.twobits.polishhorseshoes.singles.PLAY_GAME");
+        startActivity(intent);
 
-        DialogFragment newFragment = Quick_Game.newInstance(gId);
-        newFragment.show(ft, "dialog");
+
+//        // DialogFragment.show() will take care of adding the fragment
+//        // in a transaction.  We also want to remove any currently showing
+//        // dialog, so make our own transaction and take care of that here.
+//        FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+//        if (prev != null) {
+//            ft.remove(prev);
+//        }
+//        ft.addToBackStack(null);
+//
+//        DialogFragment newFragment = Quick_Game.newInstance(gId);
+//        newFragment.show(ft, "dialog");
     }
 
     public void viewSessions() {

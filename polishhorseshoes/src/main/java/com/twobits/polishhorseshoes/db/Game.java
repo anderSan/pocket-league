@@ -28,10 +28,10 @@ public class Game {
     @DatabaseField
     private long pocketleague_id;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(canBeNull = false)
     private long team_1_id;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(canBeNull = false)
     private long team_2_id;
 
     @DatabaseField(canBeNull = false)

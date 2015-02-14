@@ -1,4 +1,4 @@
-package com.twobits.polishhorseshoes;
+package com.twobits.polishhorseshoes.backend;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,6 +9,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.twobits.polishhorseshoes.R;
 import com.twobits.polishhorseshoes.db.Throw;
 import com.twobits.polishhorseshoes.rulesets.RuleSet;
 

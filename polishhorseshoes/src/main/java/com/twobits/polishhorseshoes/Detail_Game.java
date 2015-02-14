@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.twobits.polishhorseshoes.backend.Activity_Base;
 import com.twobits.polishhorseshoes.db.Game;
 import com.twobits.polishhorseshoes.db.Throw;
 import com.twobits.polishhorseshoes.enums.RuleType;

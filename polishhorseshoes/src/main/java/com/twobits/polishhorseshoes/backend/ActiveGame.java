@@ -1,4 +1,4 @@
-package com.twobits.polishhorseshoes;
+package com.twobits.polishhorseshoes.backend;
 
 import android.content.Context;
 

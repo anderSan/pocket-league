@@ -28,6 +28,10 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.j256.ormlite.dao.Dao;
+import com.twobits.polishhorseshoes.backend.ActiveGame;
+import com.twobits.polishhorseshoes.backend.Activity_Base;
+import com.twobits.polishhorseshoes.backend.ThrowTableFragment;
+import com.twobits.polishhorseshoes.backend.ThrowTableRow;
 import com.twobits.polishhorseshoes.db.Throw;
 import com.twobits.polishhorseshoes.enums.DeadType;
 import com.twobits.polishhorseshoes.enums.ThrowResult;

@@ -1,4 +1,4 @@
-package com.twobits.polishhorseshoes;
+package com.twobits.polishhorseshoes.backend;
 
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
