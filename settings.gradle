@@ -1,1 +1,1 @@
-include ':app', ':colorpicker', ':gameslibrary'
+include ':app', ':colorpicker', ':gameslibrary', ':polishhorseshoes'
