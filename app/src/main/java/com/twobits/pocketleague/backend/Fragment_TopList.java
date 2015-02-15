@@ -11,7 +11,7 @@ public abstract class Fragment_TopList extends Fragment_Base {
     public ToggleButton bar_isFavorite;
     public ToggleButton bar_isActive;
 
-    public boolean show_favorites = true;
+    public boolean show_favorites = false;
     public boolean show_actives = true;
 
     public View.OnClickListener addClicked = null;
