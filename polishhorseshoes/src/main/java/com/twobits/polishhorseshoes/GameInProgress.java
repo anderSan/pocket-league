@@ -67,6 +67,10 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
     private View naViewR;
     NumberPicker resultNp;
 
+    private String session_name;
+    private String[] team_names = new String[2];
+    private String venue_name;
+
     public ActiveGame ag;
     Dao<Throw, Long> tDao;
     Throw uiThrow;
@@ -421,18 +425,18 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
 
         // players
         tv = (TextView) fView.findViewById(R.id.gInfo_p1);
-        tv.setText(ag.getP1Name());
+        tv.setText(team_names[0]);
 
         tv = (TextView) fView.findViewById(R.id.gInfo_p2);
-        tv.setText(ag.getP2Name());
+        tv.setText(team_names[1]);
 
         // // session
         tv = (TextView) fView.findViewById(R.id.gInfo_session);
-        tv.setText(ag.getSessionName());
+        tv.setText(session_name);
 
         // venue
         tv = (TextView) fView.findViewById(R.id.gInfo_venue);
-        tv.setText(ag.getVenueName());
+        tv.setText(venue_name);
 
         // date
         tv = (TextView) fView.findViewById(R.id.gInfo_date);
@@ -470,6 +474,10 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         int testRuleSetId = intent.getIntExtra("RSID", 1);
         long p1Id = intent.getLongExtra("P1ID", -1);
         long p2Id = intent.getLongExtra("P2ID", -1);
+        team_names[0] = intent.getStringExtra("P1NAME");
+        team_names[1] = intent.getStringExtra("P2NAME");
+        session_name = intent.getStringExtra("SESSION_NAME");
+        venue_name = intent.getStringExtra("VENUE_NAME");
 
         tDao = Throw.getDao(this);
         ag = new ActiveGame(gId, p1Id, p2Id, this, testRuleSetId);
@@ -535,7 +543,7 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
 
         // table header
         tv = (TextView) findViewById(R.id.header_p1);
-        tv.setText(ag.getP1Name());
+        tv.setText(team_names[0]);
         tv.setTextColor(ThrowTableRow.tableTextColor);
         tv.setTextSize(ThrowTableRow.tableTextSize);
 
@@ -545,7 +553,7 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         tv.setTextSize(ThrowTableRow.tableTextSize);
 
         tv = (TextView) findViewById(R.id.header_p2);
-        tv.setText(ag.getP2Name());
+        tv.setText(team_names[1]);
         tv.setTextColor(ThrowTableRow.tableTextColor);
         tv.setTextSize(ThrowTableRow.tableTextSize);
 

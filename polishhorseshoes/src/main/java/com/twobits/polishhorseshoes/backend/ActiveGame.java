@@ -1,6 +1,7 @@
 package com.twobits.polishhorseshoes.backend;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
 import com.twobits.polishhorseshoes.db.Game;
@@ -16,10 +17,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 public class ActiveGame {
-    private String session_name;
-    private String[] team_names = new String[2];
-    private String venue_name;
-
     private Context context;
     private int activeIdx;
 
@@ -39,8 +36,12 @@ public class ActiveGame {
         if (gId != -1) {
             try {
                 g = gDao.queryBuilder().where().eq(Game.POCKETLEAGUE_ID, gId).queryForFirst();
+
                 if (g == null) {
-                    g = new Game(p1Id, p2Id,0);
+                    Log.i("ActiveGame", "No game found, creating a new one");
+                    g = new Game(p1Id, p2Id, testRuleSetId);
+                } else {
+                    Log.i("ActiveGame", "Game ID is:" + g.getId());
                 }
 
                 tArray = g.getThrowList(context);
@@ -48,10 +49,6 @@ public class ActiveGame {
                 throw new RuntimeException("couldn't get throws for game " + g.getId() + ": ", e);
             }
 
-            session_name = "The Session";
-            venue_name = "The Venue";
-            team_names[0] = "Team1 Name";
-            team_names[1] = "Team2 Name";
             ruleSet = RuleType.map.get(g.ruleset_id);
 
         }
@@ -232,22 +229,6 @@ public class ActiveGame {
 
     public Date getGameDate() {
         return g.getDatePlayed();
-    }
-
-    public String getP1Name() {
-        return team_names[0];
-    }
-
-    public String getP2Name() {
-        return team_names[1];
-    }
-
-    public String getSessionName() {
-        return session_name;
-    }
-
-    public String getVenueName() {
-        return venue_name;
     }
 
     public Context getContext() {
