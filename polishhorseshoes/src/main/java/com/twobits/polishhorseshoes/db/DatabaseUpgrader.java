@@ -37,30 +37,30 @@ public class DatabaseUpgrader {
     }
 
     public static List<Long> updateScores(Dao<Game, Long> gDao, Context context) {
-        ActiveGame ag = null;
-        String msg;
-        int[] oldScores = new int[2];
-        int[] newScores = new int[2];
+//        ActiveGame ag = null;
+//        String msg;
+//        int[] oldScores = new int[2];
+//        int[] newScores = new int[2];
         List<Long> badGames = new ArrayList<Long>();
-        for (Game g : gDao) {
-            // Log.i("DatabaseUpgrader.updateScores()","processing game "+g.getId());
-            oldScores[0] = g.getTeam_1_score();
-            oldScores[1] = g.getTeam_2_score();
-
-            ag = new ActiveGame(g.getId(), context, g.ruleset_id);
-            // saveAllThrows is extremely slow. any way to speed up?
-            ag.saveAllThrows(); // this also calls updateThrowsFrom(0)
-            ag.saveGame();
-            newScores[0] = ag.getGame().getTeam_1_score();
-            newScores[1] = ag.getGame().getTeam_2_score();
-
-            if (!(are_scores_equal(oldScores, newScores))) {
-                msg = String.format("bad game %d: (%d,%d)->(%d,%d)", g.getId(), oldScores[0],
-                        oldScores[1], newScores[0], newScores[1]);
-                Log.w("DB_Upgrader", msg);
-                badGames.add(g.getId());
-            }
-        }
+//        for (Game g : gDao) {
+//            // Log.i("DatabaseUpgrader.updateScores()","processing game "+g.getId());
+//            oldScores[0] = g.getTeam1Score();
+//            oldScores[1] = g.getTeam2Score();
+//
+//            ag = new ActiveGame(g.getId(), context, g.ruleset_id);
+//            // saveAllThrows is extremely slow. any way to speed up?
+//            ag.saveAllThrows(); // this also calls updateThrowsFrom(0)
+//            ag.saveGame();
+//            newScores[0] = ag.getGame().getTeam1Score();
+//            newScores[1] = ag.getGame().getTeam2Score();
+//
+//            if (!(are_scores_equal(oldScores, newScores))) {
+//                msg = String.format("bad game %d: (%d,%d)->(%d,%d)", g.getId(), oldScores[0],
+//                        oldScores[1], newScores[0], newScores[1]);
+//                Log.w("DB_Upgrader", msg);
+//                badGames.add(g.getId());
+//            }
+//        }
         return badGames;
     }
 

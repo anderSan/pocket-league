@@ -23,7 +23,6 @@ public class ActiveGame {
     private Context context;
     private int activeIdx;
 
-    private long gId;
     private Game g;
 
     private ArrayList<Throw> tArray;
@@ -33,16 +32,16 @@ public class ActiveGame {
     private Dao<Game, Long> gDao;
     private Dao<Throw, Long> tDao;
 
-    public ActiveGame(long gId, Context context, int testRuleSetId) {
-        super();
-
-        this.gId = gId;
+    public ActiveGame(long gId, long p1Id, long p2Id, Context context, int testRuleSetId) {
         gDao = Game.getDao(context);
         tDao = Throw.getDao(context);
 
         if (gId != -1) {
             try {
-                g = gDao.queryForId(gId);
+                g = gDao.queryBuilder().where().eq(Game.POCKETLEAGUE_ID, gId).queryForFirst();
+                if (g == null) {
+                    g = new Game(p1Id, p2Id,0);
+                }
 
                 tArray = g.getThrowList(context);
             } catch (SQLException e) {
@@ -55,11 +54,6 @@ public class ActiveGame {
             team_names[1] = "Team2 Name";
             ruleSet = RuleType.map.get(g.ruleset_id);
 
-        } else {
-            // if no game ID is passed in, this is for testing (or an error)
-            // so create dummy objects which won't be saved to database
-            ruleSet = RuleType.map.get(testRuleSetId);
-            tArray = new ArrayList<Throw>();
         }
 
         activeIdx = 0;
@@ -114,8 +108,8 @@ public class ActiveGame {
                 scores[0] = tmp[1];
             }
         }
-        g.setTeam_1_score(scores[0]);
-        g.setTeam_2_score(scores[1]);
+        g.setTeam1Score(scores[0]);
+        g.setTeam2Score(scores[1]);
     }
 
     private ArrayList<Long> getThrowIds() {
@@ -237,7 +231,7 @@ public class ActiveGame {
     }
 
     public Date getGameDate() {
-        return g.getDate_played();
+        return g.getDatePlayed();
     }
 
     public String getP1Name() {
@@ -266,7 +260,7 @@ public class ActiveGame {
 
     /* Saving functions */
     private void saveThrow(Throw t) {
-        if (gId != -1) {
+        if (g != null) {
             HashMap<String, Object> m = t.getQueryMap();
             List<Throw> tList = new ArrayList<Throw>();
             try {
@@ -292,7 +286,7 @@ public class ActiveGame {
 
     public void saveAllThrows() {
         updateScoresFrom(0);
-        if (gId != -1) {
+        if (g != null) {
             final ArrayList<Long> throwIds = getThrowIds();
             try {
                 tDao.callBatchTasks(new Callable<Void>() {
@@ -322,7 +316,7 @@ public class ActiveGame {
     }
 
     public void saveGame() {
-        if (gId != -1) {
+        if (g != null) {
             try {
                 gDao.update(g);
             } catch (SQLException e) {

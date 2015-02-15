@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThrowTableFragment extends Fragment {
+    private static final String LOGTAG = "ThrowFragment";
     public static final String LOG_PREFIX = "TTFrag.";
     public static final String PAGE_IDX_KEY = "page_idx";
     public static int N_ROWS = 20;
@@ -247,14 +248,14 @@ public class ThrowTableFragment extends Fragment {
     }
 
     public void log(String msg) {
-        Log.i(GameInProgress.LOGTAG, LOG_PREFIX + page_idx + '.' + msg);
+        Log.i(LOGTAG, LOG_PREFIX + page_idx + '.' + msg);
     }
 
     public void logd(String msg) {
-        Log.d(GameInProgress.LOGTAG, LOG_PREFIX + page_idx + '.' + msg);
+        Log.d(LOGTAG, LOG_PREFIX + page_idx + '.' + msg);
     }
 
     public void loge(String msg, Exception e) {
-        Log.e(GameInProgress.LOGTAG, LOG_PREFIX + page_idx + '.' + msg + ": " + e.getMessage());
+        Log.e(LOGTAG, LOG_PREFIX + page_idx + '.' + msg + ": " + e.getMessage());
     }
 }

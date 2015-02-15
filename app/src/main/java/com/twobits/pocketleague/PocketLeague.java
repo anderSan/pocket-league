@@ -390,6 +390,23 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
 
     public void loadGame(Long gId) {
         Intent intent = new Intent("com.twobits.polishhorseshoes.singles.PLAY_GAME");
+        intent.putExtra("GID", gId);
+
+        try {
+            Game g = gDao.queryForId(gId);
+
+            int ii = 0;
+            for (GameMember gm : g.getGameMembers()) {
+                intent.putExtra("P" + String.valueOf(ii) + "ID", gm.getTeam().getId());
+                intent.putExtra("P" + String.valueOf(ii) + "NAME", gm.getTeam().getTeamName());
+                ii++;
+            }
+            intent.putExtra("SESSION_NAME", g.getSession().getSessionName());
+            intent.putExtra("VENUE_NAME", g.getVenue().getName());
+        } catch (SQLException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
         startActivity(intent);
 
 

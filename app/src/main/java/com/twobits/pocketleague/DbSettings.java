@@ -23,6 +23,7 @@ import com.twobits.pocketleague.backend.Fragment_Base;
 import com.twobits.pocketleague.db.DatabaseHelper;
 import com.twobits.pocketleague.db.DbxInfo;
 import com.twobits.pocketleague.db.tables.Player;
+import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.db.tables.TeamMember;
 import com.twobits.pocketleague.db.tables.Venue;
@@ -221,20 +222,21 @@ public class DbSettings extends Fragment_Base {
 						true, false, 182, 63, emptyImage, getResources()
 								.getColor(R.color.Khaki), false) };
 
-		// Session s1 = new Session("league", GameType.POLISH_HORSESHOES,
-		// GameSubtype.POLISH_SINGLES, SessionType.LEAGUE, 1);
-		// Session s2 = new Session("league", GameType.BILLIARDS,
-		// GameSubtype.EIGHTBALL, SessionType.LEAGUE, 1);
+        Venue v1 = new Venue("Putnam St.", true);
+        Venue v2 = new Venue("Verndale", false);
+        Venue v3 = new Venue("Oxford", true);
 
-		Venue v1 = new Venue("Putnam St.", true);
-		Venue v2 = new Venue("Verndale", false);
-		Venue v3 = new Venue("Oxford", true);
+//		Session s1 = new Session("league", GameType.POLISH_HORSESHOES,
+//		GameSubtype.POLISH_SINGLES, SessionType.LEAGUE, 1, Venue);
+//
+//		Session s2 = new Session("league", GameType.BILLIARDS,
+//		GameSubtype.EIGHTBALL, SessionType.LEAGUE, 1);
 
 		try {
 			Dao<Player, Long> playerDao = mData.getPlayerDao();
 			Dao<Team, Long> teamDao = mData.getTeamDao();
 			Dao<TeamMember, Long> tmDao = mData.getTeamMemberDao();
-			// Dao<Session, Long> sessionDao = getHelper().getSessionDao();
+			Dao<Session, Long> sDao = mData.getSessionDao();
 			Dao<Venue, Long> venueDao = mData.getVenueDao();
 			for (Player p : players) {
 				playerDao.create(p);
@@ -244,8 +246,8 @@ public class DbSettings extends Fragment_Base {
 				tmDao.create(new TeamMember(t, p));
 			}
 
-			// sessionDao.create(s1);
-			// sessionDao.create(s2);
+//			sessionDao.create(s1);
+//			sessionDao.create(s2);
 
 			venueDao.create(v1);
 			venueDao.create(v2);

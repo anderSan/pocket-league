@@ -45,7 +45,6 @@ import java.util.Locale;
 
 public class GameInProgress extends Activity_Base implements ThrowTableFragment
         .OnTableRowClickedListener {
-    public static String LOGTAG = "GIP";
     private FragmentArrayAdapter vpAdapter;
     private List<ThrowTableFragment> fragmentArray = new ArrayList<ThrowTableFragment>(0);
     private ViewPager vp;
@@ -468,11 +467,12 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
 
         Intent intent = getIntent();
         Long gId = intent.getLongExtra("GID", -1);
-        int testRuleSetId = intent.getIntExtra("RSID", 0);
+        int testRuleSetId = intent.getIntExtra("RSID", 1);
+        long p1Id = intent.getLongExtra("P1ID", -1);
+        long p2Id = intent.getLongExtra("P2ID", -1);
 
-        Context context = getApplicationContext();
-        tDao = Throw.getDao(context);
-        ag = new ActiveGame(gId, context, testRuleSetId);
+        tDao = Throw.getDao(this);
+        ag = new ActiveGame(gId, p1Id, p2Id, this, testRuleSetId);
         uiThrow = ag.getActiveThrow();
 
         initMetadata();

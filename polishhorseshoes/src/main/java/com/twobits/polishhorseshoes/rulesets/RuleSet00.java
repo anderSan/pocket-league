@@ -17,8 +17,8 @@ import java.util.List;
 
 public class RuleSet00 implements RuleSet {
     /**
-     * Standard rules without coercion. TODO: remove fire rules, add in manual
-     * fire controls?
+     * Standard rules without coercion.
+     * TODO: remove fire rules, add in manual fire controls?
      */
 
     public RuleSet00() {

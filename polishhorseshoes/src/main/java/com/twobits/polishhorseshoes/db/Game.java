@@ -3,7 +3,9 @@ package com.twobits.polishhorseshoes.db;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.twobits.polishhorseshoes.enums.ThrowResult;
 import com.twobits.polishhorseshoes.enums.ThrowType;
@@ -17,15 +19,20 @@ import java.util.List;
 
 @DatabaseTable
 public class Game {
-    public static final String FIRST_TEAM = "firstTeam_id";
-    public static final String SECOND_TEAM = "secondTeam_id";
+    public static final String POCKETLEAGUE_ID = "pocketleague_id";
+    public static final String FIRST_TEAM = "team_1_id";
+    public static final String SECOND_TEAM = "team_2_id";
+    public static final String RULESET_ID = "ruleset_id";
+    public static final String TEAM_1_ON_TOP = "team_1_on_top";
     public static final String DATE_PLAYED = "date_played";
-    public static final String IS_COMPLETE = "isComplete";
+    public static final String TEAM_1_SCORE = "team_1_score";
+    public static final String TEAM_2_SCORE = "team_1_score";
+    public static final String IS_COMPLETE = "is_complete";
 
     @DatabaseField(generatedId = true)
     private long id;
 
-    @DatabaseField
+    @DatabaseField(unique = true)
     private long pocketleague_id;
 
     @DatabaseField(canBeNull = false)
@@ -38,7 +45,7 @@ public class Game {
     public int ruleset_id;
 
     @DatabaseField(canBeNull = false)
-    public boolean firstPlayerOnTop;
+    public boolean team_1_on_top;
 
     @DatabaseField(canBeNull = false)
     private Date date_played;
@@ -50,26 +57,26 @@ public class Game {
     private int team_2_score;
 
     @DatabaseField
-    private boolean isComplete = false;
+    private boolean is_complete = false;
+
+    @ForeignCollectionField
+    ForeignCollection<Throw> throw_list;
 
     public Game() {
-        super();
     }
 
-    public Game(long team_1_id, long team_2_id, int ruleSet, boolean isTracked, Date date_played) {
-        super();
+    public Game(long team_1_id, long team_2_id, int ruleset_id, Date date_played) {
         this.team_1_id = team_1_id;
         this.team_2_id = team_2_id;
-        this.ruleset_id = ruleSet;
+        this.ruleset_id = ruleset_id;
         this.date_played = date_played;
 
     }
 
-    public Game(long team_1_id, long team_2_id, int ruleSet, boolean isTracked) {
-        super();
+    public Game(long team_1_id, long team_2_id, int ruleset_id) {
         this.team_1_id = team_1_id;
         this.team_2_id = team_2_id;
-        this.ruleset_id = ruleSet;
+        this.ruleset_id = ruleset_id;
         this.date_played = new Date();
     }
 
@@ -165,11 +172,11 @@ public class Game {
     public Throw makeNewThrow(int throwNumber) {
         long offensiveTeam_id, defensiveTeam_id;
         if (throwNumber % 2 == 0) {
-            offensiveTeam_id = getTeam_1_id();
-            defensiveTeam_id = getTeam_2_id();
+            offensiveTeam_id = getTeam1Id();
+            defensiveTeam_id = getTeam2Id();
         } else {
-            offensiveTeam_id = getTeam_2_id();
-            defensiveTeam_id = getTeam_1_id();
+            offensiveTeam_id = getTeam2Id();
+            defensiveTeam_id = getTeam1Id();
         }
         Date timestamp = new Date(System.currentTimeMillis());
         Throw t = new Throw(throwNumber, this, offensiveTeam_id, defensiveTeam_id, timestamp);
@@ -185,59 +192,59 @@ public class Game {
         this.id = id;
     }
 
-    public long getTeam_1_id() {
+    public long getTeam1Id() {
         return team_1_id;
     }
 
-    public void setTeam_1_id(long team_1_id) {
+    public void setTeam1Id(long team_1_id) {
         this.team_1_id = team_1_id;
     }
 
-    public long getTeam_2_id() {
+    public long getTeam2Id() {
         return team_2_id;
     }
 
-    public void setTeam_2_id(long team_2_id) {
+    public void setTeam2Id(long team_2_id) {
         this.team_2_id = team_2_id;
     }
 
-    public Date getDate_played() {
+    public Date getDatePlayed() {
         return date_played;
     }
 
-    public void setDate_played(Date date_played) {
+    public void setDatePlayed(Date date_played) {
         this.date_played = date_played;
     }
 
-    public int getTeam_1_score() {
+    public int getTeam1Score() {
         return team_1_score;
     }
 
-    public void setTeam_1_score(int team_1_score) {
+    public void setTeam1Score(int team_1_score) {
         this.team_1_score = team_1_score;
         checkGameComplete();
     }
 
-    public int getTeam_2_score() {
+    public int getTeam2Score() {
         return team_2_score;
     }
 
-    public void setTeam_2_score(int team_2_score) {
+    public void setTeam2Score(int team_2_score) {
         this.team_2_score = team_2_score;
         checkGameComplete();
     }
 
     public boolean getIsComplete() {
-        return isComplete;
+        return is_complete;
     }
 
     public void setIsComplete(boolean isComplete) {
-        this.isComplete = isComplete;
+        this.is_complete = isComplete;
     }
 
     public void checkGameComplete() {
-        Integer s1 = getTeam_1_score();
-        Integer s2 = getTeam_2_score();
+        Integer s1 = getTeam1Score();
+        Integer s2 = getTeam2Score();
         if (Math.abs(s1 - s2) >= 2 && (s1 >= 11 || s2 >= 11)) {
             setIsComplete(true);
         } else {
@@ -245,10 +252,14 @@ public class Game {
         }
     }
 
+    public ForeignCollection<Throw> getThrows() {
+        return throw_list;
+    }
+
     public long getWinner() {
         // TODO: should raise an error if game is not complete
         long winner = team_1_id;
-        if (getTeam_2_score() > getTeam_1_score()) {
+        if (getTeam2Score() > getTeam1Score()) {
             winner = team_2_id;
         }
         return winner;
@@ -256,7 +267,7 @@ public class Game {
 
     public long getLoser() {
         long loser = team_1_id;
-        if (getTeam_2_score() < getTeam_1_score()) {
+        if (getTeam2Score() < getTeam1Score()) {
             loser = team_2_id;
         }
         return loser;

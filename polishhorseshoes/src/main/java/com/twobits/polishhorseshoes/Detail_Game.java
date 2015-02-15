@@ -70,14 +70,14 @@ public class Detail_Game extends Activity_Base {
                 gDao = Game.getDao(context);
 
                 g = gDao.queryForId(gId);
-                //                playerDao.refresh(g.getTeam_1_id());
-                //                playerDao.refresh(g.getTeam_2_id());
+                //                playerDao.refresh(g.getTeam1Id());
+                //                playerDao.refresh(g.getTeam2Id());
                 //
                 //                sessionDao.refresh(g.getSession());
                 //                venueDao.refresh(g.getVenue());
 
-                p[0] = g.getTeam_1_id();
-                p[1] = g.getTeam_2_id();
+                p[0] = g.getTeam1Id();
+                p[1] = g.getTeam2Id();
             } catch (SQLException e) {
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -103,12 +103,12 @@ public class Detail_Game extends Activity_Base {
                 .get(g.ruleset_id).getDescription());
 
         TextView gameScore = (TextView) findViewById(R.id.gDet_score);
-        gameScore.setText(String.valueOf(g.getTeam_1_score()) + "/" + String.valueOf(g
-                .getTeam_2_score()));
+        gameScore.setText(String.valueOf(g.getTeam1Score()) + "/" + String.valueOf(g
+                .getTeam2Score()));
 
         DateFormat df = new SimpleDateFormat("EEE MMM dd, yyyy @HH:mm", Locale.US);
         TextView gameDate = (TextView) findViewById(R.id.gDet_date);
-        gameDate.setText(df.format(g.getDate_played()));
+        gameDate.setText(df.format(g.getDatePlayed()));
     }
 
     public void deleteGame(View view) {
