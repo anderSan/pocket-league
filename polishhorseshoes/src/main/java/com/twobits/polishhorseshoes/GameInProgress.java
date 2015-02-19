@@ -473,25 +473,10 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
 
         Intent intent = getIntent();
         Long gId = intent.getLongExtra("GID", -1);
-        int testRuleSetId = intent.getIntExtra("RSID", 1);
-        long p1Id = intent.getLongExtra("P1ID", -1);
-        long p2Id = intent.getLongExtra("P2ID", -1);
-        team_names[0] = intent.getStringExtra("P1NAME");
-        team_names[1] = intent.getStringExtra("P2NAME");
-        session_name = intent.getStringExtra("SESSION_NAME");
-        venue_name = intent.getStringExtra("VENUE_NAME");
-
-        Uri pl_uri = new Uri.Builder()
-                .scheme(ContentResolver.SCHEME_CONTENT)
-                .authority("com.twobits.pocketleague.provider")
-                .appendPath("games")
-                .appendPath("2")
-                .build();
-        Cursor mCursor = getContentResolver().query(pl_uri, null, null, null, null);
-        cursorTest(mCursor);
-
         tDao = Throw.getDao(this);
-        ag = new ActiveGame(gId, p1Id, p2Id, this, testRuleSetId);
+
+        fetchGameDetails(gId);
+
         uiThrow = ag.getActiveThrow();
 
         initMetadata();
@@ -501,16 +486,31 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         initTableFragments();
     }
 
-    public void cursorTest(Cursor cursor) {
-        int index = 2;
-        if (cursor != null) {
-            log("Cursor count is " + cursor.getCount());
-            log("Position starts at " + cursor.getPosition());
-            while (cursor.moveToNext()) {
-                log("Position is now " + cursor.getPosition());
-                log(cursor.getString(index));
-            }
+    public void fetchGameDetails(long gId) {
+        Uri pl_uri;
+        Cursor cursor;
+        long[] t_ids = new long[2];
+
+        pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+                .authority("com.twobits.pocketleague.provider").appendPath("games")
+                .appendPath(String.valueOf(gId)).build();
+        cursor = getContentResolver().query(pl_uri, null, null, null, null);
+        cursor.moveToFirst();
+
+        session_name = cursor.getString(cursor.getColumnIndex("session_name"));
+        venue_name = cursor.getString(cursor.getColumnIndex("venue_name"));
+
+        pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+                .authority("com.twobits.pocketleague.provider").appendPath("game_members")
+                .appendPath(String.valueOf(gId)).build();
+        cursor = getContentResolver().query(pl_uri, null, null, null, null);
+        while (cursor.moveToNext()) {
+            t_ids[cursor.getPosition()] = cursor.getLong(cursor.getColumnIndex("team_id"));
+            team_names[cursor.getPosition()] = cursor.getString(cursor.getColumnIndex("team_name"));
         }
+
+        int testRuleSetId = 1;
+        ag = new ActiveGame(gId, t_ids[0], t_ids[1], this, testRuleSetId);
     }
 
     @Override

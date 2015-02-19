@@ -404,15 +404,6 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
             Intent intent = new Intent(action_type);
             if (intent.resolveActivity(getPackageManager()) != null) {
                 intent.putExtra("GID", gId);
-                int ii = 1;
-                for (GameMember gm : g.getGameMembers()) {
-                    intent.putExtra("P" + String.valueOf(ii) + "ID", gm.getTeam().getId());
-                    intent.putExtra("P" + String.valueOf(ii) + "NAME", gm.getTeam().getTeamName());
-                    ii++;
-                }
-                intent.putExtra("SESSION_NAME", g.getSession().getSessionName());
-                intent.putExtra("VENUE_NAME", g.getVenue().getName());
-
                 startActivity(intent);
             } else {
                 // DialogFragment.show() will take care of adding the fragment

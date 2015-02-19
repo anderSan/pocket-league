@@ -58,16 +58,16 @@ public class DbProvider extends ContentProvider {
         switch (uriMatch) {
             case ROUTE_GAME:
                 // Return values for the game with given id.
-                columnNames = new String[]{"id", "id_in_session", "ruleset_id", "session_name",
-                        "venue_name", "date_played", "is_complete"};
+                columnNames = new String[]{"id", "ruleset_id", "session_name", "venue_name",
+                        "date_played"};
                 cursor = new MatrixCursor(columnNames);
                 Game g = gDao.queryForId(id);
                 sDao.refresh(g.getSession());
                 vDao.refresh(g.getVenue());
 
-                cursor.addRow(new Object[]{g.getId(), g.getIdInSession(),
-                        g.getSession().getGameSubtype(), g.getSession().getSessionName(),
-                        g.getVenue().getName(), g.getDatePlayed(), g.getIsComplete()});
+                cursor.addRow(new Object[]{g.getId(), g.getSession().getGameSubtype(),
+                        g.getSession().getSessionName(), g.getVenue().getName(), g.getDatePlayed()
+                        });
                 break;
             case ROUTE_GAME_MEMBERS:
                 // Return values for each game member in game given by id.
@@ -95,6 +95,11 @@ public class DbProvider extends ContentProvider {
     }
 
     @Override
+    public int update(Uri arg0, ContentValues arg1, String arg2, String[] arg3) {
+        return 0;
+    }
+
+    @Override
     public String getType(Uri uri) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
@@ -115,10 +120,5 @@ public class DbProvider extends ContentProvider {
     @Override
     public Uri insert(Uri arg0, ContentValues arg1) {
         return null;
-    }
-
-    @Override
-    public int update(Uri arg0, ContentValues arg1, String arg2, String[] arg3) {
-        return 0;
     }
 }
