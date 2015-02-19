@@ -16,6 +16,7 @@ import java.util.List;
 
 @DatabaseTable
 public class Game {
+    public static final String ID = "id";
 	public static final String ID_IN_SESSION = "id_in_session";
 	public static final String SESSION = "session_id";
 	public static final String VENUE = "venue_id";

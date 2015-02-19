@@ -5,11 +5,13 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
@@ -479,6 +481,15 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         session_name = intent.getStringExtra("SESSION_NAME");
         venue_name = intent.getStringExtra("VENUE_NAME");
 
+        Uri pl_uri = new Uri.Builder()
+                .scheme(ContentResolver.SCHEME_CONTENT)
+                .authority("com.twobits.pocketleague.provider")
+                .appendPath("games")
+                .appendPath("2")
+                .build();
+        Cursor mCursor = getContentResolver().query(pl_uri, null, null, null, null);
+        cursorTest(mCursor);
+
         tDao = Throw.getDao(this);
         ag = new ActiveGame(gId, p1Id, p2Id, this, testRuleSetId);
         uiThrow = ag.getActiveThrow();
@@ -488,6 +499,18 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
 
         log("onCreate(): about to create fragments");
         initTableFragments();
+    }
+
+    public void cursorTest(Cursor cursor) {
+        int index = 2;
+        if (cursor != null) {
+            log("Cursor count is " + cursor.getCount());
+            log("Position starts at " + cursor.getPosition());
+            while (cursor.moveToNext()) {
+                log("Position is now " + cursor.getPosition());
+                log(cursor.getString(index));
+            }
+        }
     }
 
     @Override
