@@ -1,0 +1,29 @@
+#
+# generated on 2015/02/19 09:16:29
+#
+# --table-start--
+dataClass=com.twobits.gametemplate.db.Game
+tableName=game
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=pocketleague_id
+unique=true
+# --field-end--
+# --field-start--
+fieldName=ruleset_id
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=date_played
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=is_complete
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

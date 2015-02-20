@@ -168,22 +168,21 @@ public class DbSettings extends Fragment_Base {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_LINK_TO_DBX) {
-			if (resultCode == Activity.RESULT_OK) {
-				// ... Start using Dropbox files.
-				Toast.makeText(context, "Successfully connected to dropbox!",
-						Toast.LENGTH_SHORT).show();
-				mLinkButton.setVisibility(View.GONE);
-			} else {
-				// ... Link failed or was cancelled by the user.
-				Toast.makeText(context,
-						"Link failed or was cancelled by the user.",
-						Toast.LENGTH_SHORT).show();
-			}
-		} else {
-			super.onActivityResult(requestCode, resultCode, data);
-		}
-	}
+        if (requestCode == REQUEST_LINK_TO_DBX) {
+            if (resultCode == Activity.RESULT_OK) {
+                // ... Start using Dropbox files.
+                Toast.makeText(context, "Successfully connected to dropbox!",
+                        Toast.LENGTH_SHORT).show();
+                mLinkButton.setVisibility(View.GONE);
+            } else {
+                // ... Link failed or was cancelled by the user.
+                Toast.makeText(context, "Link failed or was cancelled by the user.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+                    }
 
 	public void clearTables() {
 		DatabaseHelper h = mData.getHelper();
@@ -295,13 +294,10 @@ public class DbSettings extends Fragment_Base {
 
 	public void saveDBdropbox() {
 		Toast.makeText(context, "Saved to dropbox", Toast.LENGTH_SHORT).show();
-
 		try {
 			// Create DbxFileSystem for synchronized file access.
-			DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr
-					.getLinkedAccount());
-
-			String fileName = new SimpleDateFormat("yyyy-MM-dd_HH-mm'.db'",
+            DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+            String fileName = new SimpleDateFormat("yyyy-MM-dd_HH-mm'.db'",
 					Locale.US).format(new Date());
 
 			DbxPath phDBpath = new DbxPath(DbxPath.ROOT, fileName);
@@ -315,8 +311,8 @@ public class DbSettings extends Fragment_Base {
 				mTestOutput.append("\nCreated new file '" + phDBpath + "'.\n");
 			}
 		} catch (IOException e) {
-			mTestOutput.setText("Dropbox test failed: " + e);
-		}
+            mTestOutput.setText("Dropbox test failed: " + e);
+        }
 	}
 
 	public void loadDBdropbox() {
@@ -369,6 +365,8 @@ public class DbSettings extends Fragment_Base {
 
 	File getInternalPath() {
 		String dbPath = mData.getHelper().getReadableDatabase().getPath();
+//		String dbPath = "/data/data/com.twobits.gametemplate/databases/gametemplate.db";
+
 		File internalDB = new File(dbPath);
 		return internalDB;
 	}

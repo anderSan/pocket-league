@@ -187,14 +187,11 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, new List_Sessions()).commit();
+            mDrawerList.setItemChecked(0, true);
             if (getCurrentGameType() == GameType.UNDEFINED) {
-                mFragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, new List_GameTypes()).commit();
-                mDrawerList.setItemChecked(2, true);
-            } else {
-                mFragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, new List_Sessions()).commit();
-                mDrawerList.setItemChecked(0, true);
+                viewGameTypes();
             }
         }
     }
@@ -380,8 +377,7 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
     }
 
     public GameType getCurrentGameType() {
-        return GameType.valueOf(getPreference("currentGameType",
-                GameType.UNDEFINED.name()));
+        return GameType.valueOf(getPreference("currentGameType", GameType.UNDEFINED.name()));
     }
 
     public void setCurrentGameType(GameType gametype) {
@@ -424,6 +420,10 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
 
     public void viewSessions() {
         selectItem(0, "Sessions");
+    }
+
+    public void viewGameTypes() {
+        selectItem(2, "Games");
     }
 
     public void viewSessionDetails(Long sId, SessionType session_type) {
