@@ -15,6 +15,13 @@
 	    android:layout_height="wrap_content"
 	    android:layout_margin="10dp"
 	    android:text="clearDB" />
+
+    <Button
+        android:id="@+id/db_clearOtherDB"
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="clear other DBs" />
 	
 	<Button
 	    android:id="@+id/db_popDB"

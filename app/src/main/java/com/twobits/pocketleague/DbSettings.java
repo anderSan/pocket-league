@@ -2,8 +2,10 @@ package com.twobits.pocketleague;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +36,7 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -66,6 +69,14 @@ public class DbSettings extends Fragment_Base {
 				clearTables();
 			}
 		});
+
+        Button mClearOtherButton = (Button) rootView.findViewById(R.id.db_clearOtherDB);
+        mClearOtherButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearOtherTables();
+            }
+        });
 
 		Button mPopulateButton = (Button) rootView.findViewById(R.id.db_popDB);
 		mPopulateButton.setOnClickListener(new OnClickListener() {
@@ -189,6 +200,21 @@ public class DbSettings extends Fragment_Base {
 		h.dropAll();
 		h.createAll();
 	}
+
+    public void clearOtherTables() {
+        List<String> other_dbs = new ArrayList<>();
+        other_dbs.add("/data/data/com.twobits.polishhorseshoes/databases/polishhorseshoes.db");
+        other_dbs.add("/data/data/com.twobits.gametemplate/databases/gametemplate.db");
+        for (String db_path : other_dbs) {
+            File external_db = new File(db_path);
+            boolean deleted = external_db.delete();
+            if (deleted) {
+                log("The database was deleted!");
+            } else {
+                log("Did not delete the database.");
+            }
+        }
+    }
 
 	public void doPopulateTest() {
 		byte[] emptyImage = new byte[0];
