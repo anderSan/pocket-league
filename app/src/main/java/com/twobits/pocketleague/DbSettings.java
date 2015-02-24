@@ -319,6 +319,9 @@ public class DbSettings extends Fragment_Base {
 	// }
 
 	public void saveDBdropbox() {
+        // TODO: zip all of the databases together before pushing to dropbox
+        // http://www.jondev.net/articles/Zipping_Files_with_Android_%28Programmatically%29
+
 		Toast.makeText(context, "Saved to dropbox", Toast.LENGTH_SHORT).show();
 		try {
 			// Create DbxFileSystem for synchronized file access.
@@ -342,6 +345,9 @@ public class DbSettings extends Fragment_Base {
 	}
 
 	public void loadDBdropbox() {
+        // once zipping is implemented, unzipping will have to be done here. See:
+        // http://jondev.net/articles/Unzipping_Files_with_Android_(Programmatically)
+
 		DbxPath latestFile = null;
 
 		try {
