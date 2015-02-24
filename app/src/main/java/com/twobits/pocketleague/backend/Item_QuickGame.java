@@ -5,12 +5,12 @@ import com.twobits.pocketleague.db.tables.GameMember;
 public class Item_QuickGame {
     private GameMember gm;
     private String name;
-    private boolean is_winner;
+    private int score;
 
     public Item_QuickGame(GameMember gm) {
         this.gm = gm;
         this.name = gm.getTeam().getTeamName();
-        this.is_winner = gm.getIsWinner();
+        this.score = gm.getScore();
     }
 
     public GameMember getGM() {
@@ -21,13 +21,13 @@ public class Item_QuickGame {
         return name;
     }
 
-    public boolean getIsWinner() {
-        return is_winner;
+    public int getScore() {
+        return score;
     }
 
     @Override
     public String toString() {
-        if (gm.getIsWinner()) {
+        if (gm.getScore() == 1) {
             return name + " (W)";
         }
         return name;

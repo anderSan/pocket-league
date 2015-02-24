@@ -79,9 +79,9 @@ public class Quick_Game extends DialogFragment_Base {
                         public void onItemClick(AdapterView<?> parent, View view, int position,
                                                 long id) {
                             for (Item_QuickGame gmi : game_members) {
-                                if (gmi.getIsWinner()) {
+                                if (gmi.getScore() == 1) {
                                     try {
-                                        gmi.getGM().setIsWinner(false);
+                                        gmi.getGM().setScore(0);
                                         gmDao.update(gmi.getGM());
                                     } catch (SQLException e) {
                                         Toast.makeText(context, e.getMessage(),
@@ -91,7 +91,7 @@ public class Quick_Game extends DialogFragment_Base {
                             }
                             try {
                                 GameMember gm = game_members.get(position).getGM();
-                                gm.setIsWinner(true);
+                                gm.setScore(1);
                                 gmDao.update(gm);
                                 g.setIsComplete(true);
                                 gDao.update(g);

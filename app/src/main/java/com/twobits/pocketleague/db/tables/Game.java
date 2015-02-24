@@ -7,10 +7,12 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.twobits.pocketleague.BuildConfig;
 import com.twobits.pocketleague.db.DatabaseHelper;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -146,18 +148,12 @@ public class Game {
 	// Additional methods
 	// =========================================================================
 	public Team getWinner() {
-        List<GameMember> winners = new ArrayList<>();
-        Team winner = null;
+        List<GameMember> game_members = new ArrayList<>(this.game_members);
+        Collections.sort(game_members);
 
-		for (GameMember gm : game_members) {
-            if (gm.getIsWinner()) {
-                winners.add(gm);
-            }
-		}
-
-        if (winners.size() == 1) {
-            winner = winners.get(0).getTeam();
+        if (BuildConfig.DEBUG && game_members.get(0).getScore() <= game_members.get(1).getScore()) {
+            throw new AssertionError("Called getWinner but winner is not certain.");
         }
-        return winner;
+        return game_members.get(0).getTeam();
 	}
 }
