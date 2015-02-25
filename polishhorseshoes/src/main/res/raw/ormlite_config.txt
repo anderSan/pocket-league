@@ -1,5 +1,5 @@
 #
-# generated on 2015/02/14 11:34:17
+# generated on 2015/02/25 09:32:26
 #
 # --table-start--
 dataClass=com.twobits.polishhorseshoes.db.Game
@@ -11,14 +11,15 @@ generatedId=true
 # --field-end--
 # --field-start--
 fieldName=pocketleague_id
+canBeNull=false
 unique=true
 # --field-end--
 # --field-start--
-fieldName=team_1_id
+fieldName=member_1_id
 canBeNull=false
 # --field-end--
 # --field-start--
-fieldName=team_2_id
+fieldName=member_2_id
 canBeNull=false
 # --field-end--
 # --field-start--
@@ -26,7 +27,7 @@ fieldName=ruleset_id
 canBeNull=false
 # --field-end--
 # --field-start--
-fieldName=team_1_on_top
+fieldName=first_on_top
 canBeNull=false
 # --field-end--
 # --field-start--
@@ -34,10 +35,10 @@ fieldName=date_played
 canBeNull=false
 # --field-end--
 # --field-start--
-fieldName=team_1_score
+fieldName=member_1_score
 # --field-end--
 # --field-start--
-fieldName=team_2_score
+fieldName=member_2_score
 # --field-end--
 # --field-start--
 fieldName=is_complete

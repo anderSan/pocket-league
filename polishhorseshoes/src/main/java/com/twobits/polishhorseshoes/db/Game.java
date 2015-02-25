@@ -1,6 +1,9 @@
 package com.twobits.polishhorseshoes.db;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
@@ -20,13 +23,13 @@ import java.util.List;
 @DatabaseTable
 public class Game {
     public static final String POCKETLEAGUE_ID = "pocketleague_id";
-    public static final String FIRST_TEAM = "team_1_id";
-    public static final String SECOND_TEAM = "team_2_id";
+    public static final String FIRST_MEMBER = "member_1_id";
+    public static final String SECOND_MEMBER = "member_2_id";
     public static final String RULESET_ID = "ruleset_id";
-    public static final String TEAM_1_ON_TOP = "team_1_on_top";
+    public static final String FIRST_ON_TOP = "first_on_top";
     public static final String DATE_PLAYED = "date_played";
-    public static final String TEAM_1_SCORE = "team_1_score";
-    public static final String TEAM_2_SCORE = "team_1_score";
+    public static final String MEMBER_1_SCORE = "member_1_score";
+    public static final String MEMBER_2_SCORE = "member_1_score";
     public static final String IS_COMPLETE = "is_complete";
 
     @DatabaseField(generatedId = true)
@@ -36,25 +39,25 @@ public class Game {
     private long pocketleague_id;
 
     @DatabaseField(canBeNull = false)
-    private long team_1_id;
+    private long member_1_id;
 
     @DatabaseField(canBeNull = false)
-    private long team_2_id;
+    private long member_2_id;
 
     @DatabaseField(canBeNull = false)
     public int ruleset_id;
 
     @DatabaseField(canBeNull = false)
-    public boolean team_1_on_top;
+    public boolean first_on_top;
 
     @DatabaseField(canBeNull = false)
     private Date date_played;
 
     @DatabaseField
-    private int team_1_score;
+    private int member_1_score;
 
     @DatabaseField
-    private int team_2_score;
+    private int member_2_score;
 
     @DatabaseField
     private boolean is_complete = false;
@@ -65,19 +68,19 @@ public class Game {
     public Game() {
     }
 
-    public Game(long pl_id, long team_1_id, long team_2_id, int ruleset_id, Date date_played) {
+    public Game(long pl_id, long member_1_id, long member_2_id, int ruleset_id, Date date_played) {
         this.pocketleague_id = pl_id;
-        this.team_1_id = team_1_id;
-        this.team_2_id = team_2_id;
+        this.member_1_id = member_1_id;
+        this.member_2_id = member_2_id;
         this.ruleset_id = ruleset_id;
         this.date_played = date_played;
 
     }
 
-    public Game(long pl_id, long team_1_id, long team_2_id, int ruleset_id) {
+    public Game(long pl_id, long member_1_id, long member_2_id, int ruleset_id) {
         this.pocketleague_id = pl_id;
-        this.team_1_id = team_1_id;
-        this.team_2_id = team_2_id;
+        this.member_1_id = member_1_id;
+        this.member_2_id = member_2_id;
         this.ruleset_id = ruleset_id;
         this.date_played = new Date();
     }
@@ -110,11 +113,11 @@ public class Game {
             // used?
             // first player is on offense
             case 0:
-                isValid = isValid && (t.getOffensiveTeamId() == team_1_id);
+                isValid = isValid && (t.getOffensiveTeamId() == member_1_id);
                 break;
             // second player is on defense
             case 1:
-                isValid = isValid && (t.getDefensiveTeamId() == team_2_id);
+                isValid = isValid && (t.getDefensiveTeamId() == member_2_id);
                 break;
             default:
                 throw new RuntimeException("invalid index " + idx);
@@ -174,11 +177,11 @@ public class Game {
     public Throw makeNewThrow(int throwNumber) {
         long offensiveTeam_id, defensiveTeam_id;
         if (throwNumber % 2 == 0) {
-            offensiveTeam_id = getTeam1Id();
-            defensiveTeam_id = getTeam2Id();
+            offensiveTeam_id = getMember1Id();
+            defensiveTeam_id = getMember2Id();
         } else {
-            offensiveTeam_id = getTeam2Id();
-            defensiveTeam_id = getTeam1Id();
+            offensiveTeam_id = getMember2Id();
+            defensiveTeam_id = getMember1Id();
         }
         Date timestamp = new Date(System.currentTimeMillis());
         Throw t = new Throw(throwNumber, this, offensiveTeam_id, defensiveTeam_id, timestamp);
@@ -202,20 +205,20 @@ public class Game {
         this.pocketleague_id = pocketleague_id;
     }
 
-    public long getTeam1Id() {
-        return team_1_id;
+    public long getMember1Id() {
+        return member_1_id;
     }
 
-    public void setTeam1Id(long team_1_id) {
-        this.team_1_id = team_1_id;
+    public void setMember1Id(long member_1_id) {
+        this.member_1_id = member_1_id;
     }
 
-    public long getTeam2Id() {
-        return team_2_id;
+    public long getMember2Id() {
+        return member_2_id;
     }
 
-    public void setTeam2Id(long team_2_id) {
-        this.team_2_id = team_2_id;
+    public void setMember2Id(long member_2_id) {
+        this.member_2_id = member_2_id;
     }
 
     public int getRulesetId() {
@@ -234,39 +237,59 @@ public class Game {
         this.date_played = date_played;
     }
 
-    public int getTeam1Score() {
-        return team_1_score;
+    public int getMember1Score() {
+        return member_1_score;
     }
 
-    public void setTeam1Score(int team_1_score) {
-        this.team_1_score = team_1_score;
-        checkGameComplete();
+    public void setMember1Score(Context context, int member_1_score) {
+        this.member_1_score = member_1_score;
+        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+                .authority("com.twobits.pocketleague.provider")
+                .appendPath("game_member").appendPath(String.valueOf(member_1_id))
+                .build();
+        ContentValues values = new ContentValues();
+        values.put("score", member_1_score);
+        context.getContentResolver().update(uri, values, null, null);
+        checkGameComplete(context);
     }
 
-    public int getTeam2Score() {
-        return team_2_score;
+    public int getMember2Score() {
+        return member_2_score;
     }
 
-    public void setTeam2Score(int team_2_score) {
-        this.team_2_score = team_2_score;
-        checkGameComplete();
+    public void setMember2Score(Context context, int member_2_score) {
+        this.member_2_score = member_2_score;
+        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+                .authority("com.twobits.pocketleague.provider")
+                .appendPath("game_member").appendPath(String.valueOf(member_2_id))
+                .build();
+        ContentValues values = new ContentValues();
+        values.put("score", member_2_score);
+        context.getContentResolver().update(uri, values, null, null);
+        checkGameComplete(context);
     }
 
     public boolean getIsComplete() {
         return is_complete;
     }
 
-    public void setIsComplete(boolean isComplete) {
+    public void setIsComplete(Context context, boolean isComplete) {
         this.is_complete = isComplete;
+        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+                .authority("com.twobits.pocketleague.provider").appendPath("game")
+                .appendPath(String.valueOf(pocketleague_id)).build();
+        ContentValues values = new ContentValues();
+        values.put("is_complete", isComplete);
+        context.getContentResolver().update(uri, values, null, null);
     }
 
-    public void checkGameComplete() {
-        Integer s1 = getTeam1Score();
-        Integer s2 = getTeam2Score();
+    public void checkGameComplete(Context context) {
+        Integer s1 = getMember1Score();
+        Integer s2 = getMember2Score();
         if (Math.abs(s1 - s2) >= 2 && (s1 >= 11 || s2 >= 11)) {
-            setIsComplete(true);
+            setIsComplete(context, true);
         } else {
-            setIsComplete(false);
+            setIsComplete(context, false);
         }
     }
 
@@ -276,17 +299,17 @@ public class Game {
 
     public long getWinner() {
         // TODO: should raise an error if game is not complete
-        long winner = team_1_id;
-        if (getTeam2Score() > getTeam1Score()) {
-            winner = team_2_id;
+        long winner = member_1_id;
+        if (getMember2Score() > getMember1Score()) {
+            winner = member_2_id;
         }
         return winner;
     }
 
     public long getLoser() {
-        long loser = team_1_id;
-        if (getTeam2Score() < getTeam1Score()) {
-            loser = team_2_id;
+        long loser = member_1_id;
+        if (getMember2Score() < getMember1Score()) {
+            loser = member_2_id;
         }
         return loser;
     }

@@ -489,7 +489,7 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
     public void fetchGameDetails(long gId) {
         Uri pl_uri;
         Cursor cursor;
-        long[] t_ids = new long[2];
+        long[] gm_ids = new long[2];
 
         pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
                 .authority("com.twobits.pocketleague.provider").appendPath("game")
@@ -507,14 +507,14 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
                 .appendPath(String.valueOf(gId)).build();
         cursor = getContentResolver().query(pl_uri, null, null, null, null);
         while (cursor.moveToNext()) {
-            t_ids[cursor.getPosition()] = cursor.getLong(cursor.getColumnIndex("team_id"));
+            gm_ids[cursor.getPosition()] = cursor.getLong(cursor.getColumnIndex("id"));
             team_names[cursor.getPosition()] = cursor.getString(cursor.getColumnIndex("team_name"));
         }
 
         cursor.close();
 
         int testRuleSetId = 1;
-        ag = new ActiveGame(gId, t_ids[0], t_ids[1], this, testRuleSetId);
+        ag = new ActiveGame(gId, gm_ids[0], gm_ids[1], this, testRuleSetId);
     }
 
     @Override

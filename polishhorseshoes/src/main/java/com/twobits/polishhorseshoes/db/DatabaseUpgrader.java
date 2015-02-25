@@ -44,15 +44,15 @@ public class DatabaseUpgrader {
         List<Long> badGames = new ArrayList<Long>();
 //        for (Game g : gDao) {
 //            // Log.i("DatabaseUpgrader.updateScores()","processing game "+g.getId());
-//            oldScores[0] = g.getTeam1Score();
-//            oldScores[1] = g.getTeam2Score();
+//            oldScores[0] = g.getMember1Score();
+//            oldScores[1] = g.getMember2Score();
 //
 //            ag = new ActiveGame(g.getId(), context, g.ruleset_id);
 //            // saveAllThrows is extremely slow. any way to speed up?
 //            ag.saveAllThrows(); // this also calls updateThrowsFrom(0)
 //            ag.saveGame();
-//            newScores[0] = ag.getGame().getTeam1Score();
-//            newScores[1] = ag.getGame().getTeam2Score();
+//            newScores[0] = ag.getGame().getMember1Score();
+//            newScores[1] = ag.getGame().getMember2Score();
 //
 //            if (!(are_scores_equal(oldScores, newScores))) {
 //                msg = String.format("bad game %d: (%d,%d)->(%d,%d)", g.getId(), oldScores[0],

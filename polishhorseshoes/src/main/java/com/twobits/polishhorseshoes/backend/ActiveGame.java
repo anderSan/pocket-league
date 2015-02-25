@@ -30,6 +30,7 @@ public class ActiveGame {
     private Dao<Throw, Long> tDao;
 
     public ActiveGame(long gId, long p1Id, long p2Id, Context context, int testRuleSetId) {
+        this.context = context;
         gDao = Game.getDao(context);
         tDao = Throw.getDao(context);
 
@@ -106,8 +107,8 @@ public class ActiveGame {
                 scores[0] = tmp[1];
             }
         }
-        g.setTeam1Score(scores[0]);
-        g.setTeam2Score(scores[1]);
+        g.setMember1Score(context, scores[0]);
+        g.setMember2Score(context, scores[1]);
     }
 
     private ArrayList<Long> getThrowIds() {
@@ -230,14 +231,6 @@ public class ActiveGame {
 
     public Date getGameDate() {
         return g.getDatePlayed();
-    }
-
-    public Context getContext() {
-        return context;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
     }
 
     /* Saving functions */
