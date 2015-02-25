@@ -29,12 +29,12 @@ public class DbProvider extends ContentProvider {
 
     private static final String AUTHORITY = DbUris.AUTHORITY;
     public static final int ROUTE_GAME = 1;
-    public static final int ROUTE_GAME_MEMBERS = 2;
+    public static final int ROUTE_GAME_MEMBER = 2;
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static {
-        sUriMatcher.addURI(AUTHORITY, "games/*", ROUTE_GAME);
-        sUriMatcher.addURI(AUTHORITY, "game_members/*", ROUTE_GAME_MEMBERS);
+        sUriMatcher.addURI(AUTHORITY, "game/*", ROUTE_GAME);
+        sUriMatcher.addURI(AUTHORITY, "game_member/*", ROUTE_GAME_MEMBER);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class DbProvider extends ContentProvider {
                         g.getSession().getSessionName(), g.getVenue().getName(), g.getDatePlayed()
                         });
                 break;
-            case ROUTE_GAME_MEMBERS:
+            case ROUTE_GAME_MEMBER:
                 // Return values for each game member in game given by id.
                 columnNames = new String[] {"id", "team_id", "team_name"};
                 cursor = new MatrixCursor(columnNames);
@@ -95,15 +95,34 @@ public class DbProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri arg0, ContentValues arg1, String arg2, String[] arg3) {
-        return 0;
+    public int update(Uri uri, ContentValues values, String arg2, String[] arg3) {
+        long id = Long.valueOf(uri.getLastPathSegment());
+
+        int uriMatch = sUriMatcher.match(uri);
+        switch (uriMatch) {
+            case ROUTE_GAME:
+                // Update values for the game given by id.
+                Game g = gDao.queryForId(id);
+                g.setIsComplete(values.getAsBoolean("is_complete"));
+                gDao.update(g);
+                break;
+            case ROUTE_GAME_MEMBER:
+                // Update values for the game member given by id.
+                GameMember gm = gmDao.queryForId(id);
+                gm.setScore(values.getAsInteger("score"));
+                gmDao.update(gm);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        return 1; // number of affected rows
     }
 
     @Override
     public String getType(Uri uri) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
-            case ROUTE_GAME_MEMBERS:
+            case ROUTE_GAME_MEMBER:
                 return DbUris.CONTENT_GAME_MEMBERS;
             case ROUTE_GAME:
                 return DbUris.CONTENT_GAME;
