@@ -555,13 +555,14 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
     @Override
     protected void onPause() {
         super.onPause();
-        ag.saveAllThrows();
-        ag.saveGame();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        log("Calling onStop");
+        ag.saveAllThrows();
+        ag.saveGame();
     }
 
     // INITIALIZATION =========================================================

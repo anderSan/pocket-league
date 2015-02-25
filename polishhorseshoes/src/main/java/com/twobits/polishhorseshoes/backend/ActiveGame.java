@@ -39,14 +39,15 @@ public class ActiveGame {
 
                 if (g == null) {
                     Log.i("ActiveGame", "No game found, creating a new one");
-                    g = new Game(p1Id, p2Id, testRuleSetId);
+                    g = new Game(gId, p1Id, p2Id, testRuleSetId);
+                    gDao.create(g);
                 } else {
-                    Log.i("ActiveGame", "Game ID is:" + g.getId());
+                    Log.i("ActiveGame", "Game ID is:" + g.getPlId());
                 }
 
                 tArray = g.getThrowList(context);
             } catch (SQLException e) {
-                throw new RuntimeException("couldn't get throws for game " + g.getId() + ": ", e);
+                throw new RuntimeException("couldn't get throws for game " + g.getPlId() + ": ", e);
             }
 
             ruleSet = RuleType.map.get(g.ruleset_id);

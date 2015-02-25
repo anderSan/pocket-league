@@ -5,8 +5,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.twobits.polishhorseshoes.db.DatabaseHelper;
+
 public class Activity_Base extends ActionBarActivity {
     protected String LOGTAG = getClass().getSimpleName();
+    private DatabaseHelper databaseHelper = null;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -17,6 +21,22 @@ public class Activity_Base extends ActionBarActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public DatabaseHelper getHelper() {
+        if (databaseHelper == null) {
+            databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+        }
+        return databaseHelper;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (databaseHelper != null) {
+            OpenHelperManager.releaseHelper();
+            databaseHelper = null;
         }
     }
 

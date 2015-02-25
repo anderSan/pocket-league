@@ -32,7 +32,7 @@ public class Game {
     @DatabaseField(generatedId = true)
     private long id;
 
-    @DatabaseField(unique = true)
+    @DatabaseField(canBeNull = false, unique = true)
     private long pocketleague_id;
 
     @DatabaseField(canBeNull = false)
@@ -65,7 +65,8 @@ public class Game {
     public Game() {
     }
 
-    public Game(long team_1_id, long team_2_id, int ruleset_id, Date date_played) {
+    public Game(long pl_id, long team_1_id, long team_2_id, int ruleset_id, Date date_played) {
+        this.pocketleague_id = pl_id;
         this.team_1_id = team_1_id;
         this.team_2_id = team_2_id;
         this.ruleset_id = ruleset_id;
@@ -73,7 +74,8 @@ public class Game {
 
     }
 
-    public Game(long team_1_id, long team_2_id, int ruleset_id) {
+    public Game(long pl_id, long team_1_id, long team_2_id, int ruleset_id) {
+        this.pocketleague_id = pl_id;
         this.team_1_id = team_1_id;
         this.team_2_id = team_2_id;
         this.ruleset_id = ruleset_id;
@@ -86,7 +88,7 @@ public class Game {
         try {
             d = helper.getGameDao();
         } catch (SQLException e) {
-            throw new RuntimeException("Couldn't get game dao: ", e);
+            throw new RuntimeException("Could not get game dao: ", e);
         }
         return d;
     }
@@ -192,6 +194,14 @@ public class Game {
         this.id = id;
     }
 
+    public long getPlId() {
+        return pocketleague_id;
+    }
+
+    public void setPlId(long pocketleague_id) {
+        this.pocketleague_id = pocketleague_id;
+    }
+
     public long getTeam1Id() {
         return team_1_id;
     }
@@ -206,6 +216,14 @@ public class Game {
 
     public void setTeam2Id(long team_2_id) {
         this.team_2_id = team_2_id;
+    }
+
+    public int getRulesetId() {
+        return ruleset_id;
+    }
+
+    public void setRulesetId(int ruleset_id) {
+        this.ruleset_id = ruleset_id;
     }
 
     public Date getDatePlayed() {
