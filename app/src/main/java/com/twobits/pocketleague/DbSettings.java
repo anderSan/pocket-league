@@ -48,6 +48,7 @@ public class DbSettings extends Fragment_Base {
 	private static final String appSecret = DbxInfo.appSecret;
 	private Button mLinkButton;
 	private Button dbxSaveButton;
+	private Button dbxSaveOtherButton;
 	private Button dbxLoadButton;
 	private TextView mTestOutput;
 
@@ -101,6 +102,14 @@ public class DbSettings extends Fragment_Base {
 				saveDBdropbox();
 			}
 		});
+
+        dbxSaveOtherButton = (Button) rootView.findViewById(R.id.db_save_other_dropbox);
+        dbxSaveOtherButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveOtherDB();
+            }
+        });
 
 		dbxLoadButton = (Button) rootView.findViewById(R.id.db_load_dropbox);
 		mTestOutput = (TextView) rootView.findViewById(R.id.db_dbxFiles);
@@ -164,12 +173,14 @@ public class DbSettings extends Fragment_Base {
 	private void showLinkedView() {
 		mLinkButton.setVisibility(View.GONE);
 		dbxSaveButton.setVisibility(View.VISIBLE);
+        dbxSaveOtherButton.setVisibility(View.VISIBLE);
 		dbxLoadButton.setVisibility(View.VISIBLE);
 	}
 
 	private void showUnlinkedView() {
 		mLinkButton.setVisibility(View.VISIBLE);
 		dbxSaveButton.setVisibility(View.GONE);
+        dbxSaveOtherButton.setVisibility(View.GONE);
 		dbxLoadButton.setVisibility(View.GONE);
 	}
 
@@ -329,20 +340,55 @@ public class DbSettings extends Fragment_Base {
             String fileName = new SimpleDateFormat("yyyy-MM-dd_HH-mm'.db'",
 					Locale.US).format(new Date());
 
-			DbxPath phDBpath = new DbxPath(DbxPath.ROOT, fileName);
-			if (!dbxFs.exists(phDBpath)) {
-				DbxFile phDBfile = dbxFs.create(phDBpath);
+			DbxPath db_path = new DbxPath(DbxPath.ROOT, fileName);
+			if (!dbxFs.exists(db_path)) {
+				DbxFile phDBfile = dbxFs.create(db_path);
 				try {
 					phDBfile.writeFromExistingFile(getInternalPath(), false);
 				} finally {
 					phDBfile.close();
 				}
-				mTestOutput.append("\nCreated new file '" + phDBpath + "'.\n");
+				mTestOutput.append("\nCreated new file '" + db_path + "'.\n");
 			}
 		} catch (IOException e) {
             mTestOutput.setText("Dropbox test failed: " + e);
         }
 	}
+
+    public void saveOtherDB() {
+        try {
+            // Create DbxFileSystem for synchronized file access.
+            DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+            List<String> filenames = new ArrayList<>();
+            filenames.add("polishhorseshoes.db");
+            filenames.add("gametemplate.db");
+
+            List<String> other_dbs = new ArrayList<>();
+            other_dbs.add("/data/data/com.twobits.polishhorseshoes/databases/polishhorseshoes.db");
+            other_dbs.add("/data/data/com.twobits.gametemplate/databases/gametemplate.db");
+
+            int ii = 0;
+            File out_file;
+            for (String name : filenames) {
+                out_file = new File(other_dbs.get(ii));
+                if (out_file.exists()) {
+                    DbxPath db_path = new DbxPath(DbxPath.ROOT, name);
+                    if (!dbxFs.exists(db_path)) {
+                        DbxFile phDBfile = dbxFs.create(db_path);
+                        try {
+                            phDBfile.writeFromExistingFile(out_file, false);
+                        } finally {
+                            phDBfile.close();
+                        }
+                        mTestOutput.append("\nCreated new file '" + db_path + "'.\n");
+                    }
+                }
+                ii++;
+            }
+        } catch (IOException e) {
+            mTestOutput.setText("Dropbox test failed: " + e);
+        }
+    }
 
 	public void loadDBdropbox() {
         // once zipping is implemented, unzipping will have to be done here. See:

@@ -44,6 +44,13 @@
 	    android:layout_margin="10dp"
 	    android:text="saveDB (dropbox)" />
 
+    <Button
+        android:id="@+id/db_save_other_dropbox"
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="save Other DBs (dropbox)" />
+
 	<Button
 	    android:id="@+id/db_load_dropbox"
 	    android:layout_width="200sp"
