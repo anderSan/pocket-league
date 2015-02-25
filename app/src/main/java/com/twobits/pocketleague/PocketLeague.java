@@ -198,8 +198,14 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
 
     @Override
     public void onBackPressed() {
-        if (((Fragment_Base) getFragmentManager().findFragmentById(R.id.content_frame))
-                .closeContextualActionBar()) {
+        boolean cab_closed = false;
+        if (getFragmentManager().findFragmentById(R.id.content_frame) instanceof Fragment_Base) {
+            cab_closed = ((Fragment_Base) getFragmentManager()
+                    .findFragmentById(R.id.content_frame)).closeContextualActionBar();
+        }
+
+        if (cab_closed) {
+            // Then don't do anything else.
         } else if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
             mDrawerLayout.closeDrawer(mDrawerList);
         } else if (getFragmentManager().getBackStackEntryCount() > 0) {
