@@ -21,7 +21,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private Dao<Game, Long> gameDao;
 
-    private List<Class> tableClasses = new ArrayList<Class>();
+    private List<Class> tableClasses = new ArrayList<>();
 
     private Context myContext;
 

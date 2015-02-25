@@ -60,7 +60,7 @@ public class Game {
 
     public static List<Game> getAll(Context context) throws SQLException {
         Dao<Game, Long> d = Game.getDao(context);
-        List<Game> games = new ArrayList<Game>();
+        List<Game> games = new ArrayList<>();
         for (Game g : d) {
             games.add(g);
         }

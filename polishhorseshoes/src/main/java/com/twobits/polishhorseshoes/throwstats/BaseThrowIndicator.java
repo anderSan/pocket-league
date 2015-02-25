@@ -5,7 +5,7 @@ import java.util.Set;
 
 public abstract class BaseThrowIndicator implements ThrowIndicator {
 
-    protected Set<String> keys = new HashSet<String>();
+    protected Set<String> keys = new HashSet<>();
 
     @Override
     public Set<String> enumerate() {

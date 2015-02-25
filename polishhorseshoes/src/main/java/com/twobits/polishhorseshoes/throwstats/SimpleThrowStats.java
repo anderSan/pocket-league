@@ -99,7 +99,7 @@ public class SimpleThrowStats {
 
         @Override
         public Set<String> enumerate() {
-            return new HashSet<String>();
+            return new HashSet<>();
         }
     }
 

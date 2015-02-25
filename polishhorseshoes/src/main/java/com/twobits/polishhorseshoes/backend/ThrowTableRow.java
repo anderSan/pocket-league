@@ -113,8 +113,8 @@ public class ThrowTableRow extends TableRow {
 
     public void appendScore(int p1Score, int p2Score) {
         TextView[] views = buildScoreViews(p1Score, p2Score, this.getContext());
-        for (int i = 0; i < views.length; i++) {
-            this.addView(views[i]);
+        for (TextView view : views) {
+            this.addView(view);
         }
     }
 

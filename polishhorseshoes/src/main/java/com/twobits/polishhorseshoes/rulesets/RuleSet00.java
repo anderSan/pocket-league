@@ -288,7 +288,7 @@ public class RuleSet00 implements RuleSet {
     }
 
     public void setThrowDrawable(Throw t, ImageView iv) {
-        List<Drawable> boxIconLayers = new ArrayList<Drawable>();
+        List<Drawable> boxIconLayers = new ArrayList<>();
 
         if (!isValid(t, iv.getContext())) {
             boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_badthrow));

@@ -63,8 +63,7 @@ public class ActiveGame {
     }
 
     private Throw makeNextThrow() {
-        Throw t = g.makeNewThrow(nThrows());
-        return t;
+        return g.makeNewThrow(nThrows());
     }
 
     private void setInitialScores(Throw t, Throw previousThrow) {
@@ -113,15 +112,15 @@ public class ActiveGame {
 
     private ArrayList<Long> getThrowIds() {
         HashMap<String, Object> m;
-        List<Throw> tList = new ArrayList<Throw>();
-        ArrayList<Long> throwIds = new ArrayList<Long>();
+        List<Throw> tList = new ArrayList<>();
+        ArrayList<Long> throwIds = new ArrayList<>();
         int cnt = 0;
         try {
             for (Throw t : tArray) {
                 m = t.getQueryMap();
                 tList = tDao.queryForFieldValuesArgs(m);
                 if (tList.isEmpty()) {
-                    throwIds.add(Long.valueOf(-1));
+                    throwIds.add((long) -1);
                 } else {
                     throwIds.add(tList.get(0).getId());
                 }
@@ -237,7 +236,7 @@ public class ActiveGame {
     private void saveThrow(Throw t) {
         if (g != null) {
             HashMap<String, Object> m = t.getQueryMap();
-            List<Throw> tList = new ArrayList<Throw>();
+            List<Throw> tList = new ArrayList<>();
             try {
                 tList = tDao.queryForFieldValuesArgs(m);
             } catch (SQLException e) {
@@ -281,8 +280,6 @@ public class ActiveGame {
                         return null;
                     }
                 });
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

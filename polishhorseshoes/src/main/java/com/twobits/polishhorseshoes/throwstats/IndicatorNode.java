@@ -11,7 +11,7 @@ public class IndicatorNode {
 
     ThrowIndicator indicator = null;
     IndicatorNode parent = null;
-    HashMap<String, IndicatorNode> childMap = new HashMap<String, IndicatorNode>();
+    HashMap<String, IndicatorNode> childMap = new HashMap<>();
     String key = null;
 
     public static double proportionStandardDev(double p, int n) {
@@ -43,7 +43,7 @@ public class IndicatorNode {
 
     public Set<String> childKeys() {
         if (indicator == null) {
-            return new HashSet<String>();
+            return new HashSet<>();
         }
         return indicator.enumerate();
     }
@@ -87,7 +87,7 @@ public class IndicatorNode {
 
     public ArrayList<String> lineage() {
         if (isRoot()) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
         ArrayList<String> arr = parent.lineage();
         arr.add(key);

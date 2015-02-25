@@ -98,7 +98,7 @@ public class Game {
 
     public static List<Game> getAll(Context context) throws SQLException {
         Dao<Game, Long> d = Game.getDao(context);
-        List<Game> games = new ArrayList<Game>();
+        List<Game> games = new ArrayList<>();
         for (Game g : d) {
             games.add(g);
         }
@@ -127,10 +127,10 @@ public class Game {
 
     public ArrayList<Throw> getThrowList(Context context) throws SQLException {
         int tidx, maxThrowIndex;
-        ArrayList<Throw> throwArray = new ArrayList<Throw>();
+        ArrayList<Throw> throwArray = new ArrayList<>();
 
-        HashMap<Integer, Throw> throwMap = new HashMap<Integer, Throw>();
-        HashMap<String, Object> m = new HashMap<String, Object>();
+        HashMap<Integer, Throw> throwMap = new HashMap<>();
+        HashMap<String, Object> m = new HashMap<>();
         m.put("game_id", getId());
 
         Dao<Throw, Long> d = Throw.getDao(context);
@@ -184,9 +184,8 @@ public class Game {
             defensiveTeam_id = getMember1Id();
         }
         Date timestamp = new Date(System.currentTimeMillis());
-        Throw t = new Throw(throwNumber, this, offensiveTeam_id, defensiveTeam_id, timestamp);
 
-        return t;
+        return new Throw(throwNumber, this, offensiveTeam_id, defensiveTeam_id, timestamp);
     }
 
     public long getId() {

@@ -142,7 +142,7 @@ public class Throw implements Comparable<Throw> {
     }
 
     public HashMap<String, Object> getQueryMap() {
-        HashMap<String, Object> m = new HashMap<String, Object>();
+        HashMap<String, Object> m = new HashMap<>();
         m.put(Throw.THROW_INDEX, throwIdx);
         m.put(Throw.GAME_ID, getGame());
         return m;

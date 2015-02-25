@@ -48,7 +48,7 @@ import java.util.Locale;
 public class GameInProgress extends Activity_Base implements ThrowTableFragment
         .OnTableRowClickedListener {
     private FragmentArrayAdapter vpAdapter;
-    private List<ThrowTableFragment> fragmentArray = new ArrayList<ThrowTableFragment>(0);
+    private List<ThrowTableFragment> fragmentArray = new ArrayList<>(0);
     private ViewPager vp;
 
     private View[] deadViews = new View[4];
@@ -268,8 +268,6 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         updateActiveThrow();
     }
 
-    ;
-
     public void firedOnPressed(View view) {
         log("buttonPressed(): " + view.getContentDescription() + " was pressed");
 
@@ -307,8 +305,7 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         public CharSequence getPageTitle(int position) {
             // tv.setText("nThrows: "+ throwsList.size());
 
-            String title = "Page " + String.valueOf(position + 1);
-            return title;
+            return "Page " + String.valueOf(position + 1);
         }
 
     }
@@ -632,7 +629,7 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
 
         tbFire = (ToggleButton) findViewById(R.id.gip_toggle_fire);
 
-        if (ag.ruleSet.useAutoFire() == true) {
+        if (ag.ruleSet.useAutoFire()) {
             tbFire.setVisibility(View.GONE);
             Button bFiredOn = (Button) findViewById(R.id.gip_button_fired_on);
             bFiredOn.setVisibility(View.GONE);

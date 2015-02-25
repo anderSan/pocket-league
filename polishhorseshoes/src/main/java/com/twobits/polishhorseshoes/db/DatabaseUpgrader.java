@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
-import com.twobits.polishhorseshoes.backend.ActiveGame;
 import com.twobits.polishhorseshoes.enums.RuleType;
 import com.twobits.polishhorseshoes.rulesets.RuleSet;
 
@@ -41,7 +40,7 @@ public class DatabaseUpgrader {
 //        String msg;
 //        int[] oldScores = new int[2];
 //        int[] newScores = new int[2];
-        List<Long> badGames = new ArrayList<Long>();
+        List<Long> badGames = new ArrayList<>();
 //        for (Game g : gDao) {
 //            // Log.i("DatabaseUpgrader.updateScores()","processing game "+g.getId());
 //            oldScores[0] = g.getMember1Score();
@@ -67,7 +66,7 @@ public class DatabaseUpgrader {
     public static List<Long> checkThrows(Dao<Throw, Long> tDao,
                                          Context context) throws SQLException {
         String msg;
-        List<Long> badThrows = new ArrayList<Long>();
+        List<Long> badThrows = new ArrayList<>();
         // TODO: make this dynamic once implemented in db
         RuleSet rs = RuleType.RS00;
         for (Throw t : tDao) {

@@ -38,7 +38,7 @@ public class TeamStats {
 
     public static List<TeamStats> getAll(Context context) throws SQLException {
         Dao<TeamStats, Long> d = TeamStats.getDao(context);
-        List<TeamStats> teamsStats = new ArrayList<TeamStats>();
+        List<TeamStats> teamsStats = new ArrayList<>();
         for (TeamStats t : d) {
             teamsStats.add(t);
         }

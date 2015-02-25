@@ -85,7 +85,7 @@ public class GameActivity extends ActionBarActivity {
         cursor.close();
 
         ListView lv = (ListView) this.findViewById(R.id.game_members);
-        ArrayAdapter<String> lv_adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> lv_adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, team_names);
         lv.setAdapter(lv_adapter);
         final Context context = this;

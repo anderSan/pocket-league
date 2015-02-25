@@ -23,7 +23,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<Throw, Long> throwDao;
     private Dao<TeamStats, Long> teamStatsDao;
 
-    private List<Class> tableClasses = new ArrayList<Class>();
+    private List<Class> tableClasses = new ArrayList<>();
 
     private Context myContext;
 

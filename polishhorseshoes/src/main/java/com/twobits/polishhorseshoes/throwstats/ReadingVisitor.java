@@ -5,12 +5,12 @@ import java.util.Iterator;
 
 public class ReadingVisitor extends BaseWalkingVisitor implements Iterator<String>,
         Iterable<String> {
-    ArrayList<ArrayList<String>> lineages = new ArrayList<ArrayList<String>>();
-    ArrayList<Double> conditionalFractions = new ArrayList<Double>();
-    ArrayList<Double> absoluteFractions = new ArrayList<Double>();
-    ArrayList<Double> conditionalFractionStdDev = new ArrayList<Double>();
-    ArrayList<Double> absoluteFractionStdDev = new ArrayList<Double>();
-    ArrayList<Integer> counts = new ArrayList<Integer>();
+    ArrayList<ArrayList<String>> lineages = new ArrayList<>();
+    ArrayList<Double> conditionalFractions = new ArrayList<>();
+    ArrayList<Double> absoluteFractions = new ArrayList<>();
+    ArrayList<Double> conditionalFractionStdDev = new ArrayList<>();
+    ArrayList<Double> absoluteFractionStdDev = new ArrayList<>();
+    ArrayList<Integer> counts = new ArrayList<>();
 
     int iterator_index = 0;
 

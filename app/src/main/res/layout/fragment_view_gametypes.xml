@@ -4,11 +4,13 @@
 
 <GridView
     android:id="@+id/gametypes_view"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:layout_alignParentStart="true"
     android:layout_alignParentTop="true"
-    android:numColumns="3" >
+    android:numColumns="3"
+    android:columnWidth="100dp"
+    android:stretchMode="spacingWidthUniform">
 </GridView>
 
 </RelativeLayout>

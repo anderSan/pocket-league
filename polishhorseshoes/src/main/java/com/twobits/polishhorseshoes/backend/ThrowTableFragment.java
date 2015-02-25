@@ -12,7 +12,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 
-import com.twobits.polishhorseshoes.GameInProgress;
 import com.twobits.polishhorseshoes.R;
 import com.twobits.polishhorseshoes.db.Throw;
 import com.twobits.polishhorseshoes.rulesets.RuleSet;
@@ -30,7 +29,7 @@ public class ThrowTableFragment extends Fragment {
     public TableLayout layout;
 
     private int page_idx = -1;
-    private List<ThrowTableRow> tableRows = new ArrayList<ThrowTableRow>(N_ROWS);
+    private List<ThrowTableRow> tableRows = new ArrayList<>(N_ROWS);
 
     OnTableRowClickedListener mListener;
 

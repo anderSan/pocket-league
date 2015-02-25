@@ -51,9 +51,7 @@ public abstract class Fragment_Base extends Fragment {
         return false;
     }
 
-    public void refreshDetails() {
-
-    };
+    public void refreshDetails() {}
 
     public void log(String msg) {
         Log.i(LOGTAG, msg);

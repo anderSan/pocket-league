@@ -431,9 +431,7 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         Fragment fragment = null;
         try {
             fragment = (Fragment) session_type.toClass().newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
 

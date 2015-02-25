@@ -199,19 +199,19 @@ public class New_Game extends Fragment_Base {
 		// ruleSetIds.add(rs.getId());
 		// }
 
-		ArrayAdapter<String> pAdapter = new ArrayAdapter<String>(context,
+		ArrayAdapter<String> pAdapter = new ArrayAdapter<>(context,
 				android.R.layout.simple_spinner_dropdown_item, player_names);
 		pAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		ArrayAdapter<String> sAdapter = new ArrayAdapter<String>(context,
+		ArrayAdapter<String> sAdapter = new ArrayAdapter<>(context,
 				android.R.layout.simple_spinner_dropdown_item, session_names);
 		sAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		ArrayAdapter<String> vAdapter = new ArrayAdapter<String>(context,
+		ArrayAdapter<String> vAdapter = new ArrayAdapter<>(context,
 				android.R.layout.simple_spinner_dropdown_item, venue_names);
 		vAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		ArrayAdapter<String> rsAdapter = new ArrayAdapter<String>(context,
+		ArrayAdapter<String> rsAdapter = new ArrayAdapter<>(context,
 				android.R.layout.simple_spinner_dropdown_item, ruleset_descriptions);
 		rsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
