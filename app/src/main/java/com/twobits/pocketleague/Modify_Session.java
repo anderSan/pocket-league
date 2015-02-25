@@ -86,7 +86,7 @@ public class Modify_Session extends Fragment_Edit {
 			sessionTypes.add(st.toString());
 		}
 		ArrayAdapter<String> stAdapter = new SpinnerAdapter(context,
-				android.R.layout.simple_spinner_item, sessionTypes,
+				android.R.layout.simple_spinner_dropdown_item, sessionTypes,
 				Arrays.asList(SessionType.values()));
 		sp_sessionType.setAdapter(stAdapter);
 
@@ -96,7 +96,7 @@ public class Modify_Session extends Fragment_Edit {
 			ruleSetDescriptions.add(gr.toDescriptor().getDescription());
 		}
 		ArrayAdapter<String> rsAdapter = new SpinnerAdapter(context,
-				android.R.layout.simple_spinner_item, ruleSetDescriptions,
+				android.R.layout.simple_spinner_dropdown_item, ruleSetDescriptions,
 				currentGameType.toGameSubtype());
 		sp_ruleSet.setAdapter(rsAdapter);
 
@@ -107,8 +107,7 @@ public class Modify_Session extends Fragment_Edit {
 				venueNames.add(v.getName());
 			}
 			ArrayAdapter<String> vAdapter = new SpinnerAdapter(context,
-					android.R.layout.simple_spinner_dropdown_item, venueNames,
-					venues);
+					android.R.layout.simple_spinner_dropdown_item, venueNames, venues);
 			sp_venues.setAdapter(vAdapter);
 		} catch (SQLException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
