@@ -1,18 +1,15 @@
 package com.twobits.pocketleague.db.tables;
 
-import android.content.Context;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Database;
+import com.couchbase.lite.Document;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-import com.twobits.pocketleague.db.DatabaseHelper;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-@DatabaseTable
 public class Venue {
+    static final String TYPE = "venue";
+    public static final String ID = "_id";
 	public static final String NAME = "name";
 	public static final String LATITUDE = "latitude";
 	public static final String LONGITUDE = "longitude";
@@ -20,86 +17,70 @@ public class Venue {
 	public static final String IS_ACTIVE = "is_active";
 	public static final String IS_FAVORITE = "is_favorite";
 
-	@DatabaseField(generatedId = true)
-	private long id;
-
-	@DatabaseField(canBeNull = false, unique = true)
-	private String name;
-
-	@DatabaseField
-	private long latitude;
-
-	@DatabaseField
-	private long longitude;
-
-	@DatabaseField
-	private long zipCode;
-
-	@DatabaseField
-	private boolean is_active = true;
-
-	@DatabaseField
-	private boolean is_favorite = false;
-
-	Venue() {
-	}
+    Map<String, Object> content = new HashMap<>();
 
 	public Venue(String name, boolean is_favorite) {
-		super();
-		this.name = name;
-		this.is_favorite = is_favorite;
+        content.put("type", TYPE);
+        content.put(NAME, name);
+        content.put(IS_ACTIVE, true);
+        content.put(IS_FAVORITE, is_favorite);
 	}
 
-	public static Dao<Venue, Long> getDao(Context context) {
-		DatabaseHelper helper = new DatabaseHelper(context);
-		Dao<Venue, Long> d = null;
-		try {
-			d = helper.getVenueDao();
-		} catch (SQLException e) {
-			throw new RuntimeException("Couldn't get venue dao: ", e);
-		}
-		return d;
-	}
-
-	public static List<Venue> getAll(Context context) {
-		Dao<Venue, Long> d = Venue.getDao(context);
-		List<Venue> venues = new ArrayList<>();
-		for (Venue v : d) {
-			venues.add(v);
-		}
-		return venues;
-	}
+    public Venue(Database database, long id) {
+        Document document = database.getDocument(ID);
+        content = document.getProperties();
+    }
 
 	public long getId() {
-		return id;
+		return (long) content.get(ID);
 	}
 
 	public String getName() {
-		return name;
+		return (String) content.get(NAME);
 	}
 
 	public void setName(String venue_name) {
-		this.name = venue_name;
-	}
-
-	public boolean exists(Context context) {
-		// TODO Auto-generated method stub
-		return false;
+		content.put(NAME, venue_name);
 	}
 
 	public boolean getIsActive() {
-		return is_active;
+		return (boolean) content.get(IS_ACTIVE);
 	}
 
 	public void setIsActive(boolean is_active) {
-		this.is_active = is_active;
+		content.put(IS_ACTIVE, is_active);
 	}
 
 	public boolean getIsFavorite() {
-		return is_favorite;
+        return (boolean) content.get(IS_FAVORITE);
 	}
 
 	public void setIsFavorite(boolean is_favorite) {
-		this.is_favorite = is_favorite;
+        content.put(IS_FAVORITE, is_favorite);
 	}
+
+    public void update(Database database) {
+        Document document = database.getDocument(ID);
+
+        if (document == null) {
+            document = database.createDocument();
+        }
+
+        try {
+            document.putProperties(content);
+//            logd("updated retrievedDocument=" + String.valueOf(document.getProperties()));
+        } catch (CouchbaseLiteException e) {
+//            loge("Cannot update document", e);
+        }
+    }
+
+    public void delete(Database database) {
+        Document document = database.getDocument(ID);
+        try {
+            document.delete();
+//            logd("Deleted document, deletion status = " + document.isDeleted());
+        } catch (CouchbaseLiteException e) {
+//            loge("Cannot delete document", e);
+        }
+    }
 }

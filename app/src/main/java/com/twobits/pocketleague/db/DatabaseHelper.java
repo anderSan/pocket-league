@@ -1,240 +1,98 @@
 package com.twobits.pocketleague.db;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
-import com.twobits.pocketleague.R;
-import com.twobits.pocketleague.db.tables.Game;
-import com.twobits.pocketleague.db.tables.GameMember;
-import com.twobits.pocketleague.db.tables.Player;
-import com.twobits.pocketleague.db.tables.Session;
-import com.twobits.pocketleague.db.tables.SessionMember;
-import com.twobits.pocketleague.db.tables.Team;
-import com.twobits.pocketleague.db.tables.TeamMember;
-import com.twobits.pocketleague.db.tables.Venue;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Database;
+import com.couchbase.lite.Document;
+import com.couchbase.lite.Manager;
+import com.couchbase.lite.android.AndroidContext;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.Map;
 
-public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
-
+public class DatabaseHelper {
+    protected String LOGTAG = getClass().getSimpleName();
 	private static final String DATABASE_NAME = "pocketleague.db";
 	private static final int DATABASE_VERSION = 1;
+    Manager manager;
+    Database database = null;
 
-	private Dao<Game, Long> gameDao;
-	private Dao<GameMember, Long> gameMemberDao;
-	private Dao<Player, Long> playerDao;
-	// private Dao<PlayerBadge, Long> playerBadgeDao;
-	private Dao<Session, Long> sessionDao;
-	private Dao<SessionMember, Long> sessionMemberDao;
-	private Dao<Team, Long> teamDao;
-	// private Dao<TeamBadge, Long> teamBadgeDao;
-	private Dao<TeamMember, Long> teamMemberDao;
-	private Dao<Venue, Long> venueDao;
-
-	private List<Class> tableClasses = new ArrayList<>();
-
-	private Context myContext;
+	private Context context;
 
 	public DatabaseHelper(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION,
-				R.raw.ormlite_config);
-		tableClasses.add(Game.class);
-		tableClasses.add(GameMember.class);
-		tableClasses.add(Player.class);
-		// tableClasses.add(PlayerBadge.class);
-		tableClasses.add(Session.class);
-		tableClasses.add(SessionMember.class);
-		tableClasses.add(Team.class);
-		// tableClasses.add(TeamBadge.class);
-		tableClasses.add(TeamMember.class);
-		tableClasses.add(Venue.class);
+		super();
+		this.context = context;
 
-		myContext = context;
+        try {
+            manager = new Manager(new AndroidContext(this.context), Manager.DEFAULT_OPTIONS);
+            logd("Manager created");
+        } catch (IOException e) {
+            loge("Cannot create manager object", e);
+            return;
+        }
+
+        if (!Manager.isValidDatabaseName(DATABASE_NAME)) {
+            log("Bad database name");
+        } else {
+            try {
+                database = manager.getDatabase(DATABASE_NAME);
+                logd ("Database created");
+            } catch (CouchbaseLiteException e) {
+                loge("Cannot get database", e);
+            }
+        }
 	}
 
-	@Override
-	public void onCreate(SQLiteDatabase sqliteDatabase,
-			ConnectionSource connectionSource) {
-		Log.i("DbHelper.onCreate()", "Attempting to create db... ");
-		try {
-			createAll(connectionSource);
-		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(),
-					"Unable to create database: ", e);
-		}
-	}
+    public Database getDatabase() {
+        return database;
+    }
 
-	@Override
-	public void onUpgrade(final SQLiteDatabase sqliteDatabase,
-			final ConnectionSource connectionSource, int oldVer,
-			final int newVer) {
-		Log.i("DbHelper.onUpgrade()",
-				"Attempting to upgrade from version " + oldVer + " to version "
-						+ newVer + ".");
+    public void close() {
+        manager.close();
+    }
 
-		switch (oldVer) {
-		// case 9:
-		// increment_09(sqliteDatabase, connectionSource);
-		// case 10:
-		// increment_10(sqliteDatabase, connectionSource);
-		// break;
-		default:
-			try {
-				dropAll(connectionSource);
-				createAll(connectionSource);
-			} catch (SQLException e) {
-				Log.e(DatabaseHelper.class.getName(),
-						"Unable to upgrade database from version " + oldVer
-								+ " to " + newVer + ": ", e);
+    public void create(Map<String, Object> content) {
+        Document document = database.createDocument();
+        try {
+            document.putProperties(content);
+        } catch (CouchbaseLiteException e) {
+            loge("Cannot write document to database", e);
+        }
+    }
 
-			}
-		}
-	}
+    public void get(long id) {
 
-	private void increment_09(SQLiteDatabase sqliteDatabase,
-			ConnectionSource connectionSource) {
-		try {
-			Log.i("DbHelper.increment_09",
-					"Attempting to upgrade from version 09 to version 10.");
-			Dao<Game, Long> gDao = getGameDao();
-			Dao<Player, Long> pDao = getPlayerDao();
-			Dao<Session, Long> sDao = getSessionDao();
-			Dao<Venue, Long> vDao = getVenueDao();
+    }
 
-			// DatabaseUpgrader.increment_09(connectionSource, gDao, pDao, sDao,
-			// vDao, tDao);
+    public void update(Document document, Map<String, Object> content) {
+        try {
+            document.putProperties(content);
+            logd("updated retrievedDocument=" + String.valueOf(document.getProperties()));
+        } catch (CouchbaseLiteException e) {
+            loge("Cannot update document", e);
+        }
+    }
 
-			createAll();
+    public void delete(Document document) {
+        try {
+            document.delete();
+            logd("Deleted document, deletion status = " + document.isDeleted());
+        } catch (CouchbaseLiteException e) {
+            loge("Cannot delete document", e);
+        }
+    }
 
-		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(),
-					"Unable to upgrade database from version " + 9 + " to "
-							+ 10 + ": ", e);
-		}
-	}
+    public void log(String msg) {
+        Log.i(LOGTAG, msg);
+    }
 
-	private void increment_10(SQLiteDatabase sqliteDatabase,
-			ConnectionSource connectionSource) {
-		try {
-			Log.i("DbHelper.increment_10",
-					"Attempting to upgrade from version 10 to version 11.");
-			// throw table
-			Dao<Game, Long> gDao = getGameDao();
-			// DatabaseUpgrader.increment_10(connectionSource, gDao, tDao);
+    public void logd(String msg) {
+        Log.d(LOGTAG, msg);
+    }
 
-		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(),
-					"Unable to upgrade database from version " + 10 + " to "
-							+ 11 + ": ", e);
-		}
-	}
-
-	public void createAll() {
-		try {
-			createAll(getConnectionSource());
-		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.toString(), e.getMessage());
-			throw new RuntimeException("Could not create tables: ", e);
-		}
-	}
-
-	public void dropAll() {
-		try {
-			dropAll(getConnectionSource());
-		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.toString(), e.getMessage());
-			throw new RuntimeException("Could not drop tables: ", e);
-		}
-	}
-
-	protected void createAll(ConnectionSource connection_source)
-			throws SQLException {
-		for (Class c : tableClasses) {
-			TableUtils.createTableIfNotExists(connection_source, c);
-		}
-	}
-
-	protected void dropAll(ConnectionSource connection_source)
-			throws SQLException {
-		for (Class c : tableClasses) {
-			TableUtils.dropTable(connection_source, c, true);
-		}
-	}
-
-	public Dao<Game, Long> getGameDao() throws SQLException {
-		if (gameDao == null) {
-			gameDao = getDao(Game.class);
-		}
-		return gameDao;
-	}
-
-	public Dao<GameMember, Long> getGameMemberDao() throws SQLException {
-		if (gameMemberDao == null) {
-			gameMemberDao = getDao(GameMember.class);
-		}
-		return gameMemberDao;
-	}
-
-	public Dao<Player, Long> getPlayerDao() throws SQLException {
-		if (playerDao == null) {
-			playerDao = getDao(Player.class);
-		}
-		return playerDao;
-	}
-
-	// public Dao<PlayerBadge, Long> getPlayerBadgeDao() throws SQLException {
-	// if (playerBadgeDao == null) {
-	// playerBadgeDao = getDao(PlayerBadge.class);
-	// }
-	// return playerBadgeDao;
-	// }
-
-	public Dao<Session, Long> getSessionDao() throws SQLException {
-		if (sessionDao == null) {
-			sessionDao = getDao(Session.class);
-		}
-		return sessionDao;
-	}
-
-	public Dao<SessionMember, Long> getSessionMemberDao() throws SQLException {
-		if (sessionMemberDao == null) {
-			sessionMemberDao = getDao(SessionMember.class);
-		}
-		return sessionMemberDao;
-	}
-
-	public Dao<Team, Long> getTeamDao() throws SQLException {
-		if (teamDao == null) {
-			teamDao = getDao(Team.class);
-		}
-		return teamDao;
-	}
-
-	// public Dao<TeamBadge, Long> getTeamBadgeDao() throws SQLException {
-	// if (teamBadgeDao == null) {
-	// teamBadgeDao = getDao(TeamBadge.class);
-	// }
-	// return teamBadgeDao;
-	// }
-
-	public Dao<TeamMember, Long> getTeamMemberDao() throws SQLException {
-		if (teamMemberDao == null) {
-			teamMemberDao = getDao(TeamMember.class);
-		}
-		return teamMemberDao;
-	}
-
-	public Dao<Venue, Long> getVenueDao() throws SQLException {
-		if (venueDao == null) {
-			venueDao = getDao(Venue.class);
-		}
-		return venueDao;
-	}
+    public void loge(String msg, Exception e) {
+        Log.e(LOGTAG, msg + ": " + e.getMessage());
+    }
 }
