@@ -5,10 +5,6 @@ import com.twobits.pocketleague.gameslibrary.GameType;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
 public class Cricket implements GameDescriptor {
-	public GameType getGameType() {
-		return GameType.DARTS;
-	}
-
 	public String getName() {
 		return "Cricket";
 	}
