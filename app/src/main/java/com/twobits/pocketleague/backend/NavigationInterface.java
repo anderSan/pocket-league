@@ -15,6 +15,8 @@ public interface NavigationInterface {
 
 	public void loadGame(Long gId);
 
+    public void viewGameTypes();
+
 	public void viewSessions();
 
     public void viewSessionDetails(Long sId, SessionType session_type);

@@ -5,15 +5,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -23,22 +20,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.backend.DataInterface;
 import com.twobits.pocketleague.backend.Fragment_Base;
 import com.twobits.pocketleague.backend.NavDrawerAdapter;
 import com.twobits.pocketleague.backend.NavDrawerItem;
 import com.twobits.pocketleague.backend.NavigationInterface;
-import com.twobits.pocketleague.db.DatabaseHelper;
 import com.twobits.pocketleague.db.tables.Game;
-import com.twobits.pocketleague.db.tables.GameMember;
-import com.twobits.pocketleague.db.tables.Player;
-import com.twobits.pocketleague.db.tables.Session;
-import com.twobits.pocketleague.db.tables.SessionMember;
-import com.twobits.pocketleague.db.tables.Team;
-import com.twobits.pocketleague.db.tables.TeamMember;
-import com.twobits.pocketleague.db.tables.Venue;
 import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
@@ -46,7 +32,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PocketLeague extends ActionBarActivity implements NavigationInterface, DataInterface {
+public class PocketLeague extends DataInterfaceActivity implements NavigationInterface {
+    FragmentManager mFragmentManager;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -55,99 +42,17 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
     private CharSequence mTitle;
     private CharSequence mSubTitle;
     NavDrawerItem[] mDrawerItems;
-    FragmentManager mFragmentManager;
-
-    public static final String APP_PREFS = "PocketLeaguePreferences";
-
-    private SharedPreferences settings;
-    private SharedPreferences.Editor prefs_editor;
-    private DatabaseHelper databaseHelper = null;
-    Dao<Game, Long> gDao;
-    Dao<GameMember, Long> gmDao;
-    Dao<Player, Long> pDao;
-    Dao<Session, Long> sDao;
-    Dao<SessionMember, Long> smDao;
-    Dao<Team, Long> tDao;
-    Dao<TeamMember, Long> tmDao;
-    Dao<Venue, Long> vDao;
-
-    public Dao<Game, Long> getGameDao(){
-        return gDao;
-    }
-
-    public Dao<GameMember, Long> getGameMemberDao(){
-         return gmDao;
-    }
-
-    public Dao<Player, Long> getPlayerDao(){
-        return pDao;
-    }
-
-    public Dao<Session, Long> getSessionDao(){
-        return sDao;
-    }
-
-    public Dao<SessionMember, Long> getSessionMemberDao(){
-        return smDao;
-    }
-
-    public Dao<Team, Long> getTeamDao(){
-        return tDao;
-    }
-
-    public Dao<TeamMember, Long> getTeamMemberDao(){
-        return tmDao;
-    }
-
-    public Dao<Venue, Long> getVenueDao(){
-        return vDao;
-    }
-
-    public DatabaseHelper getHelper() {
-        if (databaseHelper == null) {
-            databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
-        }
-        return databaseHelper;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (databaseHelper != null) {
-            OpenHelperManager.releaseHelper();
-            databaseHelper = null;
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            gDao = getHelper().getGameDao();
-            gmDao = getHelper().getGameMemberDao();
-            pDao = getHelper().getPlayerDao();
-            sDao = getHelper().getSessionDao();
-            smDao = getHelper().getSessionMemberDao();
-            tDao = getHelper().getTeamDao();
-            tmDao = getHelper().getTeamMemberDao();
-            vDao = getHelper().getVenueDao();
-        } catch (SQLException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
-
-        settings = this.getSharedPreferences(APP_PREFS, 0);
-        prefs_editor = settings.edit();
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         setContentView(R.layout.activity_pocket_league);
-
         mFragmentManager = getFragmentManager();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
-
         mTitle = mDrawerTitle = getTitle();
         mDrawerItems = makeDrawerItemArray();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -196,30 +101,6 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        boolean cab_closed = false;
-        if (getFragmentManager().findFragmentById(R.id.content_frame) instanceof Fragment_Base) {
-            cab_closed = ((Fragment_Base) getFragmentManager()
-                    .findFragmentById(R.id.content_frame)).closeContextualActionBar();
-        }
-
-        if (cab_closed) {
-            // Then don't do anything else.
-        } else if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-            mDrawerLayout.closeDrawer(mDrawerList);
-        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    public void refreshFragment() {
-        Fragment_Base f = (Fragment_Base) getFragmentManager().findFragmentById(R.id.content_frame);
-        f.refreshDetails();
-    }
-
     private NavDrawerItem[] makeDrawerItemArray() {
         List<NavDrawerItem> items = new ArrayList<>();
         String[] mLabels = getResources().getStringArray(R.array.menuItems);
@@ -231,7 +112,7 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         items.add(1, new NavDrawerItem());
         items.add(6, new NavDrawerItem());
         mIcons.recycle();
-//        items.get(0).counter = 3;
+        //        items.get(0).counter = 3;
         return items.toArray(new NavDrawerItem[items.size()]);
     }
 
@@ -333,6 +214,29 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         }
     }
 
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    // --------------------------------
+    // NAVIGATION INTERFACE METHODS
+    // --------------------------------
+
     @Override
     public void setTitle(String title) {
         setTitle(title, "");
@@ -354,40 +258,28 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         mDrawerList.setItemChecked(position, true);
     }
 
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
-
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+    public void onBackPressed() {
+        boolean cab_closed = false;
+        if (getFragmentManager().findFragmentById(R.id.content_frame) instanceof Fragment_Base) {
+            cab_closed = ((Fragment_Base) getFragmentManager()
+                    .findFragmentById(R.id.content_frame)).closeContextualActionBar();
+        }
+
+        if (cab_closed) {
+            // Then don't do anything else.
+        } else if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+            mDrawerLayout.closeDrawer(mDrawerList);
+        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggles
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    public String getPreference(String pref_name, String pref_default) {
-        return settings.getString(pref_name, pref_default);
-    }
-
-    public void setPreference(String pref_name, String pref_value) {
-        prefs_editor.putString(pref_name, pref_value);
-        prefs_editor.commit();
-    }
-
-    public GameType getCurrentGameType() {
-        return GameType.valueOf(getPreference("currentGameType", GameType.UNDEFINED.name()));
-    }
-
-    public void setCurrentGameType(GameType gametype) {
-        setPreference("currentGameType", gametype.name());
+    public void refreshFragment() {
+        Fragment_Base f = (Fragment_Base) getFragmentManager().findFragmentById(R.id.content_frame);
+        f.refreshDetails();
     }
 
     public void loadGame(Long gId) {
@@ -433,7 +325,6 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
     }
 
     public void viewSessionDetails(Long sId, SessionType session_type) {
-
         Fragment fragment = null;
         try {
             fragment = (Fragment) session_type.toClass().newInstance();
@@ -452,13 +343,11 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         ft.commit();
     }
 
-    public void modifySession(Long sId) {
-        Fragment fragment = new Modify_Session();
+    public void viewPlayerDetails(Long pId) {
+        Fragment fragment = new Detail_Player();
 
         Bundle args = new Bundle();
-        if (sId != null) {
-            args.putLong("SID", sId);
-        }
+        args.putLong("PID", pId);
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -468,11 +357,37 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         ft.commit();
     }
 
-    public void viewPlayerDetails(Long pId) {
-        Fragment fragment = new Detail_Player();
+    public void viewTeamDetails(Long tId) {
+        Fragment fragment = new Detail_Team();
 
         Bundle args = new Bundle();
-        args.putLong("PID", pId);
+        args.putLong("TID", tId);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment)
+                .addToBackStack(null).commit();
+    }
+
+    public void viewVenueDetails(Long vId) {
+        Fragment fragment = new Detail_Venue();
+
+        Bundle args = new Bundle();
+        args.putLong("VID", vId);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment)
+                .addToBackStack(null).commit();
+    }
+
+    public void modifySession(Long sId) {
+        Fragment fragment = new Modify_Session();
+
+        Bundle args = new Bundle();
+        if (sId != null) {
+            args.putLong("SID", sId);
+        }
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -498,18 +413,6 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         ft.commit();
     }
 
-    public void viewTeamDetails(Long tId) {
-        Fragment fragment = new Detail_Team();
-
-        Bundle args = new Bundle();
-        args.putLong("TID", tId);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment)
-                .addToBackStack(null).commit();
-    }
-
     public void modifyTeam(Long tId) {
         Fragment fragment = new Modify_Team();
 
@@ -524,18 +427,6 @@ public class PocketLeague extends ActionBarActivity implements NavigationInterfa
         ft.replace(R.id.content_frame, fragment).addToBackStack(null);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
-    }
-
-    public void viewVenueDetails(Long vId) {
-        Fragment fragment = new Detail_Venue();
-
-        Bundle args = new Bundle();
-        args.putLong("VID", vId);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment)
-                .addToBackStack(null).commit();
     }
 
     public void modifyVenue(Long vId) {
