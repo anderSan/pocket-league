@@ -1,133 +1,96 @@
 package com.twobits.pocketleague.db.tables;
 
-import java.sql.SQLException;
+import com.couchbase.lite.Database;
+
+import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
-import android.widget.Toast;
-
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.ForeignCollection;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
-import com.j256.ormlite.table.DatabaseTable;
-import com.twobits.pocketleague.db.DatabaseHelper;
-
-@DatabaseTable
-public class Team {
-	public static final String NAME = "name";
-	public static final String TEAM_SIZE = "team_size";
+public class Team extends CouchDocumentBase {
+    static final String TYPE = "team";
+	public static final String NAME = "team_name";
+    public static final String MEMBERS = "member_ids";
 	public static final String COLOR = "color";
 	public static final String IS_ACTIVE = "is_active";
 	public static final String IS_FAVORITE = "is_favorite";
 
-	@DatabaseField(generatedId = true)
-	private long id;
-
-	@DatabaseField(canBeNull = false, uniqueCombo = true)
-	private String name;
-
-	@DatabaseField(uniqueCombo = true)
-	private int team_size;
-
-	@DatabaseField
-	private int color;
-
-	@DatabaseField
-	private boolean is_active = true;
-
-	@DatabaseField
-	private boolean is_favorite = false;
-
-	@ForeignCollectionField
-	ForeignCollection<TeamMember> team_members;
-
-	Team() {
+	public Team(String team_name, List<Team> members, int color, boolean is_favorite) {
+        // name and size combination should be unique
+        content.put("type", TYPE);
+        content.put(NAME, team_name);
+        content.put(MEMBERS, members);
+        content.put(COLOR, color);
+        content.put(IS_ACTIVE, true);
+        content.put(IS_FAVORITE, is_favorite);
 	}
 
-	public Team(String team_name, int team_size, int color, boolean is_favorite) {
-		super();
-		this.name = team_name;
-		this.team_size = team_size;
-		this.color = color;
-		this.is_favorite = is_favorite;
+	public Team(Database database, String id){
+        super(database, id);
+    }
+
+	public String getName() {
+		return (String) content.get(NAME);
 	}
 
-	public static Dao<Team, Long> getDao(Context context) {
-		DatabaseHelper helper = new DatabaseHelper(context);
-		Dao<Team, Long> d = null;
-		try {
-			d = helper.getTeamDao();
-		} catch (SQLException e) {
-			throw new RuntimeException("Could not get team dao: ", e);
-		}
-		return d;
+	public void setName(String team_name) {
+		content.put(NAME, team_name);
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public String getTeamName() {
-		return name;
-	}
-
-	public void setTeamName(String team_name) {
-		this.name = team_name;
-	}
-
-	public int getTeamSize() {
-		return team_size;
-	}
-
-	public void setTeamSize(int team_size) {
-		this.team_size = team_size;
-	}
+    public List<Player> getMembers(Database database) {
+        List<Player> members = new ArrayList<>();
+        for (String member_id : (List<String>) content.get(MEMBERS)) {
+            members.add(new Player(database, member_id));
+        }
+        return members;
+    }
 
 	public int getColor() {
-		return color;
+		return (int) content.get(COLOR);
 	}
 
 	public void setColor(int color) {
-		this.color = color;
+		content.put(COLOR, color);
 	}
 
-	public boolean getIsActive() {
-		return is_active;
-	}
+    public boolean getIsActive() {
+        return (boolean) content.get(IS_ACTIVE);
+    }
 
-	public void setIsActive(boolean is_active) {
-		this.is_active = is_active;
-	}
+    public void setIsActive(boolean is_active) {
+        content.put(IS_ACTIVE, is_active);
+    }
 
-	public boolean getIsFavorite() {
-		return is_favorite;
-	}
+    public boolean getIsFavorite() {
+        return (boolean) content.get(IS_FAVORITE);
+    }
 
-	public void setIsFavorite(boolean is_favorite) {
-		this.is_favorite = is_favorite;
-	}
+    public void setIsFavorite(boolean is_favorite) {
+        content.put(IS_FAVORITE, is_favorite);
+    }
 
 	// =========================================================================
 	// Additional methods
 	// =========================================================================
 
-	public boolean exists(Context context) {
-		return exists(name, context);
-	}
+    public int getSize() {
+        return ((List<String>) content.get(MEMBERS)).size();
+    }
 
-	public static boolean exists(String name, Context context) {
-		if (name == null) {
-			return false;
-		}
+//	public boolean exists(Context context) {
+//		return exists(name, context);
+//	}
 
-		try {
-			List<Team> tList = getDao(context).queryBuilder().where()
-					.eq(Team.NAME, name).query();
-            return !tList.isEmpty();
-		} catch (SQLException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-			return false;
-		}
-	}
+//	public static boolean exists(String name, Context context) {
+//		if (name == null) {
+//			return false;
+//		}
+//
+//		try {
+//			List<Team> tList = getDao(context).queryBuilder().where()
+//					.eq(Team.NAME, name).query();
+//            return !tList.isEmpty();
+//		} catch (SQLException e) {
+//			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+//			return false;
+//		}
+//	}
 }
