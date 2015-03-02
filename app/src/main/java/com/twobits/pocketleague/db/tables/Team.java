@@ -1,9 +1,11 @@
 package com.twobits.pocketleague.db.tables;
 
 import com.couchbase.lite.Database;
+import com.couchbase.lite.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Team extends CouchDocumentBase {
     static final String TYPE = "team";
@@ -23,8 +25,13 @@ public class Team extends CouchDocumentBase {
         content.put(IS_FAVORITE, is_favorite);
 	}
 
-	public Team(Database database, String id){
-        super(database, id);
+    private Team(Map<String, Object> content) {
+        this.content = content;
+    }
+
+    public static Team getFromId(Database database, String id) {
+        Document document = database.getDocument(id);
+        return new Team(document.getProperties());
     }
 
 	public String getName() {
@@ -38,7 +45,7 @@ public class Team extends CouchDocumentBase {
     public List<Player> getMembers(Database database) {
         List<Player> members = new ArrayList<>();
         for (String member_id : (List<String>) content.get(MEMBERS)) {
-            members.add(new Player(database, member_id));
+            members.add(Player.getFromId(database, member_id));
         }
         return members;
     }

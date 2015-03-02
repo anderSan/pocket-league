@@ -1,12 +1,12 @@
 package com.twobits.pocketleague.db.tables;
 
 import com.couchbase.lite.Database;
-import com.twobits.pocketleague.BuildConfig;
+import com.couchbase.lite.Document;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class Game extends CouchDocumentBase {
     static final String TYPE = "game";
@@ -43,8 +43,13 @@ public class Game extends CouchDocumentBase {
         content.put(IS_TRACKED, is_tracked);
     }
 
-    public Game(Database database, String id){
-        super(database, id);
+    private Game(Map<String, Object> content) {
+        this.content = content;
+    }
+
+    public static Game getFromId(Database database, String id) {
+        Document document = database.getDocument(id);
+        return new Game(document.getProperties());
     }
 
 	public long getIdInSession() {
@@ -78,7 +83,7 @@ public class Game extends CouchDocumentBase {
     public List<Team> getMembers(Database database) {
         List<Team> members = new ArrayList<>();
         for (String member_id : (List<String>) content.get(MEMBERS)) {
-            members.add(new Team(database, member_id));
+            members.add(Team.getFromId(database, member_id));
         }
         return members;
     }

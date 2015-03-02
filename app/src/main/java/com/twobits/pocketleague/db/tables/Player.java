@@ -1,14 +1,9 @@
 package com.twobits.pocketleague.db.tables;
 
-import android.content.Context;
-import android.widget.Toast;
-
 import com.couchbase.lite.Database;
-import com.j256.ormlite.dao.Dao;
-import com.twobits.pocketleague.db.DatabaseHelper;
+import com.couchbase.lite.Document;
 
-import java.sql.SQLException;
-import java.util.List;
+import java.util.Map;
 
 public class Player extends CouchDocumentBase { //implements Comparable<Player> {
     public static final String NICK_NAME = "nickname";
@@ -57,8 +52,13 @@ public class Player extends CouchDocumentBase { //implements Comparable<Player> 
         content.put(IS_FAVORITE, is_favorite);
     }
 
-    public Player(Database database, String id){
-        super(database, id);
+    private Player(Map<String, Object> content) {
+        this.content = content;
+    }
+
+    public static Player getFromId(Database database, String id) {
+        Document document = database.getDocument(id);
+        return new Player(document.getProperties());
     }
 
 

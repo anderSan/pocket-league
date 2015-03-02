@@ -1,10 +1,8 @@
 package com.twobits.pocketleague.db.tables;
 
-import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Venue extends CouchDocumentBase {
@@ -24,8 +22,13 @@ public class Venue extends CouchDocumentBase {
         content.put(IS_FAVORITE, is_favorite);
 	}
 
-    public Venue(Database database, String venue_id) {
-        super(database, venue_id);
+    private Venue(Map<String, Object> content) {
+        this.content = content;
+    }
+
+    public static Venue getFromId(Database database, String id) {
+        Document document = database.getDocument(id);
+        return new Venue(document.getProperties());
     }
 
 	public String getName() {

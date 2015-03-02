@@ -1,6 +1,7 @@
 package com.twobits.pocketleague.db.tables;
 
 import com.couchbase.lite.Database;
+import com.couchbase.lite.Document;
 import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameDescriptor;
 import com.twobits.pocketleague.gameslibrary.GameSubtype;
@@ -8,6 +9,7 @@ import com.twobits.pocketleague.gameslibrary.GameType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Session extends CouchDocumentBase {
     static final String TYPE = "session";
@@ -37,8 +39,13 @@ public class Session extends CouchDocumentBase {
         content.put(CURRENT_VENUE, current_venue);
 	}
 
-    public Session(Database database, String id){
-        super(database, id);
+    private Session(Map<String, Object> content) {
+        this.content = content;
+    }
+
+    public static Session getFromId(Database database, String id) {
+        Document document = database.getDocument(id);
+        return new Session(document.getProperties());
     }
 
     public String getName() {
@@ -84,7 +91,7 @@ public class Session extends CouchDocumentBase {
 
 	public Venue getCurrentVenue(Database database) {
 		String venue_id =  (String) content.get(CURRENT_VENUE);
-        return new Venue(database, venue_id);
+        return Venue.getFromId(database, venue_id);
 	}
 
 	public void setCurrentVenue(Venue current_venue) {
@@ -94,7 +101,7 @@ public class Session extends CouchDocumentBase {
     public List<Game> getGames(Database database) {
         List<Game> games = new ArrayList<>();
         for (String game_id : (List<String>) content.get(GAMES)) {
-            games.add(new Game(database, game_id));
+            games.add(Game.getFromId(database, game_id));
         }
         return games;
     }
@@ -102,7 +109,7 @@ public class Session extends CouchDocumentBase {
     public List<Team> getMembers(Database database) {
         List<Team> members = new ArrayList<>();
         for (String member_id : (List<String>) content.get(MEMBERS)) {
-            members.add(new Team(database, member_id));
+            members.add(Team.getFromId(database, member_id));
         }
         return members;
     }
