@@ -82,15 +82,16 @@ public class Team extends CouchDocumentBase {
         return ((List<String>) content.get(MEMBERS)).size();
     }
 
-//	public boolean exists(Context context) {
-//		return exists(name, context);
-//	}
+	public boolean exists(Database database) {
+		return exists(database, getName());
+	}
 
-//	public static boolean exists(String name, Context context) {
-//		if (name == null) {
-//			return false;
-//		}
-//
+	public static boolean exists(Database database, String name) {
+		if (name == null) {
+			return false;
+		}
+        return true;
+
 //		try {
 //			List<Team> tList = getDao(context).queryBuilder().where()
 //					.eq(Team.NAME, name).query();
@@ -99,5 +100,5 @@ public class Team extends CouchDocumentBase {
 //			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 //			return false;
 //		}
-//	}
+	}
 }

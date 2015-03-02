@@ -97,9 +97,9 @@ public class Detail_Player extends Fragment_Detail {
 			}
 		}
 
-        mNav.setTitle(p.getNickName(), "Player Details");
+        mNav.setTitle(p.getName(), "Player Details");
 
-		tv_playerName.setText(p.getNickName() + " (" + p.getFirstName() + ' '
+		tv_playerName.setText(p.getName() + " (" + p.getFirstName() + ' '
 				+ p.getLastName() + ")");
 		tv_playerId.setText(String.valueOf(p.getId()));
 		tv_height.setText("Height: " + String.valueOf(p.getHeight()) + " cm");

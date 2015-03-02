@@ -75,8 +75,8 @@ public class Detail_Game extends Fragment_Detail {
 			}
 		}
 
-		game_p1.setText(p[0].getNickName());
-		game_p2.setText(p[1].getNickName());
+		game_p1.setText(p[0].getName());
+		game_p2.setText(p[1].getName());
 		game_id.setText(String.valueOf(g.getId()));
 		game_session.setText(g.getSession().getSessionName());
 		game_venue.setText(g.getVenue().getName());

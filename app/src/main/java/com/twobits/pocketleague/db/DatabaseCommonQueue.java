@@ -29,7 +29,7 @@ public class DatabaseCommonQueue extends OrmLiteBaseActivity<DatabaseHelper> {
 
 		List<Team> results = tQb.join(tmQb).query();
 		if (results.size() > 1) {
-			log("Warning: Multiple teams found for player " + p.getNickName());
+			log("Warning: Multiple teams found for player " + p.getName());
 			Toast.makeText(context,
 					"Warning: Multiple teams found for player!",
 					Toast.LENGTH_SHORT).show();

@@ -89,7 +89,7 @@ public class Detail_Team extends Fragment_Detail {
 				for (TeamMember tm : memberList) {
 					pDao.refresh(tm.getPlayer());
 					memberNicks = memberNicks.concat(tm.getPlayer()
-							.getNickName() + ", ");
+							.getName() + ", ");
 				}
 				if (memberNicks.length() == 0) {
 					memberNicks = "Anonymous team (no members).";

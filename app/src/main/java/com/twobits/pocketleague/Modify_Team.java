@@ -24,11 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Modify_Team extends Fragment_Edit {
-	Long tId;
+	String tId;
 	Team t;
-    Dao<Player, Long> pDao;
-	Dao<Team, Long> tDao;
-	Dao<TeamMember, Long> tmDao;
 
 	Button btn_create;
 	TextView tv_name;
@@ -46,11 +43,7 @@ public class Modify_Team extends Fragment_Edit {
 		rootView = inflater.inflate(R.layout.fragment_modify_team, container, false);
 
         Bundle args = getArguments();
-        tId = args.getLong("TID", -1);
-
-        pDao = mData.getPlayerDao();
-		tDao = mData.getTeamDao();
-		tmDao = mData.getTeamMemberDao();
+        tId = args.getString("TID");
 
 		btn_create = (Button) rootView.findViewById(R.id.button_createTeam);
 		tv_name = (TextView) rootView.findViewById(R.id.editText_teamName);
@@ -69,7 +62,7 @@ public class Modify_Team extends Fragment_Edit {
 			players = pDao.queryForAll();
 			playerNames.clear();
 			for (Player p : players) {
-				playerNames.add(p.getNickName());
+				playerNames.add(p.getName());
 			}
 		} catch (SQLException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -89,7 +82,7 @@ public class Modify_Team extends Fragment_Edit {
 			}
 		});
 
-		if (tId != -1) {
+		if (tId != null) {
 			loadTeamValues();
 		}
 
@@ -97,18 +90,14 @@ public class Modify_Team extends Fragment_Edit {
 	}
 
 	private void loadTeamValues() {
-		try {
-			t = tDao.queryForId(tId);
-			btn_create.setText("Modify");
-			tv_name.setText(t.getTeamName());
-			lv_roster.setVisibility(View.GONE);
-			cb_isFavorite.setChecked(t.getIsFavorite());
+        t = Team.getFromId(database, tId);
+        btn_create.setText("Modify");
+        tv_name.setText(t.getName());
+        lv_roster.setVisibility(View.GONE);
+        cb_isFavorite.setChecked(t.getIsFavorite());
 
-			// TODO: if loading a team, show players but dont allow team size to change
-			playerNames.clear();
-		} catch (SQLException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+        // TODO: if loading a team, show players but dont allow team size to change
+        playerNames.clear();
 	}
 
 	public void updateRosterCheckList() {
@@ -124,7 +113,7 @@ public class Modify_Team extends Fragment_Edit {
 			Boolean is_favorite = cb_isFavorite.isChecked();
 			int team_color = getResources().getColor(R.color.Aqua);
 
-			if (tId != -1) {
+			if (tId != null) {
 				modifyTeam(team_name, team_color, true, is_favorite);
 			} else {
 				createTeam(team_name, team_color, is_favorite);
@@ -138,11 +127,11 @@ public class Modify_Team extends Fragment_Edit {
         if (playerIdxList.size() == 1) {
             Toast.makeText(context, "Cannot create a team with one player.",
                     Toast.LENGTH_SHORT).show();
-        } else if (newTeam.exists(context)) {
+        } else if (newTeam.exists(database)) {
             Toast.makeText(context, "Team already exists.", Toast.LENGTH_SHORT).show();
         } else {
             try {
-                tDao.create(newTeam);
+                newTeam.update(database);
                 for (Integer playerIdx : playerIdxList) {
                     Player p = players.get(playerIdx);
                     TeamMember tm = new TeamMember(newTeam, p);
@@ -161,18 +150,13 @@ public class Modify_Team extends Fragment_Edit {
 
 	private void modifyTeam(String team_name, int team_color, boolean is_active,
                             boolean is_favorite) {
-		t.setTeamName(team_name);
+		t.setName(team_name);
 		t.setColor(team_color);
 		t.setIsActive(is_active);
 		t.setIsFavorite(is_favorite);
-		try {
-			tDao.update(t);
-			Toast.makeText(context, "Team modified.", Toast.LENGTH_SHORT).show();
-			mNav.onBackPressed();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			loge("Could not modify team", e);
-			Toast.makeText(context, "Could not modify team.", Toast.LENGTH_SHORT).show();
-		}
+
+        t.update(database);
+        Toast.makeText(context, "Team modified.", Toast.LENGTH_SHORT).show();
+        mNav.onBackPressed();
 	}
 }

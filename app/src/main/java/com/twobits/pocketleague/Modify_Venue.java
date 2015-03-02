@@ -9,16 +9,14 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.Fragment_Edit;
 import com.twobits.pocketleague.db.tables.Venue;
 
 import java.sql.SQLException;
 
 public class Modify_Venue extends Fragment_Edit {
-	Long vId;
+	String vId;
 	Venue v;
-	Dao<Venue, Long> vDao;
 
 	Button btn_create;
 	TextView tv_name;
@@ -30,9 +28,7 @@ public class Modify_Venue extends Fragment_Edit {
         rootView = inflater.inflate(R.layout.fragment_modify_venue, container, false);
 
         Bundle args = getArguments();
-        vId = args.getLong("VID", -1);
-
-		vDao = mData.getVenueDao();
+        vId = args.getString("VID");
 
 		btn_create = (Button) rootView.findViewById(R.id.button_createVenue);
 		tv_name = (TextView) rootView.findViewById(R.id.editText_venueName);
@@ -45,7 +41,7 @@ public class Modify_Venue extends Fragment_Edit {
             }
         });
 
-		if (vId != -1) {
+		if (vId != null) {
 			loadVenueValues();
 		}
 
@@ -53,14 +49,10 @@ public class Modify_Venue extends Fragment_Edit {
 	}
 
 	private void loadVenueValues() {
-		try {
-			v = vDao.queryForId(vId);
-			btn_create.setText("Modify");
-			tv_name.setText(v.getName());
-			cb_isFavorite.setChecked(v.getIsFavorite());
-		} catch (SQLException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+        v = Venue.getFromId(database, vId);
+        btn_create.setText("Modify");
+        tv_name.setText(v.getName());
+        cb_isFavorite.setChecked(v.getIsFavorite());
 	}
 
 	public void doneButtonPushed() {
@@ -71,7 +63,7 @@ public class Modify_Venue extends Fragment_Edit {
 		} else {
 			Boolean is_favorite = cb_isFavorite.isChecked();
 
-			if (vId != -1) {
+			if (vId != null) {
 				modifyVenue(venue_name, is_favorite);
 			} else {
 				createVenue(venue_name, is_favorite);
@@ -82,29 +74,17 @@ public class Modify_Venue extends Fragment_Edit {
 	private void createVenue(String venue_name, boolean is_favorite) {
 		Venue newVenue = new Venue(venue_name, is_favorite);
 
-		try {
-			vDao.create(newVenue);
-			Toast.makeText(context, "Venue created!", Toast.LENGTH_SHORT).show();
-			mNav.onBackPressed();
-		} catch (SQLException e) {
-			loge("Could not create venue", e);
-			Toast.makeText(context, "Could not create venue.", Toast.LENGTH_SHORT)
-					.show();
-		}
+        newVenue.update(database);
+        Toast.makeText(context, "Venue created!", Toast.LENGTH_SHORT).show();
+        mNav.onBackPressed();
 	}
 
 	private void modifyVenue(String venue_name, boolean is_favorite) {
 		v.setName(venue_name);
 		v.setIsFavorite(is_favorite);
-		try {
-			vDao.update(v);
-			Toast.makeText(context, "Venue modified.", Toast.LENGTH_SHORT).show();
-			mNav.onBackPressed();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			loge("Could not modify venue", e);
-			Toast.makeText(context, "Could not modify venue.", Toast.LENGTH_SHORT)
-					.show();
-		}
+
+        v.update(database);
+        Toast.makeText(context, "Venue modified.", Toast.LENGTH_SHORT).show();
+        mNav.onBackPressed();
 	}
 }

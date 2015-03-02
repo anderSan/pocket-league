@@ -32,12 +32,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Modify_Session extends Fragment_Edit {
-	Long sId;
+    String sId;
 	Session s;
-	Dao<Session, Long> sDao;
-	Dao<SessionMember, Long> smDao;
-    Dao<Team, Long> tDao;
-    Dao<Venue, Long> vDao;
 
 	Button btn_create;
 	TextView tv_name;
@@ -58,12 +54,7 @@ public class Modify_Session extends Fragment_Edit {
 		rootView = inflater.inflate(R.layout.fragment_modify_session, container, false);
 
         Bundle args = getArguments();
-        sId = args.getLong("SID", -1);
-
-		sDao = mData.getSessionDao();
-		smDao = mData.getSessionMemberDao();
-        tDao = mData.getTeamDao();
-        vDao = mData.getVenueDao();
+        sId = args.getString("SID");
 
 		btn_create = (Button) rootView.findViewById(R.id.button_createSession);
 		tv_name = (TextView) rootView.findViewById(R.id.editText_sessionName);
@@ -137,7 +128,7 @@ public class Modify_Session extends Fragment_Edit {
 			}
 		});
 
-		if (sId != -1) {
+		if (sId != null) {
 			loadSessionValues();
 		}
 
@@ -145,21 +136,17 @@ public class Modify_Session extends Fragment_Edit {
 	}
 
 	private void loadSessionValues() {
-		try {
-			s = sDao.queryForId(sId);
-			btn_create.setText("Modify");
-			tv_name.setText(s.getSessionName());
-			sp_sessionType.setVisibility(View.GONE);
-			sp_ruleSet.setVisibility(View.GONE);
-			cb_isFavorite.setChecked(s.getIsFavorite());
+        s = Session.getFromId(database, sId);
+        btn_create.setText("Modify");
+        tv_name.setText(s.getName());
+        sp_sessionType.setVisibility(View.GONE);
+        sp_ruleSet.setVisibility(View.GONE);
+        cb_isFavorite.setChecked(s.getIsFavorite());
 
-			// TODO: if loading a session, show player/team names or hide
-			// box but dont allow session roster to change or bad things
-			// could happen!
-			teamNames.clear();
-		} catch (SQLException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+        // TODO: if loading a session, show player/team names or hide
+        // box but dont allow session roster to change or bad things
+        // could happen!
+        teamNames.clear();
 	}
 
 	public void updateRosterCheckList() {
@@ -180,7 +167,7 @@ public class Modify_Session extends Fragment_Edit {
 			Venue current_venue = (Venue) sp_venues.getSelectedView().getTag();
 			Boolean is_favorite = cb_isFavorite.isChecked();
 
-			if (sId != -1) {
+			if (sId != null) {
 				modifySession(session_name, current_venue, is_favorite);
 			} else {
 				createSession(session_name, game_rule, session_type,
@@ -189,11 +176,11 @@ public class Modify_Session extends Fragment_Edit {
 		}
 	}
 
-	private void createSession(String session_name, GameSubtype game_rule,
+	private void createSession(String session_name, GameSubtype game_subtype,
 			SessionType session_type, Venue current_venue, boolean is_favorite) {
 		int team_size = teamIdxList.size();
-		Session newSession = new Session(session_name, mData.getCurrentGameType(),
-				game_rule, session_type, team_size, current_venue);
+		Session newSession = new Session(session_name, session_type, game_subtype, team_size,
+                current_venue);
 		newSession.setIsFavorite(is_favorite);
 
 		List<Team> roster = new ArrayList<>();
@@ -203,7 +190,7 @@ public class Modify_Session extends Fragment_Edit {
 		roster = seedRoster(roster);
 
 		try {
-			sDao.create(newSession);
+			newSession.update(database);
 			int seed = 0;
 			for (Team t : roster) {
 				SessionMember sm = new SessionMember(newSession, t, seed);
@@ -219,23 +206,14 @@ public class Modify_Session extends Fragment_Edit {
 		}
 	}
 
-	private void modifySession(String session_name, Venue current_venue,
-			boolean is_favorite) {
-		s.setSessionName(session_name);
+	private void modifySession(String session_name, Venue current_venue, boolean is_favorite) {
+		s.setName(session_name);
 		s.setCurrentVenue(current_venue);
 		s.setIsFavorite(is_favorite);
 
-		try {
-			sDao.update(s);
-			Toast.makeText(context, "Session modified.", Toast.LENGTH_SHORT)
-					.show();
-			mNav.onBackPressed();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			loge("Could not modify session", e);
-			Toast.makeText(context, "Could not modify session.",
-					Toast.LENGTH_SHORT).show();
-		}
+        s.update(database);
+        Toast.makeText(context, "Session modified.", Toast.LENGTH_SHORT).show();
+        mNav.onBackPressed();
 	}
 
 	public List<Team> seedRoster(List<Team> roster) {
@@ -244,5 +222,4 @@ public class Modify_Session extends Fragment_Edit {
 
 		return roster;
 	}
-
 }

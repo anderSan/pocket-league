@@ -274,7 +274,7 @@ public class DbSettings extends Fragment_Base {
 			Dao<Venue, Long> venueDao = mData.getVenueDao();
 			for (Player p : players) {
 				playerDao.create(p);
-				Team t = new Team(p.getNickName(), 1, p.getColor(),
+				Team t = new Team(p.getName(), 1, p.getColor(),
 						p.getIsFavorite());
 				teamDao.create(t);
 				tmDao.create(new TeamMember(t, p));

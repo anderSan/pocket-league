@@ -10,26 +10,17 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.Fragment_Edit;
-import com.twobits.pocketleague.db.DatabaseCommonQueue;
 import com.twobits.pocketleague.db.tables.Player;
-import com.twobits.pocketleague.db.tables.Team;
-import com.twobits.pocketleague.db.tables.TeamMember;
 
-import java.sql.SQLException;
 import java.util.Random;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener;
 
 public class Modify_Player extends Fragment_Edit {
-	Long pId;
+    String pId;
 	Player p;
-	Team t;
-	Dao<Player, Long> pDao;
-	Dao<Team, Long> tDao;
-	Dao<TeamMember, Long> tmDao;
 
 	Button btn_create;
 	TextView tv_nick;
@@ -50,11 +41,7 @@ public class Modify_Player extends Fragment_Edit {
         rootView = inflater.inflate(R.layout.fragment_modify_player, container, false);
 
         Bundle args = getArguments();
-        pId = args.getLong("PID", -1);
-
-		pDao = mData.getPlayerDao();
-		tDao = mData.getTeamDao();
-		tmDao = mData.getTeamMemberDao();
+        pId = args.getString("PID");
 
 		btn_create = (Button) rootView.findViewById(R.id.button_createPlayer);
 		tv_nick = (TextView) rootView.findViewById(R.id.editText_nickname);
@@ -81,7 +68,7 @@ public class Modify_Player extends Fragment_Edit {
             }
         });
 
-        if (pId != -1) {
+        if (pId != null) {
             loadPlayerValues();
         } else {
             Random rand = new Random();
@@ -96,24 +83,19 @@ public class Modify_Player extends Fragment_Edit {
 	}
 
 	private void loadPlayerValues() {
-		try {
-			p = pDao.queryForId(pId);
-			t = DatabaseCommonQueue.findPlayerSoloTeam(context, p);
-			btn_create.setText("Modify");
-			tv_nick.setText(p.getNickName());
-			tv_name.setText(p.getFirstName() + " " + p.getLastName());
-			tv_weight.setText(String.valueOf(p.getWeight()));
-			tv_height.setText(String.valueOf(p.getHeight()));
-			cb_lh.setChecked(p.getIsLeftHanded());
-			cb_rh.setChecked(p.getIsRightHanded());
-			cb_lf.setChecked(p.getIsLeftFooted());
-			cb_rf.setChecked(p.getIsRightFooted());
-			btn_color.setBackgroundColor(p.getColor());
-			player_color = p.getColor();
-			cb_isFavorite.setChecked(p.getIsFavorite());
-		} catch (SQLException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+        p = Player.getFromId(database, pId);
+        btn_create.setText("Modify");
+        tv_nick.setText(p.getName());
+        tv_name.setText(p.getFirstName() + " " + p.getLastName());
+        tv_weight.setText(String.valueOf(p.getWeight()));
+        tv_height.setText(String.valueOf(p.getHeight()));
+        cb_lh.setChecked(p.getIsLeftHanded());
+        cb_rh.setChecked(p.getIsRightHanded());
+        cb_lf.setChecked(p.getIsLeftFooted());
+        cb_rf.setChecked(p.getIsRightFooted());
+        btn_color.setBackgroundColor(p.getColor());
+        player_color = p.getColor();
+        cb_isFavorite.setChecked(p.getIsFavorite());
 	}
 
 	public void doneButtonPushed() {
@@ -146,50 +128,37 @@ public class Modify_Player extends Fragment_Edit {
 			Boolean lf = cb_lf.isChecked();
 			Boolean rf = cb_rf.isChecked();
 
-			byte[] emptyImage = new byte[0];
-
 			Boolean is_favorite = cb_isFavorite.isChecked();
 
-			if (pId != -1) {
+			if (pId != null) {
 				modifyPlayer(nickname, first_name, last_name, lh, rh, lf, rf,
-						height_cm, weight_kg, emptyImage, is_favorite);
+						height_cm, weight_kg, is_favorite);
 			} else {
 				createPlayer(nickname, first_name, last_name, lh, rh, lf, rf,
-						height_cm, weight_kg, emptyImage, is_favorite);
+						height_cm, weight_kg, is_favorite);
 			}
 		}
 	}
 
 	private void createPlayer(String nickname, String first_name,
 			String last_name, boolean lh, boolean rh, boolean lf, boolean rf,
-			int height_cm, int weight_kg, byte[] image, boolean is_favorite) {
+			int height_cm, int weight_kg, boolean is_favorite) {
 
 		Player newPlayer = new Player(nickname, first_name, last_name, lh, rh,
-				lf, rf, height_cm, weight_kg, image, player_color, is_favorite);
-		Team newTeam = new Team(nickname, 1, player_color, is_favorite);
-		TeamMember newTeamMember = new TeamMember(newTeam, newPlayer);
+				lf, rf, height_cm, weight_kg, player_color, is_favorite);
 
-        if (newPlayer.exists(context) || newTeam.exists(context)) {
+        if (newPlayer.exists(database)) {
             Toast.makeText(context, "Player already exists.", Toast.LENGTH_SHORT).show();
         } else {
-            try {
-                pDao.create(newPlayer);
-                tDao.create(newTeam);
-                tmDao.create(newTeamMember);
-                Toast.makeText(context, "Player created!", Toast.LENGTH_SHORT)
-                        .show();
-                mNav.onBackPressed();
-            } catch (SQLException ee) {
-                loge("Could not create player", ee);
-                Toast.makeText(context, "Could not create player.",
-                        Toast.LENGTH_SHORT).show();
-            }
+            newPlayer.update(database);
+            Toast.makeText(context, "Player created!", Toast.LENGTH_SHORT).show();
+            mNav.onBackPressed();
         }
 	}
 
 	private void modifyPlayer(String nickname, String first_name,
 			String last_name, boolean lh, boolean rh, boolean lf, boolean rf,
-			int height_cm, int weight_kg, byte[] image, boolean is_favorite) {
+			int height_cm, int weight_kg, boolean is_favorite) {
 
 		p.setNickName(nickname);
 		p.setFirstName(first_name);
@@ -203,18 +172,10 @@ public class Modify_Player extends Fragment_Edit {
 		p.setColor(player_color);
 		p.setIsFavorite(is_favorite);
 
-		t.setTeamName(nickname);
-		t.setIsFavorite(is_favorite);
-		try {
-			pDao.update(p);
-			tDao.update(t);
-			Toast.makeText(context, "Player modified.", Toast.LENGTH_SHORT).show();
-			mNav.onBackPressed();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			Toast.makeText(context, "Could not modify player.", Toast.LENGTH_SHORT)
-					.show();
-		}
+        p.update(database);
+
+        Toast.makeText(context, "Player modified.", Toast.LENGTH_SHORT).show();
+        mNav.onBackPressed();
 	}
 
 	public void showColorPicker() {

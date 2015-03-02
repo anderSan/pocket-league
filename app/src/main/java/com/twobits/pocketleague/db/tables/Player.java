@@ -6,7 +6,7 @@ import com.couchbase.lite.Document;
 import java.util.Map;
 
 public class Player extends CouchDocumentBase { //implements Comparable<Player> {
-    public static final String NICK_NAME = "nickname";
+    public static final String NAME = "nickname";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
     public static final String IS_LEFT_HANDED = "is_left_handed";
@@ -21,7 +21,7 @@ public class Player extends CouchDocumentBase { //implements Comparable<Player> 
 
     public Player(String nickname, int color) {
         // nickname should be unique
-        content.put(NICK_NAME, nickname);
+        content.put(NAME, nickname);
         content.put(FIRST_NAME, "");
         content.put(LAST_NAME, "");
         content.put(IS_LEFT_HANDED, false);
@@ -38,7 +38,7 @@ public class Player extends CouchDocumentBase { //implements Comparable<Player> 
     public Player(String nickname, String first_name, String last_name, boolean is_left_handed,
                   boolean is_right_handed, boolean is_left_footed, boolean is_right_footed,
                   int height_cm, int weight_kg, int color, boolean is_favorite) {
-        content.put(NICK_NAME, nickname);
+        content.put(NAME, nickname);
         content.put(FIRST_NAME, first_name);
         content.put(LAST_NAME, last_name);
         content.put(IS_LEFT_HANDED, is_left_handed);
@@ -62,12 +62,12 @@ public class Player extends CouchDocumentBase { //implements Comparable<Player> 
     }
 
 
-    public String getNickName() {
-        return (String) content.get(NICK_NAME);
+    public String getName() {
+        return (String) content.get(NAME);
     }
 
     public void setNickName(String nickname) {
-        content.put(NICK_NAME, nickname);
+        content.put(NAME, nickname);
     }
 
     public String getFirstName() {
@@ -163,7 +163,7 @@ public class Player extends CouchDocumentBase { //implements Comparable<Player> 
     // =========================================================================
 
     public String getDisplayName() {
-        return getFirstName() + " \"" + getNickName() + "\" " + getLastName();
+        return getFirstName() + " \"" + getName() + "\" " + getLastName();
     }
 
     public String getFullName() {
@@ -186,22 +186,22 @@ public class Player extends CouchDocumentBase { //implements Comparable<Player> 
 //        return id == another.id;
 //    }
 //
-//    public boolean exists(Context context) {
-//        return exists(nickname, context);
-//    }
-//
-//    public static boolean exists(String nickname, Context context) {
-//        if (nickname == null) {
-//            return false;
-//        }
-//
+    public boolean exists(Database database) {
+        return exists(database, getName());
+    }
+
+    public static boolean exists(Database database, String nickname) {
+        if (nickname == null) {
+            return false;
+        }
+        return true;
+
 //        try {
-//            List<Player> pList = getDao(context).queryBuilder().where().eq(Player.NICK_NAME, nickname).query();
+//            List<Player> pList = getDao(context).queryBuilder().where().eq(Player.NAME, nickname).query();
 //            return !pList.isEmpty();
 //        } catch (SQLException e) {
 //            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 //            return false;
 //        }
-//
-//    }
+    }
 }

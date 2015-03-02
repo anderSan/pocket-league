@@ -285,13 +285,13 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
     public void loadGame(Long gId) {
         Game g = null;
 
-        try {
-            g = gDao.queryForId(gId);
-            sDao.refresh(g.getSession());
-            vDao.refresh(g.getVenue());
-        } catch (SQLException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+//        try {
+//            g = gDao.queryForId(gId);
+//            sDao.refresh(g.getSession());
+//            vDao.refresh(g.getVenue());
+//        } catch (SQLException e) {
+//            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+//        }
 
         if (g != null){
             String action_type = g.getSession().getGameSubtype().toDescriptor().actionString();

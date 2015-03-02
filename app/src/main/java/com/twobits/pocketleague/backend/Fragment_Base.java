@@ -8,8 +8,11 @@ import android.util.Log;
 import android.view.ActionMode;
 import android.view.View;
 
+import com.couchbase.lite.Database;
+
 public abstract class Fragment_Base extends Fragment {
     protected String LOGTAG = getClass().getSimpleName();
+    public Database database;
     public View rootView;
     public Context context;
     public NavigationInterface mNav;
@@ -41,6 +44,7 @@ public abstract class Fragment_Base extends Fragment {
         }
 
         context = getActivity();
+        database = mData.getDatabase();
     }
 
     public boolean closeContextualActionBar() {

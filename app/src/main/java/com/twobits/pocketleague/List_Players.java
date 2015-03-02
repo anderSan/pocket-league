@@ -66,7 +66,7 @@ public class List_Players extends Fragment_TopList {
             }
 
             for (Player p : players) {
-                player_adapter.add(new Item_Player(p.getId(), p.getFullName(), p.getNickName(),
+                player_adapter.add(new Item_Player(p.getId(), p.getFullName(), p.getName(),
                         p.getColor(), p.getIsFavorite()));
             }
         } catch (SQLException e) {
