@@ -3,17 +3,14 @@ package com.twobits.pocketleague.db.tables;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.couchbase.lite.Database;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 import com.twobits.pocketleague.db.DatabaseHelper;
 
 import java.sql.SQLException;
 import java.util.List;
 
-@DatabaseTable
-public class Player implements Comparable<Player> {
+public class Player extends CouchDocumentBase { //implements Comparable<Player> {
     public static final String NICK_NAME = "nickname";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
@@ -27,197 +24,138 @@ public class Player implements Comparable<Player> {
     public static final String IS_ACTIVE = "is_active";
     public static final String IS_FAVORITE = "is_favorite";
 
-    @DatabaseField(generatedId = true)
-    private long id;
-
-    @DatabaseField(canBeNull = false, unique = true)
-    private String nickname;
-
-    @DatabaseField()
-    private String first_name;
-
-    @DatabaseField()
-    private String last_name;
-
-    @DatabaseField
-    private boolean is_left_handed;
-
-    @DatabaseField
-    private boolean is_right_handed;
-
-    @DatabaseField
-    private boolean is_left_footed;
-
-    @DatabaseField
-    private boolean is_right_footed;
-
-    @DatabaseField
-    private int height_cm;
-
-    @DatabaseField
-    private int weight_kg;
-
-    @DatabaseField(dataType = DataType.BYTE_ARRAY)
-    private byte[] image_bytes;
-
-    @DatabaseField
-    private int color;
-
-    @DatabaseField
-    private boolean is_active = true;
-
-    @DatabaseField
-    private boolean is_favorite = false;
-
-    Player() {
-    }
-
     public Player(String nickname, int color) {
-        super();
-        this.nickname = nickname;
-        this.color = color;
+        // nickname should be unique
+        content.put(NICK_NAME, nickname);
+        content.put(FIRST_NAME, "");
+        content.put(LAST_NAME, "");
+        content.put(IS_LEFT_HANDED, false);
+        content.put(IS_RIGHT_HANDED, false);
+        content.put(IS_LEFT_FOOTED, false);
+        content.put(IS_RIGHT_FOOTED, false);
+        content.put(HEIGHT, 0);
+        content.put(WEIGHT, 0);
+        content.put(COLOR, color);
+        content.put(IS_ACTIVE, true);
+        content.put(IS_FAVORITE, false);
     }
 
     public Player(String nickname, String first_name, String last_name, boolean is_left_handed,
                   boolean is_right_handed, boolean is_left_footed, boolean is_right_footed,
-                  int height_cm, int weight_kg, byte[] image_bytes, int color,
-                  boolean is_favorite) {
-        super();
-        this.nickname = nickname;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.is_left_handed = is_left_handed;
-        this.is_right_handed = is_right_handed;
-        this.is_left_footed = is_left_footed;
-        this.is_right_footed = is_right_footed;
-        this.height_cm = height_cm;
-        this.weight_kg = weight_kg;
-        this.image_bytes = image_bytes;
-        this.color = color;
-        this.is_favorite = is_favorite;
+                  int height_cm, int weight_kg, int color, boolean is_favorite) {
+        content.put(NICK_NAME, nickname);
+        content.put(FIRST_NAME, first_name);
+        content.put(LAST_NAME, last_name);
+        content.put(IS_LEFT_HANDED, is_left_handed);
+        content.put(IS_RIGHT_HANDED, is_right_handed);
+        content.put(IS_LEFT_FOOTED, is_left_footed);
+        content.put(IS_RIGHT_FOOTED, is_right_footed);
+        content.put(HEIGHT, height_cm);
+        content.put(WEIGHT, weight_kg);
+        content.put(COLOR, color);
+        content.put(IS_ACTIVE, true);
+        content.put(IS_FAVORITE, is_favorite);
     }
 
-    public static Dao<Player, Long> getDao(Context context) {
-        DatabaseHelper helper = new DatabaseHelper(context);
-        Dao<Player, Long> d = null;
-        try {
-            d = helper.getPlayerDao();
-        } catch (SQLException e) {
-            throw new RuntimeException("Could not get player dao: ", e);
-        }
-        return d;
+    public Player(Database database, String id){
+        super(database, id);
     }
 
-    public long getId() {
-        return id;
-    }
-
-    // public void setId(long id) {
-    // this.id = id;
-    // }
 
     public String getNickName() {
-        return nickname;
+        return (String) content.get(NICK_NAME);
     }
 
-    public void setNickName(String nickName) {
-        this.nickname = nickName;
+    public void setNickName(String nickname) {
+        content.put(NICK_NAME, nickname);
     }
 
     public String getFirstName() {
-        return first_name;
+        return (String) content.get(FIRST_NAME);
     }
 
-    public void setFirstName(String firstName) {
-        this.first_name = firstName;
+    public void setFirstName(String first_name) {
+        content.put(FIRST_NAME, first_name);
     }
 
     public String getLastName() {
-        return last_name;
+        return (String) content.get(LAST_NAME);
     }
 
-    public void setLastName(String lastName) {
-        this.last_name = lastName;
+    public void setLastName(String last_name) {
+        content.put(LAST_NAME, last_name);
     }
 
     public boolean getIsLeftHanded() {
-        return is_left_handed;
+        return (boolean) content.get(IS_LEFT_HANDED);
     }
 
     public void setIsLeftHanded(boolean is_left_handed) {
-        this.is_left_handed = is_left_handed;
+        content.put(IS_LEFT_HANDED, is_left_handed);
     }
 
     public boolean getIsRightHanded() {
-        return is_right_handed;
+        return (boolean) content.get(IS_RIGHT_HANDED);
     }
 
     public void setIsRightHanded(boolean is_right_handed) {
-        this.is_right_handed = is_right_handed;
+        content.put(IS_RIGHT_HANDED, is_right_handed);
     }
 
     public boolean getIsLeftFooted() {
-        return is_left_footed;
+        return (boolean) content.get(IS_LEFT_FOOTED);
     }
 
     public void setIsLeftFooted(boolean is_left_footed) {
-        this.is_left_footed = is_left_footed;
+        content.put(IS_LEFT_FOOTED, is_left_footed);
     }
 
     public boolean getIsRightFooted() {
-        return is_right_footed;
+        return (boolean) content.get(IS_RIGHT_FOOTED);
     }
 
     public void setIsRightFooted(boolean is_right_footed) {
-        this.is_right_footed = is_right_footed;
+        content.put(IS_RIGHT_FOOTED, is_right_footed);
     }
 
     public int getHeight() {
-        return height_cm;
+        return (int) content.get(HEIGHT);
     }
 
     public void setHeight_cm(int height_cm) {
-        this.height_cm = height_cm;
+        content.put(HEIGHT, height_cm);
     }
 
     public int getWeight() {
-        return weight_kg;
+        return (int) content.get(WEIGHT);
     }
 
     public void setWeight_kg(int weight_kg) {
-        this.weight_kg = weight_kg;
-    }
-
-    public byte[] getImageBytes() {
-        return image_bytes;
-    }
-
-    public void setImageBytes(byte[] image_bytes) {
-        this.image_bytes = image_bytes;
+        content.put(WEIGHT, weight_kg);
     }
 
     public int getColor() {
-        return color;
+        return (int) content.get(COLOR);
     }
 
     public void setColor(int color) {
-        this.color = color;
+        content.put(COLOR, color);
     }
 
     public boolean getIsActive() {
-        return is_active;
+        return (boolean) content.get(IS_ACTIVE);
     }
 
     public void setIsActive(boolean is_active) {
-        this.is_active = is_active;
+        content.put(IS_ACTIVE, is_active);
     }
 
     public boolean getIsFavorite() {
-        return is_favorite;
+        return (boolean) content.get(IS_FAVORITE);
     }
 
     public void setIsFavorite(boolean is_favorite) {
-        this.is_favorite = is_favorite;
+        content.put(IS_FAVORITE, is_favorite);
     }
 
     // =========================================================================
@@ -225,45 +163,45 @@ public class Player implements Comparable<Player> {
     // =========================================================================
 
     public String getDisplayName() {
-        return first_name + " \"" + nickname + "\" " + last_name;
+        return getFirstName() + " \"" + getNickName() + "\" " + getLastName();
     }
 
     public String getFullName() {
-        return first_name + " " + last_name;
+        return getFirstName() + " " + getLastName();
     }
 
-    public int compareTo(Player another) {
-        if (id < another.id) {
-            return -1;
-        } else if (id == another.id) {
-            return 0;
-        } else {
-            return 1;
-        }
-    }
-
-    public boolean equals(Object o) {
-        if (!(o instanceof Player)) return false;
-        Player another = (Player) o;
-        return id == another.id;
-    }
-
-    public boolean exists(Context context) {
-        return exists(nickname, context);
-    }
-
-    public static boolean exists(String nickname, Context context) {
-        if (nickname == null) {
-            return false;
-        }
-
-        try {
-            List<Player> pList = getDao(context).queryBuilder().where().eq(Player.NICK_NAME, nickname).query();
-            return !pList.isEmpty();
-        } catch (SQLException e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-    }
+//    public int compareTo(Player another) {
+//        if (id < another.id) {
+//            return -1;
+//        } else if (id == another.id) {
+//            return 0;
+//        } else {
+//            return 1;
+//        }
+//    }
+//
+//    public boolean equals(Object o) {
+//        if (!(o instanceof Player)) return false;
+//        Player another = (Player) o;
+//        return id == another.id;
+//    }
+//
+//    public boolean exists(Context context) {
+//        return exists(nickname, context);
+//    }
+//
+//    public static boolean exists(String nickname, Context context) {
+//        if (nickname == null) {
+//            return false;
+//        }
+//
+//        try {
+//            List<Player> pList = getDao(context).queryBuilder().where().eq(Player.NICK_NAME, nickname).query();
+//            return !pList.isEmpty();
+//        } catch (SQLException e) {
+//            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+//            return false;
+//        }
+//
+//    }
 }
