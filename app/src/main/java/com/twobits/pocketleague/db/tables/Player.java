@@ -5,9 +5,8 @@ import com.couchbase.lite.Document;
 
 import java.util.Map;
 
-public class Player extends CouchDocumentBase { //implements Comparable<Player> {
+public class Player extends Team { //implements Comparable<Player> {
     public static final String TYPE = "player";
-    public static final String NAME = "nickname";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
     public static final String IS_LEFT_HANDED = "is_left_handed";
@@ -16,13 +15,10 @@ public class Player extends CouchDocumentBase { //implements Comparable<Player> 
     public static final String IS_RIGHT_FOOTED = "is_right_footed";
     public static final String HEIGHT = "height_cm";
     public static final String WEIGHT = "weight_kg";
-    public static final String COLOR = "color";
-    public static final String IS_ACTIVE = "is_active";
-    public static final String IS_FAVORITE = "is_favorite";
 
-    public Player(String nickname, int color) {
+    public Player(Database database, String nickname, int color) {
+        super(database, nickname, null, color, false);
         // nickname should be unique
-        content.put(NAME, nickname);
         content.put(FIRST_NAME, "");
         content.put(LAST_NAME, "");
         content.put(IS_LEFT_HANDED, false);
@@ -31,15 +27,13 @@ public class Player extends CouchDocumentBase { //implements Comparable<Player> 
         content.put(IS_RIGHT_FOOTED, false);
         content.put(HEIGHT, 0);
         content.put(WEIGHT, 0);
-        content.put(COLOR, color);
-        content.put(IS_ACTIVE, true);
-        content.put(IS_FAVORITE, false);
+
     }
 
-    public Player(String nickname, String first_name, String last_name, boolean is_left_handed,
+    public Player(Database database, String nickname, String first_name, String last_name, boolean is_left_handed,
                   boolean is_right_handed, boolean is_left_footed, boolean is_right_footed,
                   int height_cm, int weight_kg, int color, boolean is_favorite) {
-        content.put(NAME, nickname);
+        super(database, nickname, null, color, is_favorite);
         content.put(FIRST_NAME, first_name);
         content.put(LAST_NAME, last_name);
         content.put(IS_LEFT_HANDED, is_left_handed);
@@ -48,20 +42,16 @@ public class Player extends CouchDocumentBase { //implements Comparable<Player> 
         content.put(IS_RIGHT_FOOTED, is_right_footed);
         content.put(HEIGHT, height_cm);
         content.put(WEIGHT, weight_kg);
-        content.put(COLOR, color);
-        content.put(IS_ACTIVE, true);
-        content.put(IS_FAVORITE, is_favorite);
     }
 
-    private Player(Map<String, Object> content) {
-        this.content = content;
+    private Player(Database database, Map<String, Object> content) {
+        super(database, content);
     }
 
     public static Player getFromId(Database database, String id) {
         Document document = database.getDocument(id);
-        return new Player(document.getProperties());
+        return new Player(database, document.getProperties());
     }
-
 
     public String getName() {
         return (String) content.get(NAME);

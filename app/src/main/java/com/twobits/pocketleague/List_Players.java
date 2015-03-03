@@ -79,7 +79,7 @@ public class List_Players extends Fragment_TopList {
 
             Player p = Player.getFromId(database, pId);
             p.setIsFavorite(((CheckBox) view).isChecked());
-            p.update(database);
+            p.update();
         }
     };
 

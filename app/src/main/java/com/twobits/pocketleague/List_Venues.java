@@ -9,21 +9,25 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.j256.ormlite.dao.Dao;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryRow;
 import com.twobits.pocketleague.backend.Fragment_TopList;
 import com.twobits.pocketleague.backend.Item_Venue;
 import com.twobits.pocketleague.backend.ListAdapter_Venue;
 import com.twobits.pocketleague.db.tables.Venue;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class List_Venues extends Fragment_TopList {
     private ListView lv;
     private ListAdapter_Venue venue_adapter;
     private List<Item_Venue> venue_list = new ArrayList<>();
-    private Dao<Venue, Long> vDao;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,31 +55,16 @@ public class List_Venues extends Fragment_TopList {
     @Override
 	public void refreshDetails() {
         venue_adapter.clear();
+        List<Venue> venues = getVenues();
 
-		try {
-            List<Venue> venues;
-            vDao = mData.getVenueDao();
-
-            if (show_favorites) {
-                venues = vDao.queryBuilder().where().eq(Venue.IS_FAVORITE, show_favorites)
-                        .and().eq(Venue.IS_ACTIVE, show_actives).query();
-            } else {
-                venues = vDao.queryBuilder().where().eq(Venue.IS_ACTIVE, show_actives).query();
-            }
-			for (Venue v : venues) {
-                venue_adapter.add(new Item_Venue(v.getId(), v.getName(), v.getIsFavorite()));
-			}
-		} catch (SQLException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-			loge("Retrieval of venues failed", e);
-		}
-
-//		venue_adapter.notifyDataSetChanged(); // required in case the list has changed
+        for (Venue v : venues) {
+            venue_adapter.add(new Item_Venue(v.getId(), v.getName(), v.getIsFavorite()));
+        }
 	}
 
     private AdapterView.OnItemClickListener lvItemClicked = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Long vId = venue_list.get(position).getId();
+            String vId = venue_list.get(position).getId();
             mNav.viewVenueDetails(vId);
         }
     };
@@ -83,15 +72,30 @@ public class List_Venues extends Fragment_TopList {
     private View.OnClickListener cbClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            long vId = (long) view.getTag();
-            try {
-                Venue v = vDao.queryForId(vId);
-                v.setIsFavorite(((CheckBox) view).isChecked());
-                vDao.update(v);
-            } catch (SQLException e) {
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-                loge("Retrieval of venue failed", e);
-            }
+            String vId = (String) view.getTag();
+
+            Venue v = Venue.getFromId(database, vId);
+            v.setIsFavorite(((CheckBox) view).isChecked());
+            v.update();
         }
     };
+
+    private List<Venue> getVenues() {
+        List<Venue> venues = null;
+        try {
+            Query query = database.getView("all-venues").createQuery();
+            query.setStartKey(Arrays.asList(show_actives, show_favorites));
+            query.setEndKey(Arrays.asList(show_actives, new HashMap<String, Object>()));
+            QueryEnumerator result = query.run();
+
+            for (Iterator<QueryRow> it = result; it.hasNext(); ) {
+                QueryRow row = it.next();
+                venues.add(Venue.getFromId(database, row.getDocumentId()));
+            }
+        } catch (CouchbaseLiteException e) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            loge("Retrieval of venues failed. ", e);
+        }
+        return venues;
+    }
 }

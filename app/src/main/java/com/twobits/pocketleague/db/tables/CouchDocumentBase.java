@@ -12,19 +12,22 @@ import java.util.Map;
 public class CouchDocumentBase {
     protected String LOGTAG = getClass().getSimpleName();
     public static final String ID = "_id";
+    Document document;
     Map<String, Object> content = new HashMap<>();
+
+    public CouchDocumentBase(Database database, Map<String, Object> content) {
+        document = database.createDocument();
+        this.content.putAll(document.getProperties());
+        if (content != null) {
+            this.content.putAll(content);
+        }
+    }
 
     public String getId() {
         return (String) content.get(ID);
     }
 
-    public void update(Database database) {
-        Document document = database.getDocument(ID);
-
-        if (document == null) {
-            document = database.createDocument();
-        }
-
+    public void update() {
         try {
             document.putProperties(content);
             logd("updated retrievedDocument=" + String.valueOf(document.getProperties()));
@@ -33,8 +36,7 @@ public class CouchDocumentBase {
         }
     }
 
-    public void delete(Database database) {
-        Document document = database.getDocument(ID);
+    public void delete() {
         try {
             document.delete();
             logd("Deleted document, deletion status = " + document.isDeleted());

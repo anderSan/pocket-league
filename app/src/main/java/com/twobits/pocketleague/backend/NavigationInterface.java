@@ -23,9 +23,9 @@ public interface NavigationInterface {
 
     public void viewPlayerDetails(String pId);
 
-    public void viewTeamDetails(Long tId);
+    public void viewTeamDetails(String tId);
 
-    public void viewVenueDetails(Long vId);
+    public void viewVenueDetails(String vId);
 
     public void modifySession(Long sId);
 

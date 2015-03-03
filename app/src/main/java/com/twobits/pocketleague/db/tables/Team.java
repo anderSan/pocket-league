@@ -4,34 +4,41 @@ import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public class Team extends CouchDocumentBase {
     public static final String TYPE = "team";
-	public static final String NAME = "team_name";
+	public static final String NAME = "name";
     public static final String MEMBERS = "member_ids";
 	public static final String COLOR = "color";
 	public static final String IS_ACTIVE = "is_active";
 	public static final String IS_FAVORITE = "is_favorite";
 
-	public Team(String team_name, List<Team> members, int color, boolean is_favorite) {
+	public Team(Database database, String team_name, List<String> member_ids, int color,
+                boolean is_favorite) {
         // name and size combination should be unique
+        super(database, null);
         content.put("type", TYPE);
         content.put(NAME, team_name);
-        content.put(MEMBERS, members);
+        if (member_ids == null) {
+            content.put(MEMBERS, Arrays.asList(getId()));
+        } else {
+            content.put(MEMBERS, member_ids);
+        }
         content.put(COLOR, color);
         content.put(IS_ACTIVE, true);
         content.put(IS_FAVORITE, is_favorite);
 	}
 
-    private Team(Map<String, Object> content) {
-        this.content = content;
+    Team(Database database, Map<String, Object> content) {
+        super(database, content);
     }
 
     public static Team getFromId(Database database, String id) {
         Document document = database.getDocument(id);
-        return new Team(document.getProperties());
+        return new Team(database, document.getProperties());
     }
 
 	public String getName() {

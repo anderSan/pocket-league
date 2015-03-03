@@ -13,15 +13,12 @@ import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryEnumerator;
 import com.couchbase.lite.QueryRow;
-import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.Fragment_TopList;
 import com.twobits.pocketleague.backend.Item_Session;
 import com.twobits.pocketleague.backend.ListAdapter_Session;
-import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.enums.SessionType;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -84,7 +81,7 @@ public class List_Sessions extends Fragment_TopList {
 
             Session s = Session.getFromId(database, sId);
             s.setIsFavorite(((CheckBox) view).isChecked());
-            s.update(database);
+            s.update();
         }
     };
 

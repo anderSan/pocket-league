@@ -357,11 +357,11 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         ft.commit();
     }
 
-    public void viewTeamDetails(Long tId) {
+    public void viewTeamDetails(String tId) {
         Fragment fragment = new Detail_Team();
 
         Bundle args = new Bundle();
-        args.putLong("TID", tId);
+        args.putString("TID", tId);
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -369,11 +369,11 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
                 .addToBackStack(null).commit();
     }
 
-    public void viewVenueDetails(Long vId) {
+    public void viewVenueDetails(String vId) {
         Fragment fragment = new Detail_Venue();
 
         Bundle args = new Bundle();
-        args.putLong("VID", vId);
+        args.putString("VID", vId);
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();

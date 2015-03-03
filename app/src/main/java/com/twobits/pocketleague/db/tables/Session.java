@@ -25,8 +25,9 @@ public class Session extends CouchDocumentBase {
     public static final String GAMES = "game_ids";
     public static final String MEMBERS = "member_ids";
 
-	public Session(String session_name, SessionType session_type, GameSubtype game_subtype,
+	public Session(Database database, String session_name, SessionType session_type, GameSubtype game_subtype,
                    int team_size, Venue current_venue) {
+        super(database, null);
         // name should be unique
         content.put("type", TYPE);
         content.put(NAME, session_name);
@@ -39,13 +40,13 @@ public class Session extends CouchDocumentBase {
         content.put(CURRENT_VENUE, current_venue);
 	}
 
-    private Session(Map<String, Object> content) {
-        this.content = content;
+    private Session(Database database, Map<String, Object> content) {
+        super(database, content);
     }
 
     public static Session getFromId(Database database, String id) {
         Document document = database.getDocument(id);
-        return new Session(document.getProperties());
+        return new Session(database, document.getProperties());
     }
 
     public String getName() {

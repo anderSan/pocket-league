@@ -12,6 +12,8 @@ import com.couchbase.lite.Mapper;
 import com.couchbase.lite.android.AndroidContext;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Session;
+import com.twobits.pocketleague.db.tables.Team;
+import com.twobits.pocketleague.db.tables.Venue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class DatabaseHelper {
         com.couchbase.lite.View cViewAllSessions =
                 database.getView(String.format("%s/%s", "pocketleague-views", "all-sessions"));
 
-        cViewAllPlayers.setMap(new Mapper() {
+        cViewAllSessions.setMap(new Mapper() {
             @Override
             public void map(Map<String, Object> document, Emitter emitter) {
                 Object type = document.get("type");
@@ -80,6 +82,38 @@ public class DatabaseHelper {
                     keys.add(document.get(Session.GAME_SUBTYPE));
                     keys.add(document.get(Session.IS_ACTIVE));
                     keys.add(document.get(Session.IS_FAVORITE));
+                    emitter.emit(keys, null);
+                }
+            }
+        }, "1.0");
+
+        com.couchbase.lite.View cViewAllTeams =
+                database.getView(String.format("%s/%s", "pocketleague-views", "all-teams"));
+
+        cViewAllTeams.setMap(new Mapper() {
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter) {
+                Object type = document.get("type");
+                if (type == Team.TYPE) {
+                    List<Object> keys = new ArrayList<>();
+                    keys.add(document.get(Team.IS_ACTIVE));
+                    keys.add(document.get(Team.IS_FAVORITE));
+                    emitter.emit(keys, null);
+                }
+            }
+        }, "1.0");
+
+        com.couchbase.lite.View cViewAllVenues =
+                database.getView(String.format("%s/%s", "pocketleague-views", "all-venues"));
+
+        cViewAllVenues.setMap(new Mapper() {
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter) {
+                Object type = document.get("type");
+                if (type == Venue.TYPE) {
+                    List<Object> keys = new ArrayList<>();
+                    keys.add(document.get(Venue.IS_ACTIVE));
+                    keys.add(document.get(Venue.IS_FAVORITE));
                     emitter.emit(keys, null);
                 }
             }
