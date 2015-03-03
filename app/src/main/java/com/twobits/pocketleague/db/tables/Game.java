@@ -20,7 +20,7 @@ public class Game extends CouchDocumentBase {
 
 	public Game(Database database, Session session, long id_in_session, List<Team> members, Venue venue,
                 Date date_played, boolean is_tracked) {
-        super(database, null);
+        super(database);
         // session and id_in_session combination should be unique
         content.put("type", TYPE);
         content.put(SESSION, session);
@@ -34,7 +34,7 @@ public class Game extends CouchDocumentBase {
 
     public Game(Database database, Session session, long id_in_session, List<Team> members, Venue venue,
                 boolean is_tracked) {
-        super(database, null);
+        super(database);
         content.put("type", TYPE);
         content.put(SESSION, session);
         content.put(ID_IN_SESSION, id_in_session);
@@ -45,13 +45,13 @@ public class Game extends CouchDocumentBase {
         content.put(IS_TRACKED, is_tracked);
     }
 
-    private Game(Database database, Map<String, Object> content) {
-        super(database, content);
+    private Game(Document document) {
+        super(document);
     }
 
     public static Game getFromId(Database database, String id) {
         Document document = database.getDocument(id);
-        return new Game(database, document.getProperties());
+        return new Game(document);
     }
 
 	public long getIdInSession() {

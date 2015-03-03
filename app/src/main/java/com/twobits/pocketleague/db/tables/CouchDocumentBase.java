@@ -14,12 +14,15 @@ public class CouchDocumentBase {
     Document document;
     Map<String, Object> content = new HashMap<>();
 
-    public CouchDocumentBase(Database database, Map<String, Object> content) {
+    public CouchDocumentBase(Database database) {
         document = database.createDocument();
-        log("New Document! " + document.getId());
-        if (content != null) {
-            this.content.putAll(content);
-        }
+        log("Created document: " + document.getId());
+    }
+
+    public CouchDocumentBase(Document document) {
+        this.document = document;
+        content.putAll(document.getProperties());
+        log("Loaded document: " + document.getId());
     }
 
     public String getId() {

@@ -23,7 +23,7 @@ public class Team extends CouchDocumentBase {
 	public Team(Database database, String team_name, List<String> member_ids, int color,
                 boolean is_favorite) {
         // name and size combination should be unique
-        super(database, null);
+        super(database);
         content.put("type", TYPE);
         content.put(NAME, team_name);
         if (member_ids == null) {
@@ -36,13 +36,13 @@ public class Team extends CouchDocumentBase {
         content.put(IS_FAVORITE, is_favorite);
 	}
 
-    Team(Database database, Map<String, Object> content) {
-        super(database, content);
+    Team(Document document) {
+        super(document);
     }
 
     public static Team getFromId(Database database, String id) {
         Document document = database.getDocument(id);
-        return new Team(database, document.getProperties());
+        return new Team(document);
     }
 
     public static QueryEnumerator getAll(Database database, boolean active, boolean only_favorite)

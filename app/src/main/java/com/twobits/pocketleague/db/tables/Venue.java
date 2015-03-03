@@ -25,7 +25,7 @@ public class Venue extends CouchDocumentBase {
 	public static final String IS_FAVORITE = "is_favorite";
 
 	public Venue(Database database, String venue_name, boolean is_favorite) {
-        super(database, null);
+        super(database);
         // name should be unique
         content.put("type", TYPE);
         content.put(NAME, venue_name);
@@ -33,13 +33,13 @@ public class Venue extends CouchDocumentBase {
         content.put(IS_FAVORITE, is_favorite);
 	}
 
-    private Venue(Database database, Map<String, Object> content) {
-        super(database, content);
+    private Venue(Document document) {
+        super(document);
     }
 
     public static Venue getFromId(Database database, String id) {
         Document document = database.getDocument(id);
-        return new Venue(database, document.getProperties());
+        return new Venue(document);
     }
 
     public static QueryEnumerator getAll(Database database, boolean active, boolean only_favorite)

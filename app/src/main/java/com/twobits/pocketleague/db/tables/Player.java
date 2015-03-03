@@ -44,13 +44,13 @@ public class Player extends Team { //implements Comparable<Player> {
         content.put(WEIGHT, weight_kg);
     }
 
-    private Player(Database database, Map<String, Object> content) {
-        super(database, content);
+    private Player(Document document) {
+        super(document);
     }
 
     public static Player getFromId(Database database, String id) {
         Document document = database.getDocument(id);
-        return new Player(database, document.getProperties());
+        return new Player(document);
     }
 
     public String getName() {
