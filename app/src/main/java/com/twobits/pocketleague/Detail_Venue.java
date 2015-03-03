@@ -6,19 +6,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.Fragment_Detail;
 import com.twobits.pocketleague.db.tables.Venue;
 
-import java.sql.SQLException;
-
 public class Detail_Venue extends Fragment_Detail {
-	Long vId;
+    String vId;
 	Venue v;
-	Dao<Venue, Long> vDao;
 
 	TextView tv_venueName;
 	TextView tv_venueId;
@@ -36,9 +31,9 @@ public class Detail_Venue extends Fragment_Detail {
         setFavoriteClicked(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (vId != -1) {
+                if (vId != null) {
                     v.setIsFavorite(((ToggleButton) view).isChecked());
-                    updateVenue();
+                    v.update();
                 }
             }
         });
@@ -46,9 +41,9 @@ public class Detail_Venue extends Fragment_Detail {
         setActiveClicked(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (vId != -1) {
+                if (vId != null) {
                     v.setIsActive(((ToggleButton) view).isChecked());
-                    updateVenue();
+                    v.update();
                 }
             }
         });
@@ -56,9 +51,7 @@ public class Detail_Venue extends Fragment_Detail {
         rootView = inflater.inflate(R.layout.activity_detail_venue, container, false);
 
         Bundle args = getArguments();
-        vId = args.getLong("VID", -1);
-
-        vDao = mData.getVenueDao();
+        vId = args.getString("VID");
 
         tv_venueName = (TextView) rootView.findViewById(R.id.vDet_name);
         tv_venueId = (TextView) rootView.findViewById(R.id.vDet_id);
@@ -71,13 +64,8 @@ public class Detail_Venue extends Fragment_Detail {
       }
 
 	public void refreshDetails() {
-        if (vId != -1) {
-            try {
-
-                v = vDao.queryForId(vId);
-            } catch (SQLException e) {
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+        if (vId != null) {
+            v = Venue.getFromId(database, vId);
         }
 
         mNav.setTitle(v.getName(), "Venue Details");
@@ -88,13 +76,4 @@ public class Detail_Venue extends Fragment_Detail {
         bar_isFavorite.setChecked(v.getIsFavorite());
         bar_isActive.setChecked(v.getIsActive());
     }
-
-	private void updateVenue() {
-		try {
-			vDao.update(v);
-		} catch (SQLException e) {
-			loge("Could not update venue", e);
-			e.printStackTrace();
-		}
-	}
 }

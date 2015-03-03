@@ -18,21 +18,13 @@ import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
-import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.Fragment_Base;
-import com.twobits.pocketleague.db.DatabaseHelper;
 import com.twobits.pocketleague.db.DbxInfo;
-import com.twobits.pocketleague.db.tables.Player;
-import com.twobits.pocketleague.db.tables.Session;
-import com.twobits.pocketleague.db.tables.Team;
-import com.twobits.pocketleague.db.tables.TeamMember;
-import com.twobits.pocketleague.db.tables.Venue;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -205,9 +197,9 @@ public class DbSettings extends Fragment_Base {
                     }
 
 	public void clearTables() {
-		DatabaseHelper h = mData.getHelper();
-		h.dropAll();
-		h.createAll();
+//		DatabaseHelper h = mData.getHelper();
+//		h.dropAll();
+//		h.createAll();
 	}
 
     public void clearOtherTables() {
@@ -227,38 +219,38 @@ public class DbSettings extends Fragment_Base {
 
 	public void doPopulateTest() {
 		byte[] emptyImage = new byte[0];
-		Player[] players = {
-				new Player("mike c", "michael", "cannamela", true, false, true,
-						false, 170, 70, emptyImage, getResources().getColor(
-								R.color.SaddleBrown), true),
-				new Player("samu", "erin", "arai", true, false, true, false,
-						160, 50, emptyImage, getResources().getColor(
-								R.color.BlanchedAlmond), false),
-				new Player("king tut", "matt", "tuttle", true, false, true,
-						false, 182, 63, emptyImage, getResources().getColor(
-								R.color.CornflowerBlue), false),
-				new Player("dru", "andrew", "o'brien", true, false, true,
-						false, 182, 63, emptyImage, getResources().getColor(
-								R.color.DarkOrange), false),
-				new Player("murder", "matt", "miguez", true, false, true,
-						false, 182, 63, emptyImage, getResources().getColor(
-								R.color.FireBrick), false),
-				new Player("juice", "julian", "spring", false, true, true,
-						false, 182, 63, emptyImage, getResources().getColor(
-								R.color.Goldenrod), false),
-				new Player("freeeedom", "mike", "freeman", true, false, true,
-						false, 182, 63, emptyImage, getResources().getColor(
-								R.color.HotPink), false),
-				new Player("pilip", "phillip", "anderson", false, true, true,
-						false, 182, 63, emptyImage, getResources().getColor(
-								R.color.Green), true),
-				new Player("sukes appeal", "jon", "sukovich", true, false,
-						true, false, 182, 63, emptyImage, getResources()
-								.getColor(R.color.Khaki), false) };
-
-        Venue v1 = new Venue("Putnam St.", true);
-        Venue v2 = new Venue("Verndale", false);
-        Venue v3 = new Venue("Oxford", true);
+//		Player[] players = {
+//				new Player("mike c", "michael", "cannamela", true, false, true,
+//						false, 170, 70, emptyImage, getResources().getColor(
+//								R.color.SaddleBrown), true),
+//				new Player("samu", "erin", "arai", true, false, true, false,
+//						160, 50, emptyImage, getResources().getColor(
+//								R.color.BlanchedAlmond), false),
+//				new Player("king tut", "matt", "tuttle", true, false, true,
+//						false, 182, 63, emptyImage, getResources().getColor(
+//								R.color.CornflowerBlue), false),
+//				new Player("dru", "andrew", "o'brien", true, false, true,
+//						false, 182, 63, emptyImage, getResources().getColor(
+//								R.color.DarkOrange), false),
+//				new Player("murder", "matt", "miguez", true, false, true,
+//						false, 182, 63, emptyImage, getResources().getColor(
+//								R.color.FireBrick), false),
+//				new Player("juice", "julian", "spring", false, true, true,
+//						false, 182, 63, emptyImage, getResources().getColor(
+//								R.color.Goldenrod), false),
+//				new Player("freeeedom", "mike", "freeman", true, false, true,
+//						false, 182, 63, emptyImage, getResources().getColor(
+//								R.color.HotPink), false),
+//				new Player("pilip", "phillip", "anderson", false, true, true,
+//						false, 182, 63, emptyImage, getResources().getColor(
+//								R.color.Green), true),
+//				new Player("sukes appeal", "jon", "sukovich", true, false,
+//						true, false, 182, 63, emptyImage, getResources()
+//								.getColor(R.color.Khaki), false) };
+//
+//        Venue v1 = new Venue("Putnam St.", true);
+//        Venue v2 = new Venue("Verndale", false);
+//        Venue v3 = new Venue("Oxford", true);
 
 //		Session s1 = new Session("league", GameType.POLISH_HORSESHOES,
 //		GameSubtype.POLISH_SINGLES, SessionType.LEAGUE, 1, Venue);
@@ -266,31 +258,31 @@ public class DbSettings extends Fragment_Base {
 //		Session s2 = new Session("league", GameType.BILLIARDS,
 //		GameSubtype.EIGHTBALL, SessionType.LEAGUE, 1);
 
-		try {
-			Dao<Player, Long> playerDao = mData.getPlayerDao();
-			Dao<Team, Long> teamDao = mData.getTeamDao();
-			Dao<TeamMember, Long> tmDao = mData.getTeamMemberDao();
-			Dao<Session, Long> sDao = mData.getSessionDao();
-			Dao<Venue, Long> venueDao = mData.getVenueDao();
-			for (Player p : players) {
-				playerDao.create(p);
-				Team t = new Team(p.getName(), 1, p.getColor(),
-						p.getIsFavorite());
-				teamDao.create(t);
-				tmDao.create(new TeamMember(t, p));
-			}
-
-//			sessionDao.create(s1);
-//			sessionDao.create(s2);
-
-			venueDao.create(v1);
-			venueDao.create(v2);
-			venueDao.create(v3);
-		} catch (SQLException e) {
-			int duration = Toast.LENGTH_LONG;
-			Toast.makeText(context, e.getMessage(), duration).show();
-			loge("Populate database failed", e);
-		}
+//		try {
+//			Dao<Player, Long> playerDao = mData.getPlayerDao();
+//			Dao<Team, Long> teamDao = mData.getTeamDao();
+//			Dao<OldTeamMember, Long> tmDao = mData.getTeamMemberDao();
+//			Dao<Session, Long> sDao = mData.getSessionDao();
+//			Dao<Venue, Long> venueDao = mData.getVenueDao();
+//			for (Player p : players) {
+//				playerDao.create(p);
+//				Team t = new Team(p.getName(), 1, p.getColor(),
+//						p.getIsFavorite());
+//				teamDao.create(t);
+//				tmDao.create(new OldTeamMember(t, p));
+//			}
+//
+////			sessionDao.create(s1);
+////			sessionDao.create(s2);
+//
+//			venueDao.create(v1);
+//			venueDao.create(v2);
+//			venueDao.create(v3);
+//		} catch (SQLException e) {
+//			int duration = Toast.LENGTH_LONG;
+//			Toast.makeText(context, e.getMessage(), duration).show();
+//			loge("Populate database failed", e);
+//		}
 	}
 
 	// public void updateScores() {
@@ -440,7 +432,8 @@ public class DbSettings extends Fragment_Base {
 	}
 
 	File getInternalPath() {
-		String dbPath = mData.getHelper().getReadableDatabase().getPath();
+        String dbPath = null;
+//		String dbPath = mData.getHelper().getReadableDatabase().getPath();
 //		String dbPath = "/data/data/com.twobits.gametemplate/databases/gametemplate.db";
 
 		return new File(dbPath);

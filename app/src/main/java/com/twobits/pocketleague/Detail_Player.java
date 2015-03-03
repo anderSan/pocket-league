@@ -6,23 +6,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.Fragment_Detail;
-import com.twobits.pocketleague.db.DatabaseCommonQueue;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Team;
 
-import java.sql.SQLException;
-
 public class Detail_Player extends Fragment_Detail {
-	Long pId;
+    String pId;
 	Player p;
 	Team t;
-	Dao<Player, Long> pDao;
-	Dao<Team, Long> tDao;
 
 	TextView tv_playerName;
 	TextView tv_playerId;
@@ -44,11 +37,10 @@ public class Detail_Player extends Fragment_Detail {
         setFavoriteClicked(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pId != -1) {
+                if (pId != null) {
                     boolean is_favorite = ((ToggleButton) v).isChecked();
                     p.setIsFavorite(is_favorite);
-                    t.setIsFavorite(is_favorite);
-                    updatePlayer();
+                    p.update();
                 }
             }
         });
@@ -56,11 +48,10 @@ public class Detail_Player extends Fragment_Detail {
         setActiveClicked(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pId != -1) {
+                if (pId != null) {
                     boolean is_active = ((ToggleButton) v).isChecked();
                     p.setIsActive(is_active);
-                    t.setIsActive(is_active);
-                    updatePlayer();
+                    p.update();
                 }
             }
         });
@@ -68,10 +59,7 @@ public class Detail_Player extends Fragment_Detail {
         rootView = inflater.inflate(R.layout.activity_detail_player, container, false);
 
         Bundle args = getArguments();
-        pId = args.getLong("PID", -1);
-
-        pDao = mData.getPlayerDao();
-        tDao = mData.getTeamDao();
+        pId = args.getString("PID");
 
 		tv_playerName = (TextView) rootView.findViewById(R.id.pDet_name);
 		tv_playerId = (TextView) rootView.findViewById(R.id.pDet_id);
@@ -88,19 +76,13 @@ public class Detail_Player extends Fragment_Detail {
     @Override
 	public void refreshDetails() {
 
-		if (pId != -1) {
-			try {
-				p = pDao.queryForId(pId);
-				t = DatabaseCommonQueue.findPlayerSoloTeam(context, p);
-			} catch (SQLException e) {
-				Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-			}
+		if (pId != null) {
+            p = Player.getFromId(database, pId);
 		}
 
         mNav.setTitle(p.getName(), "Player Details");
 
-		tv_playerName.setText(p.getName() + " (" + p.getFirstName() + ' '
-				+ p.getLastName() + ")");
+		tv_playerName.setText(p.getDisplayName());
 		tv_playerId.setText(String.valueOf(p.getId()));
 		tv_height.setText("Height: " + String.valueOf(p.getHeight()) + " cm");
 		tv_weight.setText("Weight: " + String.valueOf(p.getWeight()) + " kg");
@@ -126,15 +108,5 @@ public class Detail_Player extends Fragment_Detail {
 
 		bar_isFavorite.setChecked(p.getIsFavorite());
 		bar_isActive.setChecked(p.getIsActive());
-	}
-
-	private void updatePlayer() {
-		try {
-			pDao.update(p);
-			tDao.update(t);
-		} catch (SQLException e) {
-			loge("Could not update player", e);
-			e.printStackTrace();
-		}
 	}
 }

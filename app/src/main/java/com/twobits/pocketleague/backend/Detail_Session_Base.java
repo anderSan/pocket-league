@@ -12,23 +12,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.R;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.GameMember;
 import com.twobits.pocketleague.db.tables.Session;
-import com.twobits.pocketleague.db.tables.SessionMember;
 
 import java.sql.SQLException;
 
 public abstract class Detail_Session_Base extends Fragment_Detail {
-	public Long sId;
+	public String sId;
 	public Session s;
-
-	public Dao<Session, Long> sDao;
-	public Dao<SessionMember, Long> smDao;
-    public Dao<Game, Long> gDao;
-	public Dao<GameMember, Long> gmDao;
 
 	public MatchInfo mInfo;
 
@@ -45,29 +38,20 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
         setFavoriteClicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sId != -1) {
+                if (sId != null) {
                     boolean is_favorite = ((ToggleButton) v).isChecked();
                     s.setIsFavorite(is_favorite);
-                    updateSession();
+                    s.update();
                 }
             }
         });
 
         Bundle args = getArguments();
-		sId = args.getLong("SID", -1);
+		sId = args.getString("SID");
 
-		if (sId != -1) {
-			try {
-				sDao = mData.getSessionDao();
-				smDao = mData.getSessionMemberDao();
-                gDao = mData.getGameDao();
-				gmDao = mData.getGameMemberDao();
-
-				s = sDao.queryForId(sId);
-			} catch (SQLException e) {
-				Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-			}
-		}
+		if (sId != null) {
+            s = Session.getFromId(database, sId);
+        }
 
         createSessionLayout(inflater, container);
         setupBarButtons();
@@ -85,13 +69,13 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 	}
 
 	public void refreshBaseDetails() {
-        mNav.setTitle(s.getSessionName(), s.getSessionType().toString());
+        mNav.setTitle(s.getName(), s.getSessionType().toString());
 
 		TextView sName = (TextView) rootView.findViewById(R.id.sDet_name);
 		TextView sId = (TextView) rootView.findViewById(R.id.sDet_id);
 		TextView sessionGameType = (TextView) rootView.findViewById(R.id.sDet_gameType);
 
-		sName.setText(s.getSessionName());
+		sName.setText(s.getName());
 		sId.setText(String.valueOf(s.getId()));
 		sessionGameType.setText(s.getDescriptor().getName());
         bar_isFavorite.setChecked(s.getIsFavorite());
@@ -152,20 +136,20 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 	}
 
 	private void createMatch() {
-		Game g = new Game(s, mInfo.getIdInSession(), s.getCurrentVenue(), false);
-		GameMember t1 = new GameMember(g, mInfo.getTeam1());
-		GameMember t2 = new GameMember(g, mInfo.getTeam2());
-
-		try {
-			gDao.setObjectCache(true);
-			gDao.create(g);
-			gmDao.create(t1);
-			gmDao.create(t2);
-		} catch (SQLException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
-
-		mNav.loadGame(g.getId());
+//		GameMember t1 = new GameMember(g, mInfo.getTeam1());
+//        GameMember t2 = new GameMember(g, mInfo.getTeam2());
+//        Game g = new Game(database, s, mInfo.getIdInSession(), s.getCurrentVenue(database), false);
+//
+//		try {
+//			gDao.setObjectCache(true);
+//			gDao.create(g);
+//			gmDao.create(t1);
+//			gmDao.create(t2);
+//		} catch (SQLException e) {
+//			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+//		}
+//
+//		mNav.loadGame(g.getId());
 
 		// load a game that is in progress
 		// Intent intent = new Intent(v.getContext(), GameInProgress.class);
@@ -182,13 +166,4 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 	private void loadMatch(long game_id) {
 		mNav.loadGame(game_id);
 	}
-
-    private void updateSession() {
-        try {
-            sDao.update(s);
-        } catch (SQLException e) {
-            loge("Could not update session", e);
-            e.printStackTrace();
-        }
-    }
 }

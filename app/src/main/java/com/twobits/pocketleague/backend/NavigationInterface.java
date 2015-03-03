@@ -27,11 +27,11 @@ public interface NavigationInterface {
 
     public void viewVenueDetails(String vId);
 
-    public void modifySession(Long sId);
+    public void modifySession(String sId);
 
-    public void modifyPlayer(Long pId);
+    public void modifyPlayer(String pId);
 
-    public void modifyTeam(Long tId);
+    public void modifyTeam(String tId);
 
-    public void modifyVenue(Long vId);
+    public void modifyVenue(String vId);
 }

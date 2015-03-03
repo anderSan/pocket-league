@@ -144,13 +144,13 @@ public class Modify_Player extends Fragment_Edit {
 			String last_name, boolean lh, boolean rh, boolean lf, boolean rf,
 			int height_cm, int weight_kg, boolean is_favorite) {
 
-		Player newPlayer = new Player(nickname, first_name, last_name, lh, rh,
+		Player newPlayer = new Player(database, nickname, first_name, last_name, lh, rh,
 				lf, rf, height_cm, weight_kg, player_color, is_favorite);
 
         if (newPlayer.exists(database)) {
             Toast.makeText(context, "Player already exists.", Toast.LENGTH_SHORT).show();
         } else {
-            newPlayer.update(database);
+            newPlayer.update();
             Toast.makeText(context, "Player created!", Toast.LENGTH_SHORT).show();
             mNav.onBackPressed();
         }
@@ -172,7 +172,7 @@ public class Modify_Player extends Fragment_Edit {
 		p.setColor(player_color);
 		p.setIsFavorite(is_favorite);
 
-        p.update(database);
+        p.update();
 
         Toast.makeText(context, "Player modified.", Toast.LENGTH_SHORT).show();
         mNav.onBackPressed();

@@ -381,12 +381,12 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
                 .addToBackStack(null).commit();
     }
 
-    public void modifySession(Long sId) {
+    public void modifySession(String sId) {
         Fragment fragment = new Modify_Session();
 
         Bundle args = new Bundle();
         if (sId != null) {
-            args.putLong("SID", sId);
+            args.putString("SID", sId);
         }
         fragment.setArguments(args);
 
@@ -397,12 +397,12 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         ft.commit();
     }
 
-    public void modifyPlayer(Long pId) {
+    public void modifyPlayer(String pId) {
         Fragment fragment = new Modify_Player();
 
         Bundle args = new Bundle();
         if (pId != null) {
-            args.putLong("PID", pId);
+            args.putString("PID", pId);
         }
         fragment.setArguments(args);
 
@@ -413,12 +413,12 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         ft.commit();
     }
 
-    public void modifyTeam(Long tId) {
+    public void modifyTeam(String tId) {
         Fragment fragment = new Modify_Team();
 
         Bundle args = new Bundle();
         if (tId != null) {
-            args.putLong("TID", tId);
+            args.putString("TID", tId);
         }
         fragment.setArguments(args);
 
@@ -429,12 +429,12 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         ft.commit();
     }
 
-    public void modifyVenue(Long vId) {
+    public void modifyVenue(String vId) {
         Fragment fragment = new Modify_Venue();
 
         Bundle args = new Bundle();
         if (vId != null) {
-            args.putLong("VID", vId);
+            args.putString("VID", vId);
         }
         fragment.setArguments(args);
 

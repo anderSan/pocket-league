@@ -13,14 +13,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.j256.ormlite.dao.Dao;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryRow;
 import com.twobits.pocketleague.backend.Fragment_Edit;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Team;
-import com.twobits.pocketleague.db.tables.TeamMember;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Modify_Team extends Fragment_Edit {
@@ -59,12 +61,15 @@ public class Modify_Team extends Fragment_Edit {
         });
 
 		try {
-			players = pDao.queryForAll();
-			playerNames.clear();
-			for (Player p : players) {
-				playerNames.add(p.getName());
-			}
-		} catch (SQLException e) {
+            players.clear();
+            playerNames.clear();
+            QueryEnumerator result = Player.getAll(database, true, false);
+            for (Iterator<QueryRow> it = result; it.hasNext(); ) {
+                QueryRow row = it.next();
+                players.add(Player.getFromId(database, row.getDocumentId()));
+                playerNames.add(Player.getFromId(database, row.getDocumentId()).getName());
+            }
+		} catch (CouchbaseLiteException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 
@@ -122,29 +127,18 @@ public class Modify_Team extends Fragment_Edit {
 	}
 
 	private void createTeam(String team_name, int team_color, boolean is_favorite) {
-		Team newTeam = new Team(team_name, playerIdxList.size(), team_color, is_favorite);
-
         if (playerIdxList.size() == 1) {
-            Toast.makeText(context, "Cannot create a team with one player.",
-                    Toast.LENGTH_SHORT).show();
-        } else if (newTeam.exists(database)) {
-            Toast.makeText(context, "Team already exists.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Cannot create a team with one player.", Toast.LENGTH_SHORT).show();
+//        } else if (newTeam.exists(database)) {
+//            Toast.makeText(context, "Team already exists.", Toast.LENGTH_SHORT).show();
         } else {
-            try {
-                newTeam.update(database);
-                for (Integer playerIdx : playerIdxList) {
-                    Player p = players.get(playerIdx);
-                    TeamMember tm = new TeamMember(newTeam, p);
-                    tmDao.create(tm);
-                }
-                Toast.makeText(context, "Team created!", Toast.LENGTH_SHORT)
-                        .show();
-                mNav.onBackPressed();
-            } catch (SQLException ee) {
-                loge("Could not create team", ee);
-                Toast.makeText(context, "Could not create team.",
-                        Toast.LENGTH_SHORT).show();
+            List<String> player_ids = new ArrayList<>();
+            for (Integer playerIdx : playerIdxList) {
+                player_ids.add(players.get(playerIdx).getId());
             }
+            Team newTeam = new Team(database, team_name, player_ids, team_color, is_favorite);
+            Toast.makeText(context, "Team created!", Toast.LENGTH_SHORT).show();
+            mNav.onBackPressed();
         }
 	}
 
@@ -155,7 +149,7 @@ public class Modify_Team extends Fragment_Edit {
 		t.setIsActive(is_active);
 		t.setIsFavorite(is_favorite);
 
-        t.update(database);
+        t.update();
         Toast.makeText(context, "Team modified.", Toast.LENGTH_SHORT).show();
         mNav.onBackPressed();
 	}

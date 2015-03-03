@@ -72,9 +72,9 @@ public class Modify_Venue extends Fragment_Edit {
 	}
 
 	private void createVenue(String venue_name, boolean is_favorite) {
-		Venue newVenue = new Venue(venue_name, is_favorite);
+		Venue newVenue = new Venue(database, venue_name, is_favorite);
 
-        newVenue.update(database);
+        newVenue.update();
         Toast.makeText(context, "Venue created!", Toast.LENGTH_SHORT).show();
         mNav.onBackPressed();
 	}
@@ -83,7 +83,7 @@ public class Modify_Venue extends Fragment_Edit {
 		v.setName(venue_name);
 		v.setIsFavorite(is_favorite);
 
-        v.update(database);
+        v.update();
         Toast.makeText(context, "Venue modified.", Toast.LENGTH_SHORT).show();
         mNav.onBackPressed();
 	}

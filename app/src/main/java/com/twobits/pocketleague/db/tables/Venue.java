@@ -1,8 +1,18 @@
 package com.twobits.pocketleague.db.tables;
 
+import android.widget.Toast;
+
+import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryRow;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class Venue extends CouchDocumentBase {
@@ -30,6 +40,16 @@ public class Venue extends CouchDocumentBase {
     public static Venue getFromId(Database database, String id) {
         Document document = database.getDocument(id);
         return new Venue(database, document.getProperties());
+    }
+
+    public static QueryEnumerator getAll(Database database, boolean active, boolean only_favorite)
+            throws CouchbaseLiteException {
+        Query query = database.getView("all-venues").createQuery();
+        query.setStartKey(Arrays.asList(active, only_favorite));
+        query.setEndKey(Arrays.asList(active, new HashMap<String, Object>()));
+        QueryEnumerator result = query.run();
+
+        return result;
     }
 
 	public String getName() {

@@ -1,10 +1,14 @@
 package com.twobits.pocketleague.db.tables;
 
+import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryEnumerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +43,16 @@ public class Team extends CouchDocumentBase {
     public static Team getFromId(Database database, String id) {
         Document document = database.getDocument(id);
         return new Team(database, document.getProperties());
+    }
+
+    public static QueryEnumerator getAll(Database database, boolean active, boolean only_favorite)
+            throws CouchbaseLiteException {
+        Query query = database.getView("all-teams").createQuery();
+        query.setStartKey(Arrays.asList(active, only_favorite));
+        query.setEndKey(Arrays.asList(active, new HashMap<String, Object>()));
+        QueryEnumerator result = query.run();
+
+        return result;
     }
 
 	public String getName() {

@@ -14,6 +14,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryRow;
 import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.Fragment_Edit;
 import com.twobits.pocketleague.backend.SpinnerAdapter;
@@ -29,6 +33,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class Modify_Session extends Fragment_Edit {
@@ -92,25 +97,32 @@ public class Modify_Session extends Fragment_Edit {
 		sp_ruleSet.setAdapter(rsAdapter);
 
 		try {
-			List<Venue> venues = vDao.queryForAll();
-			List<String> venueNames = new ArrayList<>();
-			for (Venue v : venues) {
-				venueNames.add(v.getName());
-			}
+            List<Venue> venues = new ArrayList<>();
+            List<String> venueNames = new ArrayList<>();
+            QueryEnumerator result = Venue.getAll(database, true, false);
+            for (Iterator<QueryRow> it = result; it.hasNext(); ) {
+                QueryRow row = it.next();
+                venues.add(Venue.getFromId(database, row.getDocumentId()));
+                venueNames.add(Venue.getFromId(database, row.getDocumentId()).getName());
+            }
+
 			ArrayAdapter<String> vAdapter = new SpinnerAdapter(context,
 					android.R.layout.simple_spinner_dropdown_item, venueNames, venues);
 			sp_venues.setAdapter(vAdapter);
-		} catch (SQLException e) {
+		} catch (CouchbaseLiteException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 
 		try {
-			teams = tDao.queryForAll();
-			teamNames.clear();
-			for (Team t : teams) {
-				teamNames.add(t.getTeamName());
-			}
-		} catch (SQLException e) {
+            teams.clear();
+            teamNames.clear();
+            QueryEnumerator result = Team.getAll(database, true, false);
+            for (Iterator<QueryRow> it = result; it.hasNext(); ) {
+                QueryRow row = it.next();
+                teams.add(Team.getFromId(database, row.getDocumentId()));
+                teamNames.add(Team.getFromId(database, row.getDocumentId()).getName());
+            }
+		} catch (CouchbaseLiteException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 
@@ -179,8 +191,8 @@ public class Modify_Session extends Fragment_Edit {
 	private void createSession(String session_name, GameSubtype game_subtype,
 			SessionType session_type, Venue current_venue, boolean is_favorite) {
 		int team_size = teamIdxList.size();
-		Session newSession = new Session(session_name, session_type, game_subtype, team_size,
-                current_venue);
+		Session newSession = new Session(database, session_name, session_type, game_subtype,
+                team_size, current_venue);
 		newSession.setIsFavorite(is_favorite);
 
 		List<Team> roster = new ArrayList<>();
@@ -189,21 +201,21 @@ public class Modify_Session extends Fragment_Edit {
 		}
 		roster = seedRoster(roster);
 
-		try {
-			newSession.update(database);
-			int seed = 0;
-			for (Team t : roster) {
-				SessionMember sm = new SessionMember(newSession, t, seed);
-				smDao.create(sm);
-				seed++;
-			}
-			Toast.makeText(context, "Session created!", Toast.LENGTH_SHORT).show();
-			mNav.onBackPressed();
-		} catch (SQLException e) {
-			loge("Could not create session", e);
-			Toast.makeText(context, "Could not create session.",
-					Toast.LENGTH_SHORT).show();
-		}
+//		try {
+//			newSession.update();
+//			int seed = 0;
+//			for (Team t : roster) {
+//				SessionMember sm = new SessionMember(newSession, t, seed);
+//				smDao.create(sm);
+//				seed++;
+//			}
+//			Toast.makeText(context, "Session created!", Toast.LENGTH_SHORT).show();
+//			mNav.onBackPressed();
+//		} catch (SQLException e) {
+//			loge("Could not create session", e);
+//			Toast.makeText(context, "Could not create session.",
+//					Toast.LENGTH_SHORT).show();
+//		}
 	}
 
 	private void modifySession(String session_name, Venue current_venue, boolean is_favorite) {
@@ -211,7 +223,7 @@ public class Modify_Session extends Fragment_Edit {
 		s.setCurrentVenue(current_venue);
 		s.setIsFavorite(is_favorite);
 
-        s.update(database);
+        s.update();
         Toast.makeText(context, "Session modified.", Toast.LENGTH_SHORT).show();
         mNav.onBackPressed();
 	}
