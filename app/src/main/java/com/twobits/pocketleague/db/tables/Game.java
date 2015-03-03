@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Game extends CouchDocumentBase {
-    static final String TYPE = "game";
+    public static final String TYPE = "game";
 	public static final String ID_IN_SESSION = "id_in_session";
 	public static final String SESSION = "session_id";
 	public static final String VENUE = "venue_id";

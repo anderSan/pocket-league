@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Session extends CouchDocumentBase {
-    static final String TYPE = "session";
+    public static final String TYPE = "session";
 	public static final String NAME = "session_name";
     public static final String SESSION_TYPE = "session_type";
     public static final String GAME_TYPE = "game_type";

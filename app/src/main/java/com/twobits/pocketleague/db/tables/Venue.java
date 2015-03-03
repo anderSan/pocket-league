@@ -6,7 +6,7 @@ import com.couchbase.lite.Document;
 import java.util.Map;
 
 public class Venue extends CouchDocumentBase {
-    static final String TYPE = "venue";
+    public static final String TYPE = "venue";
 	public static final String NAME = "venue_name";
 	public static final String LATITUDE = "latitude";
 	public static final String LONGITUDE = "longitude";

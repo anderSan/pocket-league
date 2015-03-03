@@ -6,6 +6,7 @@ import com.couchbase.lite.Document;
 import java.util.Map;
 
 public class Player extends CouchDocumentBase { //implements Comparable<Player> {
+    public static final String TYPE = "player";
     public static final String NAME = "nickname";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";

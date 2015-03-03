@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Team extends CouchDocumentBase {
-    static final String TYPE = "team";
+    public static final String TYPE = "team";
 	public static final String NAME = "team_name";
     public static final String MEMBERS = "member_ids";
 	public static final String COLOR = "color";
