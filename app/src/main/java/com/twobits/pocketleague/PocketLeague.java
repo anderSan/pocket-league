@@ -282,7 +282,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         f.refreshDetails();
     }
 
-    public void loadGame(Long gId) {
+    public void loadGame(String gId) {
         Game g = null;
 
 //        try {
@@ -310,7 +310,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
                 }
                 ft.addToBackStack(null);
 
-                DialogFragment newFragment = Quick_Game.newInstance(gId);
+                DialogFragment newFragment = Quick_Game.newInstance(database, gId);
                 newFragment.show(ft, "dialog");
             }
         }

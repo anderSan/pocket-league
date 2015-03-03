@@ -58,7 +58,7 @@ public class Bracket {
 		for (SessionMember sm : sMembers) {
 			seed = sm.getSeed();
 			if (seed >= 0 && !smSeedMap.containsKey(seed)) {
-				smIdMap.put(sm.getTeam().getId(), seed);
+//				smIdMap.put(sm.getTeam().getId(), seed);
 				smSeedMap.put(seed, sm);
 			}
 		}
@@ -345,7 +345,7 @@ public class Bracket {
 			if (smType == BrNodeType.TIP) {
 				sm = smSeedMap.get(sm1Idcs.get(idx));
 				tv.setText("(" + String.valueOf(sm.getSeed() + 1) + ") "
-						+ sm.getTeam().getTeamName());
+						+ sm.getTeam().getName());
 				drwStr += "_labeled";
 				drwColor = sm.getTeam().getColor();
 			} else if (smType == BrNodeType.RESPAWN) {
@@ -362,7 +362,7 @@ public class Bracket {
 			if (smType == BrNodeType.TIP) {
 				sm = smSeedMap.get(sm2Idcs.get(idx));
 				tv.setText("(" + String.valueOf(sm.getSeed() + 1) + ") "
-						+ sm.getTeam().getTeamName());
+						+ sm.getTeam().getName());
 				drwStr += "_labeled";
 				drwColor = sm.getTeam().getColor();
 			} else if (smType == BrNodeType.RESPAWN) {
@@ -445,7 +445,7 @@ public class Bracket {
 				if (sm1Types.get(idx) != BrNodeType.RESPAWN) {
 					SessionMember sm = smSeedMap.get(sm1Idcs.get(idx));
 					String nickname = "(" + String.valueOf(sm.getSeed() + 1)
-					+ ") " + sm.getTeam().getTeamName();
+					+ ") " + sm.getTeam().getName();
 					tv.setText(nickname);
 				}
 				drwString += "_labeled";
@@ -483,7 +483,7 @@ public class Bracket {
 						SessionMember sm = smSeedMap.get(sm2Idcs.get(idx));
 						String nickname = "("
 						+ String.valueOf(sm.getSeed() + 1) + ") "
-						+ sm.getTeam().getTeamName();
+						+ sm.getTeam().getName();
 						tv.setText(nickname);
 					}
 					drwString += "_labeled";
@@ -773,8 +773,8 @@ public class Bracket {
 	}
 
 	public List<Game> matchMatches(List<Game> sGames) {
-		long gId;
-		long gsId;
+		String gId;
+		String gsId;
 		int smASeed;
 		int smBSeed;
 
@@ -782,15 +782,15 @@ public class Bracket {
 		while (gIt.hasNext()) {
 			Game g = gIt.next();
 			gId = g.getId();
-			gsId = g.getIdInSession();
+//			gsId = g.getIdInSession();
 			// Log.i(LOGTAG, "Game " + gId + ". "
 			// + g.getFirstPlayer().getFirstName() + " vs "
 			// + g.getSecondPlayer().getFirstName());
 
 			List<GameMember> gMembers = new ArrayList<>();
-			for (GameMember gm : g.getGameMembers()) {
-				gMembers.add(gm);
-			}
+//			for (GameMember gm : g.getMembers()) {
+//				gMembers.add(gm);
+//			}
 			smASeed = smIdMap.get(gMembers.get(0).getTeam().getId());
 			smBSeed = smIdMap.get(gMembers.get(1).getTeam().getId());
 
@@ -803,17 +803,17 @@ public class Bracket {
 							&& gameIds.get(idx) == -1) {
 						Log.i(LOGTAG, "Matching game " + gId + " to match "
 								+ matchIds.get(idx));
-						gameIds.set(idx, gId);
+//						gameIds.set(idx, gId);
 						gIt.remove();
 						break;
 					}
 				}
 			}
 
-			if (g.getIsComplete() && gameIds.contains(gId)) {
-				smASeed = smIdMap.get(g.getWinner().getId());
-				promoteWinner(gameIds.indexOf(g.getId()), smASeed);
-			}
+//			if (g.getIsComplete() && gameIds.contains(gId)) {
+//				smASeed = smIdMap.get(g.getWinner().getId());
+//				promoteWinner(gameIds.indexOf(g.getId()), smASeed);
+//			}
 		}
 		return sGames;
 	}
@@ -900,7 +900,7 @@ public class Bracket {
 		if (matchIds.contains(matchId)) {
 			int idx = matchIds.indexOf(matchId);
 			long game_id = gameIds.get(idx);
-			mInfo.setGameId(game_id);
+//			mInfo.setGameId(game_id);
 
 			BrNodeType sm1Type = sm1Types.get(idx);
 			BrNodeType sm2Type = sm2Types.get(idx);
@@ -920,8 +920,7 @@ public class Bracket {
 			if (sm1Type == BrNodeType.UNSET || sm1Type == BrNodeType.RESPAWN) {
 				title += "Unknown";
 			} else {
-				title += smSeedMap.get(sm1Idcs.get(idx)).getTeam()
-						.getTeamName();
+				title += smSeedMap.get(sm1Idcs.get(idx)).getTeam().getName();
 				if (sm1Type == BrNodeType.WIN) {
 					title += " (W)";
 				} else if (sm1Type == BrNodeType.LOSS) {
@@ -936,8 +935,7 @@ public class Bracket {
 				title += ", bracket winner.";
 			} else {
 				title += " -vs- "
-						+ smSeedMap.get(sm2Idcs.get(idx)).getTeam()
-								.getTeamName();
+						+ smSeedMap.get(sm2Idcs.get(idx)).getTeam().getName();
 				if (sm2Type == BrNodeType.WIN) {
 					title += " (W)";
 				} else if (sm2Type == BrNodeType.LOSS) {

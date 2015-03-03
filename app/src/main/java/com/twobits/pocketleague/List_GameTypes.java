@@ -60,7 +60,7 @@ public class List_GameTypes extends Fragment_TopList {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			GameType gt = (GameType) view.getTag();
-			mData.setCurrentGameType(gt);
+//			mData.setCurrentGameType(gt);
 			mNav.viewSessions();
 		}
 	};

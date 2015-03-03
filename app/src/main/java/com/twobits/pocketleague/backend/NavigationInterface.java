@@ -13,7 +13,7 @@ public interface NavigationInterface {
 
     public void refreshFragment();
 
-	public void loadGame(Long gId);
+	public void loadGame(String gId);
 
     public void viewGameTypes();
 

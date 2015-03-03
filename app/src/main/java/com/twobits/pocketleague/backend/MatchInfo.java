@@ -4,7 +4,7 @@ import com.twobits.pocketleague.db.tables.Team;
 
 public class MatchInfo {
 	private long id_in_session = -1;
-	private long game_id = -1;
+	private String game_id;
 	private Team team1;
 	private Team team2;
 	public String title = "";
@@ -16,7 +16,7 @@ public class MatchInfo {
 		this.id_in_session = id_in_session;
 	}
 
-	MatchInfo(long id_in_session, long game_id, Team team1, Team team2) {
+	MatchInfo(long id_in_session, String game_id, Team team1, Team team2) {
 		this.id_in_session = id_in_session;
 		this.game_id = game_id;
 		this.team1 = team1;
@@ -31,15 +31,15 @@ public class MatchInfo {
 		this.id_in_session = id_in_session;
 	}
 
-	public long getGameId() {
+	public String getGameId() {
 		return game_id;
 	}
 
-	public void setGameId(long game_id) {
+	public void setGameId(String game_id) {
 		this.game_id = game_id;
-		if (game_id > 0) {
+//		if (game_id > 0) {
 			this.viewable = true;
-		}
+//		}
 	}
 
 	public Team getTeam1() {
@@ -48,7 +48,7 @@ public class MatchInfo {
 
 	public void setTeam1(Team team1) {
 		this.team1 = team1;
-		if (team1 != null && team2 != null && game_id < 1) {
+		if (team1 != null && team2 != null && game_id != null) {
 			this.creatable = true;
 		}
 	}
@@ -59,7 +59,7 @@ public class MatchInfo {
 
 	public void setTeam2(Team team2) {
 		this.team2 = team2;
-		if (team1 != null && team2 != null && game_id < 1) {
+		if (team1 != null && team2 != null && game_id != null) {
 			this.creatable = true;
 		}
 	}

@@ -147,10 +147,6 @@ public class New_Game extends Fragment_Base {
 
 	public void refreshSpinners() {
 		try {
-			pDao = Player.getDao(context);
-			sDao = Session.getDao(context);
-			vDao = Venue.getDao(context);
-
 			if (intent.hasExtra("p1") && intent.hasExtra("p2")) {
 				spinner_p1.setEnabled(false);
 				spinner_p2.setEnabled(false);
@@ -189,7 +185,7 @@ public class New_Game extends Fragment_Base {
 		}
 		for (Session s : sessions) {
 			session_names.add(String.valueOf(s.getId()) + " "
-					+ s.getSessionName());
+					+ s.getName());
 		}
 		for (Venue v : venues) {
 			venue_names.add(String.valueOf(v.getId()) + " " + v.getName());

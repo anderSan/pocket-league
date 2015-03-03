@@ -36,17 +36,6 @@ public class GameMember implements Comparable<GameMember> {
         this.team = team;
     }
 
-    public static Dao<GameMember, Long> getDao(Context context) {
-        DatabaseHelper helper = new DatabaseHelper(context);
-        Dao<GameMember, Long> d = null;
-        try {
-            d = helper.getGameMemberDao();
-        } catch (SQLException e) {
-            throw new RuntimeException("Could not get game member dao: ", e);
-        }
-        return d;
-    }
-
     public long getId() {
         return id;
     }

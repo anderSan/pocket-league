@@ -163,7 +163,7 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 		// startActivity(intent);
 	}
 
-	private void loadMatch(long game_id) {
+	private void loadMatch(String game_id) {
 		mNav.loadGame(game_id);
 	}
 }

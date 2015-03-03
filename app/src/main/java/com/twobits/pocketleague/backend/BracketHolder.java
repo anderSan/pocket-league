@@ -30,35 +30,21 @@ public class BracketHolder implements View.OnClickListener {
 	private Bracket lBr; // losers bracket
 	private Bracket fBr; // finals bracket
 
-	Dao<Session, Long> sDao;
-	Dao<SessionMember, Long> smDao;
-	Dao<Team, Long> tDao;
-	Dao<Game, Long> gDao;
-
 	public BracketHolder(ScrollView sv, Session s, Boolean isDoubleElim) {
 		super();
 		this.context = sv.getContext();
 		this.s = s;
 		this.isDoubleElim = isDoubleElim;
 
-		try {
-			sDao = Session.getDao(context);
-			smDao = SessionMember.getDao(context);
-			tDao = Team.getDao(context);
-			gDao = Game.getDao(context);
-
+//		try {
 			// get all the session members
-			QueryBuilder<Session, Long> sQue = sDao.queryBuilder();
-			sQue.where().eq("id", s.getId());
-			QueryBuilder<SessionMember, Long> smQue = smDao.queryBuilder();
-			sMembers = smQue.join(sQue).orderBy(SessionMember.TEAM_SEED, true)
-					.query();
-			for (SessionMember member : sMembers) {
-				tDao.refresh(member.getTeam());
-			}
-		} catch (SQLException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+//			QueryBuilder<Session, Long> sQue = sDao.queryBuilder();
+//			sQue.where().eq("id", s.getId());
+//			QueryBuilder<SessionMember, Long> smQue = smDao.queryBuilder();
+//			sMembers = smQue.join(sQue).orderBy(SessionMember.TEAM_SEED, true).query();
+//		} catch (SQLException e) {
+//			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+//		}
 
 		rl = new RelativeLayout(context);
 
@@ -89,17 +75,13 @@ public class BracketHolder implements View.OnClickListener {
 	public void refreshBrackets() {
 		// get all the completed games for the session
 		List<Game> sGamesList = new ArrayList<>();
-		try {
-			Log.i(LOGTAG, "session id is " + s.getId());
-			sGamesList = gDao.queryBuilder().orderBy(Game.ID_IN_SESSION, true)
-					.where().eq(Game.SESSION, s.getId()).query();
-			for (Game g : sGamesList) {
-				gDao.refresh(g);
-                sDao.refresh(g.getSession());
-			}
-		} catch (SQLException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+//		try {
+//			Log.i(LOGTAG, "session id is " + s.getId());
+//			sGamesList = gDao.queryBuilder().orderBy(Game.ID_IN_SESSION, true)
+//					.where().eq(Game.SESSION, s.getId()).query();
+//		} catch (SQLException e) {
+//			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+//		}
 
 		sGamesList = wBr.matchMatches(sGamesList);
 		wBr.refreshViews();

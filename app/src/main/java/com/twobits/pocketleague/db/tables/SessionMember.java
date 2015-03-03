@@ -58,17 +58,6 @@ public class SessionMember {
 		this.team_rank = team_rank;
 	}
 
-	public static Dao<SessionMember, Long> getDao(Context context) {
-		DatabaseHelper helper = new DatabaseHelper(context);
-		Dao<SessionMember, Long> d = null;
-		try {
-			d = helper.getSessionMemberDao();
-		} catch (SQLException e) {
-			throw new RuntimeException("Could not get session member dao: ", e);
-		}
-		return d;
-	}
-
 	public Session getSessionId() {
 		return session;
 	}

@@ -9,7 +9,7 @@ public class Item_QuickGame {
 
     public Item_QuickGame(GameMember gm) {
         this.gm = gm;
-        this.name = gm.getTeam().getTeamName();
+        this.name = gm.getTeam().getName();
         this.score = gm.getScore();
     }
 

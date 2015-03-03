@@ -8,6 +8,7 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.widget.Toast;
 
+import com.couchbase.lite.Database;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.twobits.pocketleague.db.tables.Game;
@@ -21,11 +22,7 @@ import java.util.List;
 
 public class DbProvider extends ContentProvider {
     private DatabaseHelper dbhelper;
-    private RuntimeExceptionDao<Game, Long> gDao;
-    private RuntimeExceptionDao<GameMember, Long> gmDao;
-    private RuntimeExceptionDao<Session, Long> sDao;
-    private RuntimeExceptionDao<Team, Long> tDao;
-    private RuntimeExceptionDao<Venue, Long> vDao;
+    Database database;
 
     private static final String AUTHORITY = DbUris.AUTHORITY;
     public static final int ROUTE_GAME = 1;
@@ -39,18 +36,16 @@ public class DbProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        dbhelper = OpenHelperManager.getHelper(getContext(), DatabaseHelper.class);
-        gDao = dbhelper.getRuntimeExceptionDao(Game.class);
-        gmDao = dbhelper.getRuntimeExceptionDao(GameMember.class);
-        sDao = dbhelper.getRuntimeExceptionDao(Session.class);
-        tDao = dbhelper.getRuntimeExceptionDao(Team.class);
-        vDao = dbhelper.getRuntimeExceptionDao(Venue.class);
+        if (dbhelper == null) {
+            dbhelper = new DatabaseHelper(getContext());
+            database = dbhelper.getDatabase();
+        }
         return true;
     }
 
     @Override
     public Cursor query(Uri uri, String[] arg1, String arg2, String[] arg3, String arg4) {
-        long id = Long.valueOf(uri.getLastPathSegment());
+        String id = uri.getLastPathSegment();
         String[] columnNames;
         MatrixCursor cursor = null;
 
@@ -61,30 +56,27 @@ public class DbProvider extends ContentProvider {
                 columnNames = new String[]{"id", "ruleset_id", "session_name", "venue_name",
                         "date_played"};
                 cursor = new MatrixCursor(columnNames);
-                Game g = gDao.queryForId(id);
-                sDao.refresh(g.getSession());
-                vDao.refresh(g.getVenue());
+                Game g = Game.getFromId(database, id);
 
                 cursor.addRow(new Object[]{g.getId(), g.getSession().getGameSubtype(),
-                        g.getSession().getSessionName(), g.getVenue().getName(), g.getDatePlayed()
+                        g.getSession().getName(), g.getVenue().getName(), g.getDatePlayed()
                         });
                 break;
             case ROUTE_GAME_MEMBER:
                 // Return values for each game member in game given by id.
                 columnNames = new String[] {"id", "team_id", "team_name"};
                 cursor = new MatrixCursor(columnNames);
-                try {
-                    List<GameMember> game_members =
-                            gmDao.queryBuilder().where().eq(GameMember.GAME, id).query();
+//                try {
+//                    List<GameMember> game_members =
+//                            gmDao.queryBuilder().where().eq(GameMember.GAME, id).query();
 
-                    for (GameMember gm : game_members) {
-                        tDao.refresh(gm.getTeam());
-                        cursor.addRow(new Object[]{gm.getId(), gm.getTeam().getId(),
-                                gm.getTeam().getTeamName()});
-                    }
-                } catch (SQLException e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
+//                    for (GameMember gm : game_members) {
+//                        cursor.addRow(new Object[]{gm.getId(), gm.getTeam().getId(),
+//                                gm.getTeam().getName()});
+//                    }
+//                } catch (SQLException e) {
+//                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+//                }
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -96,21 +88,19 @@ public class DbProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String arg2, String[] arg3) {
-        long id = Long.valueOf(uri.getLastPathSegment());
+        String id = uri.getLastPathSegment();
 
         int uriMatch = sUriMatcher.match(uri);
         switch (uriMatch) {
             case ROUTE_GAME:
                 // Update values for the game given by id.
-                Game g = gDao.queryForId(id);
+                Game g = Game.getFromId(database, id);
                 g.setIsComplete(values.getAsBoolean("is_complete"));
-                gDao.update(g);
                 break;
             case ROUTE_GAME_MEMBER:
                 // Update values for the game member given by id.
-                GameMember gm = gmDao.queryForId(id);
-                gm.setScore(values.getAsInteger("score"));
-                gmDao.update(gm);
+//                GameMember gm = gmDao.queryForId(id);
+//                gm.setScore(values.getAsInteger("score"));
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

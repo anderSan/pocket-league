@@ -45,13 +45,13 @@ public class Detail_Session_Elimination extends Detail_Session_Base {
 		super.onPause();
 
 		// TODO: move this to bracket.java
-		try {
-			for (SessionMember sm : bracketHolder.sMembers) {
-				smDao.update(sm);
-			}
-		} catch (SQLException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+//		try {
+//			for (SessionMember sm : bracketHolder.sMembers) {
+//				smDao.update(sm);
+//			}
+//		} catch (SQLException e) {
+//			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+//		}
 	}
 
     @Override
