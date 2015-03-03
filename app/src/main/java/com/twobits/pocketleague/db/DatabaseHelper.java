@@ -6,10 +6,15 @@ import android.util.Log;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
+import com.couchbase.lite.Emitter;
 import com.couchbase.lite.Manager;
+import com.couchbase.lite.Mapper;
 import com.couchbase.lite.android.AndroidContext;
+import com.twobits.pocketleague.db.tables.Player;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class DatabaseHelper {
@@ -18,7 +23,6 @@ public class DatabaseHelper {
 	private static final int DATABASE_VERSION = 1;
     Manager manager;
     Database database = null;
-
 	private Context context;
 
 	public DatabaseHelper(Context context) {
@@ -39,11 +43,31 @@ public class DatabaseHelper {
             try {
                 database = manager.getDatabase(DATABASE_NAME);
                 logd ("Database created");
+                createCouchViews();
             } catch (CouchbaseLiteException e) {
                 loge("Cannot get database", e);
             }
         }
 	}
+
+    public void createCouchViews() {
+        com.couchbase.lite.View cViewAllPlayers =
+                database.getView(String.format("%s/%s", "pocketleague-views", "all-players"));
+
+        cViewAllPlayers.setMap(new Mapper() {
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter) {
+                Object type = document.get("type");
+                if (type == Player.TYPE) {
+                    List<Object> keys = new ArrayList<>();
+                    keys.add(document.get(Player.IS_ACTIVE));
+                    keys.add(document.get(Player.IS_FAVORITE));
+                    keys.add(document.get(Player.NAME));
+                    emitter.emit(keys, null);
+                }
+            }
+        }, "1.0");
+    }
 
     public Database getDatabase() {
         return database;

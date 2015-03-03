@@ -343,11 +343,11 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         ft.commit();
     }
 
-    public void viewPlayerDetails(Long pId) {
+    public void viewPlayerDetails(String pId) {
         Fragment fragment = new Detail_Player();
 
         Bundle args = new Bundle();
-        args.putLong("PID", pId);
+        args.putString("PID", pId);
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();

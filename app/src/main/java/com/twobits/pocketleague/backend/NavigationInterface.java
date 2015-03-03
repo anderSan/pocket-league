@@ -21,7 +21,7 @@ public interface NavigationInterface {
 
     public void viewSessionDetails(Long sId, SessionType session_type);
 
-    public void viewPlayerDetails(Long pId);
+    public void viewPlayerDetails(String pId);
 
     public void viewTeamDetails(Long tId);
 
