@@ -3,19 +3,19 @@ package com.twobits.pocketleague.backend;
 import com.twobits.pocketleague.enums.SessionType;
 
 public class Item_Session {
-	private long sId;
+	private String sId;
 	private String name;
     private SessionType session_type;
     private boolean is_favorite;
 
-    public Item_Session(long sId, String name, SessionType session_type, boolean is_favorite){
+    public Item_Session(String sId, String name, SessionType session_type, boolean is_favorite){
         this.sId = sId;
         this.name = name;
         this.session_type = session_type;
         this.is_favorite = is_favorite;
     }
 
-	public long getId() {
+	public String getId() {
 		return sId;
 	}
 

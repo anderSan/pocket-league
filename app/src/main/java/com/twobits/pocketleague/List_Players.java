@@ -18,7 +18,6 @@ import com.twobits.pocketleague.backend.Item_Player;
 import com.twobits.pocketleague.backend.ListAdapter_Player;
 import com.twobits.pocketleague.db.tables.Player;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -64,8 +63,6 @@ public class List_Players extends Fragment_TopList {
             player_adapter.add(new Item_Player(p.getId(), p.getFullName(), p.getName(),
                     p.getColor(), p.getIsFavorite()));
         }
-
-//		player_adapter.notifyDataSetChanged(); // required in case the list has changed
     }
 
     private AdapterView.OnItemClickListener lvItemClicked = new AdapterView.OnItemClickListener() {
@@ -91,8 +88,7 @@ public class List_Players extends Fragment_TopList {
         try {
             Query query = database.getView("all-players").createQuery();
             query.setStartKey(Arrays.asList(show_actives, show_favorites));
-            query.setEndKey(Arrays.asList(show_actives, new HashMap<String, Object>(),
-                    new HashMap<String, Object>()));
+            query.setEndKey(Arrays.asList(show_actives, new HashMap<String, Object>()));
             QueryEnumerator result = query.run();
 
             for (Iterator<QueryRow> it = result; it.hasNext(); ) {

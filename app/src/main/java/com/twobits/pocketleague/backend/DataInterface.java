@@ -1,6 +1,7 @@
 package com.twobits.pocketleague.backend;
 
 import com.couchbase.lite.Database;
+import com.twobits.pocketleague.gameslibrary.GameSubtype;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
 public interface DataInterface {
@@ -12,5 +13,7 @@ public interface DataInterface {
 
     public GameType getCurrentGameType();
 
-    public void setCurrentGameType(GameType gametype);
+    public GameSubtype getCurrentGameSubtype();
+
+    public void setCurrentGameSubtype(GameSubtype gamesubtype);
 }

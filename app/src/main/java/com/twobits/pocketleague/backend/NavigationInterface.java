@@ -19,7 +19,7 @@ public interface NavigationInterface {
 
 	public void viewSessions();
 
-    public void viewSessionDetails(Long sId, SessionType session_type);
+    public void viewSessionDetails(String sId, SessionType session_type);
 
     public void viewPlayerDetails(String pId);
 

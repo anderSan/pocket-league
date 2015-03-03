@@ -324,7 +324,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         selectItem(2, "Games");
     }
 
-    public void viewSessionDetails(Long sId, SessionType session_type) {
+    public void viewSessionDetails(String sId, SessionType session_type) {
         Fragment fragment = null;
         try {
             fragment = (Fragment) session_type.toClass().newInstance();
@@ -333,7 +333,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         }
 
         Bundle args = new Bundle();
-        args.putLong("SID", sId);
+        args.putString("SID", sId);
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();

@@ -9,6 +9,7 @@ import android.util.Log;
 import com.couchbase.lite.Database;
 import com.twobits.pocketleague.backend.DataInterface;
 import com.twobits.pocketleague.db.DatabaseHelper;
+import com.twobits.pocketleague.gameslibrary.GameSubtype;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
 public abstract class DataInterfaceActivity extends ActionBarActivity implements DataInterface {
@@ -58,11 +59,15 @@ public abstract class DataInterfaceActivity extends ActionBarActivity implements
     }
 
     public GameType getCurrentGameType() {
-        return GameType.valueOf(getPreference("currentGameType", GameType.UNDEFINED.name()));
+        return getCurrentGameSubtype().toGameType();
     }
 
-    public void setCurrentGameType(GameType gametype) {
-        setPreference("currentGameType", gametype.name());
+    public GameSubtype getCurrentGameSubtype() {
+        return GameSubtype.valueOf(getPreference("currentGameSubtype", GameSubtype.UNDEFINED.name()));
+    }
+
+    public void setCurrentGameSubtype(GameSubtype gamesubtype) {
+        setPreference("currentGameSubtype", gamesubtype.name());
     }
 
     public void log(String msg) {

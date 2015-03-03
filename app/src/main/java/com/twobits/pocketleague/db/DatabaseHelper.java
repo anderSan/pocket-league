@@ -11,6 +11,7 @@ import com.couchbase.lite.Manager;
 import com.couchbase.lite.Mapper;
 import com.couchbase.lite.android.AndroidContext;
 import com.twobits.pocketleague.db.tables.Player;
+import com.twobits.pocketleague.db.tables.Session;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,7 +63,23 @@ public class DatabaseHelper {
                     List<Object> keys = new ArrayList<>();
                     keys.add(document.get(Player.IS_ACTIVE));
                     keys.add(document.get(Player.IS_FAVORITE));
-                    keys.add(document.get(Player.NAME));
+                    emitter.emit(keys, null);
+                }
+            }
+        }, "1.0");
+
+        com.couchbase.lite.View cViewAllSessions =
+                database.getView(String.format("%s/%s", "pocketleague-views", "all-sessions"));
+
+        cViewAllPlayers.setMap(new Mapper() {
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter) {
+                Object type = document.get("type");
+                if (type == Session.TYPE) {
+                    List<Object> keys = new ArrayList<>();
+                    keys.add(document.get(Session.GAME_SUBTYPE));
+                    keys.add(document.get(Session.IS_ACTIVE));
+                    keys.add(document.get(Session.IS_FAVORITE));
                     emitter.emit(keys, null);
                 }
             }
