@@ -86,7 +86,7 @@ public class List_Sessions extends Fragment_TopList {
     };
 
     private List<Session> getSessions() {
-        List<Session> sessions = null;
+        List<Session> sessions = new ArrayList<>();
         try {
             Query query = database.getView("all-sessions").createQuery();
             query.setStartKey(Arrays.asList(mData.getCurrentGameSubtype(), show_actives,
@@ -103,6 +103,7 @@ public class List_Sessions extends Fragment_TopList {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             loge("Retrieval of sessions failed. ", e);
         }
+
         return sessions;
     }
 }

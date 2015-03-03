@@ -22,8 +22,8 @@ import java.util.Map;
 
 public class DatabaseHelper {
     protected String LOGTAG = getClass().getSimpleName();
-	private static final String DATABASE_NAME = "pocketleague.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final String DATABASE_NAME = "pocketleague";
+	private static final String DATABASE_VERSION = "1";
     Manager manager;
     Database database = null;
 	private Context context;
@@ -34,9 +34,9 @@ public class DatabaseHelper {
 
         try {
             manager = new Manager(new AndroidContext(this.context), Manager.DEFAULT_OPTIONS);
-            logd("Manager created");
+            logd("Manager created.");
         } catch (IOException e) {
-            loge("Cannot create manager object", e);
+            loge("Cannot create manager object: ", e);
             return;
         }
 
@@ -45,39 +45,35 @@ public class DatabaseHelper {
         } else {
             try {
                 database = manager.getDatabase(DATABASE_NAME);
-                logd ("Database created");
+                logd ("Database created.");
                 createCouchViews();
             } catch (CouchbaseLiteException e) {
-                loge("Cannot get database", e);
+                loge("Cannot get database: ", e);
             }
         }
 	}
 
     public void createCouchViews() {
-        com.couchbase.lite.View cViewAllPlayers =
-                database.getView(String.format("%s/%s", "pocketleague-views", "all-players"));
-
+        com.couchbase.lite.View cViewAllPlayers = database.getView("all-players");
         cViewAllPlayers.setMap(new Mapper() {
             @Override
             public void map(Map<String, Object> document, Emitter emitter) {
-                Object type = document.get("type");
-                if (type == Player.TYPE) {
+                String type = (String) document.get("type");
+                if (type.equals(Player.TYPE)) {
                     List<Object> keys = new ArrayList<>();
                     keys.add(document.get(Player.IS_ACTIVE));
                     keys.add(document.get(Player.IS_FAVORITE));
                     emitter.emit(keys, null);
                 }
             }
-        }, "1.0");
+        }, "1");
 
-        com.couchbase.lite.View cViewAllSessions =
-                database.getView(String.format("%s/%s", "pocketleague-views", "all-sessions"));
-
+        com.couchbase.lite.View cViewAllSessions = database.getView("all-sessions");
         cViewAllSessions.setMap(new Mapper() {
             @Override
             public void map(Map<String, Object> document, Emitter emitter) {
-                Object type = document.get("type");
-                if (type == Session.TYPE) {
+                String type = (String) document.get("type");
+                if (type.equals(Session.TYPE)) {
                     List<Object> keys = new ArrayList<>();
                     keys.add(document.get(Session.GAME_SUBTYPE));
                     keys.add(document.get(Session.IS_ACTIVE));
@@ -85,39 +81,35 @@ public class DatabaseHelper {
                     emitter.emit(keys, null);
                 }
             }
-        }, "1.0");
+        }, "1");
 
-        com.couchbase.lite.View cViewAllTeams =
-                database.getView(String.format("%s/%s", "pocketleague-views", "all-teams"));
-
+        com.couchbase.lite.View cViewAllTeams = database.getView("all-teams");
         cViewAllTeams.setMap(new Mapper() {
             @Override
             public void map(Map<String, Object> document, Emitter emitter) {
-                Object type = document.get("type");
-                if (type == Team.TYPE) {
+                String type = (String) document.get("type");
+                if (type.equals(Team.TYPE)) {
                     List<Object> keys = new ArrayList<>();
                     keys.add(document.get(Team.IS_ACTIVE));
                     keys.add(document.get(Team.IS_FAVORITE));
                     emitter.emit(keys, null);
                 }
             }
-        }, "1.0");
+        }, "1");
 
-        com.couchbase.lite.View cViewAllVenues =
-                database.getView(String.format("%s/%s", "pocketleague-views", "all-venues"));
-
+        com.couchbase.lite.View cViewAllVenues = database.getView("all-venues");
         cViewAllVenues.setMap(new Mapper() {
             @Override
             public void map(Map<String, Object> document, Emitter emitter) {
-                Object type = document.get("type");
-                if (type == Venue.TYPE) {
+                String type = (String) document.get("type");
+                if (type.equals(Venue.TYPE)) {
                     List<Object> keys = new ArrayList<>();
                     keys.add(document.get(Venue.IS_ACTIVE));
                     keys.add(document.get(Venue.IS_FAVORITE));
                     emitter.emit(keys, null);
                 }
             }
-        }, "1.0");
+        }, "1");
     }
 
     public Database getDatabase() {

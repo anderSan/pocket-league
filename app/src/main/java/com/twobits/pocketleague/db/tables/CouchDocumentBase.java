@@ -11,20 +11,23 @@ import java.util.Map;
 
 public class CouchDocumentBase {
     protected String LOGTAG = getClass().getSimpleName();
-    public static final String ID = "_id";
     Document document;
     Map<String, Object> content = new HashMap<>();
 
     public CouchDocumentBase(Database database, Map<String, Object> content) {
         document = database.createDocument();
-        this.content.putAll(document.getProperties());
+        log("New Document! " + document.getId());
         if (content != null) {
             this.content.putAll(content);
         }
     }
 
     public String getId() {
-        return (String) content.get(ID);
+        return document.getId();
+    }
+
+    public Database getDatabase() {
+        return document.getDatabase();
     }
 
     public void update() {

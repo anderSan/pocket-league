@@ -432,11 +432,23 @@ public class DbSettings extends Fragment_Base {
 	}
 
 	File getInternalPath() {
-        String dbPath = null;
+        File internal = context.getFilesDir();
+        File sub = new File(internal, "pocketleague/attachments");
+
+        File db = new File(internal, "pocketleague.cblite");
+        for (File f : internal.listFiles()) {
+            log("File: " + f.getName());
+        }
+
+        for (File f : sub.listFiles()) {
+            log("File (sub): " + f.getName());
+            log("is directory: " + f.isDirectory());
+        }
 //		String dbPath = mData.getHelper().getReadableDatabase().getPath();
 //		String dbPath = "/data/data/com.twobits.gametemplate/databases/gametemplate.db";
 
-		return new File(dbPath);
+//		return new File(dbPath);
+        return db;
 	}
 
 	public static void copyDbxFile(DbxFile sourceFile, File destFile)

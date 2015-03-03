@@ -81,7 +81,7 @@ public class List_Venues extends Fragment_TopList {
     };
 
     private List<Venue> getVenues() {
-        List<Venue> venues = null;
+        List<Venue> venues = new ArrayList<>();
         try {
             Query query = database.getView("all-venues").createQuery();
             query.setStartKey(Arrays.asList(show_actives, show_favorites));

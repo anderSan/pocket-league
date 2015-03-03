@@ -82,7 +82,7 @@ public class List_Teams extends Fragment_TopList {
     };
 
     private List<Team> getTeams() {
-        List<Team> teams = null;
+        List<Team> teams = new ArrayList<>();
         try {
             Query query = database.getView("all-teams").createQuery();
             query.setStartKey(Arrays.asList(show_actives, show_favorites));

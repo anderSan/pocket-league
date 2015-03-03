@@ -84,7 +84,7 @@ public class List_Players extends Fragment_TopList {
     };
 
     private List<Player> getPlayers() {
-        List<Player> players = null;
+        List<Player> players = new ArrayList<>();
         try {
             Query query = database.getView("all-players").createQuery();
             query.setStartKey(Arrays.asList(show_actives, show_favorites));
