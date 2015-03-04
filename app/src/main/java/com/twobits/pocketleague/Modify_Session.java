@@ -15,21 +15,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryEnumerator;
 import com.couchbase.lite.QueryRow;
-import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.Fragment_Edit;
 import com.twobits.pocketleague.backend.SpinnerAdapter;
 import com.twobits.pocketleague.db.tables.Session;
-import com.twobits.pocketleague.db.tables.SessionMember;
 import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.db.tables.Venue;
 import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameSubtype;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

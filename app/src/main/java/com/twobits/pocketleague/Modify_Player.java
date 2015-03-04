@@ -147,7 +147,7 @@ public class Modify_Player extends Fragment_Edit {
 		Player newPlayer = new Player(database, nickname, first_name, last_name, lh, rh,
 				lf, rf, height_cm, weight_kg, player_color, is_favorite);
 
-        if (newPlayer.exists(database)) {
+        if (newPlayer.exists(context, database)) {
             Toast.makeText(context, "Player already exists.", Toast.LENGTH_SHORT).show();
         } else {
             newPlayer.update();

@@ -8,17 +8,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.couchbase.lite.Database;
-import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.DialogFragment_Base;
 import com.twobits.pocketleague.backend.Item_QuickGame;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.GameMember;
 import com.twobits.pocketleague.db.tables.Session;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

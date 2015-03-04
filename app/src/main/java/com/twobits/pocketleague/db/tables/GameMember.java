@@ -1,30 +1,20 @@
 package com.twobits.pocketleague.db.tables;
 
-import java.sql.SQLException;
-
-import android.content.Context;
-
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-import com.twobits.pocketleague.db.DatabaseHelper;
-
-@DatabaseTable
 public class GameMember implements Comparable<GameMember> {
     public static final String GAME = "game_id";
     public static final String TEAM = "team_id";
     public static final String SCORE = "score";
 
-    @DatabaseField(generatedId = true)
+//    @DatabaseField(generatedId = true)
     private long id;
 
-    @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true)
+//    @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true)
     private Game game;
 
-    @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true, foreignAutoRefresh = true)
+//    @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true, foreignAutoRefresh = true)
     private Team team;
 
-    @DatabaseField(canBeNull = false)
+//    @DatabaseField(canBeNull = false)
     private int score;
 
     public GameMember() {

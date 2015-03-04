@@ -1,34 +1,24 @@
 package com.twobits.pocketleague.db.tables;
 
-import java.sql.SQLException;
-
-import android.content.Context;
-
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-import com.twobits.pocketleague.db.DatabaseHelper;
-
-@DatabaseTable
 public class SessionMember {
 	public static final String SESSION = "session_id";
 	public static final String TEAM = "team_id";
 	public static final String TEAM_SEED = "team_seed";
 	public static final String TEAM_RANK = "team_rank";
 
-	@DatabaseField(generatedId = true)
+//	@DatabaseField(generatedId = true)
 	private long id;
 
-	@DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true)
+//	@DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true)
 	private Session session;
 
-	@DatabaseField(uniqueCombo = true, foreign = true)
+//	@DatabaseField(uniqueCombo = true, foreign = true)
 	private Team team;
 
-	@DatabaseField(canBeNull = false)
+//	@DatabaseField(canBeNull = false)
 	private int team_seed;
 
-	@DatabaseField(canBeNull = false)
+//	@DatabaseField(canBeNull = false)
 	private int team_rank;
 
 	public SessionMember() {

@@ -5,17 +5,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.SessionMember;
-import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.enums.BrNodeType;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

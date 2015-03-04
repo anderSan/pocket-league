@@ -10,9 +10,12 @@ import android.view.View;
 
 import com.couchbase.lite.Database;
 
+import java.util.HashMap;
+
 public abstract class Fragment_Base extends Fragment {
     protected String LOGTAG = getClass().getSimpleName();
     public Database database;
+    public static final HashMap<String, Object> QUERY_END = new HashMap<>();
     public View rootView;
     public Context context;
     public NavigationInterface mNav;

@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class CouchDocumentBase {
     protected String LOGTAG = getClass().getSimpleName();
+    public static final HashMap<String, Object> QUERY_END = new HashMap<>();
     Document document;
     Map<String, Object> content = new HashMap<>();
 

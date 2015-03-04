@@ -1,21 +1,17 @@
 package com.twobits.pocketleague.db.tables;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-@DatabaseTable
 public class PlayerBadge {
 
-	@DatabaseField(generatedId = true)
+//	@DatabaseField(generatedId = true)
 	private long id;
 
-	@DatabaseField(foreign = true)
+//	@DatabaseField(foreign = true)
 	private Player player;
 
-	@DatabaseField(foreign = true)
+//	@DatabaseField(foreign = true)
 	private Session session;
 
-	@DatabaseField(canBeNull = false)
+//	@DatabaseField(canBeNull = false)
 	private int badgeType;
 
 	PlayerBadge() {

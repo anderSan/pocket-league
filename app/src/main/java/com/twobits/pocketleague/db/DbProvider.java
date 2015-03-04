@@ -6,19 +6,9 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
-import android.widget.Toast;
 
 import com.couchbase.lite.Database;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.twobits.pocketleague.db.tables.Game;
-import com.twobits.pocketleague.db.tables.GameMember;
-import com.twobits.pocketleague.db.tables.Session;
-import com.twobits.pocketleague.db.tables.Team;
-import com.twobits.pocketleague.db.tables.Venue;
-
-import java.sql.SQLException;
-import java.util.List;
 
 public class DbProvider extends ContentProvider {
     private DatabaseHelper dbhelper;
@@ -37,8 +27,8 @@ public class DbProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         if (dbhelper == null) {
-            dbhelper = new DatabaseHelper(getContext());
-            database = dbhelper.getDatabase();
+//            dbhelper = new DatabaseHelper(getContext());
+//            database = dbhelper.getDatabase();
         }
         return true;
     }

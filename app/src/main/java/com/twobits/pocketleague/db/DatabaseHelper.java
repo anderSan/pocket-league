@@ -61,6 +61,7 @@ public class DatabaseHelper {
                 String type = (String) document.get("type");
                 if (type.equals(Player.TYPE)) {
                     List<Object> keys = new ArrayList<>();
+                    keys.add(document.get(Player.NAME));
                     keys.add(document.get(Player.IS_ACTIVE));
                     keys.add(document.get(Player.IS_FAVORITE));
                     emitter.emit(keys, null);

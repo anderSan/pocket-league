@@ -1,5 +1,8 @@
 package com.twobits.pocketleague.db.tables;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
@@ -10,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Team extends CouchDocumentBase {
     public static final String TYPE = "team";
@@ -103,23 +105,31 @@ public class Team extends CouchDocumentBase {
         return ((List<String>) content.get(MEMBERS)).size();
     }
 
-	public boolean exists(Database database) {
-		return exists(database, getName());
+	public boolean exists(Context context, Database database) {
+        try {
+            return exists(database, getName());
+        } catch (CouchbaseLiteException e) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            loge("Existence check failed. ", e);
+            return false;
+        }
 	}
 
-	public static boolean exists(Database database, String name) {
+	public static boolean exists(Database database, String name) throws CouchbaseLiteException {
 		if (name == null) {
 			return false;
 		}
-        return true;
 
-//		try {
-//			List<Team> tList = getDao(context).queryBuilder().where()
-//					.eq(Team.NAME, name).query();
-//            return !tList.isEmpty();
-//		} catch (SQLException e) {
-//			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-//			return false;
-//		}
+        Query query = database.getView("all-teams").createQuery();
+        query.setStartKey(Arrays.asList(name));
+        query.setEndKey(Arrays.asList(name, QUERY_END, QUERY_END));
+        QueryEnumerator result = query.run();
+
+        assert (result.getCount() <= 1);
+        if (result.hasNext()) {
+            return true;
+        } else {
+            return false;
+        }
 	}
 }

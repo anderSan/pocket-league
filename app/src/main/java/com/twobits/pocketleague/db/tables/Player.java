@@ -1,9 +1,19 @@
 package com.twobits.pocketleague.db.tables;
 
+import android.content.Context;
+import android.widget.Toast;
+
+import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryRow;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class Player extends Team { //implements Comparable<Player> {
     public static final String TYPE = "player";
@@ -19,6 +29,7 @@ public class Player extends Team { //implements Comparable<Player> {
     public Player(Database database, String nickname, int color) {
         super(database, nickname, null, color, false);
         // nickname should be unique
+        content.put("type", TYPE);
         content.put(FIRST_NAME, "");
         content.put(LAST_NAME, "");
         content.put(IS_LEFT_HANDED, false);
@@ -34,6 +45,7 @@ public class Player extends Team { //implements Comparable<Player> {
                   boolean is_right_handed, boolean is_left_footed, boolean is_right_footed,
                   int height_cm, int weight_kg, int color, boolean is_favorite) {
         super(database, nickname, null, color, is_favorite);
+        content.put("type", TYPE);
         content.put(FIRST_NAME, first_name);
         content.put(LAST_NAME, last_name);
         content.put(IS_LEFT_HANDED, is_left_handed);
@@ -51,6 +63,38 @@ public class Player extends Team { //implements Comparable<Player> {
     public static Player getFromId(Database database, String id) {
         Document document = database.getDocument(id);
         return new Player(document);
+    }
+
+    public static Player findByName(Database database, String name)
+            throws CouchbaseLiteException {
+        Query query = database.getView("all-players").createQuery();
+        query.setStartKey(Arrays.asList(name));
+        query.setEndKey(Arrays.asList(name, QUERY_END, QUERY_END));
+        QueryEnumerator result = query.run();
+
+        assert (result.getCount() <= 1);
+        if (result.hasNext()) {
+            return Player.getFromId(database, result.next().getDocumentId());
+        } else {
+            return null;
+        }
+    }
+
+    public static List<Player> getPlayers(Database database, boolean active, boolean only_favorite)
+            throws CouchbaseLiteException {
+        List<Player> players = new ArrayList<>();
+
+        Query query = database.getView("all-players").createQuery();
+        query.setStartKey(Arrays.asList(null, active, only_favorite));
+        query.setEndKey(Arrays.asList(QUERY_END, active, QUERY_END));
+        QueryEnumerator result = query.run();
+
+        for (Iterator<QueryRow> it = result; it.hasNext(); ) {
+            QueryRow row = it.next();
+            players.add(getFromId(database, row.getDocumentId()));
+        }
+
+        return players;
     }
 
     public String getName() {
@@ -177,22 +221,30 @@ public class Player extends Team { //implements Comparable<Player> {
 //        return id == another.id;
 //    }
 //
-    public boolean exists(Database database) {
-        return exists(database, getName());
-    }
-
-    public static boolean exists(Database database, String nickname) {
-        if (nickname == null) {
+    public boolean exists(Context context, Database database) {
+        try {
+            return exists(database, getName());
+        } catch (CouchbaseLiteException e) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            loge("Existence check failed. ", e);
             return false;
         }
-        return true;
+    }
 
-//        try {
-//            List<Player> pList = getDao(context).queryBuilder().where().eq(Player.NAME, nickname).query();
-//            return !pList.isEmpty();
-//        } catch (SQLException e) {
-//            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-//            return false;
-//        }
+    public static boolean exists(Database database, String name) throws CouchbaseLiteException {
+        if (name == null) {
+            return false;
+        }
+        Query query = database.getView("all-players").createQuery();
+        query.setStartKey(Arrays.asList(name));
+        query.setEndKey(Arrays.asList(name, QUERY_END, QUERY_END));
+        QueryEnumerator result = query.run();
+
+        assert (result.getCount() <= 1);
+        if (result.hasNext()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

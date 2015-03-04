@@ -2,7 +2,6 @@ package com.twobits.pocketleague;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +10,12 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.j256.ormlite.dao.Dao;
 import com.twobits.pocketleague.backend.Fragment_Base;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.Venue;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,10 +47,6 @@ public class New_Game extends Fragment_Base {
 	List<String> venue_names = new ArrayList<>();
 	List<String> ruleset_descriptions = new ArrayList<>();
 	List<Integer> ruleset_ids = new ArrayList<>();
-
-	Dao<Player, Long> pDao;
-	Dao<Session, Long> sDao;
-	Dao<Venue, Long> vDao;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -146,34 +138,34 @@ public class New_Game extends Fragment_Base {
 	};
 
 	public void refreshSpinners() {
-		try {
+//		try {
 			if (intent.hasExtra("p1") && intent.hasExtra("p2")) {
 				spinner_p1.setEnabled(false);
 				spinner_p2.setEnabled(false);
 				p1Id = intent.getLongExtra("p1", -1);
 				p2Id = intent.getLongExtra("p2", -1);
-				players = pDao.queryBuilder().where().idEq(p1Id).or()
-						.idEq(p2Id).query();
+//				players = pDao.queryBuilder().where().idEq(p1Id).or()
+//						.idEq(p2Id).query();
 			} else {
-				players = pDao.queryBuilder().where()
-						.eq(Player.IS_ACTIVE, true).query();
+//				players = pDao.queryBuilder().where()
+//						.eq(Player.IS_ACTIVE, true).query();
 			}
 
 			if (intent.hasExtra("sId")) {
 				spinner_session.setEnabled(false);
 				long sId = intent.getLongExtra("sId", -1);
-				sessions = sDao.queryBuilder().where().idEq(sId).query();
+//				sessions = sDao.queryBuilder().where().idEq(sId).query();
 			} else {
-				sessions = sDao.queryBuilder().where()
-						.eq(Session.IS_ACTIVE, true).query();
+//				sessions = sDao.queryBuilder().where()
+//						.eq(Session.IS_ACTIVE, true).query();
 			}
 
-			venues = vDao.queryBuilder().where().eq(Venue.IS_ACTIVE, true)
-					.query();
-		} catch (SQLException e) {
-			Log.e(PocketLeague.class.getName(), "Could not get objects", e);
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+//			venues = vDao.queryBuilder().where().eq(Venue.IS_ACTIVE, true)
+//					.query();
+//		} catch (SQLException e) {
+//			Log.e(PocketLeague.class.getName(), "Could not get objects", e);
+//			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+//		}
 		player_names.clear();
 		session_names.clear();
 		venue_names.clear();
