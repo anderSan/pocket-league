@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     package="com.twobits.pocketleague"
-    android:sharedUserId="com.twobits"
-    android:sharedUserLabel="@string/sharedUserLabel"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <permission android:name="com.twobits.pocketleague.READ_DATABASE"
