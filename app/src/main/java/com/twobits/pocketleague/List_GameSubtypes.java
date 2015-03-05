@@ -37,18 +37,9 @@ public class List_GameSubtypes extends DialogFragment_Base {
         rootView = inflater.inflate(R.layout.fragment_view_gamesubtypes, container, false);
 
         Bundle args = getArguments();
-        for (GameSubtype gr : GameType.valueOf(args.getString("GAMETYPE")).toGameSubtype()) {
-            log("Subtype: " + gr.toDescriptor().getDescription());
-        }
         subtypes = GameType.valueOf(args.getString("GAMETYPE")).toGameSubtype();
 
 		lv = (ListView) rootView.findViewById(R.id.lv_gamesubtypes);
-        log("Subtypes size: " + subtypes.size());
-        if (subtypes.get(0) == null) {
-            log("Subtypes 0 is null");
-        }
-        log("Subtypes toString: " + subtypes.get(0).name());
-
         ListAdapter adp = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1,
                 subtypes);
 
@@ -57,10 +48,8 @@ public class List_GameSubtypes extends DialogFragment_Base {
               @Override
               public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                   mData.setCurrentGameSubtype(subtypes.get(position));
-
-                  getDialog().dismiss();
+                  dismiss();
                   mNav.viewSessions();
-
               }
         });
 

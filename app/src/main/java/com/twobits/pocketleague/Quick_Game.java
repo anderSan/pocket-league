@@ -86,7 +86,7 @@ public class Quick_Game extends DialogFragment_Base {
 //                            } catch (SQLException e) {
 //                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 //                            }
-                            getDialog().dismiss();
+                            dismiss();
                             mNav.refreshFragment();
                         }
                     });

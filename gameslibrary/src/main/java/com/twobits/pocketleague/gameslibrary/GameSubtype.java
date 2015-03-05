@@ -29,4 +29,12 @@ public enum GameSubtype {
     public GameDescriptor toDescriptor() {
         return descriptor;
     }
+
+    public GameType toGameType() {
+        return descriptor.getGameType();
+    }
+
+    public String toString() {
+        return descriptor.getName();
+    }
 }

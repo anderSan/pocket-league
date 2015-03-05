@@ -13,6 +13,7 @@ import android.widget.GridView;
 import com.twobits.pocketleague.backend.Fragment_TopList;
 import com.twobits.pocketleague.backend.Item_GameType;
 import com.twobits.pocketleague.backend.ListAdapter_GameType;
+import com.twobits.pocketleague.gameslibrary.GameSubtype;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
 import java.util.ArrayList;
@@ -60,7 +61,13 @@ public class List_GameTypes extends Fragment_TopList {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			GameType gt = (GameType) view.getTag();
-			mNav.viewGameSubtypes(gt.name());
+            List<GameSubtype> gst = gt.toGameSubtype();
+            if (gst.size() > 1) {
+                mNav.viewGameSubtypes(gt.name());
+            } else {
+                mData.setCurrentGameSubtype(gst.get(0));
+                mNav.viewSessions();
+            }
 		}
 	};
 }
