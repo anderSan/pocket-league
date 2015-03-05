@@ -13,7 +13,6 @@ import com.couchbase.lite.QueryRow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -167,16 +166,12 @@ public class Team extends CouchDocumentBase {
 			return false;
 		}
 
-        Query query = database.getView("all-teams").createQuery();
-        query.setStartKey(Arrays.asList(name));
-        query.setEndKey(Arrays.asList(name, QUERY_END, QUERY_END));
+        Query query = database.getView("team-names").createQuery();
+        query.setStartKey(name);
+        query.setEndKey(name);
         QueryEnumerator result = query.run();
 
         assert (result.getCount() <= 1);
-        if (result.hasNext()) {
-            return true;
-        } else {
-            return false;
-        }
+        return result.hasNext();
 	}
 }

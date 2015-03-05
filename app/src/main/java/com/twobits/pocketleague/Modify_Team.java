@@ -14,15 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.QueryEnumerator;
-import com.couchbase.lite.QueryRow;
 import com.twobits.pocketleague.backend.Fragment_Edit;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Team;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class Modify_Team extends Fragment_Edit {
@@ -125,16 +121,19 @@ public class Modify_Team extends Fragment_Edit {
 	}
 
 	private void createTeam(String team_name, int team_color, boolean is_favorite) {
+        List<String> player_ids = new ArrayList<>();
+        for (Integer playerIdx : playerIdxList) {
+            player_ids.add(players.get(playerIdx).getId());
+        }
+        Team newTeam = new Team(database, team_name, player_ids, team_color, is_favorite);
+
         if (playerIdxList.size() == 1) {
-            Toast.makeText(context, "Cannot create a team with one player.", Toast.LENGTH_SHORT).show();
-//        } else if (newTeam.exists(database)) {
-//            Toast.makeText(context, "Team already exists.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Cannot create a team with only one player.",
+                    Toast.LENGTH_SHORT).show();
+        } else if (newTeam.exists(context, database)) {
+            Toast.makeText(context, "Team already exists.", Toast.LENGTH_SHORT).show();
         } else {
-            List<String> player_ids = new ArrayList<>();
-            for (Integer playerIdx : playerIdxList) {
-                player_ids.add(players.get(playerIdx).getId());
-            }
-            Team newTeam = new Team(database, team_name, player_ids, team_color, is_favorite);
+            newTeam.update();
             Toast.makeText(context, "Team created!", Toast.LENGTH_SHORT).show();
             mNav.onBackPressed();
         }

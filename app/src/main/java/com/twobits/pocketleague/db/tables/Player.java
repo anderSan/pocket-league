@@ -259,15 +259,11 @@ public class Player extends Team { //implements Comparable<Player> {
             return false;
         }
         Query query = database.getView("player-names").createQuery();
-        query.setStartKey(Arrays.asList(name));
-        query.setEndKey(Arrays.asList(name));
+        query.setStartKey(name);
+        query.setEndKey(name);
         QueryEnumerator result = query.run();
 
         assert (result.getCount() <= 1);
-        if (result.hasNext()) {
-            return true;
-        } else {
-            return false;
-        }
+        return result.hasNext();
     }
 }

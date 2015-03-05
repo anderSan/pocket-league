@@ -70,7 +70,7 @@ public class DatabaseHelper {
         cvTeamNames.setMap(mapField(Team.TYPE, Team.NAME), "1");
 
         com.couchbase.lite.View cvTeamActFav = database.getView("team-act.fav");
-        cvTeamActFav.setMap(mapActFav(Team.TYPE), "1");
+        cvTeamActFav.setMap(mapActFav(Team.TYPE), "2");
 
         com.couchbase.lite.View cvVenueNames = database.getView("venue-names");
         cvVenueNames.setMap(mapField(Venue.TYPE, Venue.NAME), "1");

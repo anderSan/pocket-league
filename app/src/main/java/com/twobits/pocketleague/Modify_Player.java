@@ -173,7 +173,6 @@ public class Modify_Player extends Fragment_Edit {
 		p.setIsFavorite(is_favorite);
 
         p.update();
-
         Toast.makeText(context, "Player modified.", Toast.LENGTH_SHORT).show();
         mNav.onBackPressed();
 	}
