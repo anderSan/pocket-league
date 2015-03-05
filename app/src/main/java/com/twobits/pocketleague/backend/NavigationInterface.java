@@ -17,6 +17,8 @@ public interface NavigationInterface {
 
     public void viewGameTypes();
 
+    public void viewGameSubtypes(String gametype);
+
 	public void viewSessions();
 
     public void viewSessionDetails(String sId, SessionType session_type);

@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.twobits.pocketleague.backend.Fragment_Base;
 import com.twobits.pocketleague.backend.NavDrawerAdapter;
@@ -28,7 +27,6 @@ import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -322,6 +320,21 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
 
     public void viewGameTypes() {
         selectItem(2, "Games");
+    }
+
+    public void viewGameSubtypes(String gametype) {
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        DialogFragment newFragment = List_GameSubtypes.newInstance(gametype);
+        newFragment.show(ft, "dialog");
     }
 
     public void viewSessionDetails(String sId, SessionType session_type) {
