@@ -54,63 +54,59 @@ public class DatabaseHelper {
 	}
 
     public void createCouchViews() {
-        com.couchbase.lite.View cViewAllPlayers = database.getView("all-players");
-        cViewAllPlayers.setMap(new Mapper() {
+        com.couchbase.lite.View cvPlayerNames = database.getView("player-names");
+        cvPlayerNames.setMap(mapField(Player.TYPE, Player.NAME), "1");
+
+        com.couchbase.lite.View cvPlayerActFav = database.getView("player-act.fav");
+        cvPlayerActFav.setMap(mapActFav(Player.TYPE), "1");
+
+        com.couchbase.lite.View cvSessionNames = database.getView("session-names");
+        cvSessionNames.setMap(mapField(Session.TYPE, Session.NAME), "1");
+
+        com.couchbase.lite.View cvSessionActFav = database.getView("session-act.fav");
+        cvSessionActFav.setMap(mapActFav(Session.TYPE), "1");
+
+        com.couchbase.lite.View cvTeamNames = database.getView("team-names");
+        cvTeamNames.setMap(mapField(Team.TYPE, Team.NAME), "1");
+
+        com.couchbase.lite.View cvTeamActFav = database.getView("team-act.fav");
+        cvTeamActFav.setMap(mapActFav(Team.TYPE), "1");
+
+        com.couchbase.lite.View cvVenueNames = database.getView("venue-names");
+        cvVenueNames.setMap(mapField(Venue.TYPE, Venue.NAME), "1");
+
+        com.couchbase.lite.View cvVenueActFav = database.getView("venue-act.fav");
+        cvVenueActFav.setMap(mapActFav(Venue.TYPE), "1");
+    }
+
+    private Mapper mapField(String type_string, String field) {
+        final String doc_type = type_string;
+        final String doc_field = field;
+        return new Mapper() {
             @Override
             public void map(Map<String, Object> document, Emitter emitter) {
                 String type = (String) document.get("type");
-                if (type.equals(Player.TYPE)) {
-                    List<Object> keys = new ArrayList<>();
-                    keys.add(document.get(Player.NAME));
-                    keys.add(document.get(Player.IS_ACTIVE));
-                    keys.add(document.get(Player.IS_FAVORITE));
-                    emitter.emit(keys, null);
+                if (type.equals(doc_type)) {
+                    emitter.emit(document.get(doc_field), null);
                 }
             }
-        }, "1");
+        };
+    }
 
-        com.couchbase.lite.View cViewAllSessions = database.getView("all-sessions");
-        cViewAllSessions.setMap(new Mapper() {
+    private Mapper mapActFav(String type_string) {
+        final String doc_type = type_string;
+        return new Mapper() {
             @Override
             public void map(Map<String, Object> document, Emitter emitter) {
                 String type = (String) document.get("type");
-                if (type.equals(Session.TYPE)) {
-                    List<Object> keys = new ArrayList<>();
-                    keys.add(document.get(Session.GAME_SUBTYPE));
-                    keys.add(document.get(Session.IS_ACTIVE));
-                    keys.add(document.get(Session.IS_FAVORITE));
-                    emitter.emit(keys, null);
-                }
-            }
-        }, "1");
-
-        com.couchbase.lite.View cViewAllTeams = database.getView("all-teams");
-        cViewAllTeams.setMap(new Mapper() {
-            @Override
-            public void map(Map<String, Object> document, Emitter emitter) {
-                String type = (String) document.get("type");
-                if (type.equals(Team.TYPE)) {
-                    List<Object> keys = new ArrayList<>();
-                    keys.add(document.get(Team.IS_ACTIVE));
-                    keys.add(document.get(Team.IS_FAVORITE));
-                    emitter.emit(keys, null);
-                }
-            }
-        }, "1");
-
-        com.couchbase.lite.View cViewAllVenues = database.getView("all-venues");
-        cViewAllVenues.setMap(new Mapper() {
-            @Override
-            public void map(Map<String, Object> document, Emitter emitter) {
-                String type = (String) document.get("type");
-                if (type.equals(Venue.TYPE)) {
+                if (type.equals(doc_type)) {
                     List<Object> keys = new ArrayList<>();
                     keys.add(document.get(Venue.IS_ACTIVE));
                     keys.add(document.get(Venue.IS_FAVORITE));
                     emitter.emit(keys, null);
                 }
             }
-        }, "1");
+        };
     }
 
     public Database getDatabase() {

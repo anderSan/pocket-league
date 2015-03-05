@@ -84,15 +84,7 @@ public class List_Teams extends Fragment_TopList {
     private List<Team> getTeams() {
         List<Team> teams = new ArrayList<>();
         try {
-            Query query = database.getView("all-teams").createQuery();
-            query.setStartKey(Arrays.asList(show_actives, show_favorites));
-            query.setEndKey(Arrays.asList(show_actives, new HashMap<String, Object>()));
-            QueryEnumerator result = query.run();
-
-            for (Iterator<QueryRow> it = result; it.hasNext(); ) {
-                QueryRow row = it.next();
-                teams.add(Team.getFromId(database, row.getDocumentId()));
-            }
+            teams = Team.getTeams(database, show_actives, show_favorites);
         } catch (CouchbaseLiteException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             loge("Retrieval of teams failed. ", e);

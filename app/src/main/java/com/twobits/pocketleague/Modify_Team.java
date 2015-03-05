@@ -63,11 +63,9 @@ public class Modify_Team extends Fragment_Edit {
 		try {
             players.clear();
             playerNames.clear();
-            QueryEnumerator result = Player.getAll(database, true, false);
-            for (Iterator<QueryRow> it = result; it.hasNext(); ) {
-                QueryRow row = it.next();
-                players.add(Player.getFromId(database, row.getDocumentId()));
-                playerNames.add(Player.getFromId(database, row.getDocumentId()).getName());
+            players = Player.getPlayers(database, true, false);
+            for (Player p : players) {
+                playerNames.add(p.getName());
             }
 		} catch (CouchbaseLiteException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();

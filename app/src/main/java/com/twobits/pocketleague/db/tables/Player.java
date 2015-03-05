@@ -8,6 +8,7 @@ import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryOptions;
 import com.couchbase.lite.QueryRow;
 
 import java.util.ArrayList;
@@ -67,9 +68,9 @@ public class Player extends Team { //implements Comparable<Player> {
 
     public static Player findByName(Database database, String name)
             throws CouchbaseLiteException {
-        Query query = database.getView("all-players").createQuery();
+        Query query = database.getView("player-names").createQuery();
         query.setStartKey(Arrays.asList(name));
-        query.setEndKey(Arrays.asList(name, QUERY_END, QUERY_END));
+        query.setEndKey(Arrays.asList(name));
         QueryEnumerator result = query.run();
 
         assert (result.getCount() <= 1);
@@ -80,21 +81,43 @@ public class Player extends Team { //implements Comparable<Player> {
         }
     }
 
-    public static List<Player> getPlayers(Database database, boolean active, boolean only_favorite)
+    private static List<Player> getAll(Database database, List<Object> key_filter)
             throws CouchbaseLiteException {
         List<Player> players = new ArrayList<>();
 
-        Query query = database.getView("all-players").createQuery();
-        query.setStartKey(Arrays.asList(null, active, only_favorite));
-        query.setEndKey(Arrays.asList(QUERY_END, active, QUERY_END));
-        QueryEnumerator result = query.run();
-
-        for (Iterator<QueryRow> it = result; it.hasNext(); ) {
-            QueryRow row = it.next();
+        QueryOptions options = new QueryOptions();
+        options.setKeys(key_filter);
+        List<QueryRow> rows = database.getView("player-names").queryWithOptions(options);
+        for (QueryRow row : rows) {
             players.add(getFromId(database, row.getDocumentId()));
         }
 
         return players;
+    }
+
+    public static List<Player> getAllPlayers(Database database) throws CouchbaseLiteException {
+        return getAll(database, null);
+    }
+
+    public static List<Player> getPlayers(Database database, boolean active, boolean only_favorite)
+            throws CouchbaseLiteException {
+        List<Object> key_filter = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
+
+        Query query = database.getView("player-act.fav").createQuery();
+        query.setStartKey(Arrays.asList(active, only_favorite));
+        query.setEndKey(Arrays.asList(active, QUERY_END));
+        QueryEnumerator filter = query.run();
+        for (Iterator<QueryRow> it = filter; it.hasNext(); ) {
+            QueryRow row = it.next();
+            key_filter.add(row.getDocumentId());
+
+            // temp solution until setKeys is solved...
+            players.add(getFromId(database, row.getDocumentId()));
+        }
+
+        return players;
+        //        return getAll(database, key_filter);
     }
 
     public String getName() {
@@ -235,9 +258,9 @@ public class Player extends Team { //implements Comparable<Player> {
         if (name == null) {
             return false;
         }
-        Query query = database.getView("all-players").createQuery();
+        Query query = database.getView("player-names").createQuery();
         query.setStartKey(Arrays.asList(name));
-        query.setEndKey(Arrays.asList(name, QUERY_END, QUERY_END));
+        query.setEndKey(Arrays.asList(name));
         QueryEnumerator result = query.run();
 
         assert (result.getCount() <= 1);

@@ -8,10 +8,13 @@ import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryOptions;
+import com.couchbase.lite.QueryRow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class Team extends CouchDocumentBase {
@@ -47,14 +50,58 @@ public class Team extends CouchDocumentBase {
         return new Team(document);
     }
 
-    public static QueryEnumerator getAll(Database database, boolean active, boolean only_favorite)
+    public static Team findByName(Database database, String name)
             throws CouchbaseLiteException {
-        Query query = database.getView("all-teams").createQuery();
-        query.setStartKey(Arrays.asList(active, only_favorite));
-        query.setEndKey(Arrays.asList(active, new HashMap<String, Object>()));
+        Query query = database.getView("team-names").createQuery();
+        query.setStartKey(Arrays.asList(name));
+        query.setEndKey(Arrays.asList(name));
         QueryEnumerator result = query.run();
 
-        return result;
+        assert (result.getCount() <= 1);
+        if (result.hasNext()) {
+            return Team.getFromId(database, result.next().getDocumentId());
+        } else {
+            return null;
+        }
+    }
+
+    private static List<Team> getAll(Database database, List<Object> key_filter)
+            throws CouchbaseLiteException {
+        List<Team> teams = new ArrayList<>();
+
+        QueryOptions options = new QueryOptions();
+        options.setKeys(key_filter);
+        List<QueryRow> rows = database.getView("team-names").queryWithOptions(options);
+        for (QueryRow row : rows) {
+            teams.add(getFromId(database, row.getDocumentId()));
+        }
+
+        return teams;
+    }
+
+    public static List<Team> getAllTeams(Database database) throws CouchbaseLiteException {
+        return getAll(database, null);
+    }
+
+    public static List<Team> getTeams(Database database, boolean active, boolean only_favorite)
+            throws CouchbaseLiteException {
+        List<Object> key_filter = new ArrayList<>();
+        List<Team> teams = new ArrayList<>();
+
+        Query query = database.getView("team-act.fav").createQuery();
+        query.setStartKey(Arrays.asList(active, only_favorite));
+        query.setEndKey(Arrays.asList(active, QUERY_END));
+        QueryEnumerator filter = query.run();
+        for (Iterator<QueryRow> it = filter; it.hasNext(); ) {
+            QueryRow row = it.next();
+            key_filter.add(row.getDocumentId());
+
+            // temp solution until setKeys is solved...
+            teams.add(getFromId(database, row.getDocumentId()));
+        }
+
+        return teams;
+        //        return getAll(database, key_filter);
     }
 
 	public String getName() {

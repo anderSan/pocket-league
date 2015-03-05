@@ -83,15 +83,7 @@ public class List_Venues extends Fragment_TopList {
     private List<Venue> getVenues() {
         List<Venue> venues = new ArrayList<>();
         try {
-            Query query = database.getView("all-venues").createQuery();
-            query.setStartKey(Arrays.asList(show_actives, show_favorites));
-            query.setEndKey(Arrays.asList(show_actives, new HashMap<String, Object>()));
-            QueryEnumerator result = query.run();
-
-            for (Iterator<QueryRow> it = result; it.hasNext(); ) {
-                QueryRow row = it.next();
-                venues.add(Venue.getFromId(database, row.getDocumentId()));
-            }
+            venues = Venue.getVenues(database, show_actives, show_favorites);
         } catch (CouchbaseLiteException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             loge("Retrieval of venues failed. ", e);

@@ -1,13 +1,20 @@
 package com.twobits.pocketleague.db.tables;
 
+import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryOptions;
+import com.couchbase.lite.QueryRow;
 import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameDescriptor;
 import com.twobits.pocketleague.gameslibrary.GameSubtype;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +54,60 @@ public class Session extends CouchDocumentBase {
     public static Session getFromId(Database database, String id) {
         Document document = database.getDocument(id);
         return new Session(document);
+    }
+
+    public static Session findByName(Database database, String name)
+            throws CouchbaseLiteException {
+        Query query = database.getView("session-names").createQuery();
+        query.setStartKey(Arrays.asList(name));
+        query.setEndKey(Arrays.asList(name));
+        QueryEnumerator result = query.run();
+
+        assert (result.getCount() <= 1);
+        if (result.hasNext()) {
+            return Session.getFromId(database, result.next().getDocumentId());
+        } else {
+            return null;
+        }
+    }
+
+    private static List<Session> getAll(Database database, List<Object> key_filter)
+            throws CouchbaseLiteException {
+        List<Session> sessions = new ArrayList<>();
+
+        QueryOptions options = new QueryOptions();
+        options.setKeys(key_filter);
+        List<QueryRow> rows = database.getView("session-names").queryWithOptions(options);
+        for (QueryRow row : rows) {
+            sessions.add(getFromId(database, row.getDocumentId()));
+        }
+
+        return sessions;
+    }
+
+    public static List<Session> getAllSessions(Database database) throws CouchbaseLiteException {
+        return getAll(database, null);
+    }
+
+    public static List<Session> getSessions(Database database, boolean active, boolean only_favorite)
+            throws CouchbaseLiteException {
+        List<Object> key_filter = new ArrayList<>();
+        List<Session> sessions = new ArrayList<>();
+
+        Query query = database.getView("session-act.fav").createQuery();
+        query.setStartKey(Arrays.asList(active, only_favorite));
+        query.setEndKey(Arrays.asList(active, QUERY_END));
+        QueryEnumerator filter = query.run();
+        for (Iterator<QueryRow> it = filter; it.hasNext(); ) {
+            QueryRow row = it.next();
+            key_filter.add(row.getDocumentId());
+
+            // temp solution until setKeys is solved...
+            sessions.add(getFromId(database, row.getDocumentId()));
+        }
+
+        return sessions;
+        //        return getAll(database, key_filter);
     }
 
     public String getName() {

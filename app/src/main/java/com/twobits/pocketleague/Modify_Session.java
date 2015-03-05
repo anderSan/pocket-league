@@ -93,13 +93,11 @@ public class Modify_Session extends Fragment_Edit {
 		sp_ruleSet.setAdapter(rsAdapter);
 
 		try {
-            List<Venue> venues = new ArrayList<>();
             List<String> venueNames = new ArrayList<>();
-            QueryEnumerator result = Venue.getAll(database, true, false);
-            for (Iterator<QueryRow> it = result; it.hasNext(); ) {
-                QueryRow row = it.next();
-                venues.add(Venue.getFromId(database, row.getDocumentId()));
-                venueNames.add(Venue.getFromId(database, row.getDocumentId()).getName());
+            List<Venue> venues = Venue.getVenues(database, true, false);
+
+            for (Venue v : venues) {
+                venueNames.add(v.getName());
             }
 
 			ArrayAdapter<String> vAdapter = new SpinnerAdapter(context,
@@ -112,11 +110,9 @@ public class Modify_Session extends Fragment_Edit {
 		try {
             teams.clear();
             teamNames.clear();
-            QueryEnumerator result = Team.getAll(database, true, false);
-            for (Iterator<QueryRow> it = result; it.hasNext(); ) {
-                QueryRow row = it.next();
-                teams.add(Team.getFromId(database, row.getDocumentId()));
-                teamNames.add(Team.getFromId(database, row.getDocumentId()).getName());
+            teams = Team.getTeams(database, true, false);
+            for (Team t : teams) {
+                teamNames.add(t.getName());
             }
 		} catch (CouchbaseLiteException e) {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
