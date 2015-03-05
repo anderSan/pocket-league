@@ -1,10 +1,15 @@
 package com.twobits.pocketleague.gameslibrary.Descriptors.Darts;
 
 import com.twobits.pocketleague.gameslibrary.GameDescriptor;
+import com.twobits.pocketleague.gameslibrary.GameSubtype;
 import com.twobits.pocketleague.gameslibrary.GameType;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
 public class Cricket implements GameDescriptor {
+    public GameType getGameType() {
+        return GameType.DARTS;
+    }
+
 	public String getName() {
 		return "Cricket";
 	}

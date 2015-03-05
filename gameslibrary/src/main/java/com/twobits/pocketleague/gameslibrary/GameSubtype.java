@@ -10,31 +10,20 @@ import com.twobits.pocketleague.gameslibrary.Descriptors.Polishhorseshoes.Polish
 import com.twobits.pocketleague.gameslibrary.Descriptors.Undefined.Undefined;
 
 public enum GameSubtype {
-    DARTS_CRICKET(GameType.DARTS, new Cricket()),
-    DISC_GOLF(GameType.DISC_GOLF, new DiscGolf()),
-    EIGHTBALL(GameType.BILLIARDS, new EightBall()),
-    GOLF(GameType.GOLF, new Golf()),
-    NINEBALL(GameType.BILLIARDS, new NineBall()),
-    POLISH_SINGLES(GameType.POLISH_HORSESHOES, new PolishSingles()),
-    POLISH_DOUBLES(GameType.POLISH_HORSESHOES, new PolishDoubles()),
-    SPADES(GameType.CARDS, new Undefined()),
-    UNDEFINED(GameType.UNDEFINED, new Undefined());
-
-    private GameType game_type;
+    DARTS_CRICKET(new Cricket()),
+    DISC_GOLF(new DiscGolf()),
+    EIGHTBALL(new EightBall()),
+    GOLF(new Golf()),
+    NINEBALL(new NineBall()),
+    POLISH_SINGLES(new PolishSingles()),
+    POLISH_DOUBLES(new PolishDoubles()),
+    SPADES(new Undefined()),
+    UNDEFINED(new Undefined());
 
     private GameDescriptor descriptor;
 
-    private GameSubtype(GameType game_type, GameDescriptor descriptor) {
-        this.game_type = game_type;
+    private GameSubtype(GameDescriptor descriptor) {
         this.descriptor = descriptor;
-    }
-
-    public String toString() {
-        return "Hello"; //descriptor.getName();
-    }
-
-    public GameType toGameType() {
-        return game_type;
     }
 
     public GameDescriptor toDescriptor() {

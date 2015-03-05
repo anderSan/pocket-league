@@ -5,6 +5,10 @@ import com.twobits.pocketleague.gameslibrary.GameDescriptor;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
 public class PolishSingles implements GameDescriptor {
+    public GameType getGameType() {
+        return GameType.POLISH_HORSESHOES;
+    }
+
 	public String getName() {
 		return "Polish Horseshoes Singles";
 	}

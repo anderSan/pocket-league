@@ -5,6 +5,10 @@ import com.twobits.pocketleague.gameslibrary.GameDescriptor;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
 public class EightBall implements GameDescriptor {
+    public GameType getGameType() {
+        return GameType.BILLIARDS;
+    }
+
 	public String getName() {
 		return "8-ball";
 	}

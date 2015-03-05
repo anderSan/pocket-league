@@ -5,6 +5,10 @@ import com.twobits.pocketleague.gameslibrary.GameType;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
 public class Golf implements GameDescriptor {
+    public GameType getGameType() {
+        return GameType.GOLF;
+    }
+
 	public String getName() {
 		return "Golf";
 	}

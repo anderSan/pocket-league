@@ -1,6 +1,8 @@
 package com.twobits.pocketleague.gameslibrary;
 
 public interface GameDescriptor {
+    public GameType getGameType();
+
     public String getName();
 
     public String getDescription();

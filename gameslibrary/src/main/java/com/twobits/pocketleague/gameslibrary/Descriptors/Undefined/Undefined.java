@@ -5,6 +5,10 @@ import com.twobits.pocketleague.gameslibrary.GameDescriptor;
 import com.twobits.pocketleague.gameslibrary.ScoreType;
 
 public class Undefined implements GameDescriptor {
+    public GameType getGameType() {
+        return GameType.UNDEFINED;
+    }
+
 	public String getName() {
 		return "Undefined Game";
 	}
