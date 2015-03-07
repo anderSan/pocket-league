@@ -26,7 +26,7 @@ public class Game extends CouchDocumentBase {
         content.put(MEMBERS, members);
         content.put(VENUE, venue);
         content.put(DATE_PLAYED, new Date());
-        content.put(IS_COMPLETE, true);
+        content.put(IS_COMPLETE, false);
         content.put(IS_TRACKED, is_tracked);
     }
 

@@ -1,39 +1,11 @@
 package com.twobits.pocketleague.db.tables;
 
-import android.test.AndroidTestCase;
-import android.test.RenamingDelegatingContext;
-import android.util.Log;
+import junit.framework.TestCase;
 
-import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.Database;
-import com.couchbase.lite.Manager;
-import com.couchbase.lite.android.AndroidContext;
-
-import java.io.IOException;
-
-public class VenueTest extends AndroidTestCase {
+public class VenueTest extends TestCase {
     Venue venue;
     protected void setUp() throws Exception {
         super.setUp();
-//        setContext(new RenamingDelegatingContext(getContext(), "test_"));
-//
-//        Manager manager = null;
-//        Database database = null;
-//
-//        try {
-//            manager = new Manager(new AndroidContext(getContext()), Manager.DEFAULT_OPTIONS);
-//        } catch (IOException e) {
-//            Log.e("Test", "Failed to create manager.", e);
-//        }
-//
-//        try {
-//            if (manager != null) {
-//                database = manager.getDatabase("test_db");
-//            }
-//        } catch (CouchbaseLiteException e) {
-//            Log.e("Test", "Failed to create database.", e);
-//        }
-
         venue = new Venue("Test Venue", false);
     }
 
