@@ -115,8 +115,8 @@ public class Team extends CouchDocumentBase {
         return (String) content.get(NAME);
     }
 
-    public void setName(String team_name) {
-        content.put(NAME, team_name);
+    public void setName(String name) {
+        content.put(NAME, name);
     }
 
     public List<Player> getMembers(Database database) {

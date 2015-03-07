@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Map;
 
 public class CouchDocumentBaseTest extends AndroidTestCase {
+    Manager manager;
     Database database;
     CouchDocumentBase with_empty;
     CouchDocumentBase with_document;
@@ -25,7 +26,7 @@ public class CouchDocumentBaseTest extends AndroidTestCase {
         super.setUp();
         setContext(new RenamingDelegatingContext(getContext(), "test_"));
 
-        Manager manager = null;
+        manager = null;
         database = null;
 
         try {
@@ -52,6 +53,11 @@ public class CouchDocumentBaseTest extends AndroidTestCase {
 
         with_empty = new CouchDocumentBase();
         with_document = new CouchDocumentBase(document);
+    }
+
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        manager.close();
     }
 
     public void testCreateDocument() {

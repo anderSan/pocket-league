@@ -46,7 +46,7 @@ public class Session extends CouchDocumentBase {
         content.put(TEAM_SIZE, team_size);
         content.put(IS_ACTIVE, true);
         content.put(IS_FAVORITE, false);
-        content.put(CURRENT_VENUE, current_venue);
+        content.put(CURRENT_VENUE, current_venue.getId());
         content.put(MEMBERS, new ArrayList<Map<String, Object>>());
     }
 

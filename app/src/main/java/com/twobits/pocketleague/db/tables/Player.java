@@ -116,14 +116,6 @@ public class Player extends Team { //implements Comparable<Player> {
     }
 
     // Other methods
-    public String getName() {
-        return (String) content.get(NAME);
-    }
-
-    public void setNickName(String nickname) {
-        content.put(NAME, nickname);
-    }
-
     public String getFirstName() {
         return (String) content.get(FIRST_NAME);
     }

@@ -160,7 +160,7 @@ public class Modify_Player extends Fragment_Edit {
 			String last_name, boolean lh, boolean rh, boolean lf, boolean rf,
 			int height_cm, int weight_kg, boolean is_favorite) {
 
-		p.setNickName(nickname);
+		p.setName(nickname);
 		p.setFirstName(first_name);
 		p.setLastName(last_name);
 		p.setIsLeftHanded(lh);
