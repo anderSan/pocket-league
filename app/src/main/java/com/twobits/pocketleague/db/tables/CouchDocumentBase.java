@@ -5,6 +5,7 @@ import android.util.Log;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
+import com.twobits.pocketleague.BuildConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,8 +25,10 @@ public class CouchDocumentBase {
     }
 
     public void createDocument(Database database) {
-        document = database.createDocument();
-        log("Created document: " + document.getId());
+        if (document == null) {
+            document = database.createDocument();
+            log("Created document: " + document.getId());
+        }
     }
 
     public String getId() {
@@ -52,6 +55,10 @@ public class CouchDocumentBase {
             } catch (CouchbaseLiteException e) {
                 loge("Cannot update document", e);
             }
+        } else {
+            if (BuildConfig.DEBUG) {
+                throw new InstantiationError("No document is attached for update.");
+            }
         }
     }
 
@@ -62,6 +69,10 @@ public class CouchDocumentBase {
                 logd("Deleted document, deletion status = " + document.isDeleted());
             } catch (CouchbaseLiteException e) {
                 loge("Cannot delete document", e);
+            }
+        } else {
+            if (BuildConfig.DEBUG) {
+                throw new InstantiationError("No document is attached for delete.");
             }
         }
     }
