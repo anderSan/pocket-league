@@ -27,24 +27,11 @@ public class Player extends Team { //implements Comparable<Player> {
     public static final String HEIGHT = "height_cm";
     public static final String WEIGHT = "weight_kg";
 
-    public Player(Database database, String nickname, int color) {
-        super(database, nickname, null, color, false);
-        // nickname should be unique
-        content.put("type", TYPE);
-        content.put(FIRST_NAME, "");
-        content.put(LAST_NAME, "");
-        content.put(IS_LEFT_HANDED, false);
-        content.put(IS_RIGHT_HANDED, false);
-        content.put(IS_LEFT_FOOTED, false);
-        content.put(IS_RIGHT_FOOTED, false);
-        content.put(HEIGHT, 0);
-        content.put(WEIGHT, 0);
-
-    }
-
-    public Player(Database database, String nickname, String first_name, String last_name, boolean is_left_handed,
-                  boolean is_right_handed, boolean is_left_footed, boolean is_right_footed,
-                  int height_cm, int weight_kg, int color, boolean is_favorite) {
+    // Constructors
+    public Player(Database database, String nickname, String first_name, String last_name,
+                  boolean is_left_handed, boolean is_right_handed, boolean is_left_footed,
+                  boolean is_right_footed, int height_cm, int weight_kg, int color,
+                  boolean is_favorite) {
         super(database, nickname, null, color, is_favorite);
         content.put("type", TYPE);
         content.put(FIRST_NAME, first_name);
@@ -57,10 +44,18 @@ public class Player extends Team { //implements Comparable<Player> {
         content.put(WEIGHT, weight_kg);
     }
 
+    public Player(String nickname, String first_name, String last_name, boolean is_left_handed,
+                  boolean is_right_handed, boolean is_left_footed, boolean is_right_footed,
+                  int height_cm, int weight_kg, int color, boolean is_favorite) {
+        this(null, nickname, first_name, last_name, is_left_handed, is_right_handed, is_left_footed,
+                is_right_footed, height_cm, weight_kg, color, is_favorite);
+    }
+
     private Player(Document document) {
         super(document);
     }
 
+    // Static database methods
     public static Player getFromId(Database database, String id) {
         Document document = database.getDocument(id);
         return new Player(document);
@@ -120,6 +115,7 @@ public class Player extends Team { //implements Comparable<Player> {
         //        return getAll(database, key_filter);
     }
 
+    // Other methods
     public String getName() {
         return (String) content.get(NAME);
     }

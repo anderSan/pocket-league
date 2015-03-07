@@ -15,10 +15,7 @@ public class CouchDocumentBase {
     Document document;
     Map<String, Object> content = new HashMap<>();
 
-    public CouchDocumentBase(Database database) {
-        document = database.createDocument();
-        log("Created document: " + document.getId());
-    }
+    public CouchDocumentBase() {}
 
     public CouchDocumentBase(Document document) {
         this.document = document;
@@ -26,29 +23,46 @@ public class CouchDocumentBase {
         log("Loaded document: " + document.getId());
     }
 
+    public void createDocument(Database database) {
+        document = database.createDocument();
+        log("Created document: " + document.getId());
+    }
+
     public String getId() {
-        return document.getId();
+        if (document != null) {
+            return document.getId();
+        } else {
+            return null;
+        }
     }
 
     public Database getDatabase() {
-        return document.getDatabase();
+        if (document != null) {
+            return document.getDatabase();
+        } else {
+            return null;
+        }
     }
 
     public void update() {
-        try {
-            document.putProperties(content);
-            logd("updated retrievedDocument=" + String.valueOf(document.getProperties()));
-        } catch (CouchbaseLiteException e) {
-            loge("Cannot update document", e);
+        if (document != null) {
+            try {
+                document.putProperties(content);
+                logd("updated retrievedDocument=" + String.valueOf(document.getProperties()));
+            } catch (CouchbaseLiteException e) {
+                loge("Cannot update document", e);
+            }
         }
     }
 
     public void delete() {
-        try {
-            document.delete();
-            logd("Deleted document, deletion status = " + document.isDeleted());
-        } catch (CouchbaseLiteException e) {
-            loge("Cannot delete document", e);
+        if (document != null) {
+            try {
+                document.delete();
+                logd("Deleted document, deletion status = " + document.isDeleted());
+            } catch (CouchbaseLiteException e) {
+                loge("Cannot delete document", e);
+            }
         }
     }
 

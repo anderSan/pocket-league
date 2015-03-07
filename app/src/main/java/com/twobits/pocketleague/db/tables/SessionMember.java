@@ -1,72 +1,50 @@
 package com.twobits.pocketleague.db.tables;
 
+import android.util.ArrayMap;
+
+import com.couchbase.lite.Database;
+
+import java.util.Map;
+
 public class SessionMember {
-	public static final String SESSION = "session_id";
-	public static final String TEAM = "team_id";
+	public static final String TEAM = "team";
+    private static final String TEAM_ID = "team_id";
 	public static final String TEAM_SEED = "team_seed";
 	public static final String TEAM_RANK = "team_rank";
 
-//	@DatabaseField(generatedId = true)
-	private long id;
-
-//	@DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true)
-	private Session session;
-
-//	@DatabaseField(uniqueCombo = true, foreign = true)
 	private Team team;
-
-//	@DatabaseField(canBeNull = false)
+    private String team_id;
 	private int team_seed;
-
-//	@DatabaseField(canBeNull = false)
 	private int team_rank;
 
-	public SessionMember() {
-	}
+    public SessionMember() {}
 
 	public SessionMember(int team_seed, int team_rank) {
-		// for dummy member creation
-		super();
 		this.team_seed = team_seed;
 		this.team_rank = team_rank;
 	}
 
-	public SessionMember(Session session, Team team, int team_seed) {
-		super();
-		this.session = session;
-		this.team = team;
-		this.team_seed = team_seed;
-		this.team_rank = 0;
+    public SessionMember(String team_id, int team_seed, int team_rank) {
+        this(team_seed, team_rank);
+        this.team = team;
+    }
+
+	public SessionMember(Team team, int team_seed, int team_rank) {
+        this(team_seed, team_rank);
+        this.team = team;
 	}
 
-	public SessionMember(Session session, Team team, int team_seed,
-			int team_rank) {
-		super();
-		this.session = session;
-		this.team = team;
-		this.team_seed = team_seed;
-		this.team_rank = team_rank;
-	}
-
-	public Session getSessionId() {
-		return session;
-	}
+    public SessionMember(Team team, int team_seed) {
+        this(team, team_seed, 0);
+    }
 
 	public Team getTeam() {
 		return team;
 	}
 
-	// public void setTeam(Team team) {
-	// this.team = team;
-	// }
-
 	public int getSeed() {
 		return team_seed;
 	}
-
-	// public void setSeed(int team_seed) {
-	// this.team_seed = team_seed;
-	// }
 
 	public int getRank() {
 		return team_rank;
@@ -76,28 +54,36 @@ public class SessionMember {
 		this.team_rank = team_rank;
 	}
 
+    public Map<String, Object> toMap() {
+        Map<String, Object> contents = new ArrayMap<>();
+        contents.put(TEAM_ID, team.getId());
+        contents.put(TEAM_SEED, team_seed);
+        contents.put(TEAM_RANK, team_rank);
+        return contents;
+    }
+
 	// =========================================================================
 	// Additional methods
 	// =========================================================================
 
-	// public int compareTo(SessionMember another) {
-	// if (id < another.id) {
-	// return -1;
-	// } else if (id == another.id) {
-	// return 0;
-	// } else {
-	// return 1;
-	// }
-	// }
-	//
-	// public boolean equals(Object o) {
-	// if (!(o instanceof SessionMember))
-	// return false;
-	// SessionMember another = (SessionMember) o;
-	// if (id == another.id) {
-	// return true;
-	// } else {
-	// return false;
-	// }
-	// }
+	public int compareTo(SessionMember another) {
+        if (team_rank < another.team_rank) {
+            return -1;
+        } else if (team_rank == another.team_rank) {
+            return 0;
+        } else {
+            return 1;
+        }
+	}
+
+	public boolean equals(Object o) {
+        if (!(o instanceof SessionMember))
+            return false;
+        SessionMember another = (SessionMember) o;
+            if (team == another.team) {
+            return true;
+        } else {
+            return false;
+        }
+	}
 }

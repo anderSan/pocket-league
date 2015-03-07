@@ -18,16 +18,15 @@ import java.util.List;
 
 public class Team extends CouchDocumentBase {
     public static final String TYPE = "team";
-	public static final String NAME = "name";
+    public static final String NAME = "name";
     public static final String MEMBERS = "member_ids";
-	public static final String COLOR = "color";
-	public static final String IS_ACTIVE = "is_active";
-	public static final String IS_FAVORITE = "is_favorite";
+    public static final String COLOR = "color";
+    public static final String IS_ACTIVE = "is_active";
+    public static final String IS_FAVORITE = "is_favorite";
 
-	public Team(Database database, String team_name, List<String> member_ids, int color,
-                boolean is_favorite) {
+    // Constructors
+    public Team(String team_name, List<String> member_ids, int color, boolean is_favorite) {
         // name and size combination should be unique
-        super(database);
         content.put("type", TYPE);
         content.put(NAME, team_name);
         if (member_ids == null) {
@@ -38,19 +37,27 @@ public class Team extends CouchDocumentBase {
         content.put(COLOR, color);
         content.put(IS_ACTIVE, true);
         content.put(IS_FAVORITE, is_favorite);
-	}
+    }
+
+    public Team(Database database, String team_name, List<String> member_ids, int color,
+                boolean is_favorite) {
+        this(team_name, member_ids, color, is_favorite);
+        if (database != null) {
+            createDocument(database);
+        }
+    }
 
     Team(Document document) {
         super(document);
     }
 
+    // Static database methods
     public static Team getFromId(Database database, String id) {
         Document document = database.getDocument(id);
         return new Team(document);
     }
 
-    public static Team findByName(Database database, String name)
-            throws CouchbaseLiteException {
+    public static Team findByName(Database database, String name) throws CouchbaseLiteException {
         Query query = database.getView("team-names").createQuery();
         query.setStartKey(Arrays.asList(name));
         query.setEndKey(Arrays.asList(name));
@@ -64,8 +71,8 @@ public class Team extends CouchDocumentBase {
         }
     }
 
-    private static List<Team> getAll(Database database, List<Object> key_filter)
-            throws CouchbaseLiteException {
+    private static List<Team> getAll(Database database, List<Object> key_filter) throws
+            CouchbaseLiteException {
         List<Team> teams = new ArrayList<>();
 
         QueryOptions options = new QueryOptions();
@@ -82,8 +89,8 @@ public class Team extends CouchDocumentBase {
         return getAll(database, null);
     }
 
-    public static List<Team> getTeams(Database database, boolean active, boolean only_favorite)
-            throws CouchbaseLiteException {
+    public static List<Team> getTeams(Database database, boolean active,
+                                      boolean only_favorite) throws CouchbaseLiteException {
         List<Object> key_filter = new ArrayList<>();
         List<Team> teams = new ArrayList<>();
 
@@ -103,13 +110,14 @@ public class Team extends CouchDocumentBase {
         //        return getAll(database, key_filter);
     }
 
-	public String getName() {
-		return (String) content.get(NAME);
-	}
+    // Other methods
+    public String getName() {
+        return (String) content.get(NAME);
+    }
 
-	public void setName(String team_name) {
-		content.put(NAME, team_name);
-	}
+    public void setName(String team_name) {
+        content.put(NAME, team_name);
+    }
 
     public List<Player> getMembers(Database database) {
         List<Player> members = new ArrayList<>();
@@ -119,13 +127,13 @@ public class Team extends CouchDocumentBase {
         return members;
     }
 
-	public int getColor() {
-		return (int) content.get(COLOR);
-	}
+    public int getColor() {
+        return (int) content.get(COLOR);
+    }
 
-	public void setColor(int color) {
-		content.put(COLOR, color);
-	}
+    public void setColor(int color) {
+        content.put(COLOR, color);
+    }
 
     public boolean getIsActive() {
         return (boolean) content.get(IS_ACTIVE);
@@ -143,15 +151,15 @@ public class Team extends CouchDocumentBase {
         content.put(IS_FAVORITE, is_favorite);
     }
 
-	// =========================================================================
-	// Additional methods
-	// =========================================================================
+    // =========================================================================
+    // Additional methods
+    // =========================================================================
 
     public int getSize() {
         return ((List<String>) content.get(MEMBERS)).size();
     }
 
-	public boolean exists(Context context, Database database) {
+    public boolean exists(Context context, Database database) {
         try {
             return exists(database, getName());
         } catch (CouchbaseLiteException e) {
@@ -159,12 +167,12 @@ public class Team extends CouchDocumentBase {
             loge("Existence check failed. ", e);
             return false;
         }
-	}
+    }
 
-	public static boolean exists(Database database, String name) throws CouchbaseLiteException {
-		if (name == null) {
-			return false;
-		}
+    public static boolean exists(Database database, String name) throws CouchbaseLiteException {
+        if (name == null) {
+            return false;
+        }
 
         Query query = database.getView("team-names").createQuery();
         query.setStartKey(name);
@@ -173,5 +181,5 @@ public class Team extends CouchDocumentBase {
 
         assert (result.getCount() <= 1);
         return result.hasNext();
-	}
+    }
 }
