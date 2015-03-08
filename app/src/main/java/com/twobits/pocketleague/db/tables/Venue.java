@@ -22,17 +22,22 @@ public class Venue extends CouchDocumentBase {
     public static final String IS_FAVORITE = "is_favorite";
 
     // Constructors
-    public Venue(String venue_name, boolean is_favorite) {
+    public Venue(String venue_name) {
         // name should be unique
         content.put("type", TYPE);
-        content.put(NAME, venue_name);
-        content.put(IS_ACTIVE, true);
-        content.put(IS_FAVORITE, is_favorite);
+        setName(venue_name);
+        setIsActive(true);
+        setIsFavorite(false);
+    }
+
+    public Venue(Database database, String venue_name) {
+        this(venue_name);
+        createDocument(database);
     }
 
     public Venue(Database database, String venue_name, boolean is_favorite) {
-        this(venue_name, is_favorite);
-        createDocument(database);
+        this(database, venue_name);
+        setIsFavorite(is_favorite);
     }
 
     private Venue(Document document) {

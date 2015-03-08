@@ -9,8 +9,8 @@ public class PlayerTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        player = new Player("PlayerNickname", "First", "Last", true, false, true, false, 101, 65,
-                Color.GREEN, false);
+        player = new Player(null, "PlayerNickname", "First", "Last", true, false, true, false, 101,
+                65, Color.GREEN, false);
     }
 
     public void testGetSetFirstName() throws Exception {

@@ -18,8 +18,8 @@ public class SessionMemberTest extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        t1 = new TeamStub("Team1", new ArrayList<String>(), Color.CYAN, false);
-        t2 = new TeamStub("Team2", new ArrayList<String>(), Color.RED, true);
+        t1 = new TeamStub("Team1", null);
+        t2 = new TeamStub("Team2", null);
         sm1 = new SessionMember(t1, 2, 3);
         sm2 = new SessionMember(t2, 3);
         sm3 = new SessionMember(1, 1);
@@ -83,8 +83,8 @@ public class SessionMemberTest extends TestCase {
 class TeamStub extends Team {
     public static String ID = "stub_ID";
 
-    public TeamStub(String team_name, List<String> member_ids, int color, boolean is_favorite) {
-        super(team_name, member_ids, color, is_favorite);
+    public TeamStub(String team_name, List<Player> members) {
+        super(team_name, members);
     }
 
     @Override

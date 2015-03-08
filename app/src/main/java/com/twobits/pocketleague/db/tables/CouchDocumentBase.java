@@ -25,7 +25,7 @@ public class CouchDocumentBase {
     }
 
     public void createDocument(Database database) {
-        if (document == null) {
+        if (database != null && document == null) {
             document = database.createDocument();
             log("Created document: " + document.getId());
         }

@@ -121,23 +121,27 @@ public class Modify_Team extends Fragment_Edit {
 	}
 
 	private void createTeam(String team_name, int team_color, boolean is_favorite) {
-        List<String> player_ids = new ArrayList<>();
+        List<Player> team_members = new ArrayList<>();
         for (Integer playerIdx : playerIdxList) {
-            player_ids.add(players.get(playerIdx).getId());
+            team_members.add(players.get(playerIdx));
         }
-        Team newTeam = new Team(database, team_name, player_ids, team_color, is_favorite);
-
-        if (playerIdxList.size() == 1) {
-            Toast.makeText(context, "Cannot create a team with only one player.",
-                    Toast.LENGTH_SHORT).show();
-        } else if (newTeam.exists(context, database)) {
-            Toast.makeText(context, "Team already exists.", Toast.LENGTH_SHORT).show();
-        } else {
-            newTeam.update();
-            Toast.makeText(context, "Team created!", Toast.LENGTH_SHORT).show();
-            mNav.onBackPressed();
+        Team newTeam = new Team(database, team_name, team_members, team_color, is_favorite);
+        try {
+            if (playerIdxList.size() == 1) {
+                Toast.makeText(context, "Cannot create a team with only one player.",
+                        Toast.LENGTH_SHORT).show();
+            } else if (newTeam.exists()) {
+                Toast.makeText(context, "Team already exists.", Toast.LENGTH_SHORT).show();
+            } else {
+                newTeam.update();
+                Toast.makeText(context, "Team created!", Toast.LENGTH_SHORT).show();
+                mNav.onBackPressed();
+            }
+        } catch (CouchbaseLiteException e) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            loge("Existence check failed. ", e);
         }
-	}
+    }
 
 	private void modifyTeam(String team_name, int team_color, boolean is_active,
                             boolean is_favorite) {

@@ -1,50 +1,58 @@
 package com.twobits.pocketleague.db.tables;
 
-import android.content.Context;
-import android.widget.Toast;
+import android.graphics.Color;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryEnumerator;
-import com.couchbase.lite.QueryOptions;
 import com.couchbase.lite.QueryRow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 public class Team extends CouchDocumentBase {
     public static final String TYPE = "team";
     public static final String NAME = "name";
-    public static final String MEMBERS = "member_ids";
+    public static final String MEMBER_IDS = "member_ids";
     public static final String COLOR = "color";
     public static final String IS_ACTIVE = "is_active";
     public static final String IS_FAVORITE = "is_favorite";
 
     // Constructors
-    public Team(String team_name, List<String> member_ids, int color, boolean is_favorite) {
+    public Team(String team_name, List<Player> members) {
         // name and size combination should be unique
         content.put("type", TYPE);
-        content.put(NAME, team_name);
-        if (member_ids == null) {
-            content.put(MEMBERS, Arrays.asList(getId()));
+        setName(team_name);
+        if (members == null) {
+            content.put(MEMBER_IDS, new ArrayList<String>());
         } else {
-            content.put(MEMBERS, member_ids);
+            List<String> member_ids = new ArrayList<>();
+            for (Player member: members) {
+                member_ids.add(member.getId());
+            }
+            content.put(MEMBER_IDS, member_ids);
         }
-        content.put(COLOR, color);
-        content.put(IS_ACTIVE, true);
-        content.put(IS_FAVORITE, is_favorite);
+        Random rand = new Random();
+        setColor(Color.rgb(rand.nextInt(), rand.nextInt(), rand.nextInt()));
+        setIsActive(true);
+        setIsFavorite(false);
     }
 
-    public Team(Database database, String team_name, List<String> member_ids, int color,
+    public Team(Database database, String team_name, List<Player> members) {
+        this(team_name, members);
+        createDocument(database);
+    }
+
+    public Team(Database database, String team_name, List<Player> members, int color,
                 boolean is_favorite) {
-        this(team_name, member_ids, color, is_favorite);
-        if (database != null) {
-            createDocument(database);
-        }
+        this(database, team_name, members);
+        setColor(color);
+        setIsFavorite(is_favorite);
     }
 
     Team(Document document) {
@@ -114,10 +122,10 @@ public class Team extends CouchDocumentBase {
         content.put(NAME, name);
     }
 
-    public List<Player> getMembers(Database database) {
+    public List<Player> getMembers() {
         List<Player> members = new ArrayList<>();
-        for (String member_id : (List<String>) content.get(MEMBERS)) {
-            members.add(Player.getFromId(database, member_id));
+        for (String member_id : (List<String>) content.get(MEMBER_IDS)) {
+            members.add(Player.getFromId(getDatabase(), member_id));
         }
         return members;
     }
@@ -151,30 +159,22 @@ public class Team extends CouchDocumentBase {
     // =========================================================================
 
     public int getSize() {
-        return ((List<String>) content.get(MEMBERS)).size();
+        return ((List<String>) content.get(MEMBER_IDS)).size();
     }
 
-    public boolean exists(Context context, Database database) {
-        try {
-            return exists(database, getName());
-        } catch (CouchbaseLiteException e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            loge("Existence check failed. ", e);
-            return false;
-        }
+    public boolean exists() throws CouchbaseLiteException {
+        return exists(getDatabase(), getName());
     }
 
     public static boolean exists(Database database, String name) throws CouchbaseLiteException {
         if (name == null) {
             return false;
         }
-
         Query query = database.getView("team-names").createQuery();
         query.setStartKey(name);
         query.setEndKey(name);
         QueryEnumerator result = query.run();
 
-        assert (result.getCount() <= 1);
         return result.hasNext();
     }
 }

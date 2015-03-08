@@ -1,47 +1,35 @@
 package com.twobits.pocketleague.db.tables;
 
-import android.test.AndroidTestCase;
-
-import com.couchbase.lite.Database;
-import com.twobits.pocketleague.SandboxContext;
-import com.twobits.pocketleague.db.DatabaseHelper;
-
 import java.util.List;
 
-public class VenueDbTest extends AndroidTestCase {
-    DatabaseHelper databaseHelper;
-    Database database;
+public class VenueDbTest extends DbBaseTestCase {
     Venue v1;
     Venue v2;
 
     protected void setUp() throws Exception {
         super.setUp();
-        SandboxContext mock_context = new SandboxContext();
-        databaseHelper = new DatabaseHelper(mock_context);
-        database = databaseHelper.getDatabase();
 
-        v1 = new Venue(database, "Test Venue", false);
+        v1 = new Venue(database, "Test Venue");
         v1.update();
 
         v2 = new Venue(database, "Test Venue2", true);
         v2.update();
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        database.delete();
-        database.close();
-        database = null;
-        databaseHelper.close();
-        databaseHelper = null;
+    public void testConstructor() throws Exception {
+        Venue venue = new Venue("No doc venue");
+        assertNull(venue.getId());
+
+        venue = new Venue(database, "Doc venue");
+        assertNotNull(venue.getId());
     }
 
     public void testGetFromId() throws Exception {
         Venue v = Venue.getFromId(database, v1.getId());
 
         assertNotNull(v);
-        assertEquals(v.getId(), v1.getId());
-        assertEquals(v.document.getCurrentRevisionId(), v1.document.getCurrentRevisionId());
+        assertEquals(v1.getId(), v.getId());
+        assertEquals(v1.document.getCurrentRevisionId(), v.document.getCurrentRevisionId());
     }
 
     public void testFindByName() throws Exception {
@@ -50,13 +38,13 @@ public class VenueDbTest extends AndroidTestCase {
 
         v = Venue.findByName(database, "Test Venue");
         assertNotNull(v);
-        assertEquals(v.getId(), v1.getId());
-        assertEquals(v.document.getCurrentRevisionId(), v1.document.getCurrentRevisionId());
+        assertEquals(v1.getId(), v.getId());
+        assertEquals(v1.document.getCurrentRevisionId(), v.document.getCurrentRevisionId());
     }
 
     public void testGetAllVenues() throws Exception {
-            List<Venue> all_venues = Venue.getAllVenues(database);
-            assertEquals(2, all_venues.size());
+        List<Venue> all_venues = Venue.getAllVenues(database);
+        assertEquals(2, all_venues.size());
     }
 
     public void testGetVenues() throws Exception {

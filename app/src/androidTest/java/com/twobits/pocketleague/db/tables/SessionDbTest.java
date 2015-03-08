@@ -1,59 +1,76 @@
 package com.twobits.pocketleague.db.tables;
 
-import android.test.AndroidTestCase;
-import android.test.RenamingDelegatingContext;
-import android.util.Log;
+import android.graphics.Color;
 
-import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.Database;
-import com.couchbase.lite.Manager;
-import com.couchbase.lite.android.AndroidContext;
 import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameSubtype;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SessionDbTest extends AndroidTestCase {
-    Manager manager;
-    Database database;
-    Session session;
-    Venue venue;
+public class SessionDbTest extends DbBaseTestCase {
+    Session s1;
+    Session s2;
+    Venue v1;
+    Venue v2;
+    List<SessionMember> members;
 
     protected void setUp() throws Exception {
         super.setUp();
-        setContext(new RenamingDelegatingContext(getContext(), "test_"));
 
-        manager = null;
-        database = null;
+        v1 = new Venue(database, "Test Venue");
+        v1.update();
+        v2 = new Venue(database, "Test Other Venue");
+        v2.update();
 
-        try {
-            manager = new Manager(new AndroidContext(getContext()), Manager.DEFAULT_OPTIONS);
-        } catch (IOException e) {
-            Log.e("Test", "Failed to create manager.", e);
-        }
+        Team t1 = new Team("Team First", null);
 
-        try {
-            if (manager != null) {
-                database = manager.getDatabase("test_db");
-            }
-        } catch (CouchbaseLiteException e) {
-            Log.e("Test", "Failed to create database.", e);
-        }
+//        SessionMember sm = new SessionMember();
 
-        venue = new Venue(database, "Test Venue", false);
-        venue.update();
-        session = new Session("Session name", SessionType.OPEN, GameSubtype.EIGHTBALL, 0, 3, venue);
+        s1 = new Session(database, "Session name", SessionType.OPEN, GameSubtype.EIGHTBALL, 0, 3, v1);
+        s1.setIsFavorite(true);
+        s1.update();
+        s2 = new Session(database, "Other session name", SessionType.LADDER, GameSubtype.GOLF, 1, 2, v1);
+        s2.update();
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        manager.close();
+    public void testGetFromId() throws Exception {
+        Session s = Session.getFromId(database, s1.getId());
+
+        assertNotNull(s);
+        assertEquals(s.getId(), s1.getId());
+        assertEquals(s.document.getCurrentRevisionId(), s1.document.getCurrentRevisionId());
+    }
+
+    public void testFindByName() throws Exception {
+        Session s = Session.findByName(database, "Bogus session name");
+        assertNull(s);
+
+        s = Session.findByName(database, "Session name");
+        assertNotNull(s);
+        assertEquals(s.getId(), s1.getId());
+        assertEquals(s.document.getCurrentRevisionId(), s1.document.getCurrentRevisionId());
+    }
+
+    public void testGetAllSessions() throws Exception {
+        List<Session> all_sessions = Session.getAllSessions(database);
+        assertEquals(2, all_sessions.size());
+    }
+
+    public void testGetSessions() throws Exception {
+        List<Session> all_sessions = Session.getSessions(database, true, true);
+        assertEquals(1, all_sessions.size());
     }
 
     public void testGetSetCurrentVenue() throws Exception {
-        Venue v = session.getCurrentVenue(database);
-        assertEquals(venue.getName(), v.getName());
-        assertEquals(venue.getIsFavorite(), v.getIsFavorite());
+        Venue v = s1.getCurrentVenue(database);
+        assertEquals(v1.getName(), v.getName());
+        assertEquals(v1.getIsFavorite(), v.getIsFavorite());
+
+        s1.setCurrentVenue(v2);
+        v = s1.getCurrentVenue(database);
+        assertEquals(v2.getName(), v.getName());
+        assertEquals(v2.getIsFavorite(), v.getIsFavorite());
     }
 
     public void testGetGames() throws Exception {
@@ -69,10 +86,11 @@ public class SessionDbTest extends AndroidTestCase {
     }
 
     public void testUpdateMembers() throws Exception {
+        s1.content.get("");
 
     }
 
-    public void testGetDescriptor() throws Exception {
+    public void testUpdate() throws Exception {
 
     }
 }

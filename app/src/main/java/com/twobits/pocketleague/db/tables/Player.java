@@ -28,27 +28,39 @@ public class Player extends Team { //implements Comparable<Player> {
     public static final String WEIGHT = "weight_kg";
 
     // Constructors
+    public Player(String nickname) {
+        super(nickname, null);
+        content.put("type", TYPE);
+        setFirstName("");
+        setLastName("");
+        setIsLeftHanded(false);
+        setIsRightHanded(false);
+        setIsLeftFooted(false);
+        setIsRightFooted(false);
+        setHeight_cm(0);
+        setWeight_kg(0);
+    }
+
+    public Player(Database database, String nickname) {
+        this(nickname);
+        createDocument(database);
+    }
+
     public Player(Database database, String nickname, String first_name, String last_name,
                   boolean is_left_handed, boolean is_right_handed, boolean is_left_footed,
                   boolean is_right_footed, int height_cm, int weight_kg, int color,
                   boolean is_favorite) {
-        super(database, nickname, null, color, is_favorite);
-        content.put("type", TYPE);
-        content.put(FIRST_NAME, first_name);
-        content.put(LAST_NAME, last_name);
-        content.put(IS_LEFT_HANDED, is_left_handed);
-        content.put(IS_RIGHT_HANDED, is_right_handed);
-        content.put(IS_LEFT_FOOTED, is_left_footed);
-        content.put(IS_RIGHT_FOOTED, is_right_footed);
-        content.put(HEIGHT, height_cm);
-        content.put(WEIGHT, weight_kg);
-    }
-
-    public Player(String nickname, String first_name, String last_name, boolean is_left_handed,
-                  boolean is_right_handed, boolean is_left_footed, boolean is_right_footed,
-                  int height_cm, int weight_kg, int color, boolean is_favorite) {
-        this(null, nickname, first_name, last_name, is_left_handed, is_right_handed, is_left_footed,
-                is_right_footed, height_cm, weight_kg, color, is_favorite);
+        this(database, nickname);
+        setFirstName(first_name);
+        setLastName(last_name);
+        setIsLeftHanded(is_left_handed);
+        setIsRightHanded(is_right_handed);
+        setIsLeftFooted(is_left_footed);
+        setIsRightFooted(is_right_footed);
+        setHeight_cm(height_cm);
+        setWeight_kg(weight_kg);
+        setColor(color);
+        setIsFavorite(is_favorite);
     }
 
     private Player(Document document) {

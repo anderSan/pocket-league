@@ -1,6 +1,7 @@
 package com.twobits.pocketleague.db.tables;
 
 import com.twobits.pocketleague.enums.SessionType;
+import com.twobits.pocketleague.gameslibrary.GameDescriptor;
 import com.twobits.pocketleague.gameslibrary.GameSubtype;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
@@ -12,7 +13,7 @@ public class SessionTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        venue = new Venue("Test Venue", false);
+        venue = new Venue("Test Venue");
         session = new Session("Session name", SessionType.OPEN, GameSubtype.EIGHTBALL, 0, 3, venue);
     }
 
@@ -50,23 +51,9 @@ public class SessionTest extends TestCase {
         assertTrue(session.getIsFavorite());
     }
 
-    public void testGetGames() throws Exception {
-
-    }
-
-    public void testAddMembers() throws Exception {
-
-    }
-
-    public void testGetMembers() throws Exception {
-
-    }
-
-    public void testUpdateMembers() throws Exception {
-
-    }
-
     public void testGetDescriptor() throws Exception {
-
+        GameDescriptor gd = session.getDescriptor();
+        assertEquals(gd.getName(), "8-ball");
+        assertEquals(gd.actionString(), "com.twobits.billiards.eightball.PLAY_GAME");
     }
 }

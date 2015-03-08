@@ -1,47 +1,19 @@
 package com.twobits.pocketleague.db.tables;
 
-import android.test.AndroidTestCase;
-import android.test.RenamingDelegatingContext;
 import android.util.ArrayMap;
-import android.util.Log;
 
-import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
-import com.couchbase.lite.Manager;
-import com.couchbase.lite.android.AndroidContext;
 
 import junit.framework.Assert;
 
-import java.io.IOException;
 import java.util.Map;
 
-public class CouchDocumentBaseTest extends AndroidTestCase {
-    Manager manager;
-    Database database;
+public class CouchDocumentBaseTest extends DbBaseTestCase {
     CouchDocumentBase with_empty;
     CouchDocumentBase with_document;
 
     protected void setUp() throws Exception {
         super.setUp();
-        setContext(new RenamingDelegatingContext(getContext(), "test_"));
-
-        manager = null;
-        database = null;
-
-        try {
-            manager = new Manager(new AndroidContext(getContext()), Manager.DEFAULT_OPTIONS);
-        } catch (IOException e) {
-            Log.e("Test", "Failed to create manager.", e);
-        }
-
-        try {
-            if (manager != null) {
-                database = manager.getDatabase("test_db");
-            }
-        } catch (CouchbaseLiteException e) {
-            Log.e("Test", "Failed to create database.", e);
-        }
 
         Document document = database.createDocument();
         // Due to a bug in Couchbase, documents will raise nullpointerexception if not saved...
@@ -53,11 +25,6 @@ public class CouchDocumentBaseTest extends AndroidTestCase {
 
         with_empty = new CouchDocumentBase();
         with_document = new CouchDocumentBase(document);
-    }
-
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        manager.close();
     }
 
     public void testCreateDocument() {
