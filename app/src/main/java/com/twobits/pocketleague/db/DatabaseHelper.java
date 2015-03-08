@@ -102,8 +102,6 @@ public class DatabaseHelper {
             @Override
             public void map(Map<String, Object> document, Emitter emitter) {
                 String type = (String) document.get("type");
-                Assert.assertNotNull(document.get("_id"));
-                Assert.assertNotNull(document.get("_rev"));
                 if (type.equals(doc_type)) {
                     emitter.emit(document.get(doc_field), null);
                 }

@@ -1,8 +1,6 @@
 package com.twobits.pocketleague.db.tables;
 
-import android.content.Context;
 import android.test.AndroidTestCase;
-import android.test.RenamingDelegatingContext;
 
 import com.couchbase.lite.Database;
 import com.twobits.pocketleague.SandboxContext;
@@ -32,6 +30,7 @@ public class VenueDbTest extends AndroidTestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         database.delete();
+        database.close();
         database = null;
         databaseHelper.close();
         databaseHelper = null;
@@ -55,13 +54,13 @@ public class VenueDbTest extends AndroidTestCase {
         assertEquals(v.document.getCurrentRevisionId(), v1.document.getCurrentRevisionId());
     }
 
-    public void testGetAll() throws Exception {
+    public void testGetAllVenues() throws Exception {
             List<Venue> all_venues = Venue.getAllVenues(database);
             assertEquals(2, all_venues.size());
     }
 
     public void testGetVenues() throws Exception {
-        List<Venue> all_venues = Venue.getVenues(database, true, false);
-        assertEquals(2, all_venues.size());
+        List<Venue> all_venues = Venue.getVenues(database, true, true);
+        assertEquals(1, all_venues.size());
     }
 }
