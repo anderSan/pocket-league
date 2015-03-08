@@ -64,11 +64,11 @@ public class Session extends CouchDocumentBase {
         content.put(MEMBERS, new ArrayList<SessionMember>());
     }
 
-    // Static database methods
     private Session(Document document) {
         super(document);
     }
 
+    // Static database methods
     public static Session getFromId(Database database, String id) {
         Document document = database.getDocument(id);
         return new Session(document);
@@ -76,11 +76,10 @@ public class Session extends CouchDocumentBase {
 
     public static Session findByName(Database database, String name) throws CouchbaseLiteException {
         Query query = database.getView("session-names").createQuery();
-        query.setStartKey(Arrays.asList(name));
-        query.setEndKey(Arrays.asList(name));
+        query.setStartKey(name);
+        query.setEndKey(name);
         QueryEnumerator result = query.run();
 
-        assert (result.getCount() <= 1);
         if (result.hasNext()) {
             return Session.getFromId(database, result.next().getDocumentId());
         } else {
@@ -92,13 +91,13 @@ public class Session extends CouchDocumentBase {
             CouchbaseLiteException {
         List<Session> sessions = new ArrayList<>();
 
-        QueryOptions options = new QueryOptions();
-        options.setKeys(key_filter);
-        List<QueryRow> rows = database.getView("session-names").queryWithOptions(options);
-        for (QueryRow row : rows) {
+        Query query = database.getView("session-names").createQuery();
+        query.setKeys(key_filter);
+        QueryEnumerator rows = query.run();
+        for (Iterator<QueryRow> it = rows; it.hasNext();) {
+            QueryRow row = it.next();
             sessions.add(getFromId(database, row.getDocumentId()));
         }
-
         return sessions;
     }
 
@@ -109,7 +108,6 @@ public class Session extends CouchDocumentBase {
     public static List<Session> getSessions(Database database, boolean active,
                                             boolean only_favorite) throws CouchbaseLiteException {
         List<Object> key_filter = new ArrayList<>();
-        List<Session> sessions = new ArrayList<>();
 
         Query query = database.getView("session-act.fav").createQuery();
         query.setStartKey(Arrays.asList(active, only_favorite));
@@ -117,14 +115,11 @@ public class Session extends CouchDocumentBase {
         QueryEnumerator filter = query.run();
         for (Iterator<QueryRow> it = filter; it.hasNext(); ) {
             QueryRow row = it.next();
-            key_filter.add(row.getDocumentId());
-
-            // temp solution until setKeys is solved...
-            sessions.add(getFromId(database, row.getDocumentId()));
+            // key_filter.add(row.getDocumentId());
+            String key_id = row.getDocumentId();
+            key_filter.add(getFromId(database, key_id).getName());
         }
-
-        return sessions;
-        //        return getAll(database, key_filter);
+        return getAll(database, key_filter);
     }
 
     // Other methods

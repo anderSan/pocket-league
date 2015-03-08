@@ -64,8 +64,8 @@ public class Venue extends CouchDocumentBase {
 
         Query query = database.getView("venue-names").createQuery();
         query.setKeys(key_filter);
-        QueryEnumerator rows2 = query.run();
-        for (Iterator<QueryRow> it = rows2; it.hasNext();) {
+        QueryEnumerator rows = query.run();
+        for (Iterator<QueryRow> it = rows; it.hasNext();) {
             QueryRow row = it.next();
             venues.add(getFromId(database, row.getDocumentId()));
         }
@@ -76,8 +76,8 @@ public class Venue extends CouchDocumentBase {
         return getAll(database, null);
     }
 
-    public static List<Venue> getVenues(Database database, boolean active,
-                                        boolean only_favorite) throws CouchbaseLiteException {
+    public static List<Venue> getVenues(Database database, boolean active, boolean only_favorite)
+            throws CouchbaseLiteException {
         List<Object> key_filter = new ArrayList<>();
 
         Query query = database.getView("venue-act.fav").createQuery();
@@ -86,9 +86,9 @@ public class Venue extends CouchDocumentBase {
         QueryEnumerator filter = query.run();
         for (Iterator<QueryRow> it = filter; it.hasNext(); ) {
             QueryRow row = it.next();
+            // key_filter.add(row.getDocumentId());
             String key_id = row.getDocumentId();
             key_filter.add(getFromId(database, key_id).getName());
-            // key_filter.add(row.getDocumentId());
         }
         return getAll(database, key_filter);
     }

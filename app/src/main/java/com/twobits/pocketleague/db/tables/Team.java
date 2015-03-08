@@ -59,11 +59,10 @@ public class Team extends CouchDocumentBase {
 
     public static Team findByName(Database database, String name) throws CouchbaseLiteException {
         Query query = database.getView("team-names").createQuery();
-        query.setStartKey(Arrays.asList(name));
-        query.setEndKey(Arrays.asList(name));
+        query.setStartKey(name);
+        query.setEndKey(name);
         QueryEnumerator result = query.run();
 
-        assert (result.getCount() <= 1);
         if (result.hasNext()) {
             return Team.getFromId(database, result.next().getDocumentId());
         } else {
@@ -75,13 +74,13 @@ public class Team extends CouchDocumentBase {
             CouchbaseLiteException {
         List<Team> teams = new ArrayList<>();
 
-        QueryOptions options = new QueryOptions();
-        options.setKeys(key_filter);
-        List<QueryRow> rows = database.getView("team-names").queryWithOptions(options);
-        for (QueryRow row : rows) {
+        Query query = database.getView("team-names").createQuery();
+        query.setKeys(key_filter);
+        QueryEnumerator rows = query.run();
+        for (Iterator<QueryRow> it = rows; it.hasNext();) {
+            QueryRow row = it.next();
             teams.add(getFromId(database, row.getDocumentId()));
         }
-
         return teams;
     }
 
@@ -92,7 +91,6 @@ public class Team extends CouchDocumentBase {
     public static List<Team> getTeams(Database database, boolean active,
                                       boolean only_favorite) throws CouchbaseLiteException {
         List<Object> key_filter = new ArrayList<>();
-        List<Team> teams = new ArrayList<>();
 
         Query query = database.getView("team-act.fav").createQuery();
         query.setStartKey(Arrays.asList(active, only_favorite));
@@ -100,14 +98,11 @@ public class Team extends CouchDocumentBase {
         QueryEnumerator filter = query.run();
         for (Iterator<QueryRow> it = filter; it.hasNext(); ) {
             QueryRow row = it.next();
-            key_filter.add(row.getDocumentId());
-
-            // temp solution until setKeys is solved...
-            teams.add(getFromId(database, row.getDocumentId()));
+            // key_filter.add(row.getDocumentId());
+            String key_id = row.getDocumentId();
+            key_filter.add(getFromId(database, key_id).getName());
         }
-
-        return teams;
-        //        return getAll(database, key_filter);
+        return getAll(database, key_filter);
     }
 
     // Other methods

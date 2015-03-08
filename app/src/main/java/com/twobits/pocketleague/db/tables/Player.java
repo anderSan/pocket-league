@@ -61,11 +61,10 @@ public class Player extends Team { //implements Comparable<Player> {
         return new Player(document);
     }
 
-    public static Player findByName(Database database, String name)
-            throws CouchbaseLiteException {
+    public static Player findByName(Database database, String name) throws CouchbaseLiteException {
         Query query = database.getView("player-names").createQuery();
-        query.setStartKey(Arrays.asList(name));
-        query.setEndKey(Arrays.asList(name));
+        query.setStartKey(name);
+        query.setEndKey(name);
         QueryEnumerator result = query.run();
 
         assert (result.getCount() <= 1);
@@ -80,13 +79,13 @@ public class Player extends Team { //implements Comparable<Player> {
             throws CouchbaseLiteException {
         List<Player> players = new ArrayList<>();
 
-        QueryOptions options = new QueryOptions();
-        options.setKeys(key_filter);
-        List<QueryRow> rows = database.getView("player-names").queryWithOptions(options);
-        for (QueryRow row : rows) {
+        Query query = database.getView("player-names").createQuery();
+        query.setKeys(key_filter);
+        QueryEnumerator rows = query.run();
+        for (Iterator<QueryRow> it = rows; it.hasNext();) {
+            QueryRow row = it.next();
             players.add(getFromId(database, row.getDocumentId()));
         }
-
         return players;
     }
 
@@ -97,7 +96,6 @@ public class Player extends Team { //implements Comparable<Player> {
     public static List<Player> getPlayers(Database database, boolean active, boolean only_favorite)
             throws CouchbaseLiteException {
         List<Object> key_filter = new ArrayList<>();
-        List<Player> players = new ArrayList<>();
 
         Query query = database.getView("player-act.fav").createQuery();
         query.setStartKey(Arrays.asList(active, only_favorite));
@@ -105,14 +103,11 @@ public class Player extends Team { //implements Comparable<Player> {
         QueryEnumerator filter = query.run();
         for (Iterator<QueryRow> it = filter; it.hasNext(); ) {
             QueryRow row = it.next();
-            key_filter.add(row.getDocumentId());
-
-            // temp solution until setKeys is solved...
-            players.add(getFromId(database, row.getDocumentId()));
+            // key_filter.add(row.getDocumentId());
+            String key_id = row.getDocumentId();
+            key_filter.add(getFromId(database, key_id).getName());
         }
-
-        return players;
-        //        return getAll(database, key_filter);
+        return getAll(database, key_filter);
     }
 
     // Other methods
