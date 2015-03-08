@@ -16,7 +16,7 @@ public class GameTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         venue = new Venue("Venue name", true);
-        session = new Session("Session name", SessionType.OPEN, GameSubtype.UNDEFINED, 4, venue);
+        session = new Session("Session name", SessionType.OPEN, GameSubtype.UNDEFINED, 0, 4, venue);
         List<Team> members = new ArrayList<>();
         game = new Game(session, 1, members, venue, false);
     }

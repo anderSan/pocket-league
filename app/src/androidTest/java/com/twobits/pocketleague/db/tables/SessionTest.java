@@ -13,7 +13,7 @@ public class SessionTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         venue = new Venue("Test Venue", false);
-        session = new Session("Session name", SessionType.OPEN, GameSubtype.EIGHTBALL, 3, venue);
+        session = new Session("Session name", SessionType.OPEN, GameSubtype.EIGHTBALL, 0, 3, venue);
     }
 
     public void testGetSetName() throws Exception {

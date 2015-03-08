@@ -42,7 +42,7 @@ public class SessionDbTest extends AndroidTestCase {
 
         venue = new Venue(database, "Test Venue", false);
         venue.update();
-        session = new Session("Session name", SessionType.OPEN, GameSubtype.EIGHTBALL, 3, venue);
+        session = new Session("Session name", SessionType.OPEN, GameSubtype.EIGHTBALL, 0, 3, venue);
     }
 
     protected void tearDown() throws Exception {

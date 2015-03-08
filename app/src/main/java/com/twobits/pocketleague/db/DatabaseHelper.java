@@ -1,19 +1,22 @@
 package com.twobits.pocketleague.db;
 
-import android.content.Context;
 import android.util.Log;
 
+import com.couchbase.lite.Context;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Emitter;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.Mapper;
+import com.couchbase.lite.View;
 import com.couchbase.lite.android.AndroidContext;
 import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.db.tables.Venue;
+
+import junit.framework.Assert;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,57 +29,70 @@ public class DatabaseHelper {
 	private static final String DATABASE_VERSION = "1";
     Manager manager;
     Database database = null;
-	private Context context;
 
 	public DatabaseHelper(Context context) {
-		super();
-		this.context = context;
-
-        try {
-            manager = new Manager(new AndroidContext(this.context), Manager.DEFAULT_OPTIONS);
+		try {
+            manager = new Manager(context, Manager.DEFAULT_OPTIONS);
             logd("Manager created.");
         } catch (IOException e) {
             loge("Cannot create manager object: ", e);
             return;
         }
-
-        if (!Manager.isValidDatabaseName(DATABASE_NAME)) {
-            log("Bad database name");
-        } else {
-            try {
-                database = manager.getDatabase(DATABASE_NAME);
-                logd ("Database created.");
-                createCouchViews();
-            } catch (CouchbaseLiteException e) {
-                loge("Cannot get database: ", e);
-            }
-        }
+        getDatabase();
 	}
 
+    public DatabaseHelper(android.content.Context context) {
+        try {
+            manager = new Manager(new AndroidContext(context), Manager.DEFAULT_OPTIONS);
+            logd("Manager created.");
+        } catch (IOException e) {
+            loge("Cannot create manager object: ", e);
+            return;
+        }
+        getDatabase();
+    }
+
+    public Database getDatabase() {
+        if (database == null) {
+            if (!Manager.isValidDatabaseName(DATABASE_NAME)) {
+                log("Bad database name");
+            } else {
+                try {
+                    database = manager.getDatabase(DATABASE_NAME);
+                    logd("Database created.");
+                    createCouchViews();
+                } catch (CouchbaseLiteException e) {
+                    loge("Cannot get database: ", e);
+                }
+            }
+        }
+        return database;
+    }
+
     public void createCouchViews() {
-        com.couchbase.lite.View cvPlayerNames = database.getView("player-names");
+        View cvPlayerNames = database.getView("player-names");
         cvPlayerNames.setMap(mapField(Player.TYPE, Player.NAME), "1");
 
-        com.couchbase.lite.View cvPlayerActFav = database.getView("player-act.fav");
+        View cvPlayerActFav = database.getView("player-act.fav");
         cvPlayerActFav.setMap(mapActFav(Player.TYPE), "1");
 
-        com.couchbase.lite.View cvSessionNames = database.getView("session-names");
+        View cvSessionNames = database.getView("session-names");
         cvSessionNames.setMap(mapField(Session.TYPE, Session.NAME), "1");
 
-        com.couchbase.lite.View cvSessionActFav = database.getView("session-act.fav");
+        View cvSessionActFav = database.getView("session-act.fav");
         cvSessionActFav.setMap(mapActFav(Session.TYPE), "1");
 
-        com.couchbase.lite.View cvTeamNames = database.getView("team-names");
+        View cvTeamNames = database.getView("team-names");
         cvTeamNames.setMap(mapField(Team.TYPE, Team.NAME), "1");
 
-        com.couchbase.lite.View cvTeamActFav = database.getView("team-act.fav");
-        cvTeamActFav.setMap(mapActFav(Team.TYPE), "2");
+        View cvTeamActFav = database.getView("team-act.fav");
+        cvTeamActFav.setMapReduce(mapActFav(Team.TYPE), null, "2");
 
-        com.couchbase.lite.View cvVenueNames = database.getView("venue-names");
-        cvVenueNames.setMap(mapField(Venue.TYPE, Venue.NAME), "1");
+        View cvVenueNames = database.getView("venue-names");
+        cvVenueNames.setMapReduce(mapField(Venue.TYPE, Venue.NAME), null, "1");
 
-        com.couchbase.lite.View cvVenueActFav = database.getView("venue-act.fav");
-        cvVenueActFav.setMap(mapActFav(Venue.TYPE), "1");
+        View cvVenueActFav = database.getView("venue-act.fav");
+        cvVenueActFav.setMapReduce(mapActFav(Venue.TYPE), null, "1");
     }
 
     private Mapper mapField(String type_string, String field) {
@@ -86,6 +102,8 @@ public class DatabaseHelper {
             @Override
             public void map(Map<String, Object> document, Emitter emitter) {
                 String type = (String) document.get("type");
+                Assert.assertNotNull(document.get("_id"));
+                Assert.assertNotNull(document.get("_rev"));
                 if (type.equals(doc_type)) {
                     emitter.emit(document.get(doc_field), null);
                 }
@@ -109,10 +127,6 @@ public class DatabaseHelper {
         };
     }
 
-    public Database getDatabase() {
-        return database;
-    }
-
     public void close() {
         manager.close();
     }
@@ -124,10 +138,6 @@ public class DatabaseHelper {
         } catch (CouchbaseLiteException e) {
             loge("Cannot write document to database", e);
         }
-    }
-
-    public void get(long id) {
-
     }
 
     public void update(Document document, Map<String, Object> content) {

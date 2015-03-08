@@ -48,8 +48,8 @@ public class Venue extends CouchDocumentBase {
 
     public static Venue findByName(Database database, String name) throws CouchbaseLiteException {
         Query query = database.getView("venue-names").createQuery();
-        query.setStartKey(Arrays.asList(name));
-        query.setEndKey(Arrays.asList(name));
+        query.setStartKey(name);
+        query.setEndKey(name);
         QueryEnumerator result = query.run();
 
         assert (result.getCount() <= 1);
@@ -64,10 +64,21 @@ public class Venue extends CouchDocumentBase {
             CouchbaseLiteException {
         List<Venue> venues = new ArrayList<>();
 
-        QueryOptions options = new QueryOptions();
-        options.setKeys(key_filter);
-        List<QueryRow> rows = database.getView("venue-names").queryWithOptions(options);
-        for (QueryRow row : rows) {
+//        QueryOptions options = new QueryOptions();
+////        options.setKeys(key_filter);
+////        options.
+//        options.setStartKey(null);
+//        options.setEndKey(QUERY_END);
+//        List<QueryRow> rows = database.getView("venue-names").queryWithOptions(options);
+//        for (QueryRow row : rows) {
+//            venues.add(getFromId(database, row.getDocumentId()));
+//        }
+
+        Query query = database.getView("venue-names").createQuery();
+//        query.setKeys(key_filter);
+        QueryEnumerator rows = query.run();
+        for (Iterator<QueryRow> it = rows; it.hasNext();) {
+            QueryRow row = it.next();
             venues.add(getFromId(database, row.getDocumentId()));
         }
 
@@ -92,11 +103,11 @@ public class Venue extends CouchDocumentBase {
             key_filter.add(row.getDocumentId());
 
             // temp solution until setKeys is solved...
-            venues.add(getFromId(database, row.getDocumentId()));
+//            venues.add(getFromId(database, row.getDocumentId()));
         }
 
-        return venues;
-        // return getAll(database, key_filter);
+//        return venues;
+        return getAll(database, key_filter);
     }
 
     // Other methods

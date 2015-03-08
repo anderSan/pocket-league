@@ -36,13 +36,13 @@ public class Session extends CouchDocumentBase {
 
     // Constructors
     public Session(String session_name, SessionType session_type, GameSubtype game_subtype,
-                   int team_size, Venue current_venue) {
+                   int ruleset_id, int team_size, Venue current_venue) {
         // name should be unique
         content.put("type", TYPE);
         content.put(NAME, session_name);
         content.put(SESSION_TYPE, session_type);
         content.put(GAME_SUBTYPE, game_subtype);
-        //        content.put(RULESET_ID, ruleset_id);
+        content.put(RULESET_ID, ruleset_id);
         content.put(TEAM_SIZE, team_size);
         content.put(IS_ACTIVE, true);
         content.put(IS_FAVORITE, false);
@@ -51,15 +51,15 @@ public class Session extends CouchDocumentBase {
     }
 
     public Session(Database database, String session_name, SessionType session_type,
-                   GameSubtype game_subtype, int team_size, Venue current_venue) {
-        this(session_name, session_type, game_subtype, team_size, current_venue);
+                   GameSubtype game_subtype, int ruleset_id, int team_size, Venue current_venue) {
+        this(session_name, session_type, game_subtype, ruleset_id, team_size, current_venue);
         createDocument(database);
     }
 
     public Session(Database database, String session_name, SessionType session_type,
-                   GameSubtype game_subtype, int team_size, Venue current_venue,
+                   GameSubtype game_subtype, int ruleset_id, int team_size, Venue current_venue,
                    List<SessionMember> members) {
-        this(database, session_name, session_type, game_subtype, team_size, current_venue);
+        this(database, session_name, session_type, game_subtype, ruleset_id, team_size, current_venue);
         this.members = members;
         content.put(MEMBERS, new ArrayList<SessionMember>());
     }
