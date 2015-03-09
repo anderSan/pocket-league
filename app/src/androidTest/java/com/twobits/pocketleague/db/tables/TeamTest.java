@@ -6,10 +6,12 @@ import junit.framework.TestCase;
 
 public class TeamTest extends TestCase {
     Team team;
+    Player player;
 
     public void setUp() throws Exception {
         super.setUp();
         team = new Team("Team First", null);
+        player = new Player("Panzer");
     }
 
     public void testGetSetName() throws Exception {
@@ -28,18 +30,30 @@ public class TeamTest extends TestCase {
         assertNotNull(team.getColor());
         team.setColor(Color.CYAN);
         assertEquals(Color.CYAN, team.getColor());
+
+        assertNotNull(player.getColor());
+        player.setColor(Color.BLUE);
+        assertEquals(player.getColor(), Color.BLUE);
     }
 
     public void testGetSetIsActive() throws Exception {
         assertEquals(true, team.getIsActive());
         team.setIsActive(false);
         assertEquals(false, team.getIsActive());
+
+        assertTrue(player.getIsActive());
+        player.setIsActive(false);
+        assertFalse(player.getIsActive());
     }
 
     public void testGetIsFavorite() throws Exception {
         assertEquals(false, team.getIsFavorite());
         team.setIsFavorite(true);
         assertEquals(true, team.getIsFavorite());
+
+        assertFalse(player.getIsFavorite());
+        player.setIsFavorite(true);
+        assertTrue(player.getIsFavorite());
     }
 
     public void testGetSize() throws Exception {

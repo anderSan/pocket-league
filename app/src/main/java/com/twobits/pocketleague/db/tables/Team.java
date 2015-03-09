@@ -1,12 +1,15 @@
 package com.twobits.pocketleague.db.tables;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryOptions;
 import com.couchbase.lite.QueryRow;
 
 import java.util.ArrayList;

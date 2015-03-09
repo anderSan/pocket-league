@@ -123,6 +123,11 @@ public class Player extends Team { //implements Comparable<Player> {
     }
 
     // Other methods
+    @Override
+    public List<Player> getMembers() {
+        return Arrays.asList(this);
+    }
+
     public String getFirstName() {
         return (String) content.get(FIRST_NAME);
     }
@@ -187,33 +192,14 @@ public class Player extends Team { //implements Comparable<Player> {
         content.put(WEIGHT, weight_kg);
     }
 
-    public int getColor() {
-        return (int) content.get(COLOR);
-    }
-
-    public void setColor(int color) {
-        content.put(COLOR, color);
-    }
-
-    public boolean getIsActive() {
-        return (boolean) content.get(IS_ACTIVE);
-    }
-
-    public void setIsActive(boolean is_active) {
-        content.put(IS_ACTIVE, is_active);
-    }
-
-    public boolean getIsFavorite() {
-        return (boolean) content.get(IS_FAVORITE);
-    }
-
-    public void setIsFavorite(boolean is_favorite) {
-        content.put(IS_FAVORITE, is_favorite);
-    }
-
     // =========================================================================
     // Additional methods
     // =========================================================================
+
+    @Override
+    public int getSize() {
+        return 1;
+    }
 
     public String getDisplayName() {
         return getFirstName() + " \"" + getName() + "\" " + getLastName();
@@ -239,16 +225,6 @@ public class Player extends Team { //implements Comparable<Player> {
 //        return id == another.id;
 //    }
 //
-    public boolean exists(Context context, Database database) {
-        try {
-            return exists(database, getName());
-        } catch (CouchbaseLiteException e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            loge("Existence check failed. ", e);
-            return false;
-        }
-    }
-
     public static boolean exists(Database database, String name) throws CouchbaseLiteException {
         if (name == null) {
             return false;
@@ -258,7 +234,6 @@ public class Player extends Team { //implements Comparable<Player> {
         query.setEndKey(name);
         QueryEnumerator result = query.run();
 
-        assert (result.getCount() <= 1);
         return result.hasNext();
     }
 }

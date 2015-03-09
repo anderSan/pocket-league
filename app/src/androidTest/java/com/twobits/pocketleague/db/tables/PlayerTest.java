@@ -61,24 +61,6 @@ public class PlayerTest extends TestCase {
         assertEquals(player.getWeight(), 71);
     }
 
-    public void testGetSetColor() throws Exception {
-        assertEquals(player.getColor(), Color.GREEN);
-        player.setColor(Color.BLUE);
-        assertEquals(player.getColor(), Color.BLUE);
-    }
-
-    public void testGetSetIsActive() throws Exception {
-        assertTrue(player.getIsActive());
-        player.setIsActive(false);
-        assertFalse(player.getIsActive());
-    }
-
-    public void testGetSetIsFavorite() throws Exception {
-        assertFalse(player.getIsFavorite());
-        player.setIsFavorite(true);
-        assertTrue(player.getIsFavorite());
-    }
-
     public void testGetDisplayName() throws Exception {
         assertEquals(player.getDisplayName(), "First \"PlayerNickname\" Last");
     }

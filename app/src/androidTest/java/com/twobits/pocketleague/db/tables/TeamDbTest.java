@@ -21,7 +21,8 @@ public class TeamDbTest extends DbBaseTestCase {
         p1.update();
         p2 = new Player(database, "Sue");
         p2.update();
-        p3 = new Player(database, "Tom");
+        p3 = new Player(database, "Tom", "Doc", "Holiday", true, false, true, false, 44, 12,
+                Color.BLACK, true);
         p3.update();
 
         t1 = new Team(database, "Test Team A", Arrays.asList(p1, p2));
@@ -35,7 +36,7 @@ public class TeamDbTest extends DbBaseTestCase {
         Team team = new Team("No doc team", null);
         assertNull(team.getId());
 
-        team = new Team(database, "Doc venue", null);
+        team = new Team(database, "Doc team", null);
         assertNotNull(team.getId());
     }
 
@@ -48,7 +49,7 @@ public class TeamDbTest extends DbBaseTestCase {
     }
 
     public void testFindByName() throws Exception {
-        Team t = Team.findByName(database, "Test Other Venue");
+        Team t = Team.findByName(database, "Test Other Team");
         assertNull(t);
 
         t = Team.findByName(database, "Test Team A");
@@ -59,10 +60,12 @@ public class TeamDbTest extends DbBaseTestCase {
 
     public void testGetAllTeams() throws Exception {
         List<Team> all_teams = Team.getAllTeams(database);
-        assertEquals(2, all_teams.size());
+        assertEquals(5, all_teams.size());
     }
 
     public void testGetTeams() throws Exception {
+        // Players shouldn't show up here, since this is used for the teams fragment
+        // and that only shows teams with size > 1. Players have their own fragment.
         List<Team> all_teams = Team.getTeams(database, true, true);
         assertEquals(1, all_teams.size());
     }
@@ -83,11 +86,16 @@ public class TeamDbTest extends DbBaseTestCase {
         assertEquals(p3.getId(), members.get(1).getId());
         assertEquals("Bob", members.get(2).getName());
         assertEquals(p1.getId(), members.get(2).getId());
+
+        members = p1.getMembers();
+        assertEquals(1, members.size());
+        assertEquals("Bob", members.get(0).getName());
     }
 
     public void testGetSize() throws Exception {
         assertEquals(2, t1.getSize());
         assertEquals(3, t2.getSize());
+        assertEquals(1, p2.getSize());
     }
 
     public void testExists() throws Exception {
@@ -95,6 +103,11 @@ public class TeamDbTest extends DbBaseTestCase {
         assertTrue(t2.exists());
         Team t3 = new Team(database, "Test Team C", Arrays.asList(p1, p2));
         assertFalse(t3.exists());
+
+        assertTrue(p1.exists());
+        assertTrue(p2.exists());
+        Player p4 = new Player(database, "Scooby");
+        assertFalse(p4.exists());
     }
 
     public void testStaticExists() throws Exception {

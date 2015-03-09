@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.couchbase.lite.CouchbaseLiteException;
 import com.twobits.pocketleague.backend.Fragment_Edit;
 import com.twobits.pocketleague.db.tables.Player;
 
@@ -146,13 +147,17 @@ public class Modify_Player extends Fragment_Edit {
 
 		Player newPlayer = new Player(database, nickname, first_name, last_name, lh, rh,
 				lf, rf, height_cm, weight_kg, player_color, is_favorite);
-
-        if (newPlayer.exists(context, database)) {
-            Toast.makeText(context, "Player already exists.", Toast.LENGTH_SHORT).show();
-        } else {
-            newPlayer.update();
-            Toast.makeText(context, "Player created!", Toast.LENGTH_SHORT).show();
-            mNav.onBackPressed();
+        try {
+            if (newPlayer.exists()) {
+                Toast.makeText(context, "Player already exists.", Toast.LENGTH_SHORT).show();
+            } else {
+                newPlayer.update();
+                Toast.makeText(context, "Player created!", Toast.LENGTH_SHORT).show();
+                mNav.onBackPressed();
+            }
+        } catch (CouchbaseLiteException e) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            loge("Existence check failed. ", e);
         }
 	}
 
