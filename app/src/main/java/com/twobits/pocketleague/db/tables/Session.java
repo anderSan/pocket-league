@@ -5,7 +5,6 @@ import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryEnumerator;
-import com.couchbase.lite.QueryOptions;
 import com.couchbase.lite.QueryRow;
 import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameDescriptor;
@@ -28,9 +27,9 @@ public class Session extends CouchDocumentBase {
     public static final String TEAM_SIZE = "team_size";
     public static final String IS_ACTIVE = "is_active";
     public static final String IS_FAVORITE = "is_favorite";
-    public static final String CURRENT_VENUE = "current_venue_id";
-    public static final String GAMES = "game_ids";
-    public static final String MEMBERS = "member_ids";
+    public static final String CURRENT_VENUE_ID = "current_venue_id";
+    public static final String GAMES_IDS = "game_ids";
+    public static final String MEMBER_IDS = "member_ids";
 
     private List<SessionMember> members = new ArrayList<>();
 
@@ -39,15 +38,14 @@ public class Session extends CouchDocumentBase {
                    int ruleset_id, int team_size, Venue current_venue) {
         // name should be unique
         content.put("type", TYPE);
-        content.put(NAME, session_name);
+        setName(session_name);
         content.put(SESSION_TYPE, session_type);
         content.put(GAME_SUBTYPE, game_subtype);
         content.put(RULESET_ID, ruleset_id);
         content.put(TEAM_SIZE, team_size);
-        content.put(IS_ACTIVE, true);
-        content.put(IS_FAVORITE, false);
-        content.put(CURRENT_VENUE, current_venue.getId());
-        content.put(MEMBERS, new ArrayList<Map<String, Object>>());
+        setIsActive(true);
+        setIsFavorite(false);
+        setCurrentVenue(current_venue);
     }
 
     public Session(Database database, String session_name, SessionType session_type,
@@ -58,10 +56,10 @@ public class Session extends CouchDocumentBase {
 
     public Session(Database database, String session_name, SessionType session_type,
                    GameSubtype game_subtype, int ruleset_id, int team_size, Venue current_venue,
-                   List<SessionMember> members) {
+                   List<SessionMember> members, boolean is_favorite) {
         this(database, session_name, session_type, game_subtype, ruleset_id, team_size, current_venue);
         this.members = members;
-        content.put(MEMBERS, new ArrayList<SessionMember>());
+        setIsFavorite(is_favorite);
     }
 
     private Session(Document document) {
@@ -136,8 +134,7 @@ public class Session extends CouchDocumentBase {
     }
 
     public GameType getGameType() {
-        GameSubtype gst = (GameSubtype) content.get(GAME_SUBTYPE);
-        return gst.toGameType();
+        return getGameSubtype().toGameType();
     }
 
     public GameSubtype getGameSubtype() {
@@ -164,19 +161,19 @@ public class Session extends CouchDocumentBase {
         content.put(IS_FAVORITE, is_favorite);
     }
 
-    public Venue getCurrentVenue(Database database) {
-        String venue_id = (String) content.get(CURRENT_VENUE);
-        return Venue.getFromId(database, venue_id);
+    public Venue getCurrentVenue() {
+        String venue_id = (String) content.get(CURRENT_VENUE_ID);
+        return Venue.getFromId(getDatabase(), venue_id);
     }
 
     public void setCurrentVenue(Venue current_venue) {
-        content.put(CURRENT_VENUE, current_venue.getId());
+        content.put(CURRENT_VENUE_ID, current_venue.getId());
     }
 
-    public List<Game> getGames(Database database) {
+    public List<Game> getGames() {
         List<Game> games = new ArrayList<>();
-        for (String game_id : (List<String>) content.get(GAMES)) {
-            games.add(Game.getFromId(database, game_id));
+        for (String game_id : (List<String>) content.get(GAMES_IDS)) {
+            games.add(Game.getFromId(getDatabase(), game_id));
         }
         return games;
     }
@@ -189,8 +186,7 @@ public class Session extends CouchDocumentBase {
 
     public List<SessionMember> getMembers() {
         if (members.size() == 0) {
-            List<Map<String, Object>> stored_members = (List<Map<String,
-                    Object>>) content.get(MEMBERS);
+            List<Map<String, Object>> stored_members = (List<Map<String, Object>>) content.get(MEMBER_IDS);
             Team team;
             int team_seed;
             int team_rank;
@@ -209,7 +205,7 @@ public class Session extends CouchDocumentBase {
         if (this.members.size() == members.size()) {
             this.members = members;
         } else {
-
+            throw new InternalError("Size of member list does not match.");
         }
     }
 
@@ -219,7 +215,7 @@ public class Session extends CouchDocumentBase {
         for (SessionMember sm : members) {
             stored_members.add(sm.toMap());
         }
-        content.put(MEMBERS, stored_members);
+        content.put(MEMBER_IDS, stored_members);
 
         super.update();
     }

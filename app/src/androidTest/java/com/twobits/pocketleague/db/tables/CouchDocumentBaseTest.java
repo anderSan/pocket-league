@@ -52,7 +52,7 @@ public class CouchDocumentBaseTest extends DbBaseTestCase {
             with_empty.update();
             Assert.fail();
         } catch (InstantiationError e) {
-            //success
+            // success
         }
 
         String revision_id = with_document.document.getCurrentRevisionId();
