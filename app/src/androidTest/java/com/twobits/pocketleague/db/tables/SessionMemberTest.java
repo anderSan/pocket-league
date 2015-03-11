@@ -31,31 +31,31 @@ public class SessionMemberTest extends TestCase {
     }
 
     public void testGetSeed() throws Exception {
-        assertEquals(sm1.getSeed(), 2);
-        assertEquals(sm2.getSeed(), 3);
-        assertEquals(sm3.getSeed(), 1);
+        assertEquals(2, sm1.getSeed());
+        assertEquals(3, sm2.getSeed());
+        assertEquals(1, sm3.getSeed());
     }
 
     public void testGetSetRank() throws Exception {
-        assertEquals(sm1.getRank(), 3);
-        assertEquals(sm2.getRank(), 0);
-        assertEquals(sm3.getRank(), 1);
+        assertEquals(3, sm1.getRank());
+        assertEquals(0, sm2.getRank());
+        assertEquals(1, sm3.getRank());
 
         sm1.setRank(2);
-        assertEquals(sm1.getRank(), 2);
+        assertEquals(2, sm1.getRank());
     }
 
     public void testSwapRank() throws Exception {
-        assertEquals(sm1.getRank(), 3);
-        assertEquals(sm2.getRank(), 0);
+        assertEquals(3, sm1.getRank());
+        assertEquals(0, sm2.getRank());
 
         sm1.swapRank(sm2);
-        assertEquals(sm1.getRank(), 0);
-        assertEquals(sm2.getRank(), 3);
+        assertEquals(0, sm1.getRank());
+        assertEquals(3, sm2.getRank());
 
         SessionMember.swapRank(sm1, sm2);
-        assertEquals(sm1.getRank(), 3);
-        assertEquals(sm2.getRank(), 0);
+        assertEquals(3, sm1.getRank());
+        assertEquals(0, sm2.getRank());
     }
 
     public void testToMap() throws Exception {
@@ -64,14 +64,20 @@ public class SessionMemberTest extends TestCase {
         assertTrue(content.containsKey(SessionMember.TEAM_SEED));
         assertTrue(content.containsKey(SessionMember.TEAM_RANK));
 
-        assertEquals(content.get(SessionMember.TEAM_ID), TeamStub.ID);
-        assertEquals(content.get(SessionMember.TEAM_SEED), 2);
-        assertEquals(content.get(SessionMember.TEAM_RANK), 3);
+        assertEquals(TeamStub.ID, content.get(SessionMember.TEAM_ID));
+        assertEquals(2, content.get(SessionMember.TEAM_SEED));
+        assertEquals(3, content.get(SessionMember.TEAM_RANK));
     }
 
     public void testCompareTo() throws Exception {
-        assertEquals(sm1.compareTo(sm2), 1);
-        assertEquals(sm1.compareTo(sm1), 0);
-        assertEquals(sm3.compareTo(sm1), -1);
+        assertEquals(1, sm1.compareTo(sm2));
+        assertEquals(0, sm1.compareTo(sm1));
+        assertEquals(-1, sm3.compareTo(sm1));
+    }
+
+    public void testCompareToSeed() throws Exception {
+        assertEquals(1, SessionMember.SEED_ORDER.compare(sm1, sm3));
+        assertEquals(0, SessionMember.SEED_ORDER.compare(sm1, sm1));
+        assertEquals(-1, SessionMember.SEED_ORDER.compare(sm3, sm1));
     }
 }

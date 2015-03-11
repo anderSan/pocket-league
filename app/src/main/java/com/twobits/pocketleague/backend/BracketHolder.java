@@ -12,6 +12,7 @@ import com.twobits.pocketleague.db.tables.SessionMember;
 import com.twobits.pocketleague.enums.BrNodeType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BracketHolder implements View.OnClickListener {
@@ -31,15 +32,8 @@ public class BracketHolder implements View.OnClickListener {
 		this.s = s;
 		this.isDoubleElim = isDoubleElim;
 
-//		try {
-			// get all the session members
-//			QueryBuilder<Session, Long> sQue = sDao.queryBuilder();
-//			sQue.where().eq("id", s.getId());
-//			QueryBuilder<SessionMember, Long> smQue = smDao.queryBuilder();
-//			sMembers = smQue.join(sQue).orderBy(SessionMember.TEAM_SEED, true).query();
-//		} catch (SQLException e) {
-//			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-//		}
+        sMembers = s.getMembers();
+        Collections.sort(sMembers, SessionMember.SEED_ORDER);
 
 		rl = new RelativeLayout(context);
 
@@ -68,15 +62,7 @@ public class BracketHolder implements View.OnClickListener {
 	}
 
 	public void refreshBrackets() {
-		// get all the completed games for the session
-		List<Game> sGamesList = new ArrayList<>();
-//		try {
-//			Log.i(LOGTAG, "session id is " + s.getId());
-//			sGamesList = gDao.queryBuilder().orderBy(Game.ID_IN_SESSION, true)
-//					.where().eq(Game.SESSION_ID, s.getId()).query();
-//		} catch (SQLException e) {
-//			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-//		}
+		List<Game> sGamesList = s.getGames();
 
 		sGamesList = wBr.matchMatches(sGamesList);
 		wBr.refreshViews();

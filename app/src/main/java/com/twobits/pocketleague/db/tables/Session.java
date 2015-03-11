@@ -236,6 +236,6 @@ public class Session extends CouchDocumentBase {
     // =========================================================================
 
     public GameDescriptor getDescriptor() {
-        return ((GameSubtype) content.get(GAME_SUBTYPE)).toDescriptor();
+        return getGameSubtype().toDescriptor();
     }
 }

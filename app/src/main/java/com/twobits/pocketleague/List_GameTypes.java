@@ -36,7 +36,6 @@ public class List_GameTypes extends Fragment_TopList {
 		gametype_adapter = new ListAdapter_GameType(context, R.layout.grid_item, gametypes_list);
 		gv.setAdapter(gametype_adapter);
 		gv.setOnItemClickListener(gvItemClicked);
-		// gv.setOnItemLongClickListener(elvItemLongClicked);
 
 		return rootView;
 	}
@@ -52,8 +51,6 @@ public class List_GameTypes extends Fragment_TopList {
 		for (GameType gt : GameType.values()) {
 			gametypes_list.add(new Item_GameType(gt));
 		}
-
-//		gametype_adapter.notifyDataSetChanged(); // required if list has changed
 	}
 
 	private OnItemClickListener gvItemClicked = new OnItemClickListener() {

@@ -35,7 +35,7 @@ public class Bracket {
 	public int lastHeaderId;
 	public int lastMatchId;
 	private int nLeafs;
-	private Map<Long, Integer> smIdMap = new HashMap<>();
+	private Map<String, Integer> smIdMap = new HashMap<>();
 	private Map<Integer, SessionMember> smSeedMap = new HashMap<>();
 	private List<Integer> matchIds = new ArrayList<>();
 	private List<Integer> sm1Idcs = new ArrayList<>();
@@ -58,7 +58,7 @@ public class Bracket {
 		for (SessionMember sm : sMembers) {
 			seed = sm.getSeed();
 			if (seed >= 0 && !smSeedMap.containsKey(seed)) {
-//				smIdMap.put(sm.getTeam().getId(), seed);
+				smIdMap.put(sm.getTeam().getId(), seed);
 				smSeedMap.put(seed, sm);
 			}
 		}
@@ -527,8 +527,7 @@ public class Bracket {
 		Integer topOfTier = getTopMatchOfTier(tier);
 		Integer topOfNextTier = getTopMatchOfTier(tier + 1);
 
-		Integer childBracket = topOfNextTier + (matchIdx - topOfTier) / 2
-				+ BrNodeType.UPPER;
+		Integer childBracket = topOfNextTier + (matchIdx - topOfTier) / 2 + BrNodeType.UPPER;
 		if (matchIdx % 2 != 0) {
 			childBracket += 1000;
 		}
@@ -555,8 +554,7 @@ public class Bracket {
 				}
 				if (baseId > 0) {
 					// have to keep track of upper/lower now
-					baseId += BrNodeType.LOWER - 1; // lower arm of the match
-					// above
+					baseId += BrNodeType.LOWER - 1; // lower arm of the match above
 					while (!matchIds.contains(baseId % BrNodeType.MOD)) {
 						baseId = getChildViewId(baseId);
 					}
@@ -774,7 +772,7 @@ public class Bracket {
 
 	public List<Game> matchMatches(List<Game> sGames) {
 		String gId;
-		String gsId;
+		long gsId;
 		int smASeed;
 		int smBSeed;
 
@@ -782,15 +780,15 @@ public class Bracket {
 		while (gIt.hasNext()) {
 			Game g = gIt.next();
 			gId = g.getId();
-//			gsId = g.getIdInSession();
-			// Log.i(LOGTAG, "Game " + gId + ". "
-			// + g.getFirstPlayer().getFirstName() + " vs "
-			// + g.getSecondPlayer().getFirstName());
+			gsId = g.getIdInSession();
+//			Log.i(LOGTAG, "Game " + gId + ". "
+//			+ g.getFirstPlayer().getFirstName() + " vs "
+//			+ g.getSecondPlayer().getFirstName());
 
 			List<GameMember> gMembers = new ArrayList<>();
-//			for (GameMember gm : g.getMembers()) {
-//				gMembers.add(gm);
-//			}
+			for (GameMember gm : g.getMembers()) {
+				gMembers.add(gm);
+			}
 			smASeed = smIdMap.get(gMembers.get(0).getTeam().getId());
 			smBSeed = smIdMap.get(gMembers.get(1).getTeam().getId());
 
@@ -801,8 +799,7 @@ public class Bracket {
 				for (int idx = 0; idx < nMatches; idx++) {
 					if (hasSm(idx, smASeed) && hasSm(idx, smBSeed)
 							&& gameIds.get(idx) == -1) {
-						Log.i(LOGTAG, "Matching game " + gId + " to match "
-								+ matchIds.get(idx));
+						Log.i(LOGTAG, "Matching game " + gId + " to match " + matchIds.get(idx));
 //						gameIds.set(idx, gId);
 						gIt.remove();
 						break;
@@ -810,10 +807,10 @@ public class Bracket {
 				}
 			}
 
-//			if (g.getIsComplete() && gameIds.contains(gId)) {
-//				smASeed = smIdMap.get(g.getWinner().getId());
-//				promoteWinner(gameIds.indexOf(g.getId()), smASeed);
-//			}
+			if (g.getIsComplete() && gameIds.contains(gId)) {
+				smASeed = smIdMap.get(g.getWinner().getId());
+				promoteWinner(gameIds.indexOf(g.getId()), smASeed);
+			}
 		}
 		return sGames;
 	}

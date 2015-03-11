@@ -2,6 +2,7 @@ package com.twobits.pocketleague.db.tables;
 
 import android.util.ArrayMap;
 
+import java.util.Comparator;
 import java.util.Map;
 
 public class SessionMember implements Comparable<SessionMember> {
@@ -61,13 +62,14 @@ public class SessionMember implements Comparable<SessionMember> {
         return contents;
     }
 
-	public int compareTo(SessionMember another) {
-        if (team_rank < another.team_rank) {
-            return -1;
-        } else if (team_rank == another.team_rank) {
-            return 0;
-        } else {
-            return 1;
-        }
+    public int compareTo(SessionMember another) {
+        return ((Integer) team_rank).compareTo(another.team_rank);
     }
+
+    public static final Comparator<SessionMember> SEED_ORDER =
+        new Comparator<SessionMember>() {
+            public int compare(SessionMember e1, SessionMember e2) {
+                return ((Integer) e1.team_seed).compareTo(e2.team_seed);
+            }
+        };
 }

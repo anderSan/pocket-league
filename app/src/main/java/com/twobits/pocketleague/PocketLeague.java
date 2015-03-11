@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.twobits.pocketleague.backend.Fragment_Base;
 import com.twobits.pocketleague.backend.NavDrawerAdapter;
@@ -342,18 +343,21 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         try {
             fragment = (Fragment) session_type.toClass().newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
+            Toast.makeText(this, "Unable to load fragment.", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
 
-        Bundle args = new Bundle();
-        args.putString("SID", sId);
-        fragment.setArguments(args);
+        if (fragment != null) {
+            Bundle args = new Bundle();
+            args.putString("SID", sId);
+            fragment.setArguments(args);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.content_frame, fragment).addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.content_frame, fragment).addToBackStack(null);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
+        }
     }
 
     public void viewPlayerDetails(String pId) {

@@ -15,11 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.QueryEnumerator;
-import com.couchbase.lite.QueryRow;
 import com.twobits.pocketleague.backend.Fragment_Edit;
 import com.twobits.pocketleague.backend.SpinnerAdapter;
+import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Session;
+import com.twobits.pocketleague.db.tables.SessionMember;
 import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.db.tables.Venue;
 import com.twobits.pocketleague.enums.SessionType;
@@ -28,8 +28,6 @@ import com.twobits.pocketleague.gameslibrary.GameType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 public class Modify_Session extends Fragment_Edit {
@@ -110,7 +108,8 @@ public class Modify_Session extends Fragment_Edit {
 		try {
             teams.clear();
             teamNames.clear();
-            teams = Team.getTeams(database(), true, false);
+            teams.addAll(Player.getPlayers(database(), true, false));
+            teams.addAll(Team.getTeams(database(), true, false));
             for (Team t : teams) {
                 teamNames.add(t.getName());
             }
@@ -184,31 +183,21 @@ public class Modify_Session extends Fragment_Edit {
 			SessionType session_type, Venue current_venue, boolean is_favorite) {
 		int team_size = teamIdxList.size();
         int ruleset_id = 0;
-		Session newSession = new Session(database(), session_name, session_type, game_subtype,
-                ruleset_id, team_size, current_venue);
-		newSession.setIsFavorite(is_favorite);
 
-		List<Team> roster = new ArrayList<>();
-		for (Integer teamIdx : teamIdxList) {
-			roster.add(teams.get(teamIdx));
-		}
-		roster = seedRoster(roster);
+        List<SessionMember> roster = new ArrayList<>();
+        int seed = 0;
+        for (Integer teamIdx : teamIdxList) {
+            roster.add(new SessionMember(teams.get(teamIdx), seed));
+            seed++;
+        }
 
-//		try {
-//			newSession.update();
-//			int seed = 0;
-//			for (Team t : roster) {
-//				SessionMember sm = new SessionMember(newSession, t, seed);
-//				smDao.create(sm);
-//				seed++;
-//			}
-//			Toast.makeText(context, "Session created!", Toast.LENGTH_SHORT).show();
-//			mNav.onBackPressed();
-//		} catch (SQLException e) {
-//			loge("Could not create session", e);
-//			Toast.makeText(context, "Could not create session.",
-//					Toast.LENGTH_SHORT).show();
-//		}
+        Session newSession = new Session(database(), session_name, session_type, game_subtype,
+                ruleset_id, team_size, current_venue, roster, is_favorite);
+        newSession.setIsFavorite(is_favorite);
+        newSession.update();
+
+        Toast.makeText(context, "Session created!", Toast.LENGTH_SHORT).show();
+        mNav.onBackPressed();
 	}
 
 	private void modifySession(String session_name, Venue current_venue, boolean is_favorite) {
@@ -219,12 +208,5 @@ public class Modify_Session extends Fragment_Edit {
         s.update();
         Toast.makeText(context, "Session modified.", Toast.LENGTH_SHORT).show();
         mNav.onBackPressed();
-	}
-
-	public List<Team> seedRoster(List<Team> roster) {
-		// only random seeding so far...
-		Collections.shuffle(roster);
-
-		return roster;
 	}
 }

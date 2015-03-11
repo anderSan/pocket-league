@@ -40,9 +40,9 @@ public class GameMemberTest extends TestCase {
         assertTrue(content.containsKey(GameMember.SCORE));
         assertTrue(content.containsKey(GameMember.PLAY_ORDER));
 
-        assertEquals(content.get(GameMember.TEAM_ID), TeamStub.ID);
-        assertEquals(content.get(GameMember.SCORE), 0);
-        assertEquals(content.get(GameMember.PLAY_ORDER), -1);
+        assertEquals(TeamStub.ID, content.get(GameMember.TEAM_ID));
+        assertEquals(0, content.get(GameMember.SCORE));
+        assertEquals(-1, content.get(GameMember.PLAY_ORDER));
     }
 
     public void testCompareTo() throws Exception {
@@ -50,9 +50,9 @@ public class GameMemberTest extends TestCase {
         GameMember gm2 = new GameMember(t1);
         gm2.setPlayOrder(2);
 
-        assertEquals(gm1.compareTo(gm2), -1);
-        assertEquals(gm1.compareTo(gm1), 0);
-        assertEquals(gm2.compareTo(gm1), 1);
+        assertEquals(-1, gm1.compareTo(gm2));
+        assertEquals(0, gm1.compareTo(gm1));
+        assertEquals(1, gm2.compareTo(gm1));
     }
 
     public void testCompareToScore() throws Exception {
@@ -60,8 +60,8 @@ public class GameMemberTest extends TestCase {
         GameMember gm2 = new GameMember(t1);
         gm2.setScore(2);
 
-        assertEquals(GameMember.SCORE_ORDER.compare(gm1, gm2), 1);
-        assertEquals(GameMember.SCORE_ORDER.compare(gm1, gm1), 0);
-        assertEquals(GameMember.SCORE_ORDER.compare(gm2, gm1), -1);
+        assertEquals(1, GameMember.SCORE_ORDER.compare(gm1, gm2));
+        assertEquals(0, GameMember.SCORE_ORDER.compare(gm1, gm1));
+        assertEquals(-1, GameMember.SCORE_ORDER.compare(gm2, gm1));
     }
 }
