@@ -3,9 +3,9 @@ package com.twobits.pocketleague.backend;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
 public class Item_GameType {
-	private GameType gametype;
-	public String name;
-	private int drawable_id;
+    private GameType gametype;
+    public String name;
+    private int drawable_id;
 
     public Item_GameType(GameType gametype) {
         this.gametype = gametype;
@@ -19,27 +19,27 @@ public class Item_GameType {
         this.drawable_id = drawable_id;
     }
 
-	public GameType getGameType() {
-		return gametype;
-	}
+    public GameType getGameType() {
+        return gametype;
+    }
 
-	public void setGameType(GameType gametype) {
-		this.gametype = gametype;
-	}
+    public void setGameType(GameType gametype) {
+        this.gametype = gametype;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public int getDrawableId() {
-		return drawable_id;
-	}
+    public int getDrawableId() {
+        return drawable_id;
+    }
 
-	public void setDrawableId(int drawable_id) {
-		this.drawable_id = drawable_id;
-	}
+    public void setDrawableId(int drawable_id) {
+        this.drawable_id = drawable_id;
+    }
 }
