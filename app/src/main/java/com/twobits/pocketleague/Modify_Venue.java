@@ -49,7 +49,7 @@ public class Modify_Venue extends Fragment_Edit {
 	}
 
 	private void loadVenueValues() {
-        v = Venue.getFromId(database, vId);
+        v = Venue.getFromId(database(), vId);
         btn_create.setText("Modify");
         tv_name.setText(v.getName());
         cb_isFavorite.setChecked(v.getIsFavorite());
@@ -72,7 +72,7 @@ public class Modify_Venue extends Fragment_Edit {
 	}
 
 	private void createVenue(String venue_name, boolean is_favorite) {
-		Venue newVenue = new Venue(database, venue_name, is_favorite);
+		Venue newVenue = new Venue(database(), venue_name, is_favorite);
 
         newVenue.update();
         Toast.makeText(context, "Venue created!", Toast.LENGTH_SHORT).show();

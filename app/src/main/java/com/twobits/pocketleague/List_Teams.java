@@ -75,7 +75,7 @@ public class List_Teams extends Fragment_TopList {
         public void onClick(View view) {
             String tId = (String) view.getTag();
 
-            Team t = Team.getFromId(database, tId);
+            Team t = Team.getFromId(database(), tId);
             t.setIsFavorite(((CheckBox) view).isChecked());
             t.update();
         }
@@ -84,7 +84,7 @@ public class List_Teams extends Fragment_TopList {
     private List<Team> getTeams() {
         List<Team> teams = new ArrayList<>();
         try {
-            teams = Team.getTeams(database, show_actives, show_favorites);
+            teams = Team.getTeams(database(), show_actives, show_favorites);
         } catch (CouchbaseLiteException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             loge("Retrieval of teams failed. ", e);

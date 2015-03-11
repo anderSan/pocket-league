@@ -308,7 +308,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
                 }
                 ft.addToBackStack(null);
 
-                DialogFragment newFragment = Quick_Game.newInstance(database, gId);
+                DialogFragment newFragment = Quick_Game.newInstance(getDatabase(), gId);
                 newFragment.show(ft, "dialog");
             }
         }

@@ -68,7 +68,7 @@ public class Detail_Team extends Fragment_Detail {
 	public void refreshDetails() {
 		String member_names = "";
 		if (tId != null) {
-            t = Team.getFromId(database, tId);
+            t = Team.getFromId(database(), tId);
             for (Player p : t.getMembers()) {
                 member_names = member_names.concat(p.getName() + ", ");
             }

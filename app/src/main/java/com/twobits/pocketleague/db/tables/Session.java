@@ -39,8 +39,8 @@ public class Session extends CouchDocumentBase {
         // name should be unique
         content.put("type", TYPE);
         setName(session_name);
-        content.put(SESSION_TYPE, session_type);
-        content.put(GAME_SUBTYPE, game_subtype);
+        content.put(SESSION_TYPE, session_type.name());
+        content.put(GAME_SUBTYPE, game_subtype.name());
         content.put(RULESET_ID, ruleset_id);
         content.put(TEAM_SIZE, team_size);
         setIsActive(true);
@@ -131,7 +131,7 @@ public class Session extends CouchDocumentBase {
     }
 
     public SessionType getSessionType() {
-        return (SessionType) content.get(SESSION_TYPE);
+        return SessionType.valueOf((String) content.get(SESSION_TYPE));
     }
 
     public GameType getGameType() {
@@ -139,7 +139,7 @@ public class Session extends CouchDocumentBase {
     }
 
     public GameSubtype getGameSubtype() {
-        return (GameSubtype) content.get(GAME_SUBTYPE);
+        return GameSubtype.valueOf((String) content.get(GAME_SUBTYPE));
     }
 
     public int getTeamSize() {

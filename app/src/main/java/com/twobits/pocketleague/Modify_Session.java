@@ -94,7 +94,7 @@ public class Modify_Session extends Fragment_Edit {
 
 		try {
             List<String> venueNames = new ArrayList<>();
-            List<Venue> venues = Venue.getVenues(database, true, false);
+            List<Venue> venues = Venue.getVenues(database(), true, false);
 
             for (Venue v : venues) {
                 venueNames.add(v.getName());
@@ -110,7 +110,7 @@ public class Modify_Session extends Fragment_Edit {
 		try {
             teams.clear();
             teamNames.clear();
-            teams = Team.getTeams(database, true, false);
+            teams = Team.getTeams(database(), true, false);
             for (Team t : teams) {
                 teamNames.add(t.getName());
             }
@@ -140,7 +140,7 @@ public class Modify_Session extends Fragment_Edit {
 	}
 
 	private void loadSessionValues() {
-        s = Session.getFromId(database, sId);
+        s = Session.getFromId(database(), sId);
         btn_create.setText("Modify");
         tv_name.setText(s.getName());
         sp_sessionType.setVisibility(View.GONE);
@@ -184,7 +184,7 @@ public class Modify_Session extends Fragment_Edit {
 			SessionType session_type, Venue current_venue, boolean is_favorite) {
 		int team_size = teamIdxList.size();
         int ruleset_id = 0;
-		Session newSession = new Session(database, session_name, session_type, game_subtype,
+		Session newSession = new Session(database(), session_name, session_type, game_subtype,
                 ruleset_id, team_size, current_venue);
 		newSession.setIsFavorite(is_favorite);
 

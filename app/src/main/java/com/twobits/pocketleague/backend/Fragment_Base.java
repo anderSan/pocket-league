@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 public abstract class Fragment_Base extends Fragment {
     protected String LOGTAG = getClass().getSimpleName();
-    public Database database;
     public static final HashMap<String, Object> QUERY_END = new HashMap<>();
     public View rootView;
     public Context context;
@@ -47,7 +46,6 @@ public abstract class Fragment_Base extends Fragment {
         }
 
         context = getActivity();
-        database = mData.getDatabase();
     }
 
     public boolean closeContextualActionBar() {
@@ -56,6 +54,10 @@ public abstract class Fragment_Base extends Fragment {
             return true;
         }
         return false;
+    }
+
+    public Database database() {
+        return mData.getDatabase();
     }
 
     public void refreshDetails() {}

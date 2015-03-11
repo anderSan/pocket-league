@@ -47,7 +47,7 @@ public class Detail_Game extends Fragment_Detail {
 
 	public void refreshDetails() {
 		if (gId != null) {
-            g = Game.getFromId(database, gId);
+            g = Game.getFromId(database(), gId);
             // playerDao.refresh(g.getFirstPlayer());
             // playerDao.refresh(g.getSecondPlayer());
 

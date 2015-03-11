@@ -59,7 +59,7 @@ public class Modify_Team extends Fragment_Edit {
 		try {
             players.clear();
             playerNames.clear();
-            players = Player.getPlayers(database, true, false);
+            players = Player.getPlayers(database(), true, false);
             for (Player p : players) {
                 playerNames.add(p.getName());
             }
@@ -89,7 +89,7 @@ public class Modify_Team extends Fragment_Edit {
 	}
 
 	private void loadTeamValues() {
-        t = Team.getFromId(database, tId);
+        t = Team.getFromId(database(), tId);
         btn_create.setText("Modify");
         tv_name.setText(t.getName());
         lv_roster.setVisibility(View.GONE);
@@ -125,7 +125,7 @@ public class Modify_Team extends Fragment_Edit {
         for (Integer playerIdx : playerIdxList) {
             team_members.add(players.get(playerIdx));
         }
-        Team newTeam = new Team(database, team_name, team_members, team_color, is_favorite);
+        Team newTeam = new Team(database(), team_name, team_members, team_color, is_favorite);
         try {
             if (playerIdxList.size() == 1) {
                 Toast.makeText(context, "Cannot create a team with only one player.",

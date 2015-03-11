@@ -65,7 +65,7 @@ public class Detail_Venue extends Fragment_Detail {
 
 	public void refreshDetails() {
         if (vId != null) {
-            v = Venue.getFromId(database, vId);
+            v = Venue.getFromId(database(), vId);
         }
 
         mNav.setTitle(v.getName(), "Venue Details");

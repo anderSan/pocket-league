@@ -84,7 +84,7 @@ public class Modify_Player extends Fragment_Edit {
 	}
 
 	private void loadPlayerValues() {
-        p = Player.getFromId(database, pId);
+        p = Player.getFromId(database(), pId);
         btn_create.setText("Modify");
         tv_nick.setText(p.getName());
         tv_name.setText(p.getFirstName() + " " + p.getLastName());
@@ -145,7 +145,7 @@ public class Modify_Player extends Fragment_Edit {
 			String last_name, boolean lh, boolean rh, boolean lf, boolean rf,
 			int height_cm, int weight_kg, boolean is_favorite) {
 
-		Player newPlayer = new Player(database, nickname, first_name, last_name, lh, rh,
+		Player newPlayer = new Player(database(), nickname, first_name, last_name, lh, rh,
 				lf, rf, height_cm, weight_kg, player_color, is_favorite);
         try {
             if (newPlayer.exists()) {

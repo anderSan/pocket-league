@@ -79,7 +79,7 @@ public class List_Sessions extends Fragment_TopList {
         public void onClick(View view) {
             String sId = (String) view.getTag();
 
-            Session s = Session.getFromId(database, sId);
+            Session s = Session.getFromId(database(), sId);
             s.setIsFavorite(((CheckBox) view).isChecked());
             s.update();
         }
@@ -88,7 +88,7 @@ public class List_Sessions extends Fragment_TopList {
     private List<Session> getSessions() {
         List<Session> sessions = new ArrayList<>();
         try {
-            sessions = Session.getSessions(database, show_actives, show_favorites);
+            sessions = Session.getSessions(database(), show_actives, show_favorites);
         } catch (CouchbaseLiteException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             loge("Retrieval of sessions failed. ", e);

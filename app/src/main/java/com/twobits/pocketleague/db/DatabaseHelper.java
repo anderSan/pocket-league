@@ -1,6 +1,7 @@
 package com.twobits.pocketleague.db;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.couchbase.lite.Context;
 import com.couchbase.lite.CouchbaseLiteException;
@@ -65,6 +66,16 @@ public class DatabaseHelper {
             }
         }
         return database;
+    }
+
+    public void deleteDatabase() {
+        try {
+            database.delete();
+            database.close();
+            database = null;
+        } catch (CouchbaseLiteException e) {
+            loge("Failed to delete database. ", e);
+        }
     }
 
     public void createCouchViews() {

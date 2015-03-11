@@ -74,7 +74,7 @@ public class List_Venues extends Fragment_TopList {
         public void onClick(View view) {
             String vId = (String) view.getTag();
 
-            Venue v = Venue.getFromId(database, vId);
+            Venue v = Venue.getFromId(database(), vId);
             v.setIsFavorite(((CheckBox) view).isChecked());
             v.update();
         }
@@ -83,7 +83,7 @@ public class List_Venues extends Fragment_TopList {
     private List<Venue> getVenues() {
         List<Venue> venues = new ArrayList<>();
         try {
-            venues = Venue.getVenues(database, show_actives, show_favorites);
+            venues = Venue.getVenues(database(), show_actives, show_favorites);
         } catch (CouchbaseLiteException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             loge("Retrieval of venues failed. ", e);

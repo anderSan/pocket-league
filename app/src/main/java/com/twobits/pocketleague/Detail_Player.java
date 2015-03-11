@@ -77,7 +77,7 @@ public class Detail_Player extends Fragment_Detail {
 	public void refreshDetails() {
 
 		if (pId != null) {
-            p = Player.getFromId(database, pId);
+            p = Player.getFromId(database(), pId);
 		}
 
         mNav.setTitle(p.getName(), "Player Details");

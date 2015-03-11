@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.couchbase.lite.CouchbaseLiteException;
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileInfo;
@@ -20,6 +21,12 @@ import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 import com.twobits.pocketleague.backend.Fragment_Base;
 import com.twobits.pocketleague.db.DbxInfo;
+import com.twobits.pocketleague.db.tables.Player;
+import com.twobits.pocketleague.db.tables.Session;
+import com.twobits.pocketleague.db.tables.SessionMember;
+import com.twobits.pocketleague.db.tables.Venue;
+import com.twobits.pocketleague.enums.SessionType;
+import com.twobits.pocketleague.gameslibrary.GameSubtype;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -138,15 +145,6 @@ public class DbSettings extends Fragment_Base {
 			}
 		});
 
-		// Button mUpdtBtn = (Button)
-		// rootView.findViewById(R.id.db_updateScores);
-		// mUpdtBtn.setOnClickListener(new OnClickListener() {
-		// @Override
-		// public void onClick(View v) {
-		// updateScores();
-		// }
-		// });
-
 		return rootView;
 	}
 
@@ -197,9 +195,8 @@ public class DbSettings extends Fragment_Base {
                     }
 
 	public void clearTables() {
-//		DatabaseHelper h = mData.getHelper();
-//		h.dropAll();
-//		h.createAll();
+        mData.deleteDatabase();
+//        database = mData.getDatabase();
 	}
 
     public void clearOtherTables() {
@@ -218,106 +215,57 @@ public class DbSettings extends Fragment_Base {
     }
 
 	public void doPopulateTest() {
-		byte[] emptyImage = new byte[0];
-//		Player[] players = {
-//				new Player("mike c", "michael", "cannamela", true, false, true,
-//						false, 170, 70, emptyImage, getResources().getColor(
-//								R.color.SaddleBrown), true),
-//				new Player("samu", "erin", "arai", true, false, true, false,
-//						160, 50, emptyImage, getResources().getColor(
-//								R.color.BlanchedAlmond), false),
-//				new Player("king tut", "matt", "tuttle", true, false, true,
-//						false, 182, 63, emptyImage, getResources().getColor(
-//								R.color.CornflowerBlue), false),
-//				new Player("dru", "andrew", "o'brien", true, false, true,
-//						false, 182, 63, emptyImage, getResources().getColor(
-//								R.color.DarkOrange), false),
-//				new Player("murder", "matt", "miguez", true, false, true,
-//						false, 182, 63, emptyImage, getResources().getColor(
-//								R.color.FireBrick), false),
-//				new Player("juice", "julian", "spring", false, true, true,
-//						false, 182, 63, emptyImage, getResources().getColor(
-//								R.color.Goldenrod), false),
-//				new Player("freeeedom", "mike", "freeman", true, false, true,
-//						false, 182, 63, emptyImage, getResources().getColor(
-//								R.color.HotPink), false),
-//				new Player("pilip", "phillip", "anderson", false, true, true,
-//						false, 182, 63, emptyImage, getResources().getColor(
-//								R.color.Green), true),
-//				new Player("sukes appeal", "jon", "sukovich", true, false,
-//						true, false, 182, 63, emptyImage, getResources()
-//								.getColor(R.color.Khaki), false) };
-//
-//        Venue v1 = new Venue("Putnam St.", true);
-//        Venue v2 = new Venue("Verndale", false);
-//        Venue v3 = new Venue("Oxford", true);
+		Player[] players = {
+				new Player(database(), "mike c", "Michael", "Cannamela", true, false, true, false,
+                        170, 70, getResources().getColor(R.color.SaddleBrown), true),
+				new Player(database(), "samu", "Erin", "Arai", true, false, true, false,
+						160, 50, getResources().getColor(R.color.BlanchedAlmond), false),
+				new Player(database(), "king tut", "Matt", "Tuttle", true, false, true, false,
+                        182, 63, getResources().getColor(R.color.CornflowerBlue), false),
+				new Player(database(), "dru", "andrew", "o'brien", true, false, true,
+						false, 182, 63, getResources().getColor(R.color.DarkOrange), false),
+				new Player(database(), "murder", "matt", "miguez", true, false, true,
+						false, 182, 63, getResources().getColor(R.color.FireBrick), false),
+				new Player(database(), "juice", "julian", "spring", false, true, true,
+						false, 182, 63, getResources().getColor(R.color.Goldenrod), false),
+				new Player(database(), "freeeedom", "mike", "freeman", true, false, true,
+						false, 182, 63, getResources().getColor(R.color.HotPink), false),
+				new Player(database(), "pilip", "phillip", "anderson", false, true, true, false,
+						182, 63, getResources().getColor(R.color.Green), true),
+				new Player(database(), "sukes appeal", "jon", "sukovich", true, false, true, false,
+                        182, 63, getResources().getColor(R.color.Khaki), false)
+        };
+        for (Player p : players) {
+            p.update();
+        }
 
-//		Session s1 = new Session("league", GameType.POLISH_HORSESHOES,
-//		GameSubtype.POLISH_SINGLES, SessionType.LEAGUE, 1, Venue);
-//
-//		Session s2 = new Session("league", GameType.BILLIARDS,
-//		GameSubtype.EIGHTBALL, SessionType.LEAGUE, 1);
+        Venue[] venues = {
+                new Venue(database(), "Putnam St.", true),
+                new Venue(database(), "Verndale", false),
+                new Venue(database(), "Oxford", true)
+        };
+        for (Venue v : venues) {
+            v.update();
+        }
 
-//		try {
-//			Dao<Player, Long> playerDao = mData.getPlayerDao();
-//			Dao<Team, Long> teamDao = mData.getTeamDao();
-//			Dao<OldTeamMember, Long> tmDao = mData.getTeamMemberDao();
-//			Dao<Session, Long> sDao = mData.getSessionDao();
-//			Dao<Venue, Long> venueDao = mData.getVenueDao();
-//			for (Player p : players) {
-//				playerDao.create(p);
-//				Team t = new Team(p.getName(), 1, p.getColor(),
-//						p.getIsFavorite());
-//				teamDao.create(t);
-//				tmDao.create(new OldTeamMember(t, p));
-//			}
-//
-////			sessionDao.create(s1);
-////			sessionDao.create(s2);
-//
-//			venueDao.create(v1);
-//			venueDao.create(v2);
-//			venueDao.create(v3);
-//		} catch (SQLException e) {
-//			int duration = Toast.LENGTH_LONG;
-//			Toast.makeText(context, e.getMessage(), duration).show();
-//			loge("Populate database failed", e);
-//		}
+        List<SessionMember> members = new ArrayList<>();
+        members.add(new SessionMember(players[0], 1));
+        members.add(new SessionMember(players[1], 2));
+        members.add(new SessionMember(players[2], 3));
+        members.add(new SessionMember(players[3], 4));
+        members.add(new SessionMember(players[4], 5));
+        members.add(new SessionMember(players[5], 6));
+
+        Session[] sessions = {
+                new Session(database(), "Test Single Elim Session", SessionType.SNGL_ELIM,
+                        GameSubtype.POLISH_SINGLES, 0, 1, venues[2], members, true),
+                new Session(database(), "Test Double Elim Session", SessionType.DBL_ELIM,
+                        GameSubtype.EIGHTBALL, 0, 1, venues[0], members, false)
+        };
+        for (Session s : sessions) {
+            s.update();
+        }
 	}
-
-	// public void updateScores() {
-	// List<Long> badGames = null;
-	// List<Long> badThrows = null;
-	// Dao<Game, Long> gDao;
-	// Dao<Throw, Long> tDao;
-	// try {
-	//
-	// gDao = Game.getDao(context);
-	// tDao = Throw.getDao(context);
-	// badGames = DatabaseUpgrader.updateScores(gDao, context);
-	// if (badGames.size() > 0) {
-	// Log.w("SimpleSettings",
-	// "The following games had different scores after upgrade: "
-	// + badGames.toString());
-	// // throw new RuntimeException("Scores changed on upgrade");
-	// } else {
-	// Log.i("SimpleSettings",
-	// "All game scores unchanged after upgrade!");
-	// }
-	//
-	// badThrows = DatabaseUpgrader.checkThrows(tDao, context);
-	// if (badThrows.size() > 0) {
-	// Log.w("SimpleSettings", "The following throws are not valid: "
-	// + badThrows.toString());
-	// } else {
-	// Log.i("SimpleSettings", "All throws are valid!");
-	// }
-	// } catch (SQLException e) {
-	// int duration = Toast.LENGTH_LONG;
-	// Toast.makeText(context, e.getMessage(), duration).show();
-	// Log.e(PocketLeague.class.getName(), "Update of scores failed", e);
-	// }
-	// }
 
 	public void saveDBdropbox() {
         // TODO: zip all of the databases together before pushing to dropbox
@@ -391,20 +339,17 @@ public class DbSettings extends Fragment_Base {
 			DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr
 					.getLinkedAccount());
 
-			// Print the contents of the root folder. This will block until we
-			// can
+			// Print the contents of the root folder. This will block until we can
 			// sync metadata the first time.
 			List<DbxFileInfo> infos = dbxFs.listFolder(DbxPath.ROOT);
 			mTestOutput.setText("\nStored .db Files:\n");
 			for (DbxFileInfo info : infos) {
-				if (info.path.toString().contains(".db")) { // exclude files
-															// that dont have
-															// .db in the name
-					if (latestFile == null) { // latestFile starts as null, so
-												// make first file latest
+				if (info.path.toString().contains(".db")) {
+				// exclude files that dont have .db in the name
+					if (latestFile == null) {
+					// latestFile starts as null, so make first file latest
 						latestFile = info.path;
-					} else { // compare each file to latestFile, update if
-								// necessary
+					} else { // compare each file to latestFile, update if necessary
 						if (info.modifiedTime.after(dbxFs
 								.getFileInfo(latestFile).modifiedTime)) {
 							latestFile = info.path;

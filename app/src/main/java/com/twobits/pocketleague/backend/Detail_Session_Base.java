@@ -50,7 +50,7 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 		sId = args.getString("SID");
 
 		if (sId != null) {
-            s = Session.getFromId(database, sId);
+            s = Session.getFromId(database(), sId);
         }
 
         createSessionLayout(inflater, container);
