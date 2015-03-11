@@ -28,8 +28,8 @@ public class Session extends CouchDocumentBase {
     public static final String IS_ACTIVE = "is_active";
     public static final String IS_FAVORITE = "is_favorite";
     public static final String CURRENT_VENUE_ID = "current_venue_id";
-    public static final String GAMES_IDS = "game_ids";
-    public static final String MEMBER_IDS = "member_ids";
+    public static final String GAME_IDS = "game_ids";
+    public static final String STORED_MEMBERS = "stored_members";
 
     private List<SessionMember> members = new ArrayList<>();
 
@@ -46,6 +46,7 @@ public class Session extends CouchDocumentBase {
         setIsActive(true);
         setIsFavorite(false);
         setCurrentVenue(current_venue);
+        content.put(GAME_IDS, new ArrayList<String>());
     }
 
     public Session(Database database, String session_name, SessionType session_type,
@@ -170,9 +171,19 @@ public class Session extends CouchDocumentBase {
         content.put(CURRENT_VENUE_ID, current_venue.getId());
     }
 
+    public void addGame(Game g) {
+        List<String> game_ids = (List<String>) content.get(GAME_IDS);
+        if (g.getId() != null) {
+            game_ids.add(g.getId());
+            content.put(GAME_IDS, game_ids);
+        } else {
+            throw new NullPointerException("Game ID is null.");
+        }
+    }
+
     public List<Game> getGames() {
         List<Game> games = new ArrayList<>();
-        for (String game_id : (List<String>) content.get(GAMES_IDS)) {
+        for (String game_id : (List<String>) content.get(GAME_IDS)) {
             games.add(Game.getFromId(getDatabase(), game_id));
         }
         return games;
@@ -186,13 +197,13 @@ public class Session extends CouchDocumentBase {
 
     public List<SessionMember> getMembers() {
         if (members.size() == 0) {
-            List<Map<String, Object>> stored_members = (List<Map<String, Object>>) content.get(MEMBER_IDS);
+            List<Map<String, Object>> stored_members = (List<Map<String, Object>>) content.get(STORED_MEMBERS);
             Team team;
             int team_seed;
             int team_rank;
 
             for (Map<String, Object> sm : stored_members) {
-                team = Team.getFromId(getDatabase(), (String) sm.get(SessionMember.TEAM));
+                team = Team.getFromId(getDatabase(), (String) sm.get(SessionMember.TEAM_ID));
                 team_seed = (int) sm.get(SessionMember.TEAM_SEED);
                 team_rank = (int) sm.get(SessionMember.TEAM_RANK);
                 members.add(new SessionMember(team, team_seed, team_rank));
@@ -215,7 +226,7 @@ public class Session extends CouchDocumentBase {
         for (SessionMember sm : members) {
             stored_members.add(sm.toMap());
         }
-        content.put(MEMBER_IDS, stored_members);
+        content.put(STORED_MEMBERS, stored_members);
 
         super.update();
     }

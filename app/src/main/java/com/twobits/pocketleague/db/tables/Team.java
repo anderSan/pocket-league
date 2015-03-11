@@ -1,15 +1,12 @@
 package com.twobits.pocketleague.db.tables;
 
-import android.content.Context;
 import android.graphics.Color;
-import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryEnumerator;
-import com.couchbase.lite.QueryOptions;
 import com.couchbase.lite.QueryRow;
 
 import java.util.ArrayList;
@@ -31,15 +28,15 @@ public class Team extends CouchDocumentBase {
         // name and size combination should be unique
         content.put("type", TYPE);
         setName(team_name);
-        if (members == null) {
-            content.put(MEMBER_IDS, new ArrayList<String>());
-        } else {
-            List<String> member_ids = new ArrayList<>();
+
+        List<String> member_ids = new ArrayList<>();
+        if (members != null) {
             for (Player member: members) {
                 member_ids.add(member.getId());
             }
-            content.put(MEMBER_IDS, member_ids);
         }
+        content.put(MEMBER_IDS, member_ids);
+
         Random rand = new Random();
         setColor(Color.rgb(rand.nextInt(), rand.nextInt(), rand.nextInt()));
         setIsActive(true);

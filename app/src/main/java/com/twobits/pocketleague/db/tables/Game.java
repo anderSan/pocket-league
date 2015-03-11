@@ -1,41 +1,44 @@
 package com.twobits.pocketleague.db.tables;
 
-import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
-import com.couchbase.lite.Query;
-import com.couchbase.lite.QueryEnumerator;
-import com.couchbase.lite.QueryRow;
+import com.twobits.pocketleague.BuildConfig;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class Game extends CouchDocumentBase {
     public static final String TYPE = "game";
     public static final String ID_IN_SESSION = "id_in_session";
-    public static final String SESSION = "session_id";
-    public static final String VENUE = "venue_id";
+    public static final String SESSION_ID = "session_id";
+    public static final String VENUE_ID = "venue_id";
     public static final String DATE_PLAYED = "date_played";
     public static final String IS_COMPLETE = "is_complete";
     public static final String IS_TRACKED = "is_tracked";
-    public static final String MEMBERS = "member_ids";
+    public static final String STORED_MEMBERS = "stored_members";
+
+    private List<GameMember> members = new ArrayList<>();
 
     // Constructors
-    public Game(Session session, long id_in_session, List<Team> members, Venue venue,
+    public Game(Session session, int id_in_session, List<GameMember> members, Venue venue,
                 boolean is_tracked) {
         content.put("type", TYPE);
-        content.put(SESSION, session);
+        content.put(SESSION_ID, session.getId());
         content.put(ID_IN_SESSION, id_in_session);
-        content.put(MEMBERS, members);
-        content.put(VENUE, venue);
+        for (int ii = 0 ; ii < members.size() ; ii++) {
+            members.get(ii).setPlayOrder(ii);
+        }
+        this.members = members;
+        setVenue(venue);
         content.put(DATE_PLAYED, new Date());
-        content.put(IS_COMPLETE, false);
+        setIsComplete(false);
         content.put(IS_TRACKED, is_tracked);
     }
 
-    public Game(Database database, Session session, long id_in_session, List<Team> members,
+    public Game(Database database, Session session, int id_in_session, List<GameMember> members,
                 Venue venue, boolean is_tracked) {
         this(session, id_in_session, members, venue, is_tracked);
         createDocument(database);
@@ -53,15 +56,21 @@ public class Game extends CouchDocumentBase {
 
     // Other methods
     public long getIdInSession() {
-        return (long) content.get(ID_IN_SESSION);
+        return (int) content.get(ID_IN_SESSION);
     }
 
     public Session getSession() {
-        return (Session) content.get(SESSION);
+        String session_id = (String) content.get(SESSION_ID);
+        return Session.getFromId(getDatabase(), session_id);
     }
 
     public Venue getVenue() {
-        return (Venue) content.get(VENUE);
+        String venue_id = (String) content.get(VENUE_ID);
+        return Venue.getFromId(getDatabase(), venue_id);
+    }
+
+    public void setVenue(Venue venue) {
+        content.put(VENUE_ID, venue.getId());
     }
 
     public Date getDatePlayed() {
@@ -80,26 +89,57 @@ public class Game extends CouchDocumentBase {
         return (boolean) content.get(IS_TRACKED);
     }
 
-    public List<Team> getMembers(Database database) {
-        List<Team> members = new ArrayList<>();
-        for (String member_id : (List<String>) content.get(MEMBERS)) {
-            members.add(Team.getFromId(database, member_id));
+    public List<GameMember> getMembers() {
+        if (members.size() == 0) {
+            List<Map<String, Object>> stored_members = (List<Map<String, Object>>) content.get(STORED_MEMBERS);
+            Team team;
+            int score;
+            int play_order;
+
+            for (Map<String, Object> gm : stored_members) {
+                team = Team.getFromId(getDatabase(), (String) gm.get(GameMember.TEAM_ID));
+                score = (int) gm.get(GameMember.SCORE);
+                play_order = (int) gm.get(GameMember.PLAY_ORDER);
+                members.add(new GameMember(team, score, play_order));
+            }
         }
+        Collections.sort(members);
         return members;
+    }
+
+    public void updateMembers(List<GameMember> members) {
+        if (this.members.size() == members.size()) {
+            this.members = members;
+        } else {
+            throw new InternalError("Size of member list does not match.");
+        }
+    }
+
+    @Override
+    public void update() {
+        List<Map<String, Object>> stored_members = new ArrayList<>();
+        for (GameMember gm : members) {
+            stored_members.add(gm.toMap());
+        }
+        content.put(STORED_MEMBERS, stored_members);
+
+        super.update();
     }
 
     // =========================================================================
     // Additional methods
     // =========================================================================
 
-    //	public Team getWinner() {
-    //        List<Team> game_members = new ArrayList<>(this.game_members);
-    //        Collections.sort(game_members);
-    //
-    //        if (BuildConfig.DEBUG && game_members.get(0).getScore() <= game_members.get(1)
-    // .getScore()) {
-    //            throw new AssertionError("Called getWinner but winner is not certain.");
-    //        }
-    //        return game_members.get(0).getTeam();
-    //	}
+    public Team getWinner() {
+        if (getIsComplete()) {
+            Collections.sort(members, GameMember.SCORE_ORDER);
+
+            if (BuildConfig.DEBUG && members.get(0).getScore() <= members.get(1).getScore()) {
+                throw new AssertionError("Called getWinner but winner is not certain.");
+            }
+            return members.get(0).getTeam();
+        } else {
+            return null;
+        }
+    }
 }

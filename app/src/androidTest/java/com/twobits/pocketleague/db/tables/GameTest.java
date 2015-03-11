@@ -1,23 +1,30 @@
 package com.twobits.pocketleague.db.tables;
 
+import android.os.SystemClock;
+
 import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameSubtype;
 
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class GameTest extends TestCase {
     Game game;
     Session session;
     Venue venue;
+    Date before;
 
     protected void setUp() throws Exception {
+        before = new Date();
         super.setUp();
         venue = new Venue("Venue name");
         session = new Session("Session name", SessionType.OPEN, GameSubtype.UNDEFINED, 0, 4, venue);
-        List<Team> members = new ArrayList<>();
+        List<GameMember> members = new ArrayList<>();
+
+
         game = new Game(session, 1, members, venue, false);
     }
 
@@ -25,28 +32,18 @@ public class GameTest extends TestCase {
         assertEquals(game.getIdInSession(), 1);
     }
 
-    public void testGetSession() throws Exception {
-        Session s = game.getSession();
-        assertEquals(session.getName(), s.getName());
-        assertEquals(session.getIsFavorite(), s.getIsFavorite());
-        assertEquals(session.getTeamSize(), s.getTeamSize());
-    }
-
-    public void testGetVenue() throws Exception {
-        Venue v = game.getVenue();
-        assertEquals(venue.getName(), v.getName());
-        assertEquals(venue.getIsFavorite(), v.getIsFavorite());
-    }
-
     public void testGetDatePlayed() throws Exception {
+        Date before = new Date();
+        SystemClock.sleep(2);
+        Game g = new Game(session, 1, new ArrayList<GameMember>(), venue, false);
+        SystemClock.sleep(2);
+        Date after = new Date();
 
+        assertTrue(before.before(g.getDatePlayed()));
+        assertTrue(after.after(g.getDatePlayed()));
     }
 
-    public void testGetIsComplete() throws Exception {
-        assertFalse(game.getIsComplete());
-    }
-
-    public void testSetIsComplete() throws Exception {
+    public void testGetSetIsComplete() throws Exception {
         assertFalse(game.getIsComplete());
         game.setIsComplete(true);
         assertTrue(game.getIsComplete());
@@ -54,9 +51,5 @@ public class GameTest extends TestCase {
 
     public void testGetIsTracked() throws Exception {
         assertFalse(game.getIsTracked());
-    }
-
-    public void testGetMembers() throws Exception {
-
     }
 }

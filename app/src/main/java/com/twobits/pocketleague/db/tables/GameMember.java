@@ -1,37 +1,27 @@
 package com.twobits.pocketleague.db.tables;
 
+import android.util.ArrayMap;
+
+import java.util.Comparator;
+import java.util.Map;
+
 public class GameMember implements Comparable<GameMember> {
-    public static final String GAME = "game_id";
-    public static final String TEAM = "team_id";
+    public static final String TEAM_ID = "team_id";
     public static final String SCORE = "score";
+    public static final String PLAY_ORDER = "play_order";
 
-//    @DatabaseField(generatedId = true)
-    private long id;
-
-//    @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true)
-    private Game game;
-
-//    @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true, foreignAutoRefresh = true)
     private Team team;
+    private int score = 0;
+    int play_order = -1;
 
-//    @DatabaseField(canBeNull = false)
-    private int score;
-
-    public GameMember() {
-    }
-
-    public GameMember(Game game, Team team) {
-        super();
-        this.game = game;
+    public GameMember(Team team) {
         this.team = team;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public Game getGame() {
-        return game;
+    GameMember(Team team, int score, int play_order) {
+        this(team);
+        setScore(score);
+        setPlayOrder(play_order);
     }
 
     public Team getTeam() {
@@ -46,24 +36,26 @@ public class GameMember implements Comparable<GameMember> {
         this.score = score;
     }
 
-    // =========================================================================
-    // Additional methods
-    // =========================================================================
+    void setPlayOrder(int play_order) {
+        this.play_order = play_order;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> contents = new ArrayMap<>();
+        contents.put(TEAM_ID, team.getId());
+        contents.put(SCORE, score);
+        contents.put(PLAY_ORDER, play_order);
+        return contents;
+    }
 
     public int compareTo(GameMember another) {
-        // This will sort game members in order of decreasing score.
-        if (score < another.score) {
-            return 1;
-        } else if (score == another.score) {
-            return 0;
-        } else {
-            return -1;
-        }
+        return ((Integer) play_order).compareTo(another.play_order);
     }
 
-    public boolean equals(Object o) {
-        if (!(o instanceof GameMember)) return false;
-        GameMember another = (GameMember) o;
-        return id == another.id;
-    }
+    static final Comparator<GameMember> SCORE_ORDER =
+        new Comparator<GameMember>() {
+            public int compare(GameMember e1, GameMember e2) {
+                return ((Integer) e2.score).compareTo(e1.score);
+            }
+        };
 }

@@ -5,6 +5,7 @@ import com.twobits.pocketleague.gameslibrary.GameSubtype;
 
 import junit.framework.Assert;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -92,8 +93,24 @@ public class SessionDbTest extends DbBaseTestCase {
         assertEquals(v2.getIsFavorite(), v.getIsFavorite());
     }
 
-    public void testGetGames() throws Exception {
+    public void testAddGetGame() throws Exception {
+        assertEquals(0, s1.getGames().size());
+        Game g1 = new Game(s1, 2, new ArrayList<GameMember>(), v2, true);
+        Game g2 = new Game(database, s1, 1, new ArrayList<GameMember>(), v1, true);
+        g2.update();
 
+        try {
+            s2.addGame(g1);
+            Assert.fail();
+        } catch (NullPointerException e) {
+            // success
+        }
+
+        s1.addGame(g2);
+        assertEquals(1, s1.getGames().size());
+        List<Game> games = s1.getGames();
+        assertEquals(g2.getIdInSession(), games.get(0).getIdInSession());
+        assertEquals(g2.getIsTracked(), games.get(0).getIsTracked());
     }
 
     public void testAddMembers() throws Exception {
@@ -119,6 +136,12 @@ public class SessionDbTest extends DbBaseTestCase {
         assertEquals(2, members.size());
         assertEquals(t1, members.get(0).getTeam());
         assertEquals(t2, members.get(1).getTeam());
+
+        Session s = Session.getFromId(database, s2.getId());
+        members = s.getMembers();
+        assertEquals(2, members.size());
+        assertEquals(t1.getId(), members.get(0).getTeam().getId());
+        assertEquals(t2.getId(), members.get(1).getTeam().getId());
     }
 
     public void testUpdateMembers() throws Exception {

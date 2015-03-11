@@ -1,11 +1,7 @@
 package com.twobits.pocketleague.db.tables;
 
-import android.graphics.Color;
-
 import junit.framework.TestCase;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class SessionMemberTest extends TestCase {
@@ -77,18 +73,5 @@ public class SessionMemberTest extends TestCase {
         assertEquals(sm1.compareTo(sm2), 1);
         assertEquals(sm1.compareTo(sm1), 0);
         assertEquals(sm3.compareTo(sm1), -1);
-    }
-}
-
-class TeamStub extends Team {
-    public static String ID = "stub_ID";
-
-    public TeamStub(String team_name, List<Player> members) {
-        super(team_name, members);
-    }
-
-    @Override
-    public String getId() {
-        return ID;
     }
 }

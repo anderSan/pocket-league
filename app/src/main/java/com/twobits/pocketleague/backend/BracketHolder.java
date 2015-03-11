@@ -73,7 +73,7 @@ public class BracketHolder implements View.OnClickListener {
 //		try {
 //			Log.i(LOGTAG, "session id is " + s.getId());
 //			sGamesList = gDao.queryBuilder().orderBy(Game.ID_IN_SESSION, true)
-//					.where().eq(Game.SESSION, s.getId()).query();
+//					.where().eq(Game.SESSION_ID, s.getId()).query();
 //		} catch (SQLException e) {
 //			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 //		}

@@ -4,8 +4,7 @@ import android.util.ArrayMap;
 
 import java.util.Map;
 
-public class SessionMember {
-	public static final String TEAM = "team";
+public class SessionMember implements Comparable<SessionMember> {
     public static final String TEAM_ID = "team_id";
 	public static final String TEAM_SEED = "team_seed";
 	public static final String TEAM_RANK = "team_rank";
@@ -62,10 +61,6 @@ public class SessionMember {
         return contents;
     }
 
-	// =========================================================================
-	// Additional methods
-	// =========================================================================
-
 	public int compareTo(SessionMember another) {
         if (team_rank < another.team_rank) {
             return -1;
@@ -74,16 +69,5 @@ public class SessionMember {
         } else {
             return 1;
         }
-	}
-
-//	public boolean equals(Object o) {
-//        if (!(o instanceof SessionMember))
-//            return false;
-//        SessionMember another = (SessionMember) o;
-//            if (team == another.team) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//	}
+    }
 }
