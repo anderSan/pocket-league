@@ -74,7 +74,7 @@ public class Game extends CouchDocumentBase {
     }
 
     public Date getDatePlayed() {
-        return (Date) content.get(DATE_PLAYED);
+        return new Date((long) content.get(DATE_PLAYED));
     }
 
     public boolean getIsComplete() {

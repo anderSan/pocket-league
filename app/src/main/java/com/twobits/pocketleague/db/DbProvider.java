@@ -9,6 +9,9 @@ import android.net.Uri;
 
 import com.couchbase.lite.Database;
 import com.twobits.pocketleague.db.tables.Game;
+import com.twobits.pocketleague.db.tables.GameMember;
+
+import java.util.List;
 
 public class DbProvider extends ContentProvider {
     private DatabaseHelper dbhelper;
@@ -27,8 +30,8 @@ public class DbProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         if (dbhelper == null) {
-//            dbhelper = new DatabaseHelper(getContext());
-//            database = dbhelper.getDatabase();
+            dbhelper = new DatabaseHelper(getContext());
+            database = dbhelper.getDatabase();
         }
         return true;
     }
@@ -54,19 +57,14 @@ public class DbProvider extends ContentProvider {
                 break;
             case ROUTE_GAME_MEMBER:
                 // Return values for each game member in game given by id.
-                columnNames = new String[] {"id", "team_id", "team_name"};
+                columnNames = new String[] {"team_id", "team_name"};
                 cursor = new MatrixCursor(columnNames);
-//                try {
-//                    List<GameMember> game_members =
-//                            gmDao.queryBuilder().where().eq(GameMember.GAME, id).query();
+                g = Game.getFromId(database, id);
 
-//                    for (GameMember gm : game_members) {
-//                        cursor.addRow(new Object[]{gm.getId(), gm.getTeam().getId(),
-//                                gm.getTeam().getName()});
-//                    }
-//                } catch (SQLException e) {
-//                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-//                }
+                List<GameMember> game_members = g.getMembers();
+                for (GameMember gm : game_members) {
+                    cursor.addRow(new Object[]{gm.getTeam().getId(), gm.getTeam().getName()});
+                }
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -86,6 +84,15 @@ public class DbProvider extends ContentProvider {
                 // Update values for the game given by id.
                 Game g = Game.getFromId(database, id);
                 g.setIsComplete(values.getAsBoolean("is_complete"));
+
+                String key = "t%s_score";
+                List<GameMember> members = g.getMembers();
+                for (int ii = 0; ii < members.size(); ii++) {
+                    String new_key = String.format(key, String.valueOf(ii+1));
+                    members.get(ii).setScore(values.getAsInteger(new_key));
+                }
+                g.update();
+
                 break;
             case ROUTE_GAME_MEMBER:
                 // Update values for the game member given by id.

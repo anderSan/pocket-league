@@ -469,7 +469,7 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         setContentView(R.layout.activity_game_in_progress);
 
         Intent intent = getIntent();
-        Long gId = intent.getLongExtra("GID", -1);
+        String gId = intent.getStringExtra("GID");
         tDao = Throw.getDao(this);
 
         fetchGameDetails(gId);
@@ -483,14 +483,14 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         initTableFragments();
     }
 
-    public void fetchGameDetails(long gId) {
+    public void fetchGameDetails(String gId) {
         Uri pl_uri;
         Cursor cursor;
         long[] gm_ids = new long[2];
 
         pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
                 .authority("com.twobits.pocketleague.provider").appendPath("game")
-                .appendPath(String.valueOf(gId)).build();
+                .appendPath(gId).build();
         cursor = getContentResolver().query(pl_uri, null, null, null, null);
         cursor.moveToFirst();
 
@@ -501,10 +501,10 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
 
         pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
                 .authority("com.twobits.pocketleague.provider").appendPath("game_member")
-                .appendPath(String.valueOf(gId)).build();
+                .appendPath(gId).build();
         cursor = getContentResolver().query(pl_uri, null, null, null, null);
         while (cursor.moveToNext()) {
-            gm_ids[cursor.getPosition()] = cursor.getLong(cursor.getColumnIndex("id"));
+            gm_ids[cursor.getPosition()] = 0; //cursor.getLong(cursor.getColumnIndex("id"));
             team_names[cursor.getPosition()] = cursor.getString(cursor.getColumnIndex("team_name"));
         }
 

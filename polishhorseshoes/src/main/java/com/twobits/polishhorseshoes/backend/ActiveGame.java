@@ -29,12 +29,12 @@ public class ActiveGame {
     private Dao<Game, Long> gDao;
     private Dao<Throw, Long> tDao;
 
-    public ActiveGame(long gId, long p1Id, long p2Id, Context context, int testRuleSetId) {
+    public ActiveGame(String gId, long p1Id, long p2Id, Context context, int testRuleSetId) {
         this.context = context;
         gDao = Game.getDao(context);
         tDao = Throw.getDao(context);
 
-        if (gId != -1) {
+        if (gId != "") {
             try {
                 g = gDao.queryBuilder().where().eq(Game.POCKETLEAGUE_ID, gId).queryForFirst();
 

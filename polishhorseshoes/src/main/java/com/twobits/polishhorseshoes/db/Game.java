@@ -36,7 +36,7 @@ public class Game {
     private long id;
 
     @DatabaseField(canBeNull = false, unique = true)
-    private long pocketleague_id;
+    private String pocketleague_id;
 
     @DatabaseField(canBeNull = false)
     private long member_1_id;
@@ -68,7 +68,7 @@ public class Game {
     public Game() {
     }
 
-    public Game(long pl_id, long member_1_id, long member_2_id, int ruleset_id, Date date_played) {
+    public Game(String pl_id, long member_1_id, long member_2_id, int ruleset_id, Date date_played) {
         this.pocketleague_id = pl_id;
         this.member_1_id = member_1_id;
         this.member_2_id = member_2_id;
@@ -77,7 +77,7 @@ public class Game {
 
     }
 
-    public Game(long pl_id, long member_1_id, long member_2_id, int ruleset_id) {
+    public Game(String pl_id, long member_1_id, long member_2_id, int ruleset_id) {
         this.pocketleague_id = pl_id;
         this.member_1_id = member_1_id;
         this.member_2_id = member_2_id;
@@ -196,11 +196,11 @@ public class Game {
         this.id = id;
     }
 
-    public long getPlId() {
+    public String getPlId() {
         return pocketleague_id;
     }
 
-    public void setPlId(long pocketleague_id) {
+    public void setPlId(String pocketleague_id) {
         this.pocketleague_id = pocketleague_id;
     }
 
@@ -242,13 +242,13 @@ public class Game {
 
     public void setMember1Score(Context context, int member_1_score) {
         this.member_1_score = member_1_score;
-        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-                .authority("com.twobits.pocketleague.provider")
-                .appendPath("game_member").appendPath(String.valueOf(member_1_id))
-                .build();
-        ContentValues values = new ContentValues();
-        values.put("score", member_1_score);
-        context.getContentResolver().update(uri, values, null, null);
+//        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+//                .authority("com.twobits.pocketleague.provider")
+//                .appendPath("game_member").appendPath(String.valueOf(member_1_id))
+//                .build();
+//        ContentValues values = new ContentValues();
+//        values.put("score", member_1_score);
+//        context.getContentResolver().update(uri, values, null, null);
         checkGameComplete(context);
     }
 
@@ -258,13 +258,13 @@ public class Game {
 
     public void setMember2Score(Context context, int member_2_score) {
         this.member_2_score = member_2_score;
-        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-                .authority("com.twobits.pocketleague.provider")
-                .appendPath("game_member").appendPath(String.valueOf(member_2_id))
-                .build();
-        ContentValues values = new ContentValues();
-        values.put("score", member_2_score);
-        context.getContentResolver().update(uri, values, null, null);
+//        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+//                .authority("com.twobits.pocketleague.provider")
+//                .appendPath("game_member").appendPath(String.valueOf(member_2_id))
+//                .build();
+//        ContentValues values = new ContentValues();
+//        values.put("score", member_2_score);
+//        context.getContentResolver().update(uri, values, null, null);
         checkGameComplete(context);
     }
 
@@ -279,6 +279,9 @@ public class Game {
                 .appendPath(String.valueOf(pocketleague_id)).build();
         ContentValues values = new ContentValues();
         values.put("is_complete", isComplete);
+        values.put("t1_score", member_1_score);
+        values.put("t2_score", member_2_score);
+
         context.getContentResolver().update(uri, values, null, null);
     }
 
