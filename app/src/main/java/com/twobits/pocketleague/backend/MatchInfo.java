@@ -3,7 +3,7 @@ package com.twobits.pocketleague.backend;
 import com.twobits.pocketleague.db.tables.Team;
 
 public class MatchInfo {
-    private long id_in_session = -1;
+    private int id_in_session = -1;
     private String game_id;
     private Team team1;
     private Team team2;
@@ -12,22 +12,22 @@ public class MatchInfo {
     private boolean creatable = false;
     private boolean viewable = false;
 
-    MatchInfo(long id_in_session) {
+    MatchInfo(int id_in_session) {
         this.id_in_session = id_in_session;
     }
 
-    MatchInfo(long id_in_session, String game_id, Team team1, Team team2) {
+    MatchInfo(int id_in_session, String game_id, Team team1, Team team2) {
         this.id_in_session = id_in_session;
         this.game_id = game_id;
         this.team1 = team1;
         this.team2 = team2;
     }
 
-    public long getIdInSession() {
+    public int getIdInSession() {
         return id_in_session;
     }
 
-    public void setIdInSession(long id_in_session) {
+    public void setIdInSession(int id_in_session) {
         this.id_in_session = id_in_session;
     }
 
@@ -37,9 +37,9 @@ public class MatchInfo {
 
     public void setGameId(String game_id) {
         this.game_id = game_id;
-        //		if (game_id > 0) {
-        this.viewable = true;
-        //		}
+        if (game_id != "") {
+            this.viewable = true;
+        }
     }
 
     public Team getTeam1() {

@@ -55,7 +55,7 @@ public class Game extends CouchDocumentBase {
     }
 
     // Other methods
-    public long getIdInSession() {
+    public int getIdInSession() {
         return (int) content.get(ID_IN_SESSION);
     }
 

@@ -6,6 +6,8 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
+import com.couchbase.lite.Database;
+
 public abstract class DialogFragment_Base extends DialogFragment {
     protected String LOGTAG = getClass().getSimpleName();
     public View rootView;
@@ -31,6 +33,10 @@ public abstract class DialogFragment_Base extends DialogFragment {
         }
 
         context = getActivity();
+    }
+
+    public Database database() {
+        return mData.getDatabase();
     }
 
     public void log(String msg) {

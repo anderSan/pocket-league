@@ -48,6 +48,10 @@ public class GameMember implements Comparable<GameMember> {
         return contents;
     }
 
+    public String toString() {
+        return team.getName();
+    }
+
     public int compareTo(GameMember another) {
         return ((Integer) play_order).compareTo(another.play_order);
     }

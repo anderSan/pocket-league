@@ -11,7 +11,6 @@ import android.widget.ListView;
 
 import com.couchbase.lite.Database;
 import com.twobits.pocketleague.backend.DialogFragment_Base;
-import com.twobits.pocketleague.backend.Item_QuickGame;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.GameMember;
 import com.twobits.pocketleague.db.tables.Session;
@@ -24,7 +23,7 @@ public class Quick_Game extends DialogFragment_Base {
     String gId;
     Game g;
     Session s;
-    List<Item_QuickGame> game_members = new ArrayList<>();
+    List<GameMember> game_members = new ArrayList<>();
 
     private ListView lv;
 
@@ -51,45 +50,30 @@ public class Quick_Game extends DialogFragment_Base {
 
         if (gId != null) {
 
-//            g = Game.getFromId(database, gId);
+            g = Game.getFromId(database(), gId);
             s = g.getSession();
+            game_members = g.getMembers();
 
-
-//            for (GameMember gm : g.getMembers()) {
-//                game_members.add(new Item_QuickGame(gm));
-//            }
             ListAdapter adp = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1,
                     game_members);
 
             lv.setAdapter(adp);
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                                long id) {
-                            for (Item_QuickGame gmi : game_members) {
-                                if (gmi.getScore() == 1) {
-//                                    try {
-//                                        gmi.getGM().setScore(0);
-//                                        gmDao.update(gmi.getGM());
-//                                    } catch (SQLException e) {
-//                                        Toast.makeText(context, e.getMessage(),
-//                                                Toast.LENGTH_LONG).show();
-//                                    }
-                                }
-                            }
-//                            try {
-                                GameMember gm = game_members.get(position).getGM();
-                                gm.setScore(1);
-//                                gmDao.update(gm);
-                                g.setIsComplete(true);
-//                                gDao.update(g);
-//                            } catch (SQLException e) {
-//                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-//                            }
-                            dismiss();
-                            mNav.refreshFragment();
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    for (GameMember gm : game_members) {
+                        if (gm.getScore() == 1) {
+                            gm.setScore(0);
                         }
-                    });
+                    }
+                    game_members.get(position).setScore(1);
+                    g.updateMembers(game_members);
+                    g.setIsComplete(true);
+                    g.update();
+                    dismiss();
+                    mNav.refreshFragment();
+                }
+            });
         }
 
         getDialog().setTitle("Select Winner:");

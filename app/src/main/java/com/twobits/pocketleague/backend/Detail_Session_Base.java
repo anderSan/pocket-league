@@ -18,6 +18,7 @@ import com.twobits.pocketleague.db.tables.GameMember;
 import com.twobits.pocketleague.db.tables.Session;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public abstract class Detail_Session_Base extends Fragment_Detail {
 	public String sId;
@@ -136,20 +137,13 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 	}
 
 	private void createMatch() {
-//		GameMember t1 = new GameMember(g, mInfo.getTeam1());
-//        GameMember t2 = new GameMember(g, mInfo.getTeam2());
-//        Game g = new Game(database, s, mInfo.getIdInSession(), s.getCurrentVenue(database), false);
-//
-//		try {
-//			gDao.setObjectCache(true);
-//			gDao.create(g);
-//			gmDao.create(t1);
-//			gmDao.create(t2);
-//		} catch (SQLException e) {
-//			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-//		}
-//
-//		mNav.loadGame(g.getId());
+		GameMember t1 = new GameMember(mInfo.getTeam1());
+        GameMember t2 = new GameMember(mInfo.getTeam2());
+        Game g = new Game(database(), s, mInfo.getIdInSession(), Arrays.asList(t1, t2),
+                s.getCurrentVenue(), false);
+        g.update();
+
+		mNav.loadGame(g.getId());
 
 		// load a game that is in progress
 		// Intent intent = new Intent(v.getContext(), GameInProgress.class);

@@ -45,6 +45,10 @@ public class GameMemberTest extends TestCase {
         assertEquals(-1, content.get(GameMember.PLAY_ORDER));
     }
 
+    public void testToString() throws Exception {
+        assertEquals("Team1", gm1.toString());
+    }
+
     public void testCompareTo() throws Exception {
         gm1.setPlayOrder(1);
         GameMember gm2 = new GameMember(t1);

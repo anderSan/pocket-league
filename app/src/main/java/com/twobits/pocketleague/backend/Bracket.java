@@ -42,7 +42,7 @@ public class Bracket {
     private List<BrNodeType> sm1Types = new ArrayList<>();
     private List<Integer> sm2Idcs = new ArrayList<>();
     private List<BrNodeType> sm2Types = new ArrayList<>();
-    private List<Long> gameIds = new ArrayList<>();
+    private List<String> gameIds = new ArrayList<>();
     private RelativeLayout rl;
 
     public Bracket(List<SessionMember> sMembers, RelativeLayout rl) {
@@ -595,7 +595,7 @@ public class Bracket {
             } else {
                 sm2Types.add(BrNodeType.TIP);
             }
-            gameIds.add((long) -1);
+            gameIds.add("");
         }
 
         // add the rest of the matches
@@ -605,7 +605,7 @@ public class Bracket {
             sm1Types.add(BrNodeType.UNSET);
             sm2Idcs.add(-1);
             sm2Types.add(BrNodeType.UNSET);
-            gameIds.add((long) -1);
+            gameIds.add("");
         }
 
         // last match is actually just the winner
@@ -666,7 +666,7 @@ public class Bracket {
                 sm2Idcs.add(-1);
                 sm2Types.add(BrNodeType.UNSET);
             }
-            gameIds.add((long) -1);
+            gameIds.add("");
         }
 
         // For every other tier, the order is swapped
@@ -706,8 +706,7 @@ public class Bracket {
         sm2Idcs.addAll(Arrays.asList(idxL, idxW, -1));
         sm2Types.addAll(Arrays.asList(BrNodeType.RESPAWN, BrNodeType.RESPAWN, BrNodeType.NA));
 
-        long dumbId = -1;
-        gameIds.addAll(Arrays.asList(dumbId, dumbId, dumbId));
+        gameIds.addAll(Arrays.asList("", "", ""));
     }
 
     private void byeByes() {
@@ -757,7 +756,7 @@ public class Bracket {
 
     public List<Game> matchMatches(List<Game> sGames) {
         String gId;
-        long gsId;
+        int gsId;
         int smASeed;
         int smBSeed;
 
@@ -782,9 +781,9 @@ public class Bracket {
             } else {
                 int nMatches = length();
                 for (int idx = 0; idx < nMatches; idx++) {
-                    if (hasSm(idx, smASeed) && hasSm(idx, smBSeed) && gameIds.get(idx) == -1) {
+                    if (hasSm(idx, smASeed) && hasSm(idx, smBSeed) && gameIds.get(idx) == "") {
                         Log.i(LOGTAG, "Matching game " + gId + " to match " + matchIds.get(idx));
-                        //						gameIds.set(idx, gId);
+                        gameIds.set(idx, gId);
                         gIt.remove();
                         break;
                     }
@@ -800,7 +799,7 @@ public class Bracket {
     }
 
     private void promoteWinner(int idx, int wIdx) {
-        assert gameIds.get(idx) != -1;
+        assert gameIds.get(idx) != "";
         boolean sm1Wins = true;
 
         if (wIdx == sm2Idcs.get(idx)) {
@@ -877,8 +876,8 @@ public class Bracket {
         MatchInfo mInfo = new MatchInfo(viewId % BrNodeType.MOD);
         if (matchIds.contains(matchId)) {
             int idx = matchIds.indexOf(matchId);
-            long game_id = gameIds.get(idx);
-            //			mInfo.setGameId(game_id);
+            String game_id = gameIds.get(idx);
+            mInfo.setGameId(game_id);
 
             BrNodeType sm1Type = sm1Types.get(idx);
             BrNodeType sm2Type = sm2Types.get(idx);
@@ -925,16 +924,16 @@ public class Bracket {
             mInfo.title = title;
             mInfo.subtitle = subtitle;
 
-            // boolean allow_create = false;
-            // if (sm1Type == BrNodeType.TIP && sm2Type == BrNodeType.TIP) {
-            // allow_create = true;
-            // }
+            boolean allow_create = false;
+            if (sm1Type == BrNodeType.TIP && sm2Type == BrNodeType.TIP) {
+                allow_create = true;
+            }
 
-            // boolean allow_view = false;
-            // if (sm1Type == BrNodeType.WIN || sm1Type == BrNodeType.LOSS) {
-            // assert sm2Type == BrNodeType.WIN || sm2Type == BrNodeType.LOSS;
-            // allow_view = true;
-            // }
+            boolean allow_view = false;
+            if (sm1Type == BrNodeType.WIN || sm1Type == BrNodeType.LOSS) {
+                assert sm2Type == BrNodeType.WIN || sm2Type == BrNodeType.LOSS;
+                allow_view = true;
+            }
         }
         return mInfo;
     }
