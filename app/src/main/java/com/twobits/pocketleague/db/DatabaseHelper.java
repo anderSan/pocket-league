@@ -16,6 +16,7 @@ import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.db.tables.Venue;
+import com.twobits.pocketleague.gameslibrary.GameSubtype;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,7 +90,7 @@ public class DatabaseHelper {
         cvSessionNames.setMap(mapField(Session.TYPE, null, Session.NAME), "1");
 
         View cvSessionActFav = database.getView("session-act.fav");
-        cvSessionActFav.setMap(mapActFav(Session.TYPE), "1");
+        cvSessionActFav.setMap(mapGameActFav(Session.TYPE), "4");
 
         View cvTeamNames = database.getView("team-names");
         cvTeamNames.setMap(mapField(Team.TYPE, Player.TYPE, Team.NAME), "1");
@@ -104,9 +105,7 @@ public class DatabaseHelper {
         cvVenueActFav.setMapReduce(mapActFav(Venue.TYPE), null, "1");
     }
 
-    private Mapper mapField(final String type_string, final String alt_type, String field) {
-        final String doc_type = type_string;
-        final String doc_field = field;
+    private Mapper mapField(final String type_string, final String alt_type, final String field) {
         return new Mapper() {
             @Override
             public void map(Map<String, Object> document, Emitter emitter) {
@@ -114,22 +113,39 @@ public class DatabaseHelper {
                 boolean matched = alt_type == null ? type_string.equals(type) :
                         type_string.equals(type) || alt_type.equals(type);
                 if (matched) {
-                    emitter.emit(document.get(doc_field), null);
+                    emitter.emit(document.get(field), null);
                 }
             }
         };
     }
 
-    private Mapper mapActFav(String type_string) {
-        final String doc_type = type_string;
+    private Mapper mapActFav(final String type_string) {
         return new Mapper() {
             @Override
             public void map(Map<String, Object> document, Emitter emitter) {
                 String type = (String) document.get("type");
-                if (type.equals(doc_type)) {
+                if (type.equals(type_string)) {
                     List<Object> keys = new ArrayList<>();
-                    keys.add(document.get(Venue.IS_ACTIVE));
-                    keys.add(document.get(Venue.IS_FAVORITE));
+                    keys.add(document.get("is_active"));
+                    keys.add(document.get("is_favorite"));
+                    emitter.emit(keys, null);
+                }
+            }
+        };
+    }
+
+    private Mapper mapGameActFav(final String type_string) {
+        return new Mapper() {
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter) {
+                String type = (String) document.get("type");
+                if (type.equals(type_string)) {
+                    List<Object> keys = new ArrayList<>();
+                    String game_type = GameSubtype.valueOf(
+                            (String) document.get(Session.GAME_SUBTYPE)).toGameType().name();
+                    keys.add(game_type);
+                    keys.add(document.get(Session.IS_ACTIVE));
+                    keys.add(document.get(Session.IS_FAVORITE));
                     emitter.emit(keys, null);
                 }
             }

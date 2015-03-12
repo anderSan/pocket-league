@@ -104,13 +104,14 @@ public class Session extends CouchDocumentBase {
         return getAll(database, null);
     }
 
-    public static List<Session> getSessions(Database database, boolean active,
-                                            boolean only_favorite) throws CouchbaseLiteException {
+    public static List<Session> getSessions(Database database, GameType current_game_type,
+                                            boolean active, boolean only_favorite)
+            throws CouchbaseLiteException {
         List<Object> key_filter = new ArrayList<>();
 
         Query query = database.getView("session-act.fav").createQuery();
-        query.setStartKey(Arrays.asList(active, only_favorite));
-        query.setEndKey(Arrays.asList(active, QUERY_END));
+        query.setStartKey(Arrays.asList(current_game_type.name(), active, only_favorite));
+        query.setEndKey(Arrays.asList(current_game_type.name(), active, QUERY_END));
         QueryEnumerator filter = query.run();
         for (Iterator<QueryRow> it = filter; it.hasNext(); ) {
             QueryRow row = it.next();

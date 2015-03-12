@@ -53,6 +53,8 @@ public class List_GameSubtypes extends DialogFragment_Base {
               }
         });
 
+        getDialog().setTitle("Select Variation:");
+
 		return rootView;
 	}
 }
