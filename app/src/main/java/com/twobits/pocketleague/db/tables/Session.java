@@ -225,7 +225,9 @@ public class Session extends CouchDocumentBase {
     public void update() {
         List<Map<String, Object>> stored_members = new ArrayList<>();
         for (SessionMember sm : members) {
-            stored_members.add(sm.toMap());
+            if (sm.getTeam() != null) {
+                stored_members.add(sm.toMap());
+            }
         }
         content.put(STORED_MEMBERS, stored_members);
 

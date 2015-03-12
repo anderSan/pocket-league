@@ -142,6 +142,8 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
         Game g = new Game(database(), s, mInfo.getIdInSession(), Arrays.asList(t1, t2),
                 s.getCurrentVenue(), false);
         g.update();
+        s.addGame(g);
+        s.update();
 
 		mNav.loadGame(g.getId());
 
