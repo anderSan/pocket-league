@@ -103,8 +103,8 @@ public class BracketHolder implements View.OnClickListener {
         }
     }
 
-    public MatchInfo getMatchInfo(int viewId) {
-        MatchInfo mInfo = wBr.getMatchInfo(viewId);
+    public Item_Match getMatchInfo(int viewId) {
+        Item_Match mInfo = wBr.getMatchInfo(viewId);
 
         if (isDoubleElim) {
             if (lBr.hasView(viewId)) {

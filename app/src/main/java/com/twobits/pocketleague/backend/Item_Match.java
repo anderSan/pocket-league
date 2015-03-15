@@ -2,33 +2,29 @@ package com.twobits.pocketleague.backend;
 
 import com.twobits.pocketleague.db.tables.Team;
 
-public class MatchInfo {
+public class Item_Match {
     private int id_in_session = -1;
     private String game_id;
-    private Team team1;
-    private Team team2;
+    private Team upper_team;
+    private Team lower_team;
     public String title = "";
     public String subtitle = "";
     private boolean creatable = false;
     private boolean viewable = false;
 
-    MatchInfo(int id_in_session) {
+    Item_Match(int id_in_session) {
         this.id_in_session = id_in_session;
     }
 
-    MatchInfo(int id_in_session, String game_id, Team team1, Team team2) {
-        this.id_in_session = id_in_session;
-        this.game_id = game_id;
-        this.team1 = team1;
-        this.team2 = team2;
+    Item_Match(int id_in_session, String game_id, Team upper_team, Team lower_team) {
+        this(id_in_session);
+        setGameId(game_id);
+        setUpperTeam(upper_team);
+        setLowerTeam(lower_team);
     }
 
     public int getIdInSession() {
         return id_in_session;
-    }
-
-    public void setIdInSession(int id_in_session) {
-        this.id_in_session = id_in_session;
     }
 
     public String getGameId() {
@@ -42,24 +38,24 @@ public class MatchInfo {
         }
     }
 
-    public Team getTeam1() {
-        return team1;
+    public Team getUpper_team() {
+        return upper_team;
     }
 
-    public void setTeam1(Team team1) {
-        this.team1 = team1;
-        if (team1 != null && team2 != null && game_id != null) {
+    public void setUpperTeam(Team upper_team) {
+        this.upper_team = upper_team;
+        if (upper_team != null && lower_team != null && game_id != null) {
             this.creatable = true;
         }
     }
 
-    public Team getTeam2() {
-        return team2;
+    public Team getLower_team() {
+        return lower_team;
     }
 
-    public void setTeam2(Team team2) {
-        this.team2 = team2;
-        if (team1 != null && team2 != null && game_id != null) {
+    public void setLowerTeam(Team lower_team) {
+        this.lower_team = lower_team;
+        if (upper_team != null && lower_team != null && game_id != null) {
             this.creatable = true;
         }
     }

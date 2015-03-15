@@ -28,7 +28,6 @@ import java.util.Map;
 public class Bracket {
     public static String LOGTAG = "Bracket";
 
-    public boolean isDoubleElim;
     public String labelText = "";
     private int headerIdOffset = 0;
     private int matchIdOffset = 0;
@@ -871,9 +870,9 @@ public class Bracket {
         return viewId;
     }
 
-    public MatchInfo getMatchInfo(int viewId) {
+    public Item_Match getMatchInfo(int viewId) {
         int matchId = viewId % BrNodeType.MOD - matchIdOffset;
-        MatchInfo mInfo = new MatchInfo(viewId % BrNodeType.MOD);
+        Item_Match mInfo = new Item_Match(viewId % BrNodeType.MOD);
         if (matchIds.contains(matchId)) {
             int idx = matchIds.indexOf(matchId);
             String game_id = gameIds.get(idx);
@@ -883,11 +882,11 @@ public class Bracket {
             BrNodeType sm2Type = sm2Types.get(idx);
 
             if (sm1Type == BrNodeType.TIP || sm1Type == BrNodeType.WIN || sm1Type == BrNodeType.LOSS) {
-                mInfo.setTeam1(smSeedMap.get(sm1Idcs.get(idx)).getTeam());
+                mInfo.setUpperTeam(smSeedMap.get(sm1Idcs.get(idx)).getTeam());
             }
 
             if (sm2Type == BrNodeType.TIP || sm2Type == BrNodeType.WIN || sm2Type == BrNodeType.LOSS) {
-                mInfo.setTeam2(smSeedMap.get(sm2Idcs.get(idx)).getTeam());
+                mInfo.setLowerTeam(smSeedMap.get(sm2Idcs.get(idx)).getTeam());
             }
 
             // upper team

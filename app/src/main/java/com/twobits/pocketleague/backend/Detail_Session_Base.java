@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.twobits.pocketleague.R;
@@ -17,14 +16,13 @@ import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.GameMember;
 import com.twobits.pocketleague.db.tables.Session;
 
-import java.sql.SQLException;
 import java.util.Arrays;
 
 public abstract class Detail_Session_Base extends Fragment_Detail {
 	public String sId;
 	public Session s;
 
-	public MatchInfo mInfo;
+	public Item_Match mInfo;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -137,8 +135,8 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 	}
 
 	private void createMatch() {
-		GameMember t1 = new GameMember(mInfo.getTeam1());
-        GameMember t2 = new GameMember(mInfo.getTeam2());
+		GameMember t1 = new GameMember(mInfo.getUpper_team());
+        GameMember t2 = new GameMember(mInfo.getLower_team());
         Game g = new Game(database(), s, mInfo.getIdInSession(), Arrays.asList(t1, t2),
                 s.getCurrentVenue(), false);
         g.update();
