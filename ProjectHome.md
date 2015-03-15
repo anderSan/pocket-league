@@ -1,0 +1,1 @@
+Manage leagues and tournaments for multiple sports or games.
