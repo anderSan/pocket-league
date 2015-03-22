@@ -2,6 +2,7 @@ package com.twobits.pocketleague.db.tables;
 
 import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameSubtype;
+import com.twobits.pocketleague.gameslibrary.GameType;
 
 import junit.framework.Assert;
 
@@ -78,7 +79,13 @@ public class SessionDbTest extends DbBaseTestCase {
     }
 
     public void testGetSessions() throws Exception {
-        List<Session> all_sessions = Session.getSessions(database, true, true);
+        List<Session> all_sessions = Session.getSessions(database, GameType.GOLF, true, true);
+        assertEquals(1, all_sessions.size());
+
+        all_sessions = Session.getSessions(database, GameType.BILLIARDS, true, true);
+        assertEquals(0, all_sessions.size());
+
+        all_sessions = Session.getSessions(database, GameType.BILLIARDS, true, false);
         assertEquals(1, all_sessions.size());
     }
 

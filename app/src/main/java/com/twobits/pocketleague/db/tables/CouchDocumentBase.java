@@ -77,6 +77,24 @@ public class CouchDocumentBase {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CouchDocumentBase that = (CouchDocumentBase) o;
+        if (!getId().equals(that.getId())) return false;
+        if (!document.getCurrentRevision().equals(that.document.getCurrentRevision())) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = document.getCurrentRevision().hashCode();
+        result = 31 * result + getId().hashCode();
+        return result;
+    }
+
     public void log(String msg) {
         Log.i(LOGTAG, msg);
     }

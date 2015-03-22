@@ -18,7 +18,7 @@ public class SessionMemberTest extends TestCase {
         t2 = new TeamStub("Team2", null);
         sm1 = new SessionMember(t1, 2, 3);
         sm2 = new SessionMember(t2, 3);
-        sm3 = new SessionMember(1, 1);
+        sm3 = new SessionMember();
     }
 
     public void testGetTeam() throws Exception {
@@ -33,13 +33,13 @@ public class SessionMemberTest extends TestCase {
     public void testGetSeed() throws Exception {
         assertEquals(2, sm1.getSeed());
         assertEquals(3, sm2.getSeed());
-        assertEquals(1, sm3.getSeed());
+        assertEquals(0, sm3.getSeed());
     }
 
     public void testGetSetRank() throws Exception {
         assertEquals(3, sm1.getRank());
         assertEquals(0, sm2.getRank());
-        assertEquals(1, sm3.getRank());
+        assertEquals(0, sm3.getRank());
 
         sm1.setRank(2);
         assertEquals(2, sm1.getRank());

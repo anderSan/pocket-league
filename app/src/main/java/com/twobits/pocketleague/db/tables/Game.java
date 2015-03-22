@@ -33,7 +33,7 @@ public class Game extends CouchDocumentBase {
         }
         this.members = members;
         setVenue(venue);
-        content.put(DATE_PLAYED, new Date());
+        content.put(DATE_PLAYED, new Date().getTime());
         setIsComplete(false);
         content.put(IS_TRACKED, is_tracked);
     }
@@ -132,7 +132,7 @@ public class Game extends CouchDocumentBase {
 
     public Team getWinner() {
         if (getIsComplete()) {
-            Collections.sort(members, GameMember.SCORE_ORDER);
+            Collections.sort(getMembers(), GameMember.SCORE_ORDER);
 
             if (BuildConfig.DEBUG && members.get(0).getScore() <= members.get(1).getScore()) {
                 throw new AssertionError("Called getWinner but winner is not certain.");

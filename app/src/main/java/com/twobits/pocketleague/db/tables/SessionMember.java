@@ -10,9 +10,15 @@ public class SessionMember implements Comparable<SessionMember> {
 	public static final String TEAM_SEED = "team_seed";
 	public static final String TEAM_RANK = "team_rank";
 
-	private Team team;
-	private int team_seed;
-	private int team_rank;
+	private Team team = null;
+	private int team_seed = 0;
+	private int team_rank = 0;
+
+    public SessionMember() {}
+
+    public SessionMember(int team_seed) {
+        this.team_seed = team_seed;
+    }
 
     public SessionMember(Team team, int team_seed, int team_rank) {
         this.team = team;
@@ -22,10 +28,6 @@ public class SessionMember implements Comparable<SessionMember> {
 
     public SessionMember(Team team, int team_seed) {
         this(team, team_seed, 0);
-    }
-
-    public SessionMember(int team_seed, int team_rank) {
-        this(null, team_seed, team_rank);
     }
 
 	public Team getTeam() {

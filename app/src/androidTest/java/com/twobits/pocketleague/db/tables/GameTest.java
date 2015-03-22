@@ -34,9 +34,9 @@ public class GameTest extends TestCase {
 
     public void testGetDatePlayed() throws Exception {
         Date before = new Date();
-        SystemClock.sleep(2);
+        SystemClock.sleep(3);
         Game g = new Game(session, 1, new ArrayList<GameMember>(), venue, false);
-        SystemClock.sleep(2);
+        SystemClock.sleep(3);
         Date after = new Date();
 
         assertTrue(before.before(g.getDatePlayed()));

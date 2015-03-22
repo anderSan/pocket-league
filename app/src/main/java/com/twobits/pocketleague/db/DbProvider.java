@@ -52,8 +52,7 @@ public class DbProvider extends ContentProvider {
                 Game g = Game.getFromId(database, id);
 
                 cursor.addRow(new Object[]{g.getId(), g.getSession().getGameSubtype(),
-                        g.getSession().getName(), g.getVenue().getName(), g.getDatePlayed()
-                        });
+                        g.getSession().getName(), g.getVenue().getName(), g.getDatePlayed()});
                 break;
             case ROUTE_GAME_MEMBER:
                 // Return values for each game member in game given by id.

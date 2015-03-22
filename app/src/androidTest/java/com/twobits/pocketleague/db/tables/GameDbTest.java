@@ -1,15 +1,20 @@
 package com.twobits.pocketleague.db.tables;
 
+import android.os.SystemClock;
+
 import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameSubtype;
 
 import junit.framework.Assert;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class GameDbTest extends DbBaseTestCase {
     Game game;
+    String game_id;
     Session session;
     Team t1;
     Team t2;
@@ -36,6 +41,7 @@ public class GameDbTest extends DbBaseTestCase {
 
         game = new Game(database, session, 1, Arrays.asList(gm1, gm2), venue, false);
         game.update();
+        game_id = game.getId();
     }
 
     public void testConstructor() throws Exception {
@@ -79,6 +85,20 @@ public class GameDbTest extends DbBaseTestCase {
         assertEquals(v2.getIsFavorite(), v.getIsFavorite());
     }
 
+    public void testGetDatePlayed() throws Exception {
+        Date before = new Date();
+        SystemClock.sleep(3);
+        Game g = new Game(database, session, 1, new ArrayList<GameMember>(), venue, false);
+        g.update();
+        SystemClock.sleep(3);
+        Date after = new Date();
+
+        g = Game.getFromId(database, g.getId());
+
+        assertTrue(before.before(g.getDatePlayed()));
+        assertTrue(after.after(g.getDatePlayed()));
+    }
+
     public void testGetMembers() throws Exception {
         List<GameMember> members = game.getMembers();
         assertEquals(2, members.size());
@@ -113,6 +133,23 @@ public class GameDbTest extends DbBaseTestCase {
     }
 
     public void testGetWinner() {
+        Team t = game.getWinner();
+        assertNull(t);
+
+        game.setIsComplete(true);
+        t = game.getWinner();
+        assertNotNull(t);
+        assertEquals(t1, t);
+
+        List<GameMember> members = game.getMembers();
+        assertEquals(8, members.get(0).getScore());
+        assertEquals(0, members.get(1).getScore());
+
+        game = Game.getFromId(database, game_id);
+    }
+
+    public void testGetWinner2() {
+        game = Game.getFromId(database, game_id);
         Team t = game.getWinner();
         assertNull(t);
 
