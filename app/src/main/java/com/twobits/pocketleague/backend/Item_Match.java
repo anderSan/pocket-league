@@ -10,7 +10,6 @@ import com.twobits.pocketleague.enums.BrNodeType;
 public class Item_Match {
     private int id_in_session = -1;
     private String game_id = "";
-    private boolean creatable = false;
     private boolean viewable = false;
 
     private SessionMember upper_member;
@@ -86,7 +85,7 @@ public class Item_Match {
     }
 
     public boolean getCreatable() {
-        return creatable;
+        return (game_id.equals("") && getUpperTeam() != null && getLowerTeam() != null);
     }
 
     public boolean getViewable() {
@@ -98,8 +97,11 @@ public class Item_Match {
     }
 
     public int getUpperColor() {
-        if (upper_member.getTeam() != null) return upper_member.getTeam().getColor();
-        else return Color.LTGRAY;
+        if (getUpperTeam() != null) {
+            return getUpperTeam().getColor();
+        } else {
+            return Color.LTGRAY;
+        }
     }
 
     public String getUpperSeedName() {
@@ -112,10 +114,6 @@ public class Item_Match {
 
     public void setUpperMember(SessionMember upper_member) {
         this.upper_member = upper_member;
-
-        if (upper_member != null && lower_member != null && game_id != null) {
-            this.creatable = true;
-        }
     }
 
     public BrNodeType getUpperNodeType() {
@@ -139,8 +137,11 @@ public class Item_Match {
     }
 
     public int getLowerColor() {
-        if (lower_member.getTeam() != null) return lower_member.getTeam().getColor();
-        else return Color.LTGRAY;
+        if (getLowerTeam() != null) {
+            return getLowerTeam().getColor();
+        } else {
+            return Color.LTGRAY;
+        }
     }
 
     public String getLowerSeedName() {
@@ -153,9 +154,6 @@ public class Item_Match {
 
     public void setLowerMember(SessionMember lower_member) {
         this.lower_member = lower_member;
-        if (upper_member != null && lower_member != null && game_id != null) {
-            this.creatable = true;
-        }
     }
 
     public BrNodeType getLowerNodeType() {

@@ -2,6 +2,7 @@ package com.twobits.pocketleague.backend;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.util.Log;
 import android.view.Gravity;
@@ -544,9 +545,9 @@ public class Bracket {
                 }
 
                 if (g.getIsComplete()) {
-                    if (g.getWinner() == match.getUpperTeam()) {
+                    if (g.getWinner().equals(match.getUpperTeam())) {
                         promoteWinner(matches.get(g.getIdInSession()), true);
-                    } else if (g.getWinner() == match.getLowerTeam()) {
+                    } else if (g.getWinner().equals(match.getLowerTeam())) {
                         promoteWinner(matches.get(g.getIdInSession()), false);
                     }
                 }
