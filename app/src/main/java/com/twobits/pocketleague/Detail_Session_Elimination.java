@@ -29,11 +29,11 @@ public class Detail_Session_Elimination extends Detail_Session_Base {
 		bracketHolder = new BracketHolder(sv, s, isDblElim) {
 			@Override
 			public void onClick(View v) {
-				mInfo = getMatchInfo(v.getId());
+				mInfo = getMatch(v.getId());
 				log("gId: " + mInfo.getIdInSession() + ", create: "
 						+ mInfo.getCreatable() + ", view: "
-						+ mInfo.getViewable() + ", marquee: " + mInfo.title
-						+ ", " + mInfo.subtitle);
+						+ mInfo.getViewable() + ", marquee: " + mInfo.getTitle()
+						+ ", " + mInfo.getSubtitle());
 				mActionMode = rootView.startActionMode(new ActionBarCallBack());
 				v.setSelected(true);
 			}

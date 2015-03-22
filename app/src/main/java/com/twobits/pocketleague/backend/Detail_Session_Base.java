@@ -88,8 +88,8 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 			MenuInflater inflater = mode.getMenuInflater();
 			inflater.inflate(R.menu.context_menu, menu);
 
-			mode.setTitle(mInfo.title);
-			mode.setSubtitle(mInfo.subtitle);
+			mode.setTitle(mInfo.getTitle());
+			mode.setSubtitle(mInfo.getSubtitle());
 
 			MenuItem mItm = menu.findItem(R.id.action_match);
 			if (mInfo.getCreatable()) {
@@ -135,8 +135,8 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 	}
 
 	private void createMatch() {
-		GameMember t1 = new GameMember(mInfo.getUpper_team());
-        GameMember t2 = new GameMember(mInfo.getLower_team());
+		GameMember t1 = new GameMember(mInfo.getUpperMember().getTeam());
+        GameMember t2 = new GameMember(mInfo.getLowerMember().getTeam());
         Game g = new Game(database(), s, mInfo.getIdInSession(), Arrays.asList(t1, t2),
                 s.getCurrentVenue(), false);
         g.update();

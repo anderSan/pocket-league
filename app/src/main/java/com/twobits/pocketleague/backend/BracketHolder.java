@@ -40,23 +40,24 @@ public class BracketHolder implements View.OnClickListener {
         foldRoster();
         wBr = new Bracket(sMembers, rl);
         if (isDoubleElim) {
-            wBr.labelText = "Winners Bracket";
+            wBr.label_text = "Winners Bracket";
         }
-        wBr.buildBracket(context, this);
+        wBr.buildBracket(this);
 
         if (isDoubleElim) {
             lBr = new Bracket(sMembers.size(), false, rl);
-            lBr.changeOffsets(wBr.lastHeaderId, 0);
-            lBr.labelText = "Losers Bracket";
-            lBr.seedFromParentBracket(wBr);
-            lBr.buildBracket(context, 64, wBr.lowestViewId(), 1, this);
+            lBr.setCeilingViewId(wBr.lowestViewId());
+            lBr.setHeaderOffset(wBr.getLastHeaderId());
+            lBr.label_text = "Losers Bracket";
+//            lBr.seedFromParentBracket(wBr);
+            lBr.buildBracket(64, 1, this);
 
-            fBr = new Bracket(sMembers.size(), true, rl);
-            fBr.changeOffsets(lBr.lastHeaderId, lBr.lastMatchId + 1);
-            fBr.labelText = "Finals";
-            fBr.copyBracketMaps(wBr);
-            fBr.buildBracket(context, 150, lBr.lowestViewId(), 1, this);
-            fBr.setFinalsRespawnText();
+//            fBr = new Bracket(sMembers.size(), true, rl);
+//            fBr.changeOffsets(lBr.lastHeaderId, lBr.lastMatchId + 1);
+//            fBr.label_text = "Finals";
+//            fBr.copyBracketMaps(wBr);
+//            fBr.buildBracket(context, 150, lBr.lowestViewId(), 1, this);
+//            fBr.setFinalsRespawnText();
         }
         sv.addView(rl);
     }
@@ -66,25 +67,25 @@ public class BracketHolder implements View.OnClickListener {
 
         sGamesList = wBr.matchMatches(sGamesList);
         wBr.refreshViews();
-
-        if (isDoubleElim) {
-            lBr.respawnFromParentBracket(wBr);
-            sGamesList = lBr.matchMatches(sGamesList);
-            lBr.refreshViews();
-
-            fBr.respawnFromParentBracket(wBr);
-            fBr.respawnFromParentBracket(lBr);
-            sGamesList = fBr.matchMatches(sGamesList);
-            fBr.refreshViews();
-        }
-        assert sGamesList.isEmpty();
+//
+//        if (isDoubleElim) {
+//            lBr.respawnFromParentBracket(wBr);
+//            sGamesList = lBr.matchMatches(sGamesList);
+//            lBr.refreshViews();
+//
+//            fBr.respawnFromParentBracket(wBr);
+//            fBr.respawnFromParentBracket(lBr);
+//            sGamesList = fBr.matchMatches(sGamesList);
+//            fBr.refreshViews();
+//        }
+//        assert sGamesList.isEmpty();
     }
 
     public void foldRoster() {
         // expand the list size to the next power of two
         Integer n = Bracket.factorTwos(sMembers.size());
 
-        SessionMember dummy_sMember = new SessionMember(BrNodeType.BYE.value(), -1000);
+        SessionMember dummy_sMember = new SessionMember();
 
         while (sMembers.size() < Math.pow(2, n)) {
             sMembers.add(dummy_sMember);
@@ -103,16 +104,16 @@ public class BracketHolder implements View.OnClickListener {
         }
     }
 
-    public Item_Match getMatchInfo(int viewId) {
-        Item_Match mInfo = wBr.getMatchInfo(viewId);
+    public Item_Match getMatch(int viewId) {
+        Item_Match mInfo = wBr.getMatch(viewId);
 
-        if (isDoubleElim) {
-            if (lBr.hasView(viewId)) {
-                mInfo = lBr.getMatchInfo(viewId);
-            } else if (fBr.hasView(viewId)) {
-                mInfo = fBr.getMatchInfo(viewId);
-            }
-        }
+//        if (isDoubleElim) {
+//            if (lBr.hasView(viewId)) {
+//                mInfo = lBr.getMatchInfo(viewId);
+//            } else if (fBr.hasView(viewId)) {
+//                mInfo = fBr.getMatchInfo(viewId);
+//            }
+//        }
 
         return mInfo;
     }
