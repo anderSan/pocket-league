@@ -105,12 +105,17 @@ public class Bracket {
         return n_leafs - 1 + getMatchOffset();
     }
 
+    public boolean hasView(int view_id) {
+        int match_id = view_id % BrNodeType.MOD - match_offset;
+        return matches.containsKey(match_id);
+    }
+
     public Item_Match getMatch(int viewId) {
         int match_id = viewId % BrNodeType.MOD - match_offset;
         if (matches.containsKey(match_id)) {
             return matches.get(match_id);
         } else {
-            return new Item_Match(0);
+            return null;
         }
     }
 
@@ -553,48 +558,42 @@ public class Bracket {
                 }
             }
         }
-
-//        String gId;
-//        int gsId;
-//        int smASeed;
-//        int smBSeed;
-//
-//        Iterator<Game> gIt = sGames.iterator();
-//        while (gIt.hasNext()) {
-//            Game g = gIt.next();
-//            gId = g.getId();
-//            gsId = g.getIdInSession();
-//            //			Log.i(LOGTAG, "Game " + gId + ". "
-//            //			+ g.getFirstPlayer().getFirstName() + " vs "
-//            //			+ g.getSecondPlayer().getFirstName());
-//
-//            List<GameMember> gMembers = new ArrayList<>();
-//            for (GameMember gm : g.getMembers()) {
-//                gMembers.add(gm);
-//            }
-//            smASeed = smIdMap.get(gMembers.get(0).getTeam().getId());
-//            smBSeed = smIdMap.get(gMembers.get(1).getTeam().getId());
-//
-//            if (gameIds.contains(gId)) {
-//                gIt.remove();
-//            } else {
-//                int nMatches = length();
-//                for (int idx = 0; idx < nMatches; idx++) {
-//                    if (hasSm(idx, smASeed) && hasSm(idx, smBSeed) && gameIds.get(idx) == "") {
-//                        Log.i(LOGTAG, "Matching game " + gId + " to match " + matchIds.get(idx));
-//                        gameIds.set(idx, gId);
-//                        gIt.remove();
-//                        break;
-//                    }
-//                }
-//            }
-//
-//            if (g.getIsComplete() && gameIds.contains(gId)) {
-//                smASeed = smIdMap.get(g.getWinner().getId());
-//                promoteWinner(gameIds.indexOf(g.getId()), smASeed);
-//            }
-//        }
         return sGames;
+    }
+
+    public void respawnFromParentBracket(Bracket br) {
+        for (Item_Match match : matches.values()) {
+            if (match.getUpperNodeType() == BrNodeType.RESPAWN) {
+                Item_Match respawn_match = br.matches.get(match.getUpperMember().getSeed());
+                if (respawn_match.getUpperNodeType() == BrNodeType.LOSS) {
+                    match.setUpperMember(respawn_match.getUpperMember());
+                    match.setUpperNodeType(BrNodeType.TIP);
+                } else if (respawn_match.getLowerNodeType() == BrNodeType.LOSS) {
+                    match.setUpperMember(respawn_match.getLowerMember());
+                    match.setUpperNodeType(BrNodeType.TIP);
+                } else if (respawn_match.getLowerNodeType() == BrNodeType.NA
+                        && respawn_match.getUpperNodeType() == BrNodeType.TIP) {
+                    match.setUpperMember(respawn_match.getUpperMember());
+                    match.setUpperNodeType(BrNodeType.TIP);
+                }
+            }
+
+            if (match.getLowerNodeType() == BrNodeType.RESPAWN) {
+                Item_Match respawn_match = br.matches.get(match.getLowerMember().getSeed());
+                if (respawn_match.getUpperNodeType() == BrNodeType.LOSS) {
+                    match.setLowerMember(respawn_match.getUpperMember());
+                    match.setLowerNodeType(BrNodeType.TIP);
+                } else if (respawn_match.getLowerNodeType() == BrNodeType.LOSS) {
+                    match.setLowerMember(respawn_match.getLowerMember());
+                    match.setLowerNodeType(BrNodeType.TIP);
+                } else if (respawn_match.getLowerNodeType() == BrNodeType.NA
+                        && respawn_match.getUpperNodeType() == BrNodeType.TIP) {
+                    match.setLowerMember(respawn_match.getUpperMember());
+                    match.setLowerNodeType(BrNodeType.TIP);
+                }
+            }
+        }
+//        logMatchList("Matches after respawn: ");
     }
 
     public Integer lowestViewId() {

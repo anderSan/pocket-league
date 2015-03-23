@@ -67,17 +67,17 @@ public class BracketHolder implements View.OnClickListener {
 
         sGamesList = wBr.matchMatches(sGamesList);
         wBr.refreshViews();
-//
-//        if (isDoubleElim) {
-//            lBr.respawnFromParentBracket(wBr);
-//            sGamesList = lBr.matchMatches(sGamesList);
-//            lBr.refreshViews();
-//
+
+        if (isDoubleElim) {
+            lBr.respawnFromParentBracket(wBr);
+            sGamesList = lBr.matchMatches(sGamesList);
+            lBr.refreshViews();
+
 //            fBr.respawnFromParentBracket(wBr);
 //            fBr.respawnFromParentBracket(lBr);
 //            sGamesList = fBr.matchMatches(sGamesList);
 //            fBr.refreshViews();
-//        }
+        }
 //        assert sGamesList.isEmpty();
     }
 
@@ -107,13 +107,13 @@ public class BracketHolder implements View.OnClickListener {
     public Item_Match getMatch(int viewId) {
         Item_Match mInfo = wBr.getMatch(viewId);
 
-//        if (isDoubleElim) {
-//            if (lBr.hasView(viewId)) {
-//                mInfo = lBr.getMatchInfo(viewId);
+        if (isDoubleElim) {
+            if (lBr.hasView(viewId)) {
+                mInfo = lBr.getMatch(viewId);
 //            } else if (fBr.hasView(viewId)) {
 //                mInfo = fBr.getMatchInfo(viewId);
-//            }
-//        }
+            }
+        }
 
         return mInfo;
     }
