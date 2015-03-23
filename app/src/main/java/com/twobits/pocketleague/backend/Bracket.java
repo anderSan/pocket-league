@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.twobits.pocketleague.BuildConfig;
 import com.twobits.pocketleague.R;
 import com.twobits.pocketleague.db.tables.Game;
-import com.twobits.pocketleague.db.tables.GameMember;
 import com.twobits.pocketleague.db.tables.SessionMember;
 import com.twobits.pocketleague.enums.BrDrawable;
 import com.twobits.pocketleague.enums.BrNodeType;
@@ -21,7 +20,6 @@ import com.twobits.pocketleague.enums.BrNodeType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -596,6 +594,19 @@ public class Bracket {
 //        logMatchList("Matches after respawn: ");
     }
 
+    private boolean smLost(SessionMember sm) {
+        boolean has_lost = false;
+        for (Item_Match match : matches.values()) {
+            if (sm.equals(match.getUpperMember()) && match.getUpperNodeType() == BrNodeType.LOSS) {
+                has_lost = true;
+            }
+            if (sm.equals(match.getLowerMember()) && match.getLowerNodeType() == BrNodeType.LOSS) {
+                has_lost = true;
+            }
+        }
+        return has_lost;
+    }
+
     public Integer lowestViewId() {
         int match_id = n_leafs / 2 - 1 ;
 
@@ -654,11 +665,11 @@ public class Bracket {
                     tv.setText(match.getUpperSeedName());
                 }
                 drwString += "_labeled";
-//                if (smLost(sm1Idcs.get(idx))) {
-//                    tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-//                } else {
-//                    tv.setPaintFlags(tv.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-//                }
+                if (smLost(match.getUpperMember())) {
+                    tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    tv.setPaintFlags(tv.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
             }
             if (match.getLowerNodeType() == BrNodeType.NA) {
                 drwString = "endpoint";
@@ -684,11 +695,11 @@ public class Bracket {
                         tv.setText(match.getLowerSeedName());
                     }
                     drwString += "_labeled";
-//                    if (smLost(sm2Idcs.get(idx))) {
-//                        tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-//                    } else {
-//                        tv.setPaintFlags(tv.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-//                    }
+                    if (smLost(match.getLowerMember())) {
+                        tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    } else {
+                        tv.setPaintFlags(tv.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    }
                 }
                 tv.setBackgroundResource(BrDrawable.map.get(drwString));
                 tv.getBackground().setColorFilter(drwColor, Mode.MULTIPLY);
