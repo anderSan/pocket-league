@@ -205,7 +205,11 @@ public class Item_Match {
     }
 
     private String getSeedName(SessionMember sm) {
-        return "(" + String.valueOf(sm.getSeed() + 1) + ") " + sm.getTeam().getName();
+        if (sm.getTeam() == null) {
+            return "(NULL)";
+        } else {
+            return "(" + String.valueOf(sm.getSeed() + 1) + ") " + sm.getTeam().getName();
+        }
     }
 
     public void setOnClickListener(View.OnClickListener ocl) {

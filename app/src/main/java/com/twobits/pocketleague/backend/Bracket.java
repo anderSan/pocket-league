@@ -58,13 +58,11 @@ public class Bracket {
             n_leafs = 4;
             match_offset = br.getLastMatchId() + 1;
             testFactorTwos();
-            seed(n_leafs);
+            seed(br.n_leafs, br.match_offset);
         } else {
             this.n_leafs = (int) Math.pow(2, 2 * factorTwos(br.n_leafs) - 1);
             testFactorTwos();
-            seed();
-            trimFromParentBracket(br);
-            byeByes();
+            seed(br);
         }
     }
 
@@ -373,7 +371,7 @@ public class Bracket {
         byeByes();
     }
 
-    private void seed() {
+    private void seed(Bracket br) {
         List<Integer> idA = generateReseedMatchIds();
 
         // For every other tier, the order is swapped
@@ -381,23 +379,23 @@ public class Bracket {
         for (int ii = 0; ii < idA.size(); ii++) {
             respawn_ids.add(ii);
         }
-        Collections.reverse(respawn_ids);
-
-        int ii = (int) (Math.pow(2, (factorTwos(n_leafs) - 3) / 2));
-        int idxA = 3 * ii;
-        int idxB;
-
-        if (ii > 0) {
-            while (idxA < idA.size() - 1) {
-                for (int jj = 0; jj < ii / 2; jj++) {
-                    idxB = (idxA + ii - 1 - jj);
-                    Collections.swap(respawn_ids, idxA + jj, idxB);
-                }
-                idxA += (9 * ii) / 4;
-                ii /= 4;
-            }
-        }
-        Collections.reverse(respawn_ids);
+//        Collections.reverse(respawn_ids);
+//
+//        int ii = (int) (Math.pow(2, (factorTwos(n_leafs) - 3) / 2));
+//        int idxA = 3 * ii;
+//        int idxB;
+//
+//        if (ii > 0) {
+//            while (idxA < idA.size() - 1) {
+//                for (int jj = 0; jj < ii / 2; jj++) {
+//                    idxB = (idxA + ii - 1 - jj);
+//                    Collections.swap(respawn_ids, idxA + jj, idxB);
+//                }
+//                idxA += (9 * ii) / 4;
+//                ii /= 4;
+//            }
+//        }
+//        Collections.reverse(respawn_ids);
 
         int tier;
         Item_Match new_match;
@@ -406,8 +404,13 @@ public class Bracket {
             new_match = new Item_Match(match_id + match_offset);
 
             if (tier % 2 == 0) {
-                new_match.setUpperMember(new SessionMember(respawn_ids.pop()));
-                new_match.setUpperNodeType(BrNodeType.RESPAWN);
+                int respawn_id = respawn_ids.pop();
+                new_match.setUpperMember(new SessionMember(respawn_id));
+                if (br.matches.get(respawn_id) != null) {
+                    new_match.setUpperNodeType(BrNodeType.RESPAWN);
+                } else {
+                    new_match.setUpperNodeType(BrNodeType.BYE);
+                }
                 new_match.setUpperIsLabelled(true);
                 if (tier == 0) {
                     new_match.setLowerNodeType(BrNodeType.BYE);
@@ -495,9 +498,9 @@ public class Bracket {
         return match_ids;
     }
 
-    private void seed(int baseSize) {
-        int idxW = baseSize - 1;
-        int idxL = (int) (Math.pow(2, 2 * factorTwos(baseSize) - 1) - 1);
+    private void seed(int that_base_size, int that_match_offset) {
+        int idxL = that_base_size - 1;
+        int idxW = (int)  Math.pow(2, (factorTwos(that_base_size + 1) + 1) / 2) - 1;
         Log.i(LOGTAG, "winner base: " + idxW + ", loser base: " + idxL);
 
         Item_Match match;
@@ -616,25 +619,6 @@ public class Bracket {
             }
         }
 //        logMatchList("Matches after respawn: ");
-    }
-
-    public void trimFromParentBracket(Bracket br) {
-        for (Item_Match match : matches.values()) {
-            if (match.getUpperNodeType() == BrNodeType.RESPAWN) {
-                Item_Match respawn_match = br.matches.get(match.getUpperMember().getSeed());
-                if (respawn_match == null) {
-                    match.setUpperNodeType(BrNodeType.BYE);
-                }
-            }
-
-            if (match.getLowerNodeType() == BrNodeType.RESPAWN) {
-                Item_Match respawn_match = br.matches.get(match.getLowerMember().getSeed());
-                if (respawn_match == null) {
-                    match.setLowerNodeType(BrNodeType.BYE);
-                }
-            }
-        }
-        //        logMatchList("Matches after respawn: ");
     }
 
     private boolean smLost(SessionMember sm) {
