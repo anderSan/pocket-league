@@ -14,6 +14,7 @@ import com.twobits.pocketleague.BuildConfig;
 import com.twobits.pocketleague.R;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.SessionMember;
+import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.enums.BrDrawable;
 import com.twobits.pocketleague.enums.BrNodeType;
 
@@ -39,8 +40,7 @@ public class Bracket {
         this.rl = rl;
         context = rl.getContext();
         this.n_leafs = sMembers.size();
-        assert (n_leafs & (n_leafs - 1)) == 0;
-
+        testFactorTwos();
         seed(sMembers);
     }
 
@@ -49,37 +49,35 @@ public class Bracket {
      * another bracket after losing or reaching the top tier. The insane loops
      * generate a tiered losers bracket.
      */
-    public Bracket(int n_leafs, boolean is_final, RelativeLayout rl) {
+    public Bracket(Bracket br, boolean is_final, RelativeLayout rl) {
+        ceiling_view_id = br.lowestViewId();
+        header_offset = br.getLastHeaderId();
         this.rl = rl;
         context = rl.getContext();
-//        if (is_final) {
-//            this.n_leafs = 4;
-//        } else {
-            this.n_leafs = (int) Math.pow(2, 2 * factorTwos(n_leafs) - 1);
-//        }
-        assert (n_leafs & (n_leafs - 1)) == 0;
-
-//        if (is_final) {
-//            seed(n_leafs);
-//        } else {
+        if (is_final) {
+            n_leafs = 4;
+            match_offset = br.getLastMatchId() + 1;
+            testFactorTwos();
+            seed(n_leafs);
+        } else {
+            this.n_leafs = (int) Math.pow(2, 2 * factorTwos(br.n_leafs) - 1);
+            testFactorTwos();
             seed();
-//        }
+        }
+    }
+
+    private void testFactorTwos() {
+        if (BuildConfig.DEBUG && (n_leafs & (n_leafs - 1)) != 0) {
+            throw new AssertionError("Number of leafs in bracket is not 2^n");
+        }
     }
 
     public int getCeilingViewId() {
         return ceiling_view_id;
     }
 
-    public void setCeilingViewId(int ceiling_view_id) {
-        this.ceiling_view_id = ceiling_view_id;
-    }
-
     public int getHeaderOffset() {
         return header_offset;
-    }
-
-    public void setHeaderOffset(int header_offset) {
-        this.header_offset = header_offset;
     }
 
     public int getFirstColumnId() {
@@ -218,7 +216,7 @@ public class Bracket {
     }
 
     public void makeMatchViews(Item_Match match) {
-        int match_id = match.getIdInSession();
+        int id_in_session = match.getIdInSession();
         BrNodeType smType;
 
         TextView tv;
@@ -227,14 +225,14 @@ public class Bracket {
 
         drwStr = "upper";
         tv = new TextView(context);
-        tv.setId(match_id + match_offset + BrNodeType.UPPER);
+        tv.setId(id_in_session + BrNodeType.UPPER);
         smType = match.getUpperNodeType();
         if (smType == BrNodeType.TIP) {
             tv.setText(match.getUpperSeedName());
             drwStr += "_labeled";
             drwColor = match.getUpperColor();
         } else if (smType == BrNodeType.RESPAWN) {
-            tv.setText("(" + (char) (match.getUpperMember().getSeed() + 65) + ") ");
+            tv.setText(match.getUpperRespawnName());
             drwStr += "_labeled";
         }
         if (match.getLowerNodeType() == BrNodeType.NA) {
@@ -250,14 +248,14 @@ public class Bracket {
         drwStr = "lower";
         drwColor = Color.LTGRAY;
         tv = new TextView(context);
-        tv.setId(match_id + match_offset + BrNodeType.LOWER);
+        tv.setId(id_in_session + BrNodeType.LOWER);
         smType = match.getLowerNodeType();
         if (smType == BrNodeType.TIP) {
             tv.setText(match.getLowerSeedName());
             drwStr += "_labeled";
             drwColor = match.getLowerColor();
         } else if (smType == BrNodeType.RESPAWN) {
-            tv.setText("(" + (char) (match.getLowerMember().getSeed() + 65) + ") ");
+            tv.setText(match.getLowerRespawnName());
             drwStr += "_labeled";
         }
         tv.setBackgroundResource(BrDrawable.map.get(drwStr));
@@ -273,7 +271,7 @@ public class Bracket {
 
         // add upper view
         TextView tv = (TextView) match.getUpperView();
-        if (tier == getHighestTier()) {
+        if (match.getLowerNodeType() == BrNodeType.NA) {
             lp = getFinalLayoutParams(tier, tv.getId(), match.getUpperIsLabelled());
         } else {
             lp = getUpperLayoutParams(tier, tv.getId(), match.getUpperIsLabelled());
@@ -282,7 +280,7 @@ public class Bracket {
 
         // add lower view
         tv = (TextView) match.getLowerView();
-        if (tier != getHighestTier()) {
+        if (match.getLowerNodeType() != BrNodeType.NA) {
             lp = getLowerLayoutParams(tier, tv.getId(), match.getLowerIsLabelled());
             rl.addView(tv, lp);
         }
@@ -342,7 +340,7 @@ public class Bracket {
 
         // seed the lowest tier
         for (Integer ii = 0; ii < n_leafs; ii += 2) {
-            new_match = new Item_Match(ii / 2);
+            new_match = new Item_Match(ii / 2 + match_offset);
             new_match.setUpperMember(sMembers.get(ii));
             new_match.setUpperNodeType(BrNodeType.TIP);
             new_match.setUpperIsLabelled(true);
@@ -359,7 +357,7 @@ public class Bracket {
 
         // add the rest of the matches
         for (int ii = n_leafs / 2; ii < n_leafs; ii++) {
-            new_match = new Item_Match(ii);
+            new_match = new Item_Match(ii + match_offset);
             matches.put(ii, new_match);
         }
 
@@ -399,7 +397,7 @@ public class Bracket {
         Item_Match new_match;
         for (int match_id : idA) {
             tier = getTier(match_id);
-            new_match = new Item_Match(match_id);
+            new_match = new Item_Match(match_id + match_offset);
 
             if (tier % 2 == 0) {
                 new_match.setUpperMember(new SessionMember(respawn_ids.pop()));
@@ -491,24 +489,35 @@ public class Bracket {
         return match_ids;
     }
 
-//    private void preSeedFinal(int baseSize) {
-//        int idxW = baseSize - 1;
-//        int idxL = (int) (Math.pow(2, 2 * factorTwos(baseSize) - 1) - 1);
-//        Log.i(LOGTAG, "winner base: " + idxW + ", loser base: " + idxL);
-//
-//        matchIds.addAll(Arrays.asList(0, 2, 3));
-//        for (int idx = 0; idx < matchIds.size(); idx++) {
-//            matchIds.set(idx, matchIds.get(idx) + match_offset);
-//        }
-//
-//        sm1Idcs.addAll(Arrays.asList(idxW, -1, -1));
-//        sm1Types.addAll(Arrays.asList(BrNodeType.RESPAWN, BrNodeType.UNSET, BrNodeType.UNSET));
-//
-//        sm2Idcs.addAll(Arrays.asList(idxL, idxW, -1));
-//        sm2Types.addAll(Arrays.asList(BrNodeType.RESPAWN, BrNodeType.RESPAWN, BrNodeType.NA));
-//
-//        gameIds.addAll(Arrays.asList("", "", ""));
-//    }
+    private void seed(int baseSize) {
+        int idxW = baseSize - 1;
+        int idxL = (int) (Math.pow(2, 2 * factorTwos(baseSize) - 1) - 1);
+        Log.i(LOGTAG, "winner base: " + idxW + ", loser base: " + idxL);
+
+        Item_Match match;
+
+        match = new Item_Match(0 + match_offset);
+        match.setUpperMember(new SessionMember(new Team("(W)", null), idxW));
+        match.setLowerMember(new SessionMember(new Team("(L)", null), idxL));
+        match.setUpperNodeType(BrNodeType.RESPAWN);
+        match.setLowerNodeType(BrNodeType.RESPAWN);
+        match.setUpperIsLabelled(true);
+        match.setLowerIsLabelled(true);
+        matches.put(0, match);
+
+        match = new Item_Match(2 + match_offset);
+        match.setUpperMember(new SessionMember());
+        match.setLowerMember(new SessionMember(new Team("(W)", null), idxW));
+        match.setLowerNodeType(BrNodeType.RESPAWN);
+        match.setLowerIsLabelled(true);
+        matches.put(2, match);
+
+        match = new Item_Match(3 + match_offset);
+        match.setUpperMember(new SessionMember());
+        match.setLowerMember(new SessionMember());
+        match.setLowerNodeType(BrNodeType.NA);
+        matches.put(3, match);
+    }
 
     private void byeByes() {
         List<Integer> bye_matches = new ArrayList<>();
@@ -526,7 +535,7 @@ public class Bracket {
                 } else {
                     matches.get(getChildMatch(match)).setLowerIsLabelled(true);
                 }
-                bye_matches.add(match.getIdInSession());
+                bye_matches.add(match.getIdInSession() - match_offset);
             }
         }
         for (int key : bye_matches) {
@@ -537,9 +546,12 @@ public class Bracket {
 
     public List<Game> matchMatches(List<Game> sGames) {
         Item_Match match;
+        List<Game> matched = new ArrayList<>();
         for (Game g : sGames) {
-            if (matches.containsKey(g.getIdInSession())) {
-                match = matches.get(g.getIdInSession());
+            int match_id = g.getIdInSession() - match_offset;
+            if (matches.containsKey(match_id)) {
+                match = matches.get(match_id);
+                matched.add(g);
 
                 if (match.getGameId().equals("")) {
                     match.setGameId(g.getId());
@@ -549,13 +561,15 @@ public class Bracket {
 
                 if (g.getIsComplete()) {
                     if (g.getWinner().equals(match.getUpperTeam())) {
-                        promoteWinner(matches.get(g.getIdInSession()), true);
+                        promoteWinner(matches.get(match_id), true);
                     } else if (g.getWinner().equals(match.getLowerTeam())) {
-                        promoteWinner(matches.get(g.getIdInSession()), false);
+                        promoteWinner(matches.get(match_id), false);
                     }
                 }
             }
         }
+        sGames.removeAll(matched);
+
         return sGames;
     }
 
@@ -563,31 +577,35 @@ public class Bracket {
         for (Item_Match match : matches.values()) {
             if (match.getUpperNodeType() == BrNodeType.RESPAWN) {
                 Item_Match respawn_match = br.matches.get(match.getUpperMember().getSeed());
-                if (respawn_match.getUpperNodeType() == BrNodeType.LOSS) {
-                    match.setUpperMember(respawn_match.getUpperMember());
-                    match.setUpperNodeType(BrNodeType.TIP);
-                } else if (respawn_match.getLowerNodeType() == BrNodeType.LOSS) {
-                    match.setUpperMember(respawn_match.getLowerMember());
-                    match.setUpperNodeType(BrNodeType.TIP);
-                } else if (respawn_match.getLowerNodeType() == BrNodeType.NA
-                        && respawn_match.getUpperNodeType() == BrNodeType.TIP) {
-                    match.setUpperMember(respawn_match.getUpperMember());
-                    match.setUpperNodeType(BrNodeType.TIP);
+                if (respawn_match != null) {
+                    if (respawn_match.getUpperNodeType() == BrNodeType.LOSS) {
+                        match.setUpperMember(respawn_match.getUpperMember());
+                        match.setUpperNodeType(BrNodeType.TIP);
+                    } else if (respawn_match.getLowerNodeType() == BrNodeType.LOSS) {
+                        match.setUpperMember(respawn_match.getLowerMember());
+                        match.setUpperNodeType(BrNodeType.TIP);
+                    } else if (respawn_match.getLowerNodeType() == BrNodeType.NA
+                            && respawn_match.getUpperNodeType() == BrNodeType.TIP) {
+                        match.setUpperMember(respawn_match.getUpperMember());
+                        match.setUpperNodeType(BrNodeType.TIP);
+                    }
                 }
             }
 
             if (match.getLowerNodeType() == BrNodeType.RESPAWN) {
                 Item_Match respawn_match = br.matches.get(match.getLowerMember().getSeed());
-                if (respawn_match.getUpperNodeType() == BrNodeType.LOSS) {
-                    match.setLowerMember(respawn_match.getUpperMember());
-                    match.setLowerNodeType(BrNodeType.TIP);
-                } else if (respawn_match.getLowerNodeType() == BrNodeType.LOSS) {
-                    match.setLowerMember(respawn_match.getLowerMember());
-                    match.setLowerNodeType(BrNodeType.TIP);
-                } else if (respawn_match.getLowerNodeType() == BrNodeType.NA
-                        && respawn_match.getUpperNodeType() == BrNodeType.TIP) {
-                    match.setLowerMember(respawn_match.getUpperMember());
-                    match.setLowerNodeType(BrNodeType.TIP);
+                if (respawn_match != null) {
+                    if (respawn_match.getUpperNodeType() == BrNodeType.LOSS) {
+                        match.setLowerMember(respawn_match.getUpperMember());
+                        match.setLowerNodeType(BrNodeType.TIP);
+                    } else if (respawn_match.getLowerNodeType() == BrNodeType.LOSS) {
+                        match.setLowerMember(respawn_match.getLowerMember());
+                        match.setLowerNodeType(BrNodeType.TIP);
+                    } else if (respawn_match.getLowerNodeType() == BrNodeType.NA
+                            && respawn_match.getUpperNodeType() == BrNodeType.TIP) {
+                        match.setLowerMember(respawn_match.getUpperMember());
+                        match.setLowerNodeType(BrNodeType.TIP);
+                    }
                 }
             }
         }
@@ -639,9 +657,19 @@ public class Bracket {
         match.setWinner(promote_upper);
 
         // if a player was promoted to play against self, as in finals
-//        if (sm1Idcs.get(childIdx) == sm2Idcs.get(childIdx) && sm1Types.get(childIdx) == sm2Types.get(childIdx)) {
-//            promoteSelf(childIdx);
-//        }
+        if (child_match.getUpperTeam() != null) {
+            if (child_match.getUpperTeam().equals(child_match.getLowerTeam())
+                    && child_match.getUpperNodeType() == child_match.getLowerNodeType()) {
+                child_match.setLowerNodeType(BrNodeType.NA);
+                rl.removeView(child_match.getUpperView());
+                rl.removeView(child_match.getLowerView());
+                addViewsToLayout(child_match);
+                child_match = matches.get(getChildMatch(child_match));
+                rl.removeView(child_match.getUpperView());
+                rl.removeView(child_match.getLowerView());
+                matches.remove(child_match.getIdInSession() - match_offset);
+            }
+        }
     }
 
     public void refreshViews() {
@@ -708,7 +736,7 @@ public class Bracket {
     }
 
     private int getTier(Item_Match match) {
-        return getTier(match.getIdInSession(), n_leafs);
+        return getTier(match.getIdInSession() - match_offset, n_leafs);
     }
 
     private int getTier(int match_id) {
@@ -739,7 +767,7 @@ public class Bracket {
     }
 
     private int getChildMatch(Item_Match match) {
-        return getChildMatch(match.getIdInSession());
+        return getChildMatch(match.getIdInSession() - match_offset);
     }
 
     private int getChildMatch(int match_id) {
@@ -751,7 +779,7 @@ public class Bracket {
     }
 
     private boolean getChildIsUpper(Item_Match match) {
-        return getChildIsUpper(match.getIdInSession());
+        return getChildIsUpper(match.getIdInSession() - match_offset);
     }
 
     private boolean getChildIsUpper(int match_id) {
@@ -762,7 +790,7 @@ public class Bracket {
         int match_id = view_id % BrNodeType.MOD - match_offset;
 
         // default place view under the headers
-        int viewAboveId = getFirstColumnId();
+        int viewAboveId = getFirstColumnId() - match_offset;
 
         if (!isUpperView(view_id)) {
             // lower views always go under their respective upper view
@@ -796,7 +824,7 @@ public class Bracket {
             }
         }
 
-        Log.i(LOGTAG, "viewId: " + view_id + " placed below " + viewAboveId);
+        Log.i(LOGTAG, "viewId: " + view_id + " placed below " + String.valueOf(viewAboveId + match_offset));
         return viewAboveId + match_offset;
     }
 

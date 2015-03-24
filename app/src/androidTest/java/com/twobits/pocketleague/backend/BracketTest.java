@@ -56,6 +56,13 @@ public class BracketTest extends AndroidTestCase {
         assertEquals(1002, br.findViewAboveId(1001));
         assertEquals(1001, br.findViewAboveId(2001));
         assertEquals(1002, br.findViewAboveId(2002));
+
+        br = new Bracket(Arrays.asList(sm1, sm2, sm1, sm1), new RelativeLayout(getContext()));
+        br.setMatchOffset(5);
+        assertEquals(3, br.findViewAboveId(1007));
+        assertEquals(1007, br.findViewAboveId(1006));
+        assertEquals(1006, br.findViewAboveId(2006));
+        assertEquals(1007, br.findViewAboveId(2007));
     }
 
     public void testGenerateReseedMatchIds() throws Exception {

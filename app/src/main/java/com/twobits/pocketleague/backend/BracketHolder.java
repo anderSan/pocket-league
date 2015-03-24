@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
+import com.twobits.pocketleague.BuildConfig;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.SessionMember;
@@ -45,19 +46,13 @@ public class BracketHolder implements View.OnClickListener {
         wBr.buildBracket(this);
 
         if (isDoubleElim) {
-            lBr = new Bracket(sMembers.size(), false, rl);
-            lBr.setCeilingViewId(wBr.lowestViewId());
-            lBr.setHeaderOffset(wBr.getLastHeaderId());
+            lBr = new Bracket(wBr, false, rl);
             lBr.label_text = "Losers Bracket";
-//            lBr.seedFromParentBracket(wBr);
             lBr.buildBracket(64, 1, this);
 
-//            fBr = new Bracket(sMembers.size(), true, rl);
-//            fBr.changeOffsets(lBr.lastHeaderId, lBr.lastMatchId + 1);
-//            fBr.label_text = "Finals";
-//            fBr.copyBracketMaps(wBr);
-//            fBr.buildBracket(context, 150, lBr.lowestViewId(), 1, this);
-//            fBr.setFinalsRespawnText();
+            fBr = new Bracket(lBr, true, rl);
+            fBr.label_text = "Finals";
+            fBr.buildBracket(150, 1, this);
         }
         sv.addView(rl);
     }
@@ -73,12 +68,14 @@ public class BracketHolder implements View.OnClickListener {
             sGamesList = lBr.matchMatches(sGamesList);
             lBr.refreshViews();
 
-//            fBr.respawnFromParentBracket(wBr);
-//            fBr.respawnFromParentBracket(lBr);
-//            sGamesList = fBr.matchMatches(sGamesList);
-//            fBr.refreshViews();
+            fBr.respawnFromParentBracket(wBr);
+            fBr.respawnFromParentBracket(lBr);
+            sGamesList = fBr.matchMatches(sGamesList);
+            fBr.refreshViews();
         }
-//        assert sGamesList.isEmpty();
+        if (BuildConfig.DEBUG && !sGamesList.isEmpty()) {
+            throw new AssertionError("Orphaned games found in session.");
+        }
     }
 
     public void foldRoster() {
@@ -110,8 +107,8 @@ public class BracketHolder implements View.OnClickListener {
         if (isDoubleElim) {
             if (lBr.hasView(viewId)) {
                 mInfo = lBr.getMatch(viewId);
-//            } else if (fBr.hasView(viewId)) {
-//                mInfo = fBr.getMatchInfo(viewId);
+            } else if (fBr.hasView(viewId)) {
+                mInfo = fBr.getMatch(viewId);
             }
         }
 

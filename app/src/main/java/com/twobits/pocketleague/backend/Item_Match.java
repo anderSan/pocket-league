@@ -93,7 +93,11 @@ public class Item_Match {
     }
 
     public Team getUpperTeam() {
-        return upper_member.getTeam();
+        if (upper_member != null) {
+            return upper_member.getTeam();
+        } else {
+            return null;
+        }
     }
 
     public int getUpperColor() {
@@ -106,6 +110,14 @@ public class Item_Match {
 
     public String getUpperSeedName() {
         return getSeedName(upper_member);
+    }
+
+    public String getUpperRespawnName() {
+        if (getUpperTeam() == null) {
+            return "(" + (char) (upper_member.getSeed() + 65) + ")";
+        } else {
+            return getUpperTeam().getName();
+        }
     }
 
     public SessionMember getUpperMember() {
@@ -133,7 +145,11 @@ public class Item_Match {
     }
 
     public Team getLowerTeam() {
-        return lower_member.getTeam();
+        if (lower_member != null) {
+            return lower_member.getTeam();
+        } else {
+            return null;
+        }
     }
 
     public int getLowerColor() {
@@ -146,6 +162,14 @@ public class Item_Match {
 
     public String getLowerSeedName() {
         return getSeedName(lower_member);
+    }
+
+    public String getLowerRespawnName() {
+        if (getLowerTeam() == null) {
+            return "(" + (char) (lower_member.getSeed() + 65) + ")";
+        } else {
+            return getLowerTeam().getName();
+        }
     }
 
     public SessionMember getLowerMember() {
