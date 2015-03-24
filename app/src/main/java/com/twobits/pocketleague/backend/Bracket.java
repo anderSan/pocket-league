@@ -120,7 +120,6 @@ public class Bracket {
     }
 
     public void buildBracket(int tierWidth, int columnViewId, OnClickListener mListener) {
-        TextView tv;
         makeHeaders(300, tierWidth, columnViewId);
 
         for (Item_Match match : matches.values()) {
@@ -621,15 +620,26 @@ public class Bracket {
 //        logMatchList("Matches after respawn: ");
     }
 
-    private boolean smLost(SessionMember sm) {
+    private boolean smLost(Item_Match match, boolean upper) {
         boolean has_lost = false;
-        for (Item_Match match : matches.values()) {
-            if (sm.equals(match.getUpperMember()) && match.getUpperNodeType() == BrNodeType.LOSS) {
-                has_lost = true;
+
+        BrNodeType node_type;
+        if (upper) {
+            node_type = match.getUpperNodeType();
+        } else {
+            node_type = match.getLowerNodeType();
+        }
+        if (node_type == BrNodeType.LOSS) has_lost = true;
+
+        while (node_type == BrNodeType.WIN) {
+            upper = getChildIsUpper(match);
+            match = matches.get(getChildMatch(match));
+            if (upper) {
+                node_type = match.getUpperNodeType();
+            } else {
+                node_type = match.getLowerNodeType();
             }
-            if (sm.equals(match.getLowerMember()) && match.getLowerNodeType() == BrNodeType.LOSS) {
-                has_lost = true;
-            }
+            if (node_type == BrNodeType.LOSS) has_lost = true;
         }
         return has_lost;
     }
@@ -702,7 +712,7 @@ public class Bracket {
                     tv.setText(match.getUpperSeedName());
                 }
                 drwString += "_labeled";
-                if (smLost(match.getUpperMember())) {
+                if (smLost(match, true)) {
                     tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 } else {
                     tv.setPaintFlags(tv.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
@@ -732,7 +742,7 @@ public class Bracket {
                         tv.setText(match.getLowerSeedName());
                     }
                     drwString += "_labeled";
-                    if (smLost(match.getLowerMember())) {
+                    if (smLost(match, false)) {
                         tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     } else {
                         tv.setPaintFlags(tv.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
