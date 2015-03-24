@@ -109,7 +109,11 @@ public class Item_Match {
     }
 
     public String getUpperSeedName() {
-        return getSeedName(upper_member);
+        if (upper_member == null) {
+            return "null";
+        } else {
+            return getSeedName(upper_member);
+        }
     }
 
     public String getUpperRespawnName() {
@@ -161,7 +165,11 @@ public class Item_Match {
     }
 
     public String getLowerSeedName() {
-        return getSeedName(lower_member);
+        if (lower_member == null) {
+            return "null";
+        } else {
+            return getSeedName(lower_member);
+        }
     }
 
     public String getLowerRespawnName() {

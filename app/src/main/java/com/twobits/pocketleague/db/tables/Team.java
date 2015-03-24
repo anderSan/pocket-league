@@ -43,6 +43,11 @@ public class Team extends CouchDocumentBase {
         setIsFavorite(false);
     }
 
+    public Team(String team_name, int color) {
+        this(team_name, null);
+        setColor(color);
+    }
+
     public Team(Database database, String team_name, List<Player> members) {
         this(team_name, members);
         createDocument(database);

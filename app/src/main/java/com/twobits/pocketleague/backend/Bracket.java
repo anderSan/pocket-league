@@ -20,10 +20,10 @@ import com.twobits.pocketleague.enums.BrNodeType;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Bracket {
     public static String LOGTAG = "Bracket";
@@ -34,7 +34,7 @@ public class Bracket {
     private int header_offset = 0;
     private int match_offset = 0;
     private int n_leafs;
-    private Map<Integer, Item_Match> matches = new HashMap<>();
+    private Map<Integer, Item_Match> matches = new TreeMap<>();
 
     public Bracket(List<SessionMember> sMembers, RelativeLayout rl) {
         this.rl = rl;
@@ -63,6 +63,8 @@ public class Bracket {
             this.n_leafs = (int) Math.pow(2, 2 * factorTwos(br.n_leafs) - 1);
             testFactorTwos();
             seed();
+            trimFromParentBracket(br);
+            byeByes();
         }
     }
 
@@ -342,7 +344,11 @@ public class Bracket {
         for (Integer ii = 0; ii < n_leafs; ii += 2) {
             new_match = new Item_Match(ii / 2 + match_offset);
             new_match.setUpperMember(sMembers.get(ii));
-            new_match.setUpperNodeType(BrNodeType.TIP);
+            if (sMembers.get(ii).getTeam() == null) {
+                new_match.setUpperNodeType(BrNodeType.BYE);
+            } else {
+                new_match.setUpperNodeType(BrNodeType.TIP);
+            }
             new_match.setUpperIsLabelled(true);
 
             new_match.setLowerMember(sMembers.get(ii + 1));
@@ -497,8 +503,8 @@ public class Bracket {
         Item_Match match;
 
         match = new Item_Match(0 + match_offset);
-        match.setUpperMember(new SessionMember(new Team("(W)", null), idxW));
-        match.setLowerMember(new SessionMember(new Team("(L)", null), idxL));
+        match.setUpperMember(new SessionMember(new Team("(W)", Color.LTGRAY), idxW));
+        match.setLowerMember(new SessionMember(new Team("(L)", Color.LTGRAY), idxL));
         match.setUpperNodeType(BrNodeType.RESPAWN);
         match.setLowerNodeType(BrNodeType.RESPAWN);
         match.setUpperIsLabelled(true);
@@ -507,7 +513,7 @@ public class Bracket {
 
         match = new Item_Match(2 + match_offset);
         match.setUpperMember(new SessionMember());
-        match.setLowerMember(new SessionMember(new Team("(W)", null), idxW));
+        match.setLowerMember(new SessionMember(new Team("(W)", Color.LTGRAY), idxW));
         match.setLowerNodeType(BrNodeType.RESPAWN);
         match.setLowerIsLabelled(true);
         matches.put(2, match);
@@ -526,9 +532,9 @@ public class Bracket {
         for (Item_Match match : matches.values()) {
             if (match.isBye()) {
                 if (match.getUpperNodeType() == BrNodeType.BYE) {
-                    promoteWinner(match, false);
+                    promoteMember(match, false);
                 } else {
-                    promoteWinner(match, true);
+                    promoteMember(match, true);
                 }
                 if (getChildIsUpper(match)) {
                     matches.get(getChildMatch(match)).setUpperIsLabelled(true);
@@ -561,9 +567,9 @@ public class Bracket {
 
                 if (g.getIsComplete()) {
                     if (g.getWinner().equals(match.getUpperTeam())) {
-                        promoteWinner(matches.get(match_id), true);
+                        promoteMember(matches.get(match_id), true);
                     } else if (g.getWinner().equals(match.getLowerTeam())) {
-                        promoteWinner(matches.get(match_id), false);
+                        promoteMember(matches.get(match_id), false);
                     }
                 }
             }
@@ -612,6 +618,25 @@ public class Bracket {
 //        logMatchList("Matches after respawn: ");
     }
 
+    public void trimFromParentBracket(Bracket br) {
+        for (Item_Match match : matches.values()) {
+            if (match.getUpperNodeType() == BrNodeType.RESPAWN) {
+                Item_Match respawn_match = br.matches.get(match.getUpperMember().getSeed());
+                if (respawn_match == null) {
+                    match.setUpperNodeType(BrNodeType.BYE);
+                }
+            }
+
+            if (match.getLowerNodeType() == BrNodeType.RESPAWN) {
+                Item_Match respawn_match = br.matches.get(match.getLowerMember().getSeed());
+                if (respawn_match == null) {
+                    match.setLowerNodeType(BrNodeType.BYE);
+                }
+            }
+        }
+        //        logMatchList("Matches after respawn: ");
+    }
+
     private boolean smLost(SessionMember sm) {
         boolean has_lost = false;
         for (Item_Match match : matches.values()) {
@@ -634,30 +659,30 @@ public class Bracket {
         return match_id + match_offset + BrNodeType.LOWER;
     }
 
-    private void promoteWinner(Item_Match match, boolean promote_upper) {
-        SessionMember winner;
+    private void promoteMember(Item_Match match, boolean promote_upper) {
+        SessionMember promoted;
         BrNodeType node_type;
 
         if (promote_upper) {
-            winner = match.getUpperMember();
+            promoted = match.getUpperMember();
             node_type = match.getUpperNodeType();
         } else {
-            winner = match.getLowerMember();
+            promoted = match.getLowerMember();
             node_type = match.getLowerNodeType();
         }
 
         Item_Match child_match = matches.get(getChildMatch(match));
         if (getChildIsUpper(match)) {
             child_match.setUpperNodeType(node_type);
-            child_match.setUpperMember(winner);
+            child_match.setUpperMember(promoted);
         } else {
             child_match.setLowerNodeType(node_type);
-            child_match.setLowerMember(winner);
+            child_match.setLowerMember(promoted);
         }
         match.setWinner(promote_upper);
 
         // if a player was promoted to play against self, as in finals
-        if (child_match.getUpperTeam() != null) {
+        if (getTier(match) == getHighestTier() - 2 && child_match.getUpperTeam() != null) {
             if (child_match.getUpperTeam().equals(child_match.getLowerTeam())
                     && child_match.getUpperNodeType() == child_match.getLowerNodeType()) {
                 child_match.setLowerNodeType(BrNodeType.NA);
@@ -818,7 +843,11 @@ public class Bracket {
                         while (!matches.containsKey(baseId)) {
                             baseId = getChildMatch(baseId);
                         }
-                        viewAboveId = baseId + BrNodeType.UPPER;
+                        if (getTier(baseId) > getTier(match_id)) {
+                            viewAboveId = baseId + BrNodeType.UPPER;
+                        } else {
+                            viewAboveId = baseId + BrNodeType.LOWER;
+                        }
                     }
                 }
             }

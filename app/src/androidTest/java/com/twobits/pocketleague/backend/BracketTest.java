@@ -43,7 +43,8 @@ public class BracketTest extends AndroidTestCase {
         Bracket br;
         SessionMember sm1 = new SessionMember(new Player("p1"), 1);
         SessionMember sm2 = new SessionMember();
-        br = new Bracket(Arrays.asList(sm1, sm1, sm1, sm1), new RelativeLayout(getContext()));
+        RelativeLayout rl = new RelativeLayout(getContext());
+        br = new Bracket(Arrays.asList(sm1, sm1, sm1, sm1), rl);
         assertEquals(3, br.findViewAboveId(1000));
         assertEquals(1000, br.findViewAboveId(2000));
         assertEquals(2000, br.findViewAboveId(1001));
@@ -51,18 +52,35 @@ public class BracketTest extends AndroidTestCase {
         assertEquals(1000, br.findViewAboveId(1002));
         assertEquals(1002, br.findViewAboveId(2002));
 
-        br = new Bracket(Arrays.asList(sm1, sm2, sm1, sm1), new RelativeLayout(getContext()));
+        br = new Bracket(Arrays.asList(sm1, sm2, sm1, sm1), rl);
         assertEquals(3, br.findViewAboveId(1002));
         assertEquals(1002, br.findViewAboveId(1001));
         assertEquals(1001, br.findViewAboveId(2001));
         assertEquals(1002, br.findViewAboveId(2002));
 
-        br = new Bracket(Arrays.asList(sm1, sm2, sm1, sm1), new RelativeLayout(getContext()));
+        br = new Bracket(Arrays.asList(sm1, sm2, sm1, sm1), rl);
         br.setMatchOffset(5);
         assertEquals(3, br.findViewAboveId(1007));
         assertEquals(1007, br.findViewAboveId(1006));
         assertEquals(1006, br.findViewAboveId(2006));
         assertEquals(1007, br.findViewAboveId(2007));
+
+        List<SessionMember> members = new ArrayList<>();
+        for (int ii = 0; ii < 32; ii++) {
+            members.add(sm2);
+        }
+        members.set(0, sm1);
+        members.set(16, sm1);
+        members.set(20, sm1);
+        members.set(22, sm1);
+        members.set(24, sm1);
+        members.set(28, sm1);
+        members.set(30, sm1);
+
+        br = new Bracket(members, rl);
+        assertEquals(31, br.getLastMatchId());
+        assertEquals(3, br.findViewAboveId(1030));
+        assertEquals(2021, br.findViewAboveId(1027));
     }
 
     public void testGenerateReseedMatchIds() throws Exception {
