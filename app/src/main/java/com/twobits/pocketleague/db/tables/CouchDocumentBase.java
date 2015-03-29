@@ -21,7 +21,15 @@ public class CouchDocumentBase {
     public CouchDocumentBase(Document document) {
         this.document = document;
         content.putAll(document.getProperties());
-        log("Loaded document: " + document.getId());
+
+        if (BuildConfig.DEBUG) {
+            if (content.containsKey("name")) {
+                String name = (String) content.get("name");
+                log(String.format("Loaded document: %s (%s)", document.getId(), name));
+            } else {
+                log(String.format("Loaded document: %s", document.getId()));
+            }
+        }
     }
 
     public void createDocument(Database database) {
@@ -60,6 +68,9 @@ public class CouchDocumentBase {
                 throw new InstantiationError("No document is attached for update.");
             }
         }
+
+        content.clear();
+        content.putAll(document.getProperties());
     }
 
     public void delete() {

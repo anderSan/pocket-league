@@ -143,7 +143,7 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
         s.addGame(g);
         s.update();
 
-		mNav.loadGame(g.getId());
+		loadMatch(g.getId());
 
 		// load a game that is in progress
 		// Intent intent = new Intent(v.getContext(), GameInProgress.class);

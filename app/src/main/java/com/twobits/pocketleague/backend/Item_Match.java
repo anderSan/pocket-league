@@ -65,7 +65,9 @@ public class Item_Match {
     }
 
     public String getSubtitle() {
-        String subtitle = "match: " + getIdInSession() + ", gameId: " + game_id;
+//        String subtitle = "match: " + getIdInSession() + ", gameId: " + game_id;
+        String subtitle = "match: " + getIdInSession() + ", UpperNode: " + upper_node_type.name() +
+                ", LowerNode: " + lower_node_type.name();
         return subtitle;
     }
 

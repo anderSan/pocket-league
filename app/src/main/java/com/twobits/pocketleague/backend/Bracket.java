@@ -664,6 +664,7 @@ public class Bracket {
             promoted = match.getLowerMember();
             node_type = match.getLowerNodeType();
         }
+        if (node_type == BrNodeType.WIN) node_type = BrNodeType.TIP;
 
         Item_Match child_match = matches.get(getChildMatch(match));
         if (getChildIsUpper(match)) {
