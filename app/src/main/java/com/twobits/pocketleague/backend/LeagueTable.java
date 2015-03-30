@@ -1,11 +1,11 @@
 package com.twobits.pocketleague.backend;
 
 import android.content.Context;
-import android.util.AttributeSet;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -13,8 +13,10 @@ import android.widget.TextView;
 
 import com.twobits.pocketleague.BuildConfig;
 import com.twobits.pocketleague.R;
+import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.SessionMember;
+import com.twobits.pocketleague.enums.BrNodeType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,21 +52,69 @@ public class LeagueTable implements View.OnClickListener {
     }
 
     public void refreshTable() {
-
+        matchMatches();
+        refreshViews();
     }
 
-    public Item_Match getMatch(int viewId) {
-//        Item_Match mInfo = wBr.getMatch(viewId);
-//
-//        if (isDoubleElim) {
-//            if (lBr.hasView(viewId)) {
-//                mInfo = lBr.getMatch(viewId);
-//            } else if (fBr.hasView(viewId)) {
-//                mInfo = fBr.getMatch(viewId);
-//            }
-//        }
+    private void matchMatches() {
+        Item_Match match;
+        List<Game> games_list = s.getGames();
+        List<Game> matched = new ArrayList<>();
 
-        return null;
+        for (Game g : games_list) {
+            int match_id = g.getIdInSession();
+            if (matches.containsKey(match_id)) {
+                match = matches.get(match_id);
+                matched.add(g);
+
+                if (match.getGameId().equals("")) {
+                    match.setGameId(g.getId());
+                } else if (BuildConfig.DEBUG && !match.getGameId().equals(g.getId())) {
+                    throw new AssertionError("Match id mismatch.");
+                }
+
+                if (g.getIsComplete()) {
+                    if (g.getWinner().equals(match.getUpperTeam())) {
+                        match.setWinner(true);
+                    } else if (g.getWinner().equals(match.getLowerTeam())) {
+                        match.setWinner(false);
+                    }
+                }
+            }
+        }
+        games_list.removeAll(matched);
+        if (BuildConfig.DEBUG && !games_list.isEmpty()) {
+            throw new AssertionError("Orphaned games found in session.");
+        }
+    }
+
+    private void refreshViews() {
+        TextView tv;
+        int drwColor;
+
+        for (Item_Match match : matches.values()) {
+            drwColor = Color.LTGRAY;
+            if (match.getUpperNodeType() == BrNodeType.WIN) {
+                drwColor = Color.GREEN;
+            } else if (match.getUpperNodeType() == BrNodeType.LOSS) {
+                drwColor = Color.RED;
+            }
+            tv = (TextView) match.getUpperView();
+            tv.setBackgroundColor(drwColor);
+
+            drwColor = Color.LTGRAY;
+            if (match.getLowerNodeType() == BrNodeType.WIN) {
+                drwColor = Color.GREEN;
+            } else if (match.getLowerNodeType() == BrNodeType.LOSS) {
+                drwColor = Color.RED;
+            }
+            tv = (TextView) match.getLowerView();
+            tv.setBackgroundColor(drwColor);
+        }
+    }
+
+    public Item_Match getMatch(int match_id) {
+        return matches.get(match_id);
     }
 
     private void seed(List<SessionMember> sMembers) {
@@ -77,10 +127,9 @@ public class LeagueTable implements View.OnClickListener {
 
                 new_match = new Item_Match(id_in_session);
                 new_match.setUpperMember(sMembers.get(ii));
-                if (jj == 0) new_match.setUpperIsLabelled(true);
-
                 new_match.setLowerMember(sMembers.get(jj));
-                if (ii == 0) new_match.setLowerIsLabelled(true);
+                new_match.setUpperNodeType(BrNodeType.TIP);
+                new_match.setLowerNodeType(BrNodeType.TIP);
 
                 matches.put(id_in_session, new_match);
             }
@@ -89,6 +138,7 @@ public class LeagueTable implements View.OnClickListener {
 
     private void buildTable(View.OnClickListener mListener) {
         TextView tv;
+        Item_Match match;
         VerticalTextView vtv;
         TableLayout.LayoutParams tp;
         TableRow.LayoutParams rp1, rp2;
@@ -120,6 +170,7 @@ public class LeagueTable implements View.OnClickListener {
         }
         tl.addView(tableRow);
 
+        int match_id;
         for (int ii = 0; ii < members.size(); ii++) {
             tableRow = new TableRow(context);
             tableRow.setLayoutParams(tp);
@@ -135,26 +186,23 @@ public class LeagueTable implements View.OnClickListener {
                 tv.setLayoutParams(rp2);
                 tv.setWidth(96);
                 tv.setHeight(96);
-                tv.setBackgroundResource(R.drawable.league_table_match);
+                if (ii != jj) {
+                    tv.setBackgroundResource(R.drawable.league_table_match);
+                    tv.setOnClickListener(mListener);
+                    match_id = memberPositionsToMatchId(new int[]{ii, jj});
+                    tv.setTag(match_id);
+                    match = matches.get(match_id);
+                    if (ii < jj) {
+                        match.setUpperView(tv);
+                    } else {
+                        match.setLowerView(tv);
+                    }
+                }
                 tv.setGravity(Gravity.CENTER);
                 tableRow.addView(tv);
             }
             tl.addView(tableRow);
         }
-
-        for (Item_Match match : matches.values()) {
-            makeMatchViews(match);
-//            match.setOnClickListener(mListener);
-            addViewsToLayout(match);
-        }
-    }
-
-    private void makeMatchViews(Item_Match match) {
-
-    }
-
-    private void addViewsToLayout(Item_Match match) {
-
     }
 
     private int memberPositionsToMatchId(int[] indices) {
@@ -169,7 +217,8 @@ public class LeagueTable implements View.OnClickListener {
             throw new ArrayIndexOutOfBoundsException();
         }
 
-        return n_members * row + col;
+        if (row < col) return n_members * row + col;
+        else return n_members * col + row;
     }
 
     @Override

@@ -18,12 +18,12 @@ public class Detail_Session_League extends Detail_Session_Base {
         rootView = inflater.inflate(R.layout.fragment_detail_session_league, container, false);
         ScrollView sv = (ScrollView) rootView.findViewById(R.id.scrollView1);
 
-        rootView.getMeasuredWidth();
+//        rootView.getMeasuredWidth();
 
         league_table = new LeagueTable(sv, s) {
             @Override
             public void onClick(View v) {
-                mInfo = getMatch(v.getId());
+                mInfo = getMatch((int) v.getTag());
                 log("gId: " + mInfo.getIdInSession() + ", create: "
                         + mInfo.getCreatable() + ", view: "
                         + mInfo.getViewable() + ", marquee: " + mInfo.getTitle()
@@ -36,6 +36,8 @@ public class Detail_Session_League extends Detail_Session_Base {
 
     @Override
     public void refreshDetails() {
-
+        if (league_table != null) {
+            league_table.refreshTable();
+        }
     }
 }
