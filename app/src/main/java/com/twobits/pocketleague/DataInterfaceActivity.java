@@ -5,12 +5,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.twobits.pocketleague.backend.DataInterface;
-import com.twobits.pocketleague.db.DatabaseHelper;
 import com.twobits.pocketleague.gameslibrary.GameSubtype;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
@@ -21,27 +18,12 @@ public abstract class DataInterfaceActivity extends ActionBarActivity implements
     private SharedPreferences settings;
     private SharedPreferences.Editor prefs_editor;
 
-    private DatabaseHelper databaseHelper = null;
-
-
     public Database getDatabase() {
-        if (databaseHelper == null) {
-            databaseHelper = new DatabaseHelper(this);
-        }
-        return databaseHelper.getDatabase();
+        return ((PocketLeagueApp) getApplication()).getDatabase();
     }
 
     public void deleteDatabase() {
-        databaseHelper.deleteDatabase();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (databaseHelper != null) {
-            databaseHelper.close();
-            databaseHelper = null;
-        }
+        ((PocketLeagueApp) getApplication()).deleteDatabase();
     }
 
     @Override

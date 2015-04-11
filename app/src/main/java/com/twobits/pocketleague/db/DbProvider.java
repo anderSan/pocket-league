@@ -8,13 +8,13 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 
 import com.couchbase.lite.Database;
+import com.twobits.pocketleague.PocketLeagueApp;
 import com.twobits.pocketleague.db.tables.Game;
 import com.twobits.pocketleague.db.tables.GameMember;
 
 import java.util.List;
 
 public class DbProvider extends ContentProvider {
-    private DatabaseHelper dbhelper;
     Database database;
 
     private static final String AUTHORITY = DbUris.AUTHORITY;
@@ -29,10 +29,7 @@ public class DbProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        if (dbhelper == null) {
-            dbhelper = new DatabaseHelper(getContext());
-            database = dbhelper.getDatabase();
-        }
+        database = ((PocketLeagueApp) getContext().getApplicationContext()).getDatabase();
         return true;
     }
 
@@ -40,7 +37,7 @@ public class DbProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] arg1, String arg2, String[] arg3, String arg4) {
         String id = uri.getLastPathSegment();
         String[] columnNames;
-        MatrixCursor cursor = null;
+        MatrixCursor cursor;
 
         int uriMatch = sUriMatcher.match(uri);
         switch (uriMatch) {
