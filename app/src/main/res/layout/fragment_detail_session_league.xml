@@ -14,6 +14,7 @@
         android:layout_below="@id/sDet_gameType"
         android:layout_above="@id/detail_nav_bar"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         />
 
 </RelativeLayout>

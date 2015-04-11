@@ -32,7 +32,6 @@ public class LeagueTable implements View.OnClickListener {
     private TableLayout tl;
     public List<SessionMember> members = new ArrayList<>();
     private Map<Integer, Item_Match> matches = new TreeMap<>();
-    private Map<Integer, Integer> view_ids = new HashMap<>();
 
     public LeagueTable(ScrollView sv, Session s) {
         this.s = s;
@@ -42,7 +41,7 @@ public class LeagueTable implements View.OnClickListener {
                 ScrollView.LayoutParams.WRAP_CONTENT);
         lp.setMargins(20, 20, 10, 10);
         tl.setLayoutParams(lp);
-        this.context = tl.getContext();
+        context = tl.getContext();
 
         members = s.getMembers();
         Collections.sort(members, SessionMember.SEED_ORDER);
@@ -176,6 +175,7 @@ public class LeagueTable implements View.OnClickListener {
             tableRow.setLayoutParams(tp);
             tv = new TextView(context);
             tv.setGravity(Gravity.RIGHT);
+            tv.setMinWidth(300);
             tv.setText(members.get(ii).getTeam().getName());
             tv.setTextAppearance(context, android.R.style.TextAppearance_Medium);
             tv.setLayoutParams(rp1);
