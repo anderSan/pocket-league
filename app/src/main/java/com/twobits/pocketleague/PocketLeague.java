@@ -265,20 +265,28 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
                     .findFragmentById(R.id.content_frame)).closeContextualActionBar();
         }
 
-        if (cab_closed) {
-            // Then don't do anything else.
-        } else if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-            mDrawerLayout.closeDrawer(mDrawerList);
-        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
+        if (!cab_closed) {
+            if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+                mDrawerLayout.closeDrawer(mDrawerList);
+            } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+                getFragmentManager().popBackStack();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
     public void refreshFragment() {
         Fragment_Base f = (Fragment_Base) getFragmentManager().findFragmentById(R.id.content_frame);
         f.refreshDetails();
+    }
+
+    public void returnResult(Object result) {
+        getFragmentManager().popBackStackImmediate();
+        if (result != null) {
+            Fragment_Base f = (Fragment_Base) getFragmentManager().findFragmentById(R.id.content_frame);
+            f.putResult(result);
+        }
     }
 
     public void loadGame(String gId) {
@@ -343,12 +351,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
             Bundle args = new Bundle();
             args.putString("SID", sId);
             fragment.setArguments(args);
-
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.replace(R.id.content_frame, fragment).addToBackStack(null);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.commit();
+            replaceFragment(fragment);
         }
     }
 
@@ -358,12 +361,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         Bundle args = new Bundle();
         args.putString("PID", pId);
         fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.content_frame, fragment).addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
+        replaceFragment(fragment);
     }
 
     public void viewTeamDetails(String tId) {
@@ -372,10 +370,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         Bundle args = new Bundle();
         args.putString("TID", tId);
         fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment)
-                .addToBackStack(null).commit();
+        replaceFragment(fragment);
     }
 
     public void viewVenueDetails(String vId) {
@@ -384,10 +379,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         Bundle args = new Bundle();
         args.putString("VID", vId);
         fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment)
-                .addToBackStack(null).commit();
+        replaceFragment(fragment);
     }
 
     public void modifySession(String sId) {
@@ -398,12 +390,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
             args.putString("SID", sId);
         }
         fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.content_frame, fragment).addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
+        replaceFragment(fragment);
     }
 
     public void modifyPlayer(String pId) {
@@ -414,12 +401,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
             args.putString("PID", pId);
         }
         fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.content_frame, fragment).addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
+        replaceFragment(fragment);
     }
 
     public void modifyTeam(String tId) {
@@ -430,12 +412,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
             args.putString("TID", tId);
         }
         fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.content_frame, fragment).addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
+        replaceFragment(fragment);
     }
 
     public void modifyVenue(String vId) {
@@ -446,11 +423,24 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
             args.putString("VID", vId);
         }
         fragment.setArguments(args);
+        replaceFragment(fragment);
+    }
 
+    public void selectTeams() {
+        Fragment fragment = new Select_Teams();
+
+        Bundle args = new Bundle();
+//        if (vId != null) {
+//            args.putString("VID", vId);
+//        }
+        fragment.setArguments(args);
+        replaceFragment(fragment);
+    }
+
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.content_frame, fragment).addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
     }
 }

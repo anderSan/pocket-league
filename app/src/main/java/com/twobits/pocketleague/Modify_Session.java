@@ -1,15 +1,13 @@
 package com.twobits.pocketleague;
 
 import android.os.Bundle;
+import android.transition.Slide;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +15,6 @@ import android.widget.Toast;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.twobits.pocketleague.backend.Fragment_Edit;
 import com.twobits.pocketleague.backend.SpinnerAdapter;
-import com.twobits.pocketleague.db.tables.Player;
 import com.twobits.pocketleague.db.tables.Session;
 import com.twobits.pocketleague.db.tables.SessionMember;
 import com.twobits.pocketleague.db.tables.Team;
@@ -35,17 +32,15 @@ public class Modify_Session extends Fragment_Edit {
 	Session s;
 
 	Button btn_create;
+	Button btn_select;
 	TextView tv_name;
 	Spinner sp_sessionType;
 	Spinner sp_ruleSet;
 	Spinner sp_venues;
 	TextView tv_num_selected;
-	ListView lv_roster;
 	CheckBox cb_isFavorite;
 
 	List<Team> teams = new ArrayList<>();
-	List<Integer> teamIdxList = new ArrayList<>();
-	List<String> teamNames = new ArrayList<>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,12 +51,12 @@ public class Modify_Session extends Fragment_Edit {
         sId = args.getString("SID");
 
 		btn_create = (Button) rootView.findViewById(R.id.button_createSession);
+		btn_select = (Button) rootView.findViewById(R.id.btn_chooseTeams);
 		tv_name = (TextView) rootView.findViewById(R.id.editText_sessionName);
 		sp_sessionType = (Spinner) rootView.findViewById(R.id.newSession_sessionType);
 		sp_ruleSet = (Spinner) rootView.findViewById(R.id.newSession_ruleSet);
 		sp_venues = (Spinner) rootView.findViewById(R.id.newSession_venues);
 		tv_num_selected = (TextView) rootView.findViewById(R.id.tv_num_selected);
-		lv_roster = (ListView) rootView.findViewById(R.id.newSession_teamSelection);
 		cb_isFavorite = (CheckBox) rootView.findViewById(R.id.newSession_isFavorite);
 
         btn_create.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +65,13 @@ public class Modify_Session extends Fragment_Edit {
                 doneButtonPushed();
             }
         });
+
+		btn_select.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mNav.selectTeams();
+			}
+		});
 
 		List<String> sessionTypes = new ArrayList<>();
 		for (SessionType st : SessionType.values()) {
@@ -105,31 +107,9 @@ public class Modify_Session extends Fragment_Edit {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 
-		try {
-            teams.clear();
-            teamNames.clear();
-            teams.addAll(Player.getPlayers(database(), true, false));
-            teams.addAll(Team.getTeams(database(), true, false));
-            for (Team t : teams) {
-                teamNames.add(t.getName());
-            }
-		} catch (CouchbaseLiteException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
 
-		updateRosterCheckList();
-		lv_roster.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView arg0, View view, int pos,
-					long arg3) {
-				if (teamIdxList.contains(pos)) {
-					teamIdxList.remove((Integer) pos);
-				} else {
-					teamIdxList.add(pos);
-				}
-				tv_num_selected.setText(teamIdxList.size() + " selected");
-			}
-		});
+//		tv_num_selected.setText(teamIdxList.size() + " selected");
+
 
 		if (sId != null) {
 			loadSessionValues();
@@ -145,49 +125,41 @@ public class Modify_Session extends Fragment_Edit {
         sp_sessionType.setVisibility(View.GONE);
         sp_ruleSet.setVisibility(View.GONE);
         cb_isFavorite.setChecked(s.getIsFavorite());
-
-        // TODO: if loading a session, show player/team names or hide
-        // box but dont allow session roster to change or bad things
-        // could happen!
-        teamNames.clear();
-	}
-
-	public void updateRosterCheckList() {
-		lv_roster.setAdapter(new ArrayAdapter<>(context,
-				android.R.layout.simple_list_item_multiple_choice, teamNames));
 	}
 
 	public void doneButtonPushed() {
 		String session_name = tv_name.getText().toString().trim();
 		if (session_name.isEmpty()) {
-			Toast.makeText(context, "Session name is required.", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(context, "Session name is required.", Toast.LENGTH_LONG).show();
 		} else {
-			SessionType session_type = (SessionType) sp_sessionType
-					.getSelectedView().getTag();
-			GameSubtype game_rule = (GameSubtype) sp_ruleSet.getSelectedView()
-					.getTag();
+			SessionType session_type = (SessionType) sp_sessionType.getSelectedView().getTag();
+			GameSubtype game_rule = (GameSubtype) sp_ruleSet.getSelectedView().getTag();
 			Venue current_venue = (Venue) sp_venues.getSelectedView().getTag();
 			Boolean is_favorite = cb_isFavorite.isChecked();
 
 			if (sId != null) {
 				modifySession(session_name, current_venue, is_favorite);
 			} else {
-				createSession(session_name, game_rule, session_type,
-						current_venue, is_favorite);
+				createSession(session_name, game_rule, session_type, current_venue, is_favorite);
 			}
 		}
 	}
 
+	@Override @SuppressWarnings("unchecked")
+	public void putResult(Object result) {
+		teams = (List<Team>) result;
+		tv_num_selected.setText(String.valueOf(teams.size()));
+	}
+
 	private void createSession(String session_name, GameSubtype game_subtype,
 			SessionType session_type, Venue current_venue, boolean is_favorite) {
-		int team_size = teamIdxList.size();
+		int team_size = teams.size();
         int ruleset_id = 0;
 
         List<SessionMember> roster = new ArrayList<>();
         int seed = 0;
-        for (Integer teamIdx : teamIdxList) {
-            roster.add(new SessionMember(teams.get(teamIdx), seed));
+        for (Team team : teams) {
+            roster.add(new SessionMember(team, seed));
             seed++;
         }
 

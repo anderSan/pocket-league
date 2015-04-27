@@ -44,8 +44,10 @@
 
 	
 	<string name="team_member_header"><u>Team members:</u></string>
+	<string name="select_teams">Select Teams</string>
 	<string name="button_newGame">New Game</string>
-	<string name="create">Create!</string>
+	<string name="create">Create</string>
+	<string name="done">Done</string>
 	<string name="pDet_computeStats">Get Offensive Stats</string>
 	<string name="pDet_computeDefensiveStats">Get Defensive Stats</string>
 
