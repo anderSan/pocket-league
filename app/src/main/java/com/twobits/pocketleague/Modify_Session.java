@@ -124,6 +124,7 @@ public class Modify_Session extends Fragment_Edit {
         tv_name.setText(s.getName());
         sp_sessionType.setVisibility(View.GONE);
         sp_ruleSet.setVisibility(View.GONE);
+		btn_select.setVisibility(View.GONE);
         cb_isFavorite.setChecked(s.getIsFavorite());
 	}
 
@@ -132,14 +133,14 @@ public class Modify_Session extends Fragment_Edit {
 		if (session_name.isEmpty()) {
 			Toast.makeText(context, "Session name is required.", Toast.LENGTH_LONG).show();
 		} else {
-			SessionType session_type = (SessionType) sp_sessionType.getSelectedView().getTag();
-			GameSubtype game_rule = (GameSubtype) sp_ruleSet.getSelectedView().getTag();
 			Venue current_venue = (Venue) sp_venues.getSelectedView().getTag();
 			Boolean is_favorite = cb_isFavorite.isChecked();
 
 			if (sId != null) {
 				modifySession(session_name, current_venue, is_favorite);
 			} else {
+				SessionType session_type = (SessionType) sp_sessionType.getSelectedView().getTag();
+				GameSubtype game_rule = (GameSubtype) sp_ruleSet.getSelectedView().getTag();
 				createSession(session_name, game_rule, session_type, current_venue, is_favorite);
 			}
 		}

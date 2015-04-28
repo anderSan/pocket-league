@@ -174,4 +174,11 @@ public class SessionDbTest extends DbBaseTestCase {
         assertEquals(1, members.get(0).getRank());
         assertEquals(2, members.get(1).getRank());
     }
+
+    public void testUpdate() throws Exception {
+        Session s = Session.getFromId(database, s2.getId());
+        assertEquals(2, s2.getMembers().size());
+        s.update();
+        assertEquals(2, s.getMembers().size());
+    }
 }

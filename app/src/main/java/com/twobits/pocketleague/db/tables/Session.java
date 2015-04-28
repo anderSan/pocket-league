@@ -93,8 +93,8 @@ public class Session extends CouchDocumentBase {
         Query query = database.getView("session-names").createQuery();
         query.setKeys(key_filter);
         QueryEnumerator rows = query.run();
-        for (Iterator<QueryRow> it = rows; it.hasNext();) {
-            QueryRow row = it.next();
+        for (; rows.hasNext();) {
+            QueryRow row = rows.next();
             sessions.add(getFromId(database, row.getDocumentId()));
         }
         return sessions;
@@ -113,8 +113,8 @@ public class Session extends CouchDocumentBase {
         query.setStartKey(Arrays.asList(current_game_type.name(), active, only_favorite));
         query.setEndKey(Arrays.asList(current_game_type.name(), active, QUERY_END));
         QueryEnumerator filter = query.run();
-        for (Iterator<QueryRow> it = filter; it.hasNext(); ) {
-            QueryRow row = it.next();
+        for (; filter.hasNext(); ) {
+            QueryRow row = filter.next();
             // key_filter.add(row.getDocumentId());
             String key_id = row.getDocumentId();
             key_filter.add(getFromId(database, key_id).getName());
@@ -172,6 +172,7 @@ public class Session extends CouchDocumentBase {
         content.put(CURRENT_VENUE_ID, current_venue.getId());
     }
 
+    @SuppressWarnings("unchecked")
     public void addGame(Game g) {
         List<String> game_ids = (List<String>) content.get(GAME_IDS);
         if (g.getId() != null) {
@@ -182,6 +183,7 @@ public class Session extends CouchDocumentBase {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public List<Game> getGames() {
         List<Game> games = new ArrayList<>();
         for (String game_id : (List<String>) content.get(GAME_IDS)) {
@@ -196,9 +198,15 @@ public class Session extends CouchDocumentBase {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public List<SessionMember> getMembers() {
         if (members.size() == 0) {
-            List<Map<String, Object>> stored_members = (List<Map<String, Object>>) content.get(STORED_MEMBERS);
+            List<Map<String, Object>> stored_members;
+            if (content.containsKey(STORED_MEMBERS)) {
+                stored_members = (List<Map<String, Object>>) content.get(STORED_MEMBERS);
+            } else {
+                stored_members = new ArrayList<>();
+            }
             Team team;
             int team_seed;
             int team_rank;
@@ -224,7 +232,7 @@ public class Session extends CouchDocumentBase {
     @Override
     public void update() {
         List<Map<String, Object>> stored_members = new ArrayList<>();
-        for (SessionMember sm : members) {
+        for (SessionMember sm : getMembers()) {
             if (sm.getTeam() != null) {
                 stored_members.add(sm.toMap());
             }
