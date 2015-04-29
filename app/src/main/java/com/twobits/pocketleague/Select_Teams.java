@@ -86,6 +86,6 @@ public class Select_Teams extends Fragment_Edit {
         for (Integer teamIdx : teamIdxList) {
             team_ids.add(teams.get(teamIdx));
         }
-        mNav.returnResult(team_ids);
+        mNav.setTeams(team_ids);
     }
 }

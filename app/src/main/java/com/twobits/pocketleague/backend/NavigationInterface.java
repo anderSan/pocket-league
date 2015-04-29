@@ -1,6 +1,9 @@
 package com.twobits.pocketleague.backend;
 
+import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.enums.SessionType;
+
+import java.util.List;
 
 public interface NavigationInterface {
     void setTitle(String title);
@@ -13,7 +16,7 @@ public interface NavigationInterface {
 
     void refreshFragment();
 
-    void returnResult(Object result);
+    void setTeams(List<Team> teams);
 
     void loadGame(String gId);
 
@@ -40,4 +43,6 @@ public interface NavigationInterface {
     void modifyVenue(String vId);
 
     void selectTeams();
+
+    void selectReseedSession();
 }

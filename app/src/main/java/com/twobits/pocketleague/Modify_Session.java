@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
+import com.twobits.pocketleague.backend.Add_Teams;
 import com.twobits.pocketleague.backend.Fragment_Edit;
 import com.twobits.pocketleague.backend.SpinnerAdapter;
 import com.twobits.pocketleague.db.tables.Session;
@@ -27,12 +28,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Modify_Session extends Fragment_Edit {
+public class Modify_Session extends Fragment_Edit implements Add_Teams {
     String sId;
 	Session s;
 
 	Button btn_create;
 	Button btn_select;
+	Button btn_reseed;
 	TextView tv_name;
 	Spinner sp_sessionType;
 	Spinner sp_ruleSet;
@@ -52,6 +54,7 @@ public class Modify_Session extends Fragment_Edit {
 
 		btn_create = (Button) rootView.findViewById(R.id.button_createSession);
 		btn_select = (Button) rootView.findViewById(R.id.btn_chooseTeams);
+		btn_reseed = (Button) rootView.findViewById(R.id.btn_reseed);
 		tv_name = (TextView) rootView.findViewById(R.id.editText_sessionName);
 		sp_sessionType = (Spinner) rootView.findViewById(R.id.newSession_sessionType);
 		sp_ruleSet = (Spinner) rootView.findViewById(R.id.newSession_ruleSet);
@@ -70,6 +73,13 @@ public class Modify_Session extends Fragment_Edit {
 			@Override
 			public void onClick(View v) {
 				mNav.selectTeams();
+			}
+		});
+
+		btn_reseed.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mNav.selectReseedSession();
 			}
 		});
 
@@ -107,10 +117,6 @@ public class Modify_Session extends Fragment_Edit {
 			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 
-
-//		tv_num_selected.setText(teamIdxList.size() + " selected");
-
-
 		if (sId != null) {
 			loadSessionValues();
 		}
@@ -125,6 +131,7 @@ public class Modify_Session extends Fragment_Edit {
         sp_sessionType.setVisibility(View.GONE);
         sp_ruleSet.setVisibility(View.GONE);
 		btn_select.setVisibility(View.GONE);
+		btn_reseed.setVisibility(View.GONE);
         cb_isFavorite.setChecked(s.getIsFavorite());
 	}
 
@@ -146,10 +153,10 @@ public class Modify_Session extends Fragment_Edit {
 		}
 	}
 
-	@Override @SuppressWarnings("unchecked")
-	public void putResult(Object result) {
-		teams = (List<Team>) result;
-		tv_num_selected.setText(String.valueOf(teams.size()));
+	@Override
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
+		tv_num_selected.setText(teams.size() + " selected");
 	}
 
 	private void createSession(String session_name, GameSubtype game_subtype,

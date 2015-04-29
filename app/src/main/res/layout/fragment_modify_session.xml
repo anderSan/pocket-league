@@ -67,13 +67,22 @@
 
     <Button
         android:id="@+id/btn_chooseTeams"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_below="@id/tv_num_selected"
         android:layout_marginTop="16dp"
         android:text="@string/select_teams"
         />
+
+    <Button
+        android:id="@+id/btn_reseed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/reseed_teams"
+        android:layout_alignTop="@+id/btn_chooseTeams"
+        android:layout_alignParentEnd="true" />
     
     <Button
         android:id="@+id/button_createSession"

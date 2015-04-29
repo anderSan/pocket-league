@@ -20,11 +20,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.twobits.pocketleague.backend.Add_Teams;
 import com.twobits.pocketleague.backend.Fragment_Base;
 import com.twobits.pocketleague.backend.NavDrawerAdapter;
 import com.twobits.pocketleague.backend.NavDrawerItem;
 import com.twobits.pocketleague.backend.NavigationInterface;
 import com.twobits.pocketleague.db.tables.Game;
+import com.twobits.pocketleague.db.tables.Team;
 import com.twobits.pocketleague.enums.SessionType;
 import com.twobits.pocketleague.gameslibrary.GameType;
 
@@ -281,11 +283,11 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         f.refreshDetails();
     }
 
-    public void returnResult(Object result) {
+    public void setTeams(List<Team> teams) {
         getFragmentManager().popBackStackImmediate();
-        if (result != null) {
-            Fragment_Base f = (Fragment_Base) getFragmentManager().findFragmentById(R.id.content_frame);
-            f.putResult(result);
+        if (teams != null) {
+            Add_Teams f = (Add_Teams) getFragmentManager().findFragmentById(R.id.content_frame);
+            f.setTeams(teams);
         }
     }
 
@@ -430,9 +432,14 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
         Fragment fragment = new Select_Teams();
 
         Bundle args = new Bundle();
-//        if (vId != null) {
-//            args.putString("VID", vId);
-//        }
+        fragment.setArguments(args);
+        replaceFragment(fragment);
+    }
+
+    public void selectReseedSession() {
+        Fragment fragment = new SelectReseedSession();
+
+        Bundle args = new Bundle();
         fragment.setArguments(args);
         replaceFragment(fragment);
     }
