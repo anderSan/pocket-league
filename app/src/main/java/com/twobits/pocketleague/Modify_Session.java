@@ -37,7 +37,6 @@ public class Modify_Session extends Fragment_Edit implements Add_Teams {
 	Button btn_reseed;
 	TextView tv_name;
 	Spinner sp_sessionType;
-	Spinner sp_ruleSet;
 	Spinner sp_venues;
 	TextView tv_num_selected;
 	CheckBox cb_isFavorite;
@@ -57,7 +56,6 @@ public class Modify_Session extends Fragment_Edit implements Add_Teams {
 		btn_reseed = (Button) rootView.findViewById(R.id.btn_reseed);
 		tv_name = (TextView) rootView.findViewById(R.id.editText_sessionName);
 		sp_sessionType = (Spinner) rootView.findViewById(R.id.newSession_sessionType);
-		sp_ruleSet = (Spinner) rootView.findViewById(R.id.newSession_ruleSet);
 		sp_venues = (Spinner) rootView.findViewById(R.id.newSession_venues);
 		tv_num_selected = (TextView) rootView.findViewById(R.id.tv_num_selected);
 		cb_isFavorite = (CheckBox) rootView.findViewById(R.id.newSession_isFavorite);
@@ -92,16 +90,6 @@ public class Modify_Session extends Fragment_Edit implements Add_Teams {
 				Arrays.asList(SessionType.values()));
 		sp_sessionType.setAdapter(stAdapter);
 
-		List<String> ruleSetDescriptions = new ArrayList<>();
-		GameType currentGameType = mData.getCurrentGameType();
-		for (GameSubtype gr : currentGameType.toGameSubtype()) {
-			ruleSetDescriptions.add(gr.toDescriptor().getDescription());
-		}
-		ArrayAdapter<String> rsAdapter = new SpinnerAdapter(context,
-				android.R.layout.simple_spinner_dropdown_item, ruleSetDescriptions,
-				currentGameType.toGameSubtype());
-		sp_ruleSet.setAdapter(rsAdapter);
-
 		try {
             List<String> venueNames = new ArrayList<>();
             List<Venue> venues = Venue.getVenues(database(), true, false);
@@ -129,7 +117,6 @@ public class Modify_Session extends Fragment_Edit implements Add_Teams {
         btn_create.setText("Modify");
         tv_name.setText(s.getName());
         sp_sessionType.setVisibility(View.GONE);
-        sp_ruleSet.setVisibility(View.GONE);
 		btn_select.setVisibility(View.GONE);
 		btn_reseed.setVisibility(View.GONE);
         cb_isFavorite.setChecked(s.getIsFavorite());
@@ -147,8 +134,7 @@ public class Modify_Session extends Fragment_Edit implements Add_Teams {
 				modifySession(session_name, current_venue, is_favorite);
 			} else {
 				SessionType session_type = (SessionType) sp_sessionType.getSelectedView().getTag();
-				GameSubtype game_rule = (GameSubtype) sp_ruleSet.getSelectedView().getTag();
-				createSession(session_name, game_rule, session_type, current_venue, is_favorite);
+				createSession(session_name, session_type, current_venue, is_favorite);
 			}
 		}
 	}
@@ -159,10 +145,11 @@ public class Modify_Session extends Fragment_Edit implements Add_Teams {
 		tv_num_selected.setText(teams.size() + " selected");
 	}
 
-	private void createSession(String session_name, GameSubtype game_subtype,
-			SessionType session_type, Venue current_venue, boolean is_favorite) {
+	private void createSession(String session_name, SessionType session_type, Venue current_venue,
+							   boolean is_favorite) {
+		GameSubtype game_subtype = mData.getCurrentGameSubtype();
+		int ruleset_id = 0;
 		int team_size = teams.size();
-        int ruleset_id = 0;
 
         List<SessionMember> roster = new ArrayList<>();
         int seed = 0;
