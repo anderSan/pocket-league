@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="com.twobits.gametemplate"
+    package="info.andersonpa.gametemplate"
     android:sharedUserId="com.twobits"
     android:sharedUserLabel="@string/sharedUserLabel"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <permission android:name="com.twobits.pocketleague.READ_DATABASE"/>
-    <uses-permission android:name="com.twobits.pocketleague.READ_DATABASE"/>
+    <permission android:name="info.andersonpa.pocketleague.READ_DATABASE"/>
+    <uses-permission android:name="info.andersonpa.pocketleague.READ_DATABASE"/>
 
     <application
         android:allowBackup="true"

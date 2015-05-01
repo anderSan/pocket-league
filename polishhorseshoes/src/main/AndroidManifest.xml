@@ -1,12 +1,12 @@
 <manifest
-    package="com.twobits.polishhorseshoes"
+    package="info.andersonpa.polishhorseshoes"
     android:sharedUserId="com.twobits"
     android:sharedUserLabel="@string/sharedUserLabel"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <permission android:name="com.twobits.pocketleague.READ_DATABASE"/>
-    <uses-permission android:name="com.twobits.pocketleague.READ_DATABASE"/>
+    <permission android:name="info.andersonpa.pocketleague.READ_DATABASE"/>
+    <uses-permission android:name="info.andersonpa.pocketleague.READ_DATABASE"/>
 
     <application
         android:allowBackup="true"
@@ -19,19 +19,19 @@
             android:name=".GameInProgress"
             android:label="@string/title_activity_game_in_progress">
             <intent-filter>
-                <action android:name="com.twobits.polishhorseshoes.singles.PLAY_GAME"/>
-                <action android:name="com.twobits.polishhorseshoes.doubles.PLAY_GAME"/>
+                <action android:name="info.andersonpa.polishhorseshoes.singles.PLAY_GAME"/>
+                <action android:name="info.andersonpa.polishhorseshoes.doubles.PLAY_GAME"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.twobits.polishhorseshoes.Detail_Game"
+            android:name="info.andersonpa.polishhorseshoes.Detail_Game"
             android:label="@string/title_activity_detail_game">
         </activity>
 
         <activity
-            android:name="com.twobits.polishhorseshoes.AboutPage"
+            android:name="info.andersonpa.polishhorseshoes.AboutPage"
             android:label="@string/title_activity_about_page">
         </activity>
 

@@ -2,7 +2,7 @@
 # generated on 2015/02/24 09:04:19
 #
 # --table-start--
-dataClass=com.twobits.pocketleague.db.tables.Game
+dataClass=info.andersonpa.pocketleague.db.tables.Game
 tableName=game
 # --table-fields-start--
 # --field-start--
@@ -40,7 +40,7 @@ foreignCollection=true
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.twobits.pocketleague.db.tables.GameMember
+dataClass=info.andersonpa.pocketleague.db.tables.GameMember
 tableName=gamemember
 # --table-fields-start--
 # --field-start--
@@ -68,7 +68,7 @@ canBeNull=false
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.twobits.pocketleague.db.tables.Player
+dataClass=info.andersonpa.pocketleague.db.tables.Player
 tableName=player
 # --table-fields-start--
 # --field-start--
@@ -121,7 +121,7 @@ fieldName=is_favorite
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.twobits.pocketleague.db.tables.Session
+dataClass=info.andersonpa.pocketleague.db.tables.Session
 tableName=session
 # --table-fields-start--
 # --field-start--
@@ -169,7 +169,7 @@ foreignCollection=true
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.twobits.pocketleague.db.tables.SessionMember
+dataClass=info.andersonpa.pocketleague.db.tables.SessionMember
 tableName=sessionmember
 # --table-fields-start--
 # --field-start--
@@ -199,7 +199,7 @@ canBeNull=false
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.twobits.pocketleague.db.tables.Team
+dataClass=info.andersonpa.pocketleague.db.tables.Team
 tableName=team
 # --table-fields-start--
 # --field-start--
@@ -232,7 +232,7 @@ foreignCollection=true
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.twobits.pocketleague.db.tables.TeamMember
+dataClass=info.andersonpa.pocketleague.db.tables.TeamMember
 tableName=teammember
 # --table-fields-start--
 # --field-start--
@@ -254,7 +254,7 @@ uniqueCombo=true
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.twobits.pocketleague.db.tables.Venue
+dataClass=info.andersonpa.pocketleague.db.tables.Venue
 tableName=venue
 # --table-fields-start--
 # --field-start--
