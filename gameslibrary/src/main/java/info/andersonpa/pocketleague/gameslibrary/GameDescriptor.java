@@ -7,9 +7,13 @@ public interface GameDescriptor {
 
     String getDescription();
 
-    boolean allowed_nTeams(int n_teams);
+    Integer min_number_teams();
 
-    boolean allowed_teamSize(int team_size);
+    Integer max_number_teams();
+
+    Integer min_team_size();
+
+    Integer max_team_size();
 
     ScoreType getScoreType();
 

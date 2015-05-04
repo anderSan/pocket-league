@@ -17,13 +17,21 @@ public class DiscGolf implements GameDescriptor {
 		return "Disc Golf.";
 	}
 
-	public boolean allowed_nTeams(int n_teams) {
-        return n_teams >= 1;
+	public Integer min_number_teams() {
+		return 1;
 	}
 
-	public boolean allowed_teamSize(int team_size) {
-        return team_size == 1 || team_size == 2;
+	public Integer max_number_teams() {
+		return null;
 	}
+
+	public Integer min_team_size() {
+		return 1;
+	};
+
+	public Integer max_team_size() {
+		return 2;
+	};
 
 	public ScoreType getScoreType() {
 		return ScoreType.POINTS_INVERSE;

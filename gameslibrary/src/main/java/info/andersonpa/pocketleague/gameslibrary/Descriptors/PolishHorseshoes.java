@@ -1,7 +1,7 @@
 package info.andersonpa.pocketleague.gameslibrary.Descriptors;
 
-import info.andersonpa.pocketleague.gameslibrary.GameType;
 import info.andersonpa.pocketleague.gameslibrary.GameDescriptor;
+import info.andersonpa.pocketleague.gameslibrary.GameType;
 import info.andersonpa.pocketleague.gameslibrary.ScoreType;
 
 public class PolishHorseshoes implements GameDescriptor {
@@ -17,13 +17,21 @@ public class PolishHorseshoes implements GameDescriptor {
 		return "Polish Horseshoes.";
 	}
 
-	public boolean allowed_nTeams(int n_teams) {
-        return n_teams == 2;
+	public Integer min_number_teams() {
+		return 2;
 	}
 
-	public boolean allowed_teamSize(int team_size) {
-        return team_size == 1 || team_size == 2;
+	public Integer max_number_teams() {
+		return 2;
 	}
+
+	public Integer min_team_size() {
+		return 1;
+	};
+
+	public Integer max_team_size() {
+		return 2;
+	};
 
 	public ScoreType getScoreType() {
 		return ScoreType.POINTS;

@@ -17,13 +17,21 @@ public class Spades implements GameDescriptor {
 		return "Spades.";
 	}
 
-	public boolean allowed_nTeams(int n_teams) {
-        return n_teams == 2;
+	public Integer min_number_teams() {
+		return 2;
 	}
 
-	public boolean allowed_teamSize(int team_size) {
-        return team_size == 2;
+	public Integer max_number_teams() {
+		return 2;
 	}
+
+	public Integer min_team_size() {
+		return 2;
+	};
+
+	public Integer max_team_size() {
+		return 2;
+	};
 
 	public ScoreType getScoreType() {
 		return ScoreType.POINTS;
