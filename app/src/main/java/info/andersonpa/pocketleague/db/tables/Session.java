@@ -22,7 +22,6 @@ public class Session extends CouchDocumentBase {
     public static final String SESSION_TYPE = "session_type";
     public static final String GAME_TYPE = "game_type";
     public static final String GAME_SUBTYPE = "game_subtype";
-    public static final String RULESET_ID = "ruleset_id";
     public static final String TEAM_SIZE = "team_size";
     public static final String IS_ACTIVE = "is_active";
     public static final String IS_FAVORITE = "is_favorite";
@@ -34,13 +33,12 @@ public class Session extends CouchDocumentBase {
 
     // Constructors
     public Session(String session_name, SessionType session_type, GameSubtype game_subtype,
-                   int ruleset_id, int team_size, Venue current_venue) {
+                   int team_size, Venue current_venue) {
         // name should be unique
         content.put("type", TYPE);
         setName(session_name);
         content.put(SESSION_TYPE, session_type.name());
         content.put(GAME_SUBTYPE, game_subtype.name());
-        content.put(RULESET_ID, ruleset_id);
         content.put(TEAM_SIZE, team_size);
         setIsActive(true);
         setIsFavorite(false);
@@ -49,15 +47,15 @@ public class Session extends CouchDocumentBase {
     }
 
     public Session(Database database, String session_name, SessionType session_type,
-                   GameSubtype game_subtype, int ruleset_id, int team_size, Venue current_venue) {
-        this(session_name, session_type, game_subtype, ruleset_id, team_size, current_venue);
+                   GameSubtype game_subtype, int team_size, Venue current_venue) {
+        this(session_name, session_type, game_subtype, team_size, current_venue);
         createDocument(database);
     }
 
     public Session(Database database, String session_name, SessionType session_type,
-                   GameSubtype game_subtype, int ruleset_id, int team_size, Venue current_venue,
+                   GameSubtype game_subtype, int team_size, Venue current_venue,
                    List<SessionMember> members, boolean is_favorite) {
-        this(database, session_name, session_type, game_subtype, ruleset_id, team_size, current_venue);
+        this(database, session_name, session_type, game_subtype, team_size, current_venue);
         this.members = members;
         setIsFavorite(is_favorite);
     }

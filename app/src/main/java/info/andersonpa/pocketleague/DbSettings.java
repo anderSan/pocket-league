@@ -257,9 +257,9 @@ public class DbSettings extends Fragment_Base {
 
         Session[] sessions = {
                 new Session(database(), "Test Single Elim Session", SessionType.SNGL_ELIM,
-                        GameSubtype.POLISH_SINGLES, 0, 1, venues[2], members, true),
+                        GameSubtype.POLISH_HORSESHOES, 1, venues[2], members, true),
                 new Session(database(), "Test Double Elim Session", SessionType.DBL_ELIM,
-                        GameSubtype.EIGHTBALL, 0, 1, venues[0], members, false)
+                        GameSubtype.EIGHTBALL, 1, venues[0], members, false)
         };
         for (Session s : sessions) {
             s.update();

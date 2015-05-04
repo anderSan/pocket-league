@@ -36,18 +36,18 @@ public class SessionDbTest extends DbBaseTestCase {
         sm1 = new SessionMember(t1, 1, 2);
         sm2 = new SessionMember(t2, 2, 1);
 
-        s1 = new Session(database, "Session name", SessionType.OPEN, GameSubtype.EIGHTBALL, 0, 3, v1);
+        s1 = new Session(database, "Session name", SessionType.OPEN, GameSubtype.EIGHTBALL, 3, v1);
         s1.update();
-        s2 = new Session(database, "Other session name", SessionType.LADDER, GameSubtype.GOLF, 1, 2,
+        s2 = new Session(database, "Other session name", SessionType.LADDER, GameSubtype.GOLF, 2,
                 v1, Arrays.asList(sm1, sm2), true);
         s2.update();
     }
 
     public void testConstructor() throws Exception {
-        Session session = new Session("No doc session", SessionType.OPEN, GameSubtype.GOLF, 0, 1, v1);
+        Session session = new Session("No doc session", SessionType.OPEN, GameSubtype.GOLF, 1, v1);
         assertNull(session.getId());
 
-        session = new Session(database, "Doc session", SessionType.OPEN, GameSubtype.GOLF, 0, 1, v1);
+        session = new Session(database, "Doc session", SessionType.OPEN, GameSubtype.GOLF, 1, v1);
         assertNotNull(session.getId());
     }
 

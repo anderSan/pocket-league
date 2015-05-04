@@ -3,6 +3,7 @@ package info.andersonpa.pocketleague.db.tables;
 import android.test.AndroidTestCase;
 
 import com.couchbase.lite.Database;
+
 import info.andersonpa.pocketleague.SandboxContext;
 import info.andersonpa.pocketleague.db.DatabaseHelper;
 

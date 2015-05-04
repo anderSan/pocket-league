@@ -27,7 +27,7 @@ public class GameDbTest extends DbBaseTestCase {
 
         venue = new Venue(database, "Venue name");
         venue.update();
-        session = new Session(database, "Session name", SessionType.OPEN, GameSubtype.UNDEFINED, 0, 4, venue);
+        session = new Session(database, "Session name", SessionType.OPEN, GameSubtype.UNDEFINED, 4, venue);
         session.update();
 
         t1 = new Team(database, "Team First", null);

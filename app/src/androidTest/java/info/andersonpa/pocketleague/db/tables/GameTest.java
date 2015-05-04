@@ -21,7 +21,7 @@ public class GameTest extends TestCase {
         before = new Date();
         super.setUp();
         venue = new Venue("Venue name");
-        session = new Session("Session name", SessionType.OPEN, GameSubtype.UNDEFINED, 0, 4, venue);
+        session = new Session("Session name", SessionType.OPEN, GameSubtype.UNDEFINED, 4, venue);
         List<GameMember> members = new ArrayList<>();
 
 

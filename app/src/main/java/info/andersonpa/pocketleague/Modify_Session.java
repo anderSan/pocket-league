@@ -146,7 +146,6 @@ public class Modify_Session extends Fragment_Edit implements Add_Teams {
 	private void createSession(String session_name, SessionType session_type, Venue current_venue,
 							   boolean is_favorite) {
 		GameSubtype game_subtype = mData.getCurrentGameSubtype();
-		int ruleset_id = 0;
 		int team_size = teams.size();
 
         List<SessionMember> roster = new ArrayList<>();
@@ -157,7 +156,7 @@ public class Modify_Session extends Fragment_Edit implements Add_Teams {
         }
 
         Session newSession = new Session(database(), session_name, session_type, game_subtype,
-                ruleset_id, team_size, current_venue, roster, is_favorite);
+                team_size, current_venue, roster, is_favorite);
         newSession.setIsFavorite(is_favorite);
         newSession.update();
 
