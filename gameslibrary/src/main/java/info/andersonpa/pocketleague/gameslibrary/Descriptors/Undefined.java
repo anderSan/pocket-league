@@ -1,28 +1,28 @@
-package info.andersonpa.pocketleague.gameslibrary.Descriptors.Polishhorseshoes;
+package info.andersonpa.pocketleague.gameslibrary.Descriptors;
 
-import info.andersonpa.pocketleague.gameslibrary.GameDescriptor;
 import info.andersonpa.pocketleague.gameslibrary.GameType;
+import info.andersonpa.pocketleague.gameslibrary.GameDescriptor;
 import info.andersonpa.pocketleague.gameslibrary.ScoreType;
 
-public class PolishDoubles implements GameDescriptor {
+public class Undefined implements GameDescriptor {
     public GameType getGameType() {
-        return GameType.POLISH_HORSESHOES;
+        return GameType.UNDEFINED;
     }
 
 	public String getName() {
-		return "Polish Horseshoes Doubles";
+		return "Undefined Game";
 	}
 
 	public String getDescription() {
-		return "2v2 Polish Horseshoes.";
+		return "N/A.";
 	}
 
 	public boolean allowed_nTeams(int n_teams) {
-        return n_teams == 2;
+		return false;
 	}
 
 	public boolean allowed_teamSize(int team_size) {
-        return team_size == 2;
+		return false;
 	}
 
 	public ScoreType getScoreType() {
@@ -30,6 +30,6 @@ public class PolishDoubles implements GameDescriptor {
 	}
 
     public String actionString() {
-        return "info.andersonpa.polishhorseshoes.doubles.PLAY_GAME";
+        return "com.twobits.undefined.PLAY_GAME";
     }
 }

@@ -19,8 +19,7 @@
             android:name=".GameInProgress"
             android:label="@string/title_activity_game_in_progress">
             <intent-filter>
-                <action android:name="info.andersonpa.polishhorseshoes.singles.PLAY_GAME"/>
-                <action android:name="info.andersonpa.polishhorseshoes.doubles.PLAY_GAME"/>
+                <action android:name="info.andersonpa.polishhorseshoes.PLAY_GAME"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>

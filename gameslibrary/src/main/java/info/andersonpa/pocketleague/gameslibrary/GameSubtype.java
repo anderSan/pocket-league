@@ -5,9 +5,8 @@ import info.andersonpa.pocketleague.gameslibrary.Descriptors.Billiards.NineBall;
 import info.andersonpa.pocketleague.gameslibrary.Descriptors.Darts.Cricket;
 import info.andersonpa.pocketleague.gameslibrary.Descriptors.DiscGolf;
 import info.andersonpa.pocketleague.gameslibrary.Descriptors.Golf;
-import info.andersonpa.pocketleague.gameslibrary.Descriptors.Polishhorseshoes.PolishDoubles;
-import info.andersonpa.pocketleague.gameslibrary.Descriptors.Polishhorseshoes.PolishSingles;
-import info.andersonpa.pocketleague.gameslibrary.Descriptors.Undefined.Undefined;
+import info.andersonpa.pocketleague.gameslibrary.Descriptors.PolishHorseshoes;
+import info.andersonpa.pocketleague.gameslibrary.Descriptors.Undefined;
 
 public enum GameSubtype {
     DARTS_CRICKET(new Cricket()),
@@ -15,14 +14,13 @@ public enum GameSubtype {
     EIGHTBALL(new EightBall()),
     GOLF(new Golf()),
     NINEBALL(new NineBall()),
-    POLISH_SINGLES(new PolishSingles()),
-    POLISH_DOUBLES(new PolishDoubles()),
+    POLISH_HORSESHOES(new PolishHorseshoes()),
     SPADES(new Undefined()),
     UNDEFINED(new Undefined());
 
     private GameDescriptor descriptor;
 
-    private GameSubtype(GameDescriptor descriptor) {
+    GameSubtype(GameDescriptor descriptor) {
         this.descriptor = descriptor;
     }
 
