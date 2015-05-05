@@ -60,6 +60,10 @@ public class Detail_Venue extends Fragment_Detail {
         bar_isActive.setTextOn(getString(R.string.open));
         bar_isActive.setTextOff(getString(R.string.closed));
 
+        if (!mData.getIsDevMode()) {
+            tv_venueId.setVisibility(View.GONE);
+        }
+
         return rootView;
       }
 

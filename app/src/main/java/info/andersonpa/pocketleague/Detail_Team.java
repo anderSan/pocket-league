@@ -61,6 +61,10 @@ public class Detail_Team extends Fragment_Detail {
 
         setupBarButtons();
 
+        if (!mData.getIsDevMode()) {
+            tv_teamId.setVisibility(View.GONE);
+        }
+
         return rootView;
 	}
 

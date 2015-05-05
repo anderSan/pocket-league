@@ -14,9 +14,7 @@ import info.andersonpa.pocketleague.gameslibrary.GameType;
 public abstract class DataInterfaceActivity extends ActionBarActivity implements DataInterface {
     protected String LOGTAG = getClass().getSimpleName();
 
-    public static final String APP_PREFS = "PocketLeaguePreferences";
     private SharedPreferences settings;
-    private SharedPreferences.Editor prefs_editor;
 
     public Database getDatabase() {
         return ((PocketLeagueApp) getApplication()).getDatabase();
@@ -30,18 +28,9 @@ public abstract class DataInterfaceActivity extends ActionBarActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        settings = this.getSharedPreferences(APP_PREFS, 0);
-        prefs_editor = settings.edit();
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
+
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-    }
-
-    public String getPreference(String pref_name, String pref_default) {
-        return settings.getString(pref_name, pref_default);
-    }
-
-    public void setPreference(String pref_name, String pref_value) {
-        prefs_editor.putString(pref_name, pref_value);
-        prefs_editor.commit();
     }
 
     public GameType getCurrentGameType() {
@@ -49,11 +38,16 @@ public abstract class DataInterfaceActivity extends ActionBarActivity implements
     }
 
     public GameSubtype getCurrentGameSubtype() {
-        return GameSubtype.valueOf(getPreference("currentGameSubtype", GameSubtype.UNDEFINED.name()));
+        return GameSubtype.valueOf(settings.getString("currentGameSubtype",
+                GameSubtype.UNDEFINED.name()));
     }
 
     public void setCurrentGameSubtype(GameSubtype gamesubtype) {
-        setPreference("currentGameSubtype", gamesubtype.name());
+        settings.edit().putString("currentGameSubtype", gamesubtype.name()).commit();
+    }
+
+    public boolean getIsDevMode() {
+        return settings.getBoolean("dev_mode", false);
     }
 
     public void log(String msg) {

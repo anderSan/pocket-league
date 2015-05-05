@@ -70,6 +70,10 @@ public class Detail_Player extends Fragment_Detail {
 
         setupBarButtons();
 
+		if (!mData.getIsDevMode()) {
+            tv_playerId.setVisibility(View.GONE);
+        }
+
         return rootView;
 	}
 

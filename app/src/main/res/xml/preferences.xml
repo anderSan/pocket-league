@@ -1,26 +1,11 @@
 <PreferenceScreen
         xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-            android:title="Not Yet Implemented">
-
-        <ListPreference
-                android:key="ruleset_preference"
-                android:title="Default Ruleset"
-                android:summary="This should say which descriptor is chosen."
-                android:entries="@array/owngoals"
-                android:entryValues="@array/owngoals"
-                android:dialogTitle="Default Ruleset" />
-        
-        <ListPreference
-                android:key="iconset_preference"
-                android:title="Default Icons"
-                android:summary="This should say which icon set is chosen."
-                android:entries="@array/owngoals"
-                android:entryValues="@array/owngoals"
-                android:dialogTitle="Default Icons" />
-
-    </PreferenceCategory>
+    <SwitchPreference
+        android:key="dev_mode"
+        android:title="Development Mode"
+        android:summary="Show development views."
+        android:defaultValue="true" />
 
     <PreferenceCategory
             android:title="Examples">

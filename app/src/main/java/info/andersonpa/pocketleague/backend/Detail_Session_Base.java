@@ -74,6 +74,10 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 		TextView sId = (TextView) rootView.findViewById(R.id.sDet_id);
 		TextView sessionGameType = (TextView) rootView.findViewById(R.id.sDet_gameType);
 
+		if (!mData.getIsDevMode()) {
+			sId.setVisibility(View.GONE);
+		}
+
 		sName.setText(s.getName());
 		sId.setText(String.valueOf(s.getId()));
 		sessionGameType.setText(s.getDescriptor().getName());
