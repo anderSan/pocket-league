@@ -83,8 +83,10 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
             }
 
             public void onDrawerOpened(View drawerView) {
-                ((Fragment_Base) getFragmentManager()
-                        .findFragmentById(R.id.content_frame)).closeContextualActionBar();
+                Fragment f = getFragmentManager().findFragmentById(R.id.content_frame);
+                if (f instanceof Fragment_Base) {
+                    ((Fragment_Base) f).closeContextualActionBar();
+                }
                 getSupportActionBar().setTitle(mDrawerTitle);
                 getSupportActionBar().setSubtitle("");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
