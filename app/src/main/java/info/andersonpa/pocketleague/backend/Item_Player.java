@@ -34,8 +34,4 @@ public class Item_Player {
     public boolean getIsFavorite() {
         return is_favorite;
     }
-
-    public void setIsFavorite(boolean is_favorite) {
-        this.is_favorite = is_favorite;
-    }
 }

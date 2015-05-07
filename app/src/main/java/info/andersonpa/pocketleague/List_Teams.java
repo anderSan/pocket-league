@@ -54,7 +54,7 @@ public class List_Teams extends Fragment_TopList {
         List<Team> teams = getTeams();
 
         for (Team t : teams) {
-            team_adapter.add(new Item_Team(t.getId(), t.getName(), t.getIsFavorite()));
+            team_adapter.add(new Item_Team(t.getId(), t.getName(), t.getColor(), t.getIsFavorite()));
         }
 	}
 

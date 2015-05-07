@@ -35,6 +35,7 @@ public class ListAdapter_Team extends ArrayAdapter<Item_Team> {
             convertView = inflater.inflate(R.layout.list_item_team, parent, false);
 
             holder = new ViewHolder_Team();
+            holder.t_color = (TextView) convertView.findViewById(R.id.tv_t_color);
             holder.t_name = (TextView) convertView.findViewById(R.id.tv_t_name);
             holder.t_isFavorite = (CheckBox) convertView.findViewById(R.id.cb_t_isfavorite);
             holder.t_isFavorite.setOnClickListener(cbClicked);
@@ -44,6 +45,7 @@ public class ListAdapter_Team extends ArrayAdapter<Item_Team> {
         }
 
         Item_Team item = team_list.get(position);
+        holder.t_color.setBackgroundColor(item.getColor());
         holder.t_name.setText(item.getName());
         holder.t_isFavorite.setChecked(item.getIsFavorite());
         holder.t_isFavorite.setTag(item.getId());
@@ -58,6 +60,7 @@ public class ListAdapter_Team extends ArrayAdapter<Item_Team> {
 }
 
 class ViewHolder_Team {
+    TextView t_color;
     TextView t_name;
     CheckBox t_isFavorite;
 }
