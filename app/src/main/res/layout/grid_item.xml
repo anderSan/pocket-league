@@ -8,8 +8,7 @@
         android:id="@+id/grid_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:src="@drawable/btn_cup_on" >
+        android:layout_gravity="center" >
     </ImageView>
     <TextView
         android:id="@+id/grid_text"
