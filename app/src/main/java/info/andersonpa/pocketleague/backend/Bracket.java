@@ -133,7 +133,7 @@ public class Bracket {
         // invisible headers are for spacing the bracket.
         TextView tv;
         RelativeLayout.LayoutParams lp;
-        int vwHeight = 30;
+        int vwHeight = 0;
 
         // bracket label view
         tv = new TextView(context);
