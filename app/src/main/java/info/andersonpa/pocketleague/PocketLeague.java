@@ -20,6 +20,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import info.andersonpa.pocketleague.backend.Add_Teams;
 import info.andersonpa.pocketleague.backend.Fragment_Base;
 import info.andersonpa.pocketleague.backend.NavDrawerAdapter;
@@ -29,9 +32,6 @@ import info.andersonpa.pocketleague.db.tables.Game;
 import info.andersonpa.pocketleague.db.tables.Team;
 import info.andersonpa.pocketleague.enums.SessionType;
 import info.andersonpa.pocketleague.gameslibrary.GameType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PocketLeague extends DataInterfaceActivity implements NavigationInterface {
     FragmentManager mFragmentManager;

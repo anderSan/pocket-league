@@ -3,15 +3,16 @@ package info.andersonpa.pocketleague;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.couchbase.lite.Database;
+
 import info.andersonpa.pocketleague.backend.DataInterface;
 import info.andersonpa.pocketleague.gameslibrary.GameSubtype;
 import info.andersonpa.pocketleague.gameslibrary.GameType;
 
-public abstract class DataInterfaceActivity extends ActionBarActivity implements DataInterface {
+public abstract class DataInterfaceActivity extends AppCompatActivity implements DataInterface {
     protected String LOGTAG = getClass().getSimpleName();
 
     private SharedPreferences settings;

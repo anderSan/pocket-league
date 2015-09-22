@@ -10,7 +10,7 @@ public class PlayerTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         player = new Player(null, "PlayerNickname", "First", "Last", true, false, true, false, 101,
-                65, Color.GREEN, false);
+                65, Color.GREEN, false, null);
     }
 
     public void testGetSetFirstName() throws Exception {
@@ -59,6 +59,10 @@ public class PlayerTest extends TestCase {
         assertEquals(player.getWeight(), 65);
         player.setWeight_kg(71);
         assertEquals(player.getWeight(), 71);
+    }
+
+    public void testGetSetContactUri() throws Exception {
+        throw new UnsupportedOperationException("This test is not yet implemented.");
     }
 
     public void testGetDisplayName() throws Exception {

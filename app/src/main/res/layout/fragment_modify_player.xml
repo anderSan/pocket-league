@@ -106,6 +106,15 @@
         android:layout_below="@id/checkBox_rightFooted"
     	android:background="@color/Black"
     	/>
+
+    <QuickContactBadge
+        android:id="@+id/quickbadge"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop"
+        android:layout_below="@id/checkBox_rightFooted"
+        android:layout_alignParentEnd="true"
+        />
     
     <Button
         android:id="@+id/button_createPlayer"

@@ -1,5 +1,8 @@
 package info.andersonpa.pocketleague.db.tables;
 
+import android.net.Uri;
+import android.provider.ContactsContract;
+
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
@@ -22,6 +25,7 @@ public class Player extends Team { //implements Comparable<Player> {
     public static final String IS_RIGHT_FOOTED = "is_right_footed";
     public static final String HEIGHT = "height_cm";
     public static final String WEIGHT = "weight_kg";
+    public static final String CONTACT_URI = "contact_uri";
 
     // Constructors
     public Player(String nickname) {
@@ -35,6 +39,7 @@ public class Player extends Team { //implements Comparable<Player> {
         setIsRightFooted(false);
         setHeight_cm(0);
         setWeight_kg(0);
+        setContactUri(null);
     }
 
     public Player(Database database, String nickname) {
@@ -45,7 +50,7 @@ public class Player extends Team { //implements Comparable<Player> {
     public Player(Database database, String nickname, String first_name, String last_name,
                   boolean is_left_handed, boolean is_right_handed, boolean is_left_footed,
                   boolean is_right_footed, int height_cm, int weight_kg, int color,
-                  boolean is_favorite) {
+                  boolean is_favorite, Uri contact_uri) {
         this(database, nickname);
         setFirstName(first_name);
         setLastName(last_name);
@@ -57,6 +62,7 @@ public class Player extends Team { //implements Comparable<Player> {
         setWeight_kg(weight_kg);
         setColor(color);
         setIsFavorite(is_favorite);
+        setContactUri(contact_uri);
     }
 
     private Player(Document document) {
@@ -186,6 +192,30 @@ public class Player extends Team { //implements Comparable<Player> {
 
     public void setWeight_kg(int weight_kg) {
         content.put(WEIGHT, weight_kg);
+    }
+
+    public Uri getContactUri() {
+        String uri_string = (String) content.get(CONTACT_URI);
+        if (uri_string != null) {
+            return Uri.parse(uri_string);
+        } else {
+            return null;
+        }
+    }
+
+    public void setContactUri(Uri contact_uri) {
+        content.put(CONTACT_URI, contact_uri.toString());
+    }
+
+    public Uri getThumbnailUri() {
+        Uri contactUri = getContactUri();
+        if (contactUri != null) {
+            Uri thumbnail = Uri.withAppendedPath(contactUri,
+                    ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+            return thumbnail;
+        } else {
+            return null;
+        }
     }
 
     // =========================================================================

@@ -1,10 +1,15 @@
 package info.andersonpa.pocketleague;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -23,6 +28,7 @@ public class Detail_Player extends Fragment_Detail {
 	TextView tv_weight;
 	TextView tv_handed;
 	TextView tv_footed;
+	QuickContactBadge qcb_badge;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,12 +73,14 @@ public class Detail_Player extends Fragment_Detail {
 		tv_weight = (TextView) rootView.findViewById(R.id.pDet_weight);
 		tv_handed = (TextView) rootView.findViewById(R.id.pDet_handed);
 		tv_footed = (TextView) rootView.findViewById(R.id.pDet_footed);
+        qcb_badge = (QuickContactBadge) rootView.findViewById(R.id.quickbadge);
 
         setupBarButtons();
 
 		if (!mData.getIsDevMode()) {
             tv_playerId.setVisibility(View.GONE);
         }
+        qcb_badge.setImageToDefault();
 
         return rootView;
 	}
@@ -108,6 +116,16 @@ public class Detail_Player extends Fragment_Detail {
 			}
 		} else {
 			tv_footed.setText("R");
+		}
+
+		if (p.getContactUri() != null) {
+			qcb_badge.assignContactUri(p.getContactUri());
+			qcb_badge.setImageURI(p.getThumbnailUri());
+			if(qcb_badge.getDrawable() == null) {
+				qcb_badge.setImageToDefault();
+                qcb_badge.setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
+			}
+            log("player uri set.");
 		}
 
 		bar_isFavorite.setChecked(p.getIsFavorite());

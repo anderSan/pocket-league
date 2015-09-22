@@ -1,19 +1,31 @@
 package info.andersonpa.pocketleague;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
+
+import info.andersonpa.pocketleague.backend.DataInterface;
 import info.andersonpa.pocketleague.backend.Fragment_Edit;
 import info.andersonpa.pocketleague.db.tables.Player;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Random;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
@@ -35,6 +47,10 @@ public class Modify_Player extends Fragment_Edit {
 	Button btn_color;
 	int player_color;
 	CheckBox cb_isFavorite;
+	QuickContactBadge qcb_badge;
+    Uri player_uri = null;
+
+    private static final int CONTACT_PICKER_RESULT = 1001;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +71,7 @@ public class Modify_Player extends Fragment_Edit {
 		cb_rf = (CheckBox) rootView.findViewById(R.id.checkBox_rightFooted);
 		btn_color = (Button) rootView.findViewById(R.id.newPlayer_colorPicker);
 		cb_isFavorite = (CheckBox) rootView.findViewById(R.id.newPlayer_isFavorite);
+        qcb_badge = (QuickContactBadge) rootView.findViewById(R.id.quickbadge);
 
         btn_color.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +85,14 @@ public class Modify_Player extends Fragment_Edit {
                 doneButtonPushed();
             }
         });
+        qcb_badge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
+                        ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(contactPickerIntent, CONTACT_PICKER_RESULT);
+            }
+        });
 
         if (pId != null) {
             loadPlayerValues();
@@ -78,6 +103,7 @@ public class Modify_Player extends Fragment_Edit {
             int b = rand.nextInt();
             player_color = Color.rgb(r, g, b);
             btn_color.setBackgroundColor(player_color);
+            qcb_badge.setImageToDefault();
         }
 
         return rootView;
@@ -97,6 +123,13 @@ public class Modify_Player extends Fragment_Edit {
         btn_color.setBackgroundColor(p.getColor());
         player_color = p.getColor();
         cb_isFavorite.setChecked(p.getIsFavorite());
+        player_uri = p.getContactUri();
+
+        qcb_badge.setImageURI(p.getThumbnailUri());
+        if(qcb_badge.getDrawable() == null) {
+            qcb_badge.setImageToDefault();
+            qcb_badge.setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
+        }
 	}
 
 	public void doneButtonPushed() {
@@ -146,7 +179,7 @@ public class Modify_Player extends Fragment_Edit {
 			int height_cm, int weight_kg, boolean is_favorite) {
 
 		Player newPlayer = new Player(database(), nickname, first_name, last_name, lh, rh,
-				lf, rf, height_cm, weight_kg, player_color, is_favorite);
+				lf, rf, height_cm, weight_kg, player_color, is_favorite, player_uri);
         try {
             if (newPlayer.exists()) {
                 Toast.makeText(context, "Player already exists.", Toast.LENGTH_SHORT).show();
@@ -176,11 +209,32 @@ public class Modify_Player extends Fragment_Edit {
 		p.setHeight_cm(height_cm);
 		p.setColor(player_color);
 		p.setIsFavorite(is_favorite);
+        p.setContactUri(player_uri);
 
         p.update();
         Toast.makeText(context, "Player modified.", Toast.LENGTH_SHORT).show();
         mNav.onBackPressed();
 	}
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == CONTACT_PICKER_RESULT) {
+                player_uri = data.getData();
+                qcb_badge.assignContactUri(player_uri);
+
+                Uri thumbnail = Uri.withAppendedPath(player_uri,
+                        ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+
+                qcb_badge.setImageURI(thumbnail);
+                qcb_badge.setColorFilter(null);
+                if(qcb_badge.getDrawable() == null) {
+                    qcb_badge.setImageToDefault();
+                    qcb_badge.setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
+                }
+            }
+        }
+    }
 
 	public void showColorPicker() {
 		// initialColor is the initially-selected color to be shown in the

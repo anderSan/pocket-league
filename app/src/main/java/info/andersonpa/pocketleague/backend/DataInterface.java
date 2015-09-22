@@ -6,6 +6,7 @@ import info.andersonpa.pocketleague.gameslibrary.GameSubtype;
 import info.andersonpa.pocketleague.gameslibrary.GameType;
 
 public interface DataInterface {
+
     Database getDatabase();
 
     void deleteDatabase();
