@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PocketLeague.iml" filepath="$PROJECT_DIR$/PocketLeague.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/colorpicker/colorpicker.iml" filepath="$PROJECT_DIR$/colorpicker/colorpicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/gameslibrary/gameslibrary.iml" filepath="$PROJECT_DIR$/gameslibrary/gameslibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/gametemplate/gametemplate.iml" filepath="$PROJECT_DIR$/gametemplate/gametemplate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pocket-league.iml" filepath="$PROJECT_DIR$/pocket-league.iml" />
       <module fileurl="file://$PROJECT_DIR$/polishhorseshoes/polishhorseshoes.iml" filepath="$PROJECT_DIR$/polishhorseshoes/polishhorseshoes.iml" />
     </modules>
   </component>
