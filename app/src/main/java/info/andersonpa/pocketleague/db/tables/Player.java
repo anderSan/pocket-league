@@ -17,15 +17,15 @@ import java.util.List;
 
 public class Player extends Team { //implements Comparable<Player> {
     public static final String TYPE = "player";
-    public static final String FIRST_NAME = "first_name";
-    public static final String LAST_NAME = "last_name";
-    public static final String IS_LEFT_HANDED = "is_left_handed";
-    public static final String IS_RIGHT_HANDED = "is_right_handed";
-    public static final String IS_LEFT_FOOTED = "is_left_footed";
-    public static final String IS_RIGHT_FOOTED = "is_right_footed";
-    public static final String HEIGHT = "height_cm";
-    public static final String WEIGHT = "weight_kg";
-    public static final String CONTACT_URI = "contact_uri";
+    private static final String FIRST_NAME = "first_name";
+    private static final String LAST_NAME = "last_name";
+    private static final String IS_LEFT_HANDED = "is_left_handed";
+    private static final String IS_RIGHT_HANDED = "is_right_handed";
+    private static final String IS_LEFT_FOOTED = "is_left_footed";
+    private static final String IS_RIGHT_FOOTED = "is_right_footed";
+    private static final String HEIGHT = "height_cm";
+    private static final String WEIGHT = "weight_kg";
+    private static final String CONTACT_URI = "contact_uri";
 
     // Constructors
     public Player(String nickname) {
@@ -96,14 +96,14 @@ public class Player extends Team { //implements Comparable<Player> {
         Query query = database.getView("player-names").createQuery();
         query.setKeys(key_filter);
         QueryEnumerator rows = query.run();
-        for (Iterator<QueryRow> it = rows; it.hasNext();) {
-            QueryRow row = it.next();
+        for (; rows.hasNext();) {
+            QueryRow row = rows.next();
             players.add(getFromId(database, row.getDocumentId()));
         }
         return players;
     }
 
-    public static List<Player> getAllPlayers(Database database) throws CouchbaseLiteException {
+    static List<Player> getAllPlayers(Database database) throws CouchbaseLiteException {
         return getAll(database, null);
     }
 
@@ -115,8 +115,8 @@ public class Player extends Team { //implements Comparable<Player> {
         query.setStartKey(Arrays.asList(active, only_favorite));
         query.setEndKey(Arrays.asList(active, QUERY_END));
         QueryEnumerator filter = query.run();
-        for (Iterator<QueryRow> it = filter; it.hasNext(); ) {
-            QueryRow row = it.next();
+        for (; filter.hasNext(); ) {
+            QueryRow row = filter.next();
             // key_filter.add(row.getDocumentId());
             String key_id = row.getDocumentId();
             key_filter.add(getFromId(database, key_id).getName());
@@ -204,7 +204,9 @@ public class Player extends Team { //implements Comparable<Player> {
     }
 
     public void setContactUri(Uri contact_uri) {
-        content.put(CONTACT_URI, contact_uri.toString());
+        if (contact_uri != null) {
+            content.put(CONTACT_URI, contact_uri.toString());
+        }
     }
 
     public Uri getThumbnailUri() {

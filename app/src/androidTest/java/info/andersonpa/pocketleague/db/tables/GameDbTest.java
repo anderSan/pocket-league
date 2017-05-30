@@ -1,28 +1,40 @@
 package info.andersonpa.pocketleague.db.tables;
 
 import android.os.SystemClock;
+import android.support.test.runner.AndroidJUnit4;
 
 import info.andersonpa.pocketleague.enums.SessionType;
 import info.andersonpa.pocketleague.gameslibrary.GameSubtype;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class GameDbTest extends DbBaseTestCase {
-    Game game;
-    String game_id;
-    Session session;
-    Team t1;
-    Team t2;
-    GameMember gm1;
-    GameMember gm2;
-    Venue venue;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 
-    protected void setUp() throws Exception {
+@RunWith(AndroidJUnit4.class)
+public class GameDbTest extends DbBaseTestCase {
+    private Game game;
+    private String game_id;
+    private Session session;
+    private Team t1;
+    private Team t2;
+    private GameMember gm1;
+    private GameMember gm2;
+    private Venue venue;
+
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         venue = new Venue(database, "Venue name");
@@ -44,6 +56,7 @@ public class GameDbTest extends DbBaseTestCase {
         game_id = game.getId();
     }
 
+    @Test
     public void testConstructor() throws Exception {
         Game g = new Game(session, 2, Arrays.asList(gm1), venue, true);
         assertNull(g.getId());
@@ -52,6 +65,7 @@ public class GameDbTest extends DbBaseTestCase {
         assertNotNull(g.getId());
     }
 
+    @Test
     public void testGetFromId() throws Exception {
         Game g = Game.getFromId(database, game.getId());
 
@@ -64,6 +78,7 @@ public class GameDbTest extends DbBaseTestCase {
         assertEquals(t2, members.get(1).getTeam());
     }
 
+    @Test
     public void testGetSession() throws Exception {
         Session s = game.getSession();
         assertEquals(session.getName(), s.getName());
@@ -71,6 +86,7 @@ public class GameDbTest extends DbBaseTestCase {
         assertEquals(session.getTeamSize(), s.getTeamSize());
     }
 
+    @Test
     public void testGetSetVenue() throws Exception {
         Venue v = game.getVenue();
         assertEquals(venue.getName(), v.getName());
@@ -85,6 +101,7 @@ public class GameDbTest extends DbBaseTestCase {
         assertEquals(v2.getIsFavorite(), v.getIsFavorite());
     }
 
+    @Test
     public void testGetDatePlayed() throws Exception {
         Date before = new Date();
         SystemClock.sleep(3);
@@ -99,6 +116,7 @@ public class GameDbTest extends DbBaseTestCase {
         assertTrue(after.after(g.getDatePlayed()));
     }
 
+    @Test
     public void testGetMembers() throws Exception {
         List<GameMember> members = game.getMembers();
         assertEquals(2, members.size());
@@ -114,6 +132,7 @@ public class GameDbTest extends DbBaseTestCase {
         assertEquals(0, members.get(1).getScore());
     }
 
+    @Test
     public void testUpdateMembers() throws Exception {
         try {
             game.updateMembers(Arrays.asList(gm1));
@@ -132,6 +151,7 @@ public class GameDbTest extends DbBaseTestCase {
         assertEquals(3, members.get(1).getScore());
     }
 
+    @Test
     public void testGetWinner() {
         Team t = game.getWinner();
         assertNull(t);
@@ -148,6 +168,7 @@ public class GameDbTest extends DbBaseTestCase {
         game = Game.getFromId(database, game_id);
     }
 
+    @Test
     public void testGetWinner2() {
         game = Game.getFromId(database, game_id);
         Team t = game.getWinner();

@@ -1,18 +1,32 @@
 package info.andersonpa.pocketleague.db.tables;
 
+import android.support.test.runner.AndroidJUnit4;
 import android.util.ArrayMap;
 
 import com.couchbase.lite.Document;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.util.Map;
 
-public class CouchDocumentBaseTest extends DbBaseTestCase {
-    CouchDocumentBase with_empty;
-    CouchDocumentBase with_document;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-    protected void setUp() throws Exception {
+@RunWith(AndroidJUnit4.class)
+public class CouchDocumentBaseTest extends DbBaseTestCase {
+    private CouchDocumentBase with_empty;
+    private CouchDocumentBase with_document;
+
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         Document document = database.createDocument();
@@ -27,6 +41,7 @@ public class CouchDocumentBaseTest extends DbBaseTestCase {
         with_document = new CouchDocumentBase(document);
     }
 
+    @Test
     public void testCreateDocument() {
         assertNull(with_empty.document);
         with_empty.createDocument(database);
@@ -37,16 +52,19 @@ public class CouchDocumentBaseTest extends DbBaseTestCase {
         assertEquals(with_document.getId(), id);
     }
 
+    @Test
     public void testGetId() {
         assertNull(with_empty.getId());
         assertNotNull(with_document.getId());
     }
 
+    @Test
     public void testGetDatabase() {
         assertNull(with_empty.getDatabase());
         assertNotNull(with_document.getDatabase());
     }
 
+    @Test
     public void testUpdate() {
         try {
             with_empty.update();
@@ -60,6 +78,7 @@ public class CouchDocumentBaseTest extends DbBaseTestCase {
         assertNotSame(with_document.document.getCurrentRevisionId(), revision_id);
     }
 
+    @Test
     public void testDelete() {
         try {
             with_empty.delete();

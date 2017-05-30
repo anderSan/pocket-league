@@ -1,25 +1,26 @@
 package info.andersonpa.pocketleague.db.tables;
 
-import android.test.AndroidTestCase;
+import android.support.test.InstrumentationRegistry;
 
 import com.couchbase.lite.Database;
 
-import info.andersonpa.pocketleague.SandboxContext;
+import org.junit.After;
+import org.junit.Before;
+
 import info.andersonpa.pocketleague.db.DatabaseHelper;
 
-public class DbBaseTestCase extends AndroidTestCase {
-    DatabaseHelper databaseHelper;
+class DbBaseTestCase {
+    private DatabaseHelper databaseHelper;
     Database database;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        SandboxContext mock_context = new SandboxContext();
-        databaseHelper = new DatabaseHelper(mock_context);
+    @Before
+    public void setUp() throws Exception {
+        databaseHelper = new DatabaseHelper(InstrumentationRegistry.getTargetContext());
         database = databaseHelper.getDatabase();
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         database.delete();
         database.close();
         database = null;

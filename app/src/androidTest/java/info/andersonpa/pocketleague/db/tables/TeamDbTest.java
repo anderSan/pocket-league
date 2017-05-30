@@ -1,19 +1,32 @@
 package info.andersonpa.pocketleague.db.tables;
 
 import android.graphics.Color;
+import android.support.test.runner.AndroidJUnit4;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
+
+@RunWith(AndroidJUnit4.class)
 public class TeamDbTest extends DbBaseTestCase {
-    Player p1;
-    Player p2;
-    Player p3;
+    private Player p1;
+    private Player p2;
+    private Player p3;
 
-    Team t1;
-    Team t2;
+    private Team t1;
+    private Team t2;
 
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         p1 = new Player(database, "Bob");
@@ -21,7 +34,7 @@ public class TeamDbTest extends DbBaseTestCase {
         p2 = new Player(database, "Sue");
         p2.update();
         p3 = new Player(database, "Tom", "Doc", "Holiday", true, false, true, false, 44, 12,
-                Color.BLACK, true);
+                Color.BLACK, true, null);
         p3.update();
 
         t1 = new Team(database, "Test Team A", Arrays.asList(p1, p2));
@@ -31,6 +44,7 @@ public class TeamDbTest extends DbBaseTestCase {
         t2.update();
     }
 
+    @Test
     public void testConstructor() throws Exception {
         Team team = new Team("No doc team", null);
         assertNull(team.getId());
@@ -39,6 +53,7 @@ public class TeamDbTest extends DbBaseTestCase {
         assertNotNull(team.getId());
     }
 
+    @Test
     public void testGetFromId() throws Exception {
         Team t = Team.getFromId(database, t1.getId());
 
@@ -47,6 +62,7 @@ public class TeamDbTest extends DbBaseTestCase {
         assertEquals(t1.document.getCurrentRevisionId(), t.document.getCurrentRevisionId());
     }
 
+    @Test
     public void testFindByName() throws Exception {
         Team t = Team.findByName(database, "Test Other Team");
         assertNull(t);
@@ -57,11 +73,13 @@ public class TeamDbTest extends DbBaseTestCase {
         assertEquals(t1.document.getCurrentRevisionId(), t.document.getCurrentRevisionId());
     }
 
+    @Test
     public void testGetAllTeams() throws Exception {
         List<Team> all_teams = Team.getAllTeams(database);
         assertEquals(5, all_teams.size());
     }
 
+    @Test
     public void testGetTeams() throws Exception {
         // Players shouldn't show up here, since this is used for the teams fragment
         // and that only shows teams with size > 1. Players have their own fragment.
@@ -69,6 +87,7 @@ public class TeamDbTest extends DbBaseTestCase {
         assertEquals(1, all_teams.size());
     }
 
+    @Test
     public void testGetMembers() throws Exception {
         List<Player> members = t1.getMembers();
         assertEquals(2, members.size());
@@ -91,12 +110,14 @@ public class TeamDbTest extends DbBaseTestCase {
         assertEquals("Bob", members.get(0).getName());
     }
 
+    @Test
     public void testGetSize() throws Exception {
         assertEquals(2, t1.getSize());
         assertEquals(3, t2.getSize());
         assertEquals(1, p2.getSize());
     }
 
+    @Test
     public void testExists() throws Exception {
         assertTrue(t1.exists());
         assertTrue(t2.exists());
@@ -109,6 +130,7 @@ public class TeamDbTest extends DbBaseTestCase {
         assertFalse(p4.exists());
     }
 
+    @Test
     public void testStaticExists() throws Exception {
         assertTrue(Team.exists(database, t1.getName()));
         assertTrue(Team.exists(database, t2.getName()));

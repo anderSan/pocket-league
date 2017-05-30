@@ -1,19 +1,29 @@
 package info.andersonpa.pocketleague.db.tables;
 
+import android.support.test.runner.AndroidJUnit4;
+
 import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.Map;
 
-public class SessionMemberTest extends TestCase {
-    SessionMember sm1;
-    SessionMember sm2;
-    SessionMember sm3;
-    Team t1;
-    Team t2;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-    @Override
+@RunWith(AndroidJUnit4.class)
+public class SessionMemberTest {
+    private SessionMember sm1;
+    private SessionMember sm2;
+    private SessionMember sm3;
+    private Team t1;
+    private Team t2;
+
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         t1 = new TeamStub("Team1", null);
         t2 = new TeamStub("Team2", null);
         sm1 = new SessionMember(t1, 2, 3);
@@ -21,6 +31,7 @@ public class SessionMemberTest extends TestCase {
         sm3 = new SessionMember();
     }
 
+    @Test
     public void testGetTeam() throws Exception {
         Team t = sm1.getTeam();
         assertEquals(t1.getName(), t.getName());
@@ -30,12 +41,14 @@ public class SessionMemberTest extends TestCase {
         assertNull(sm3.getTeam());
     }
 
+    @Test
     public void testGetSeed() throws Exception {
         assertEquals(2, sm1.getSeed());
         assertEquals(3, sm2.getSeed());
         assertEquals(0, sm3.getSeed());
     }
 
+    @Test
     public void testGetSetRank() throws Exception {
         assertEquals(3, sm1.getRank());
         assertEquals(0, sm2.getRank());
@@ -45,6 +58,7 @@ public class SessionMemberTest extends TestCase {
         assertEquals(2, sm1.getRank());
     }
 
+    @Test
     public void testSwapRank() throws Exception {
         assertEquals(3, sm1.getRank());
         assertEquals(0, sm2.getRank());
@@ -58,6 +72,7 @@ public class SessionMemberTest extends TestCase {
         assertEquals(0, sm2.getRank());
     }
 
+    @Test
     public void testToMap() throws Exception {
         Map<String, Object> content = sm1.toMap();
         assertTrue(content.containsKey(SessionMember.TEAM_ID));
@@ -69,12 +84,14 @@ public class SessionMemberTest extends TestCase {
         assertEquals(3, content.get(SessionMember.TEAM_RANK));
     }
 
+    @Test
     public void testCompareTo() throws Exception {
         assertEquals(1, sm1.compareTo(sm2));
         assertEquals(0, sm1.compareTo(sm1));
         assertEquals(-1, sm3.compareTo(sm1));
     }
 
+    @Test
     public void testCompareToSeed() throws Exception {
         assertEquals(1, SessionMember.SEED_ORDER.compare(sm1, sm3));
         assertEquals(0, SessionMember.SEED_ORDER.compare(sm1, sm1));

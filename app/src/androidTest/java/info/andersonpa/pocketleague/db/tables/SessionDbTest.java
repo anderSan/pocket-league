@@ -1,26 +1,40 @@
 package info.andersonpa.pocketleague.db.tables;
 
+import android.support.test.runner.AndroidJUnit4;
+
 import info.andersonpa.pocketleague.enums.SessionType;
 import info.andersonpa.pocketleague.gameslibrary.GameSubtype;
 import info.andersonpa.pocketleague.gameslibrary.GameType;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SessionDbTest extends DbBaseTestCase {
-    Session s1;
-    Session s2;
-    SessionMember sm1;
-    SessionMember sm2;
-    Team t1;
-    Team t2;
-    Venue v1;
-    Venue v2;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
-    protected void setUp() throws Exception {
+@RunWith(AndroidJUnit4.class)
+public class SessionDbTest extends DbBaseTestCase {
+    private Session s1;
+    private Session s2;
+    private SessionMember sm1;
+    private SessionMember sm2;
+    private Team t1;
+    private Team t2;
+    private Venue v1;
+    private Venue v2;
+
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         v1 = new Venue(database, "Test Venue");
@@ -43,6 +57,7 @@ public class SessionDbTest extends DbBaseTestCase {
         s2.update();
     }
 
+    @Test
     public void testConstructor() throws Exception {
         Session session = new Session("No doc session", SessionType.OPEN, GameSubtype.GOLF, 1, v1);
         assertNull(session.getId());
@@ -51,6 +66,7 @@ public class SessionDbTest extends DbBaseTestCase {
         assertNotNull(session.getId());
     }
 
+    @Test
     public void testGetFromId() throws Exception {
         Session s = Session.getFromId(database, s2.getId());
 
@@ -63,6 +79,7 @@ public class SessionDbTest extends DbBaseTestCase {
         assertEquals(t2, members.get(1).getTeam());
     }
 
+    @Test
     public void testFindByName() throws Exception {
         Session s = Session.findByName(database, "Bogus session name");
         assertNull(s);
@@ -73,22 +90,31 @@ public class SessionDbTest extends DbBaseTestCase {
         assertEquals(s.document.getCurrentRevisionId(), s1.document.getCurrentRevisionId());
     }
 
+    @Test
     public void testGetAllSessions() throws Exception {
         List<Session> all_sessions = Session.getAllSessions(database);
         assertEquals(2, all_sessions.size());
     }
 
+    @Test
     public void testGetSessions() throws Exception {
         List<Session> all_sessions = Session.getSessions(database, GameType.GOLF, true, true);
         assertEquals(1, all_sessions.size());
+        assertEquals(GameType.GOLF, all_sessions.get(0).getGameType());
+        assertTrue(all_sessions.get(0).getIsActive());
+        assertTrue(all_sessions.get(0).getIsFavorite());
 
         all_sessions = Session.getSessions(database, GameType.BILLIARDS, true, true);
         assertEquals(0, all_sessions.size());
 
         all_sessions = Session.getSessions(database, GameType.BILLIARDS, true, false);
         assertEquals(1, all_sessions.size());
+        assertEquals(GameType.BILLIARDS, all_sessions.get(0).getGameType());
+        assertTrue(all_sessions.get(0).getIsActive());
+        assertFalse(all_sessions.get(0).getIsFavorite());
     }
 
+    @Test
     public void testGetSetCurrentVenue() throws Exception {
         Venue v = s1.getCurrentVenue();
         assertEquals(v1.getName(), v.getName());
@@ -100,6 +126,7 @@ public class SessionDbTest extends DbBaseTestCase {
         assertEquals(v2.getIsFavorite(), v.getIsFavorite());
     }
 
+    @Test
     public void testAddGetGame() throws Exception {
         assertEquals(0, s1.getGames().size());
         Game g1 = new Game(s1, 2, new ArrayList<GameMember>(), v2, true);
@@ -120,6 +147,7 @@ public class SessionDbTest extends DbBaseTestCase {
         assertEquals(g2.getIsTracked(), games.get(0).getIsTracked());
     }
 
+    @Test
     public void testAddMembers() throws Exception {
         assertEquals(0, s1.getMembers().size());
         s1.addMembers(Arrays.asList(sm2, sm1));
@@ -136,6 +164,7 @@ public class SessionDbTest extends DbBaseTestCase {
         assertEquals(t2, members.get(1).getTeam());
     }
 
+    @Test
     public void testGetMembers() throws Exception {
         assertEquals(0, s1.getMembers().size());
 
@@ -151,6 +180,7 @@ public class SessionDbTest extends DbBaseTestCase {
         assertEquals(t2.getId(), members.get(1).getTeam().getId());
     }
 
+    @Test
     public void testUpdateMembers() throws Exception {
         try {
             s1.updateMembers(Arrays.asList(sm1));
@@ -175,6 +205,7 @@ public class SessionDbTest extends DbBaseTestCase {
         assertEquals(2, members.get(1).getRank());
     }
 
+    @Test
     public void testUpdate() throws Exception {
         Session s = Session.getFromId(database, s2.getId());
         assertEquals(2, s2.getMembers().size());

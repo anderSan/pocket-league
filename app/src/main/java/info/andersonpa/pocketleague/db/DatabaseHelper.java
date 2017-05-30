@@ -23,11 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 public class DatabaseHelper {
-    protected String LOGTAG = getClass().getSimpleName();
+    private  String LOGTAG = getClass().getSimpleName();
     private static final String DATABASE_NAME = "pocketleague";
     private static final String DATABASE_VERSION = "1";
-    Manager manager;
-    Database database = null;
+    private Manager manager;
+    private Database database = null;
 
     public DatabaseHelper(Context context) {
         try {
@@ -78,7 +78,7 @@ public class DatabaseHelper {
         }
     }
 
-    public void createCouchViews() {
+    private void createCouchViews() {
         View cvPlayerNames = database.getView("player-names");
         cvPlayerNames.setMap(mapField(Player.TYPE, null, Player.NAME), "1");
 
@@ -89,13 +89,13 @@ public class DatabaseHelper {
         cvSessionNames.setMap(mapField(Session.TYPE, null, Session.NAME), "1");
 
         View cvSessionActFav = database.getView("session-act.fav");
-        cvSessionActFav.setMap(mapGameActFav(Session.TYPE), "4");
+        cvSessionActFav.setMap(mapGameActFav(Session.TYPE), "1");
 
         View cvTeamNames = database.getView("team-names");
         cvTeamNames.setMap(mapField(Team.TYPE, Player.TYPE, Team.NAME), "1");
 
         View cvTeamActFav = database.getView("team-act.fav");
-        cvTeamActFav.setMapReduce(mapActFav(Team.TYPE), null, "2");
+        cvTeamActFav.setMapReduce(mapActFav(Team.TYPE), null, "1");
 
         View cvVenueNames = database.getView("venue-names");
         cvVenueNames.setMapReduce(mapField(Venue.TYPE, null, Venue.NAME), null, "1");
@@ -143,8 +143,8 @@ public class DatabaseHelper {
                     String game_type = GameSubtype.valueOf(
                             (String) document.get(Session.GAME_SUBTYPE)).toGameType().name();
                     keys.add(game_type);
-                    keys.add(document.get(Session.IS_ACTIVE));
-                    keys.add(document.get(Session.IS_FAVORITE));
+                    keys.add(document.get("is_active"));
+                    keys.add(document.get("is_favorite"));
                     emitter.emit(keys, null);
                 }
             }
@@ -186,7 +186,7 @@ public class DatabaseHelper {
         Log.i(LOGTAG, msg);
     }
 
-    public void logd(String msg) {
+    private void logd(String msg) {
         Log.d(LOGTAG, msg);
     }
 

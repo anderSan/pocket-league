@@ -1,12 +1,24 @@
 package info.andersonpa.pocketleague.db.tables;
 
+import android.support.test.runner.AndroidJUnit4;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.util.List;
 
-public class VenueDbTest extends DbBaseTestCase {
-    Venue v1;
-    Venue v2;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 
-    protected void setUp() throws Exception {
+@RunWith(AndroidJUnit4.class)
+public class VenueDbTest extends DbBaseTestCase {
+    private Venue v1;
+    private Venue v2;
+
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         v1 = new Venue(database, "Test Venue");
@@ -16,6 +28,7 @@ public class VenueDbTest extends DbBaseTestCase {
         v2.update();
     }
 
+    @Test
     public void testConstructor() throws Exception {
         Venue venue = new Venue("No doc venue");
         assertNull(venue.getId());
@@ -24,6 +37,7 @@ public class VenueDbTest extends DbBaseTestCase {
         assertNotNull(venue.getId());
     }
 
+    @Test
     public void testGetFromId() throws Exception {
         Venue v = Venue.getFromId(database, v1.getId());
 
@@ -32,6 +46,7 @@ public class VenueDbTest extends DbBaseTestCase {
         assertEquals(v1.document.getCurrentRevisionId(), v.document.getCurrentRevisionId());
     }
 
+    @Test
     public void testFindByName() throws Exception {
         Venue v = Venue.findByName(database, "Test Other Venue");
         assertNull(v);
@@ -42,11 +57,13 @@ public class VenueDbTest extends DbBaseTestCase {
         assertEquals(v1.document.getCurrentRevisionId(), v.document.getCurrentRevisionId());
     }
 
+    @Test
     public void testGetAllVenues() throws Exception {
         List<Venue> all_venues = Venue.getAllVenues(database);
         assertEquals(2, all_venues.size());
     }
 
+    @Test
     public void testGetVenues() throws Exception {
         List<Venue> all_venues = Venue.getVenues(database, true, true);
         assertEquals(1, all_venues.size());

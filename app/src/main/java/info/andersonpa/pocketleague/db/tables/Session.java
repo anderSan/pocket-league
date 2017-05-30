@@ -13,21 +13,22 @@ import info.andersonpa.pocketleague.gameslibrary.GameType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class Session extends CouchDocumentBase {
     public static final String TYPE = "session";
     public static final String NAME = "name";
-    public static final String SESSION_TYPE = "session_type";
+    private static final String SESSION_TYPE = "session_type";
     public static final String GAME_TYPE = "game_type";
     public static final String GAME_SUBTYPE = "game_subtype";
-    public static final String TEAM_SIZE = "team_size";
-    public static final String IS_ACTIVE = "is_active";
-    public static final String IS_FAVORITE = "is_favorite";
-    public static final String CURRENT_VENUE_ID = "current_venue_id";
-    public static final String GAME_IDS = "game_ids";
-    public static final String STORED_MEMBERS = "stored_members";
+    private static final String TEAM_SIZE = "team_size";
+    private static final String IS_ACTIVE = "is_active";
+    private static final String IS_FAVORITE = "is_favorite";
+    private static final String CURRENT_VENUE_ID = "current_venue_id";
+    private static final String GAME_IDS = "game_ids";
+    private static final String STORED_MEMBERS = "stored_members";
 
     private List<SessionMember> members = new ArrayList<>();
 
@@ -70,7 +71,7 @@ public class Session extends CouchDocumentBase {
         return new Session(document);
     }
 
-    public static Session findByName(Database database, String name) throws CouchbaseLiteException {
+    static Session findByName(Database database, String name) throws CouchbaseLiteException {
         Query query = database.getView("session-names").createQuery();
         query.setStartKey(name);
         query.setEndKey(name);
@@ -97,7 +98,7 @@ public class Session extends CouchDocumentBase {
         return sessions;
     }
 
-    public static List<Session> getAllSessions(Database database) throws CouchbaseLiteException {
+    static List<Session> getAllSessions(Database database) throws CouchbaseLiteException {
         return getAll(database, null);
     }
 
@@ -116,7 +117,11 @@ public class Session extends CouchDocumentBase {
             String key_id = row.getDocumentId();
             key_filter.add(getFromId(database, key_id).getName());
         }
-        return getAll(database, key_filter);
+        if (key_filter.size() > 0) {
+            return getAll(database, key_filter);
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     // Other methods
@@ -132,7 +137,7 @@ public class Session extends CouchDocumentBase {
         return SessionType.valueOf((String) content.get(SESSION_TYPE));
     }
 
-    public GameType getGameType() {
+    GameType getGameType() {
         return getGameSubtype().toGameType();
     }
 
@@ -140,7 +145,7 @@ public class Session extends CouchDocumentBase {
         return GameSubtype.valueOf((String) content.get(GAME_SUBTYPE));
     }
 
-    public int getTeamSize() {
+    int getTeamSize() {
         return (int) content.get(TEAM_SIZE);
     }
 
@@ -189,7 +194,7 @@ public class Session extends CouchDocumentBase {
         return games;
     }
 
-    public void addMembers(List<SessionMember> new_members) {
+    void addMembers(List<SessionMember> new_members) {
         if (members.size() == 0) {
             members = new_members;
         }
@@ -218,7 +223,7 @@ public class Session extends CouchDocumentBase {
         return members;
     }
 
-    public void updateMembers(List<SessionMember> members) {
+    void updateMembers(List<SessionMember> members) {
         if (this.members.size() == members.size()) {
             this.members = members;
         } else {

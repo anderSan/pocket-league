@@ -1,20 +1,30 @@
 package info.andersonpa.pocketleague.db.tables;
 
+import android.support.test.runner.AndroidJUnit4;
+
 import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.Map;
 
-public class GameMemberTest extends TestCase {
-    GameMember gm1;
-    Team t1;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-    @Override
+@RunWith(AndroidJUnit4.class)
+public class GameMemberTest {
+    private GameMember gm1;
+    private Team t1;
+
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         t1 = new TeamStub("Team1", null);
         gm1 = new GameMember(t1);
     }
 
+    @Test
     public void testGetTeam() throws Exception {
         Team t = gm1.getTeam();
         assertEquals(t1.getName(), t.getName());
@@ -22,18 +32,21 @@ public class GameMemberTest extends TestCase {
         assertEquals(t1.getIsActive(), t.getIsActive());
     }
 
+    @Test
     public void testGetSetScore() throws Exception {
         assertEquals(gm1.getScore(), 0);
         gm1.setScore(3);
         assertEquals(gm1.getScore(), 3);
     }
 
+    @Test
     public void testGetSetPlayOrder() throws Exception {
         assertEquals(gm1.play_order, -1);
         gm1.setPlayOrder(3);
         assertEquals(gm1.play_order, 3);
     }
 
+    @Test
     public void testToMap() throws Exception {
         Map<String, Object> content = gm1.toMap();
         assertTrue(content.containsKey(GameMember.TEAM_ID));
@@ -45,10 +58,12 @@ public class GameMemberTest extends TestCase {
         assertEquals(-1, content.get(GameMember.PLAY_ORDER));
     }
 
+    @Test
     public void testToString() throws Exception {
         assertEquals("Team1", gm1.toString());
     }
 
+    @Test
     public void testCompareTo() throws Exception {
         gm1.setPlayOrder(1);
         GameMember gm2 = new GameMember(t1);
@@ -59,6 +74,7 @@ public class GameMemberTest extends TestCase {
         assertEquals(1, gm2.compareTo(gm1));
     }
 
+    @Test
     public void testCompareToScore() throws Exception {
         gm1.setScore(1);
         GameMember gm2 = new GameMember(t1);

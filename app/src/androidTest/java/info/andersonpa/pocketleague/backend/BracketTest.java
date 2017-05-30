@@ -1,26 +1,28 @@
 package info.andersonpa.pocketleague.backend;
 
-import android.test.AndroidTestCase;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 import android.widget.RelativeLayout;
 
-import info.andersonpa.pocketleague.db.tables.Player;
-import info.andersonpa.pocketleague.db.tables.SessionMember;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BracketTest extends AndroidTestCase {
+import info.andersonpa.pocketleague.db.tables.Player;
+import info.andersonpa.pocketleague.db.tables.SessionMember;
 
-    public void setUp() throws Exception {
-        super.setUp();
-    }
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-    public void tearDown() throws Exception {
+@RunWith(AndroidJUnit4.class)
+public class BracketTest {
 
-    }
-
+    @Test
     public void testGetTier() throws Exception {
         assertEquals(0, Bracket.getTier(0, 0));
         assertEquals(0, Bracket.getTier(0, 1));
@@ -39,11 +41,12 @@ public class BracketTest extends AndroidTestCase {
         assertEquals(4, Bracket.getTier(15, 16));
     }
 
+    @Test
     public void testFindViewAboveId() throws Exception {
         Bracket br;
         SessionMember sm1 = new SessionMember(new Player("p1"), 1);
         SessionMember sm2 = new SessionMember();
-        RelativeLayout rl = new RelativeLayout(getContext());
+        RelativeLayout rl = new RelativeLayout(InstrumentationRegistry.getContext());
         br = new Bracket(Arrays.asList(sm1, sm1, sm1, sm1), rl);
         assertEquals(3, br.findViewAboveId(1000));
         assertEquals(1000, br.findViewAboveId(2000));
@@ -83,6 +86,7 @@ public class BracketTest extends AndroidTestCase {
         assertEquals(2021, br.findViewAboveId(1027));
     }
 
+    @Test
     public void testGenerateReseedMatchIds() throws Exception {
         LinkedList<Integer> match_ids = Bracket.generateReseedMatchIds(8);
         List<Integer> expected = Arrays.asList(2, 3, 5, 6, 7);
@@ -105,6 +109,7 @@ public class BracketTest extends AndroidTestCase {
         assertEquals(47, match_ids.size());
     }
 
+    @Test
     public void testGenerateRespawnIds() throws Exception {
         LinkedList<Integer> respawn_ids = Bracket.generateRespawnIds(8);
         List<Integer> expected = Arrays.asList(0, 1, 2, 3, 4);
@@ -121,11 +126,13 @@ public class BracketTest extends AndroidTestCase {
         }
     }
 
+    @Test
     public void testIsUpperView() throws Exception {
         assertTrue(Bracket.isUpperView(1001));
         assertFalse(Bracket.isUpperView(2011));
     }
 
+    @Test
     public void testFactorTwos() throws Exception {
         assertEquals(0, Bracket.factorTwos(1));
         assertEquals(1, Bracket.factorTwos(2));

@@ -1,10 +1,18 @@
 package info.andersonpa.pocketleague.backend;
 
+import android.support.test.runner.AndroidJUnit4;
+
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
-public class LeagueTableTest extends TestCase {
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertEquals;
+
+@RunWith(AndroidJUnit4.class)
+public class LeagueTableTest {
+
+    @Test
     public void testMemberPositionsToMatchId() throws Exception {
         // check upper triangle
         assertEquals(0, LeagueTable.memberPositionsToMatchId(new int[]{0,0}, 5));

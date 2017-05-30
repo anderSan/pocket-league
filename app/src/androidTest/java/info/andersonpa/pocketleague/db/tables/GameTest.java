@@ -1,25 +1,33 @@
 package info.andersonpa.pocketleague.db.tables;
 
 import android.os.SystemClock;
+import android.support.test.runner.AndroidJUnit4;
 
-import info.andersonpa.pocketleague.enums.SessionType;
-import info.andersonpa.pocketleague.gameslibrary.GameSubtype;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class GameTest extends TestCase {
-    Game game;
-    Session session;
-    Venue venue;
+import info.andersonpa.pocketleague.enums.SessionType;
+import info.andersonpa.pocketleague.gameslibrary.GameSubtype;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+@RunWith(AndroidJUnit4.class)
+public class GameTest {
+    private Game game;
+    private Session session;
+    private Venue venue;
     Date before;
 
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         before = new Date();
-        super.setUp();
         venue = new Venue("Venue name");
         session = new Session("Session name", SessionType.OPEN, GameSubtype.UNDEFINED, 4, venue);
         List<GameMember> members = new ArrayList<>();
@@ -28,10 +36,12 @@ public class GameTest extends TestCase {
         game = new Game(session, 1, members, venue, false);
     }
 
+    @Test
     public void testGetIdInSession() throws Exception {
         assertEquals(game.getIdInSession(), 1);
     }
 
+    @Test
     public void testGetDatePlayed() throws Exception {
         Date before = new Date();
         SystemClock.sleep(3);
@@ -43,12 +53,14 @@ public class GameTest extends TestCase {
         assertTrue(after.after(g.getDatePlayed()));
     }
 
+    @Test
     public void testGetSetIsComplete() throws Exception {
         assertFalse(game.getIsComplete());
         game.setIsComplete(true);
         assertTrue(game.getIsComplete());
     }
 
+    @Test
     public void testGetIsTracked() throws Exception {
         assertFalse(game.getIsTracked());
     }
