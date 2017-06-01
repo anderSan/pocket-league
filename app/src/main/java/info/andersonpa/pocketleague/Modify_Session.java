@@ -92,8 +92,12 @@ public class Modify_Session extends Fragment_Edit implements Add_Teams {
             List<String> venueNames = new ArrayList<>();
             List<Venue> venues = Venue.getVenues(database(), true, false);
 
-            for (Venue v : venues) {
-                venueNames.add(v.getName());
+            if (venues.size() == 0) {
+                btn_create.setEnabled(false);
+            } else {
+                for (Venue v : venues) {
+                    venueNames.add(v.getName());
+                }
             }
 
 			ArrayAdapter<String> vAdapter = new SpinnerAdapter(context,
@@ -124,7 +128,9 @@ public class Modify_Session extends Fragment_Edit implements Add_Teams {
 		String session_name = tv_name.getText().toString().trim();
 		if (session_name.isEmpty()) {
 			Toast.makeText(context, "Session name is required.", Toast.LENGTH_LONG).show();
-		} else {
+		} else if (teams.size() == 0) {
+            Toast.makeText(context, "No teams selected for the session.", Toast.LENGTH_SHORT).show();
+        } else {
 			Venue current_venue = (Venue) sp_venues.getSelectedView().getTag();
 			Boolean is_favorite = cb_isFavorite.isChecked();
 
