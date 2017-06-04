@@ -5,3 +5,6 @@
 .DS_Store
 /build
 /.idea
+*.iml
+*.apk
+app/src/main/java/info/andersonpa/pocketleague/db/DbxInfo.java
