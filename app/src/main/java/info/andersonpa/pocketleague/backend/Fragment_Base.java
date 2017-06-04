@@ -29,23 +29,23 @@ public abstract class Fragment_Base extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         try {
-            mNav = (NavigationInterface) activity;
+            mNav = (NavigationInterface) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement NavigationInterface");
         }
         try {
-            mData = (DataInterface) activity;
+            mData = (DataInterface) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement DataInterface");
         }
 
-        context = getActivity();
+        this.context = context;
     }
 
     public boolean closeContextualActionBar() {
