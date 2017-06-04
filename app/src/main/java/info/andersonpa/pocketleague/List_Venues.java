@@ -1,26 +1,26 @@
 package info.andersonpa.pocketleague;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import info.andersonpa.pocketleague.backend.Fragment_TopList;
 import info.andersonpa.pocketleague.backend.Item_Venue;
 import info.andersonpa.pocketleague.backend.ListAdapter_Venue;
 import info.andersonpa.pocketleague.db.tables.Venue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class List_Venues extends Fragment_TopList {
-    private ListView lv;
+    private RecyclerView rv;
     private ListAdapter_Venue venue_adapter;
     private List<Item_Venue> venue_list = new ArrayList<>();
 
@@ -33,14 +33,16 @@ public class List_Venues extends Fragment_TopList {
                 mNav.modifyVenue(null);
             }
         });
+
         mNav.setTitle("Venues");
         mNav.setDrawerItemChecked(5);
 		rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 
-        lv = (ListView) rootView.findViewById(R.id.dbListing);
-        venue_adapter = new ListAdapter_Venue(context, R.layout.list_item_venue, venue_list, cbClicked);
-        lv.setAdapter(venue_adapter);
-        lv.setOnItemClickListener(lvItemClicked);
+        rv = (RecyclerView) rootView.findViewById(R.id.dbListing);
+        rv.setLayoutManager(new LinearLayoutManager(context));
+
+        venue_adapter = new ListAdapter_Venue(context, venue_list, lvItemClicked, cbClicked);
+        rv.setAdapter(venue_adapter);
 
         setupBarButtons(getString(R.string.open), getString(R.string.closed));
 
@@ -49,17 +51,19 @@ public class List_Venues extends Fragment_TopList {
 
     @Override
 	public void refreshDetails() {
-        venue_adapter.clear();
         List<Venue> venues = getVenues();
 
+        venue_list.clear();
         for (Venue v : venues) {
-            venue_adapter.add(new Item_Venue(v.getId(), v.getName(), v.getIsFavorite()));
+            venue_list.add(new Item_Venue(v.getId(), v.getName(), v.getIsFavorite()));
         }
+        venue_adapter.notifyDataSetChanged();
 	}
 
-    private AdapterView.OnItemClickListener lvItemClicked = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String vId = venue_list.get(position).getId();
+    private View.OnClickListener lvItemClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String vId = (String) view.getTag();
             mNav.viewVenueDetails(vId);
         }
     };
@@ -67,7 +71,7 @@ public class List_Venues extends Fragment_TopList {
     private View.OnClickListener cbClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            String vId = (String) view.getTag();
+            String vId = (String) ((View) view.getParent()).getTag();
 
             Venue v = Venue.getFromId(database(), vId);
             v.setIsFavorite(((CheckBox) view).isChecked());

@@ -1,70 +1,73 @@
 package info.andersonpa.pocketleague.backend;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import info.andersonpa.pocketleague.R;
-
 import java.util.List;
 
-public class ListAdapter_Player extends ArrayAdapter<Item_Player> {
+import info.andersonpa.pocketleague.R;
+
+public class ListAdapter_Player extends RecyclerView.Adapter<ListAdapter_Player.ViewHolder> {
 	private Context context;
 	private List<Item_Player> player_list;
+    private View.OnClickListener itemClicked;
     private View.OnClickListener cbClicked;
 
-	public ListAdapter_Player(Context context, int layoutResourceId, List<Item_Player> data,
+	public ListAdapter_Player(Context context, List<Item_Player> data, View.OnClickListener itemClicked,
                               View.OnClickListener cbClicked) {
-        super(context, layoutResourceId, data);
 		this.context = context;
 		this.player_list = data;
+        this.itemClicked = itemClicked;
         this.cbClicked = cbClicked;
 	}
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder_Player holder;
-
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_player, parent, false);
-
-            holder = new ViewHolder_Player();
-            holder.p_color = (TextView) convertView.findViewById(R.id.tv_p_color);
-            holder.p_name = (TextView) convertView.findViewById(R.id.tv_p_name);
-            holder.p_nickname = (TextView) convertView.findViewById(R.id.tv_p_nickname);
-            holder.p_isfavorite = (CheckBox) convertView.findViewById(R.id.cb_p_isfavorite);
-            holder.p_isfavorite.setOnClickListener(cbClicked);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder_Player) convertView.getTag();
-        }
-
-        Item_Player item = player_list.get(position);
-        holder.p_color.setBackgroundColor(item.getColor());
-        holder.p_name.setText(item.getName());
-        holder.p_nickname.setText(item.getNickname());
-        holder.p_isfavorite.setChecked(item.getIsFavorite());
-        holder.p_isfavorite.setTag(item.getId());
-
-		return convertView;
-	}
+    @Override
+    public int getItemCount() {
+        return player_list.size();
+    }
 
     @Override
-    public int getCount() {
-        return player_list.size();
+    public ListAdapter_Player.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+        View player_view = inflater.inflate(R.layout.list_item_player, parent, false);
+        ViewHolder viewHolder = new ViewHolder(player_view);
+        player_view.setOnClickListener(itemClicked);
+        viewHolder.p_isFavorite.setOnClickListener(cbClicked);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(ListAdapter_Player.ViewHolder viewHolder, int position) {
+        Item_Player p = player_list.get(position);
+
+        viewHolder.itemView.setTag(p.getId());
+        viewHolder.p_color.setBackgroundColor(p.getColor());
+        viewHolder.p_name.setText(p.getName());
+        viewHolder.p_nickname.setText(p.getNickname());
+        viewHolder.p_isFavorite.setChecked(p.getIsFavorite());
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView p_color;
+        TextView p_name;
+        TextView p_nickname;
+        CheckBox p_isFavorite;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+
+            p_color = (TextView) itemView.findViewById(R.id.tv_p_color);
+            p_name = (TextView) itemView.findViewById(R.id.tv_p_name);
+            p_nickname = (TextView) itemView.findViewById(R.id.tv_p_nickname);
+            p_isFavorite = (CheckBox) itemView.findViewById(R.id.cb_p_isfavorite);
+        }
     }
 }
 
-class ViewHolder_Player {
-    TextView p_color;
-    TextView p_name;
-    TextView p_nickname;
-    CheckBox p_isfavorite;
-
-}

@@ -1,63 +1,65 @@
 package info.andersonpa.pocketleague.backend;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import info.andersonpa.pocketleague.R;
-
 import java.util.List;
 
-public class ListAdapter_Venue extends ArrayAdapter<Item_Venue> {
+import info.andersonpa.pocketleague.R;
+
+public class ListAdapter_Venue extends RecyclerView.Adapter<ListAdapter_Venue.ViewHolder> {
     private Context context;
     private List<Item_Venue> venue_list;
+    private View.OnClickListener itemClicked;
     private View.OnClickListener cbClicked;
 
-    public ListAdapter_Venue(Context context, int layoutResourceId, List<Item_Venue> data,
-                             View.OnClickListener cbClicked) {
-        super(context, layoutResourceId, data);
+    public ListAdapter_Venue(Context context, List<Item_Venue> data, View.OnClickListener itemClicked, View.OnClickListener cbClicked) {
         this.context = context;
         this.venue_list = data;
+        this.itemClicked = itemClicked;
         this.cbClicked = cbClicked;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder_Venue holder;
+    public int getItemCount() {
+    return venue_list.size();
+}
 
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context
-                    .LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_venue, parent, false);
+    @Override
+    public ListAdapter_Venue.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
 
-            holder = new ViewHolder_Venue();
-            holder.v_name = (TextView) convertView.findViewById(R.id.tv_v_name);
-            holder.v_isFavorite = (CheckBox) convertView.findViewById(R.id.cb_v_isfavorite);
-            holder.v_isFavorite.setOnClickListener(cbClicked);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder_Venue) convertView.getTag();
-        }
-
-        Item_Venue item = venue_list.get(position);
-        holder.v_name.setText(item.getName());
-        holder.v_isFavorite.setChecked(item.getIsFavorite());
-        holder.v_isFavorite.setTag(item.getId());
-
-        return convertView;
+        View venue_view = inflater.inflate(R.layout.list_item_venue, parent, false);
+        ViewHolder viewHolder = new ViewHolder(venue_view);
+        venue_view.setOnClickListener(itemClicked);
+        viewHolder.v_isFavorite.setOnClickListener(cbClicked);
+        return viewHolder;
     }
 
     @Override
-    public int getCount() {
-        return venue_list.size();
-    }
-}
+    public void onBindViewHolder(ListAdapter_Venue.ViewHolder viewHolder, int position) {
+        Item_Venue v = venue_list.get(position);
 
-class ViewHolder_Venue {
-    TextView v_name;
-    CheckBox v_isFavorite;
+        viewHolder.itemView.setTag(v.getId());
+        viewHolder.v_name.setText(v.getName());
+        viewHolder.v_isFavorite.setChecked(v.getIsFavorite());
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView v_name;
+        CheckBox v_isFavorite;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+
+            v_name = (TextView) itemView.findViewById(R.id.tv_v_name);
+            v_isFavorite = (CheckBox) itemView.findViewById(R.id.cb_v_isfavorite);
+        }
+    }
 }

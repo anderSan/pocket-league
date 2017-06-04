@@ -1,26 +1,26 @@
 package info.andersonpa.pocketleague;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import info.andersonpa.pocketleague.backend.Fragment_TopList;
 import info.andersonpa.pocketleague.backend.Item_Team;
 import info.andersonpa.pocketleague.backend.ListAdapter_Team;
 import info.andersonpa.pocketleague.db.tables.Team;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class List_Teams extends Fragment_TopList {
-    private ListView lv;
+    private RecyclerView rv;
     private ListAdapter_Team team_adapter;
     private List<Item_Team> team_list = new ArrayList<>();
 
@@ -38,10 +38,11 @@ public class List_Teams extends Fragment_TopList {
         mNav.setDrawerItemChecked(4);
 		rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 
-		lv = (ListView) rootView.findViewById(R.id.dbListing);
-		team_adapter = new ListAdapter_Team(context, R.layout.list_item_team, team_list, cbClicked);
-		lv.setAdapter(team_adapter);
-		lv.setOnItemClickListener(lvItemClicked);
+		rv = (RecyclerView) rootView.findViewById(R.id.dbListing);
+        rv.setLayoutManager(new LinearLayoutManager(context));
+
+		team_adapter = new ListAdapter_Team(context, team_list, lvItemClicked, cbClicked);
+		rv.setAdapter(team_adapter);
 
         setupBarButtons();
 
@@ -50,17 +51,19 @@ public class List_Teams extends Fragment_TopList {
 
     @Override
 	public void refreshDetails() {
-		team_adapter.clear();
-        List<Team> teams = getTeams();
+		List<Team> teams = getTeams();
 
+        team_list.clear();
         for (Team t : teams) {
-            team_adapter.add(new Item_Team(t.getId(), t.getName(), t.getColor(), t.getIsFavorite()));
+            team_list.add(new Item_Team(t.getId(), t.getName(), t.getColor(), t.getIsFavorite()));
         }
+        team_adapter.notifyDataSetChanged();
 	}
 
-    private AdapterView.OnItemClickListener lvItemClicked = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String tId = team_list.get(position).getId();
+    private View.OnClickListener lvItemClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String tId = (String) view.getTag();
             mNav.viewTeamDetails(tId);
         }
     };
@@ -68,7 +71,7 @@ public class List_Teams extends Fragment_TopList {
     private View.OnClickListener cbClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            String tId = (String) view.getTag();
+            String tId = (String) ((View) view.getParent()).getTag();
 
             Team t = Team.getFromId(database(), tId);
             t.setIsFavorite(((CheckBox) view).isChecked());

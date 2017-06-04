@@ -1,15 +1,18 @@
 package info.andersonpa.pocketleague;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import info.andersonpa.pocketleague.backend.Fragment_TopList;
 import info.andersonpa.pocketleague.backend.Item_Session;
@@ -17,11 +20,8 @@ import info.andersonpa.pocketleague.backend.ListAdapter_Session;
 import info.andersonpa.pocketleague.db.tables.Session;
 import info.andersonpa.pocketleague.enums.SessionType;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class List_Sessions extends Fragment_TopList {
-    ListView lv;
+    private RecyclerView rv;
     private ListAdapter_Session session_adapter;
     private List<Item_Session> session_list = new ArrayList<>();
 
@@ -39,11 +39,11 @@ public class List_Sessions extends Fragment_TopList {
         mNav.setDrawerItemChecked(0);
         rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
 
-        lv = (ListView) rootView.findViewById(R.id.dbListing);
-        session_adapter = new ListAdapter_Session(context, R.layout.list_item_session,
-                session_list, cbClicked);
-        lv.setAdapter(session_adapter);
-        lv.setOnItemClickListener(lvItemClicked);
+        rv = (RecyclerView) rootView.findViewById(R.id.dbListing);
+        rv.setLayoutManager(new LinearLayoutManager(context));
+
+        session_adapter = new ListAdapter_Session(context, session_list, lvItemClicked, cbClicked);
+        rv.setAdapter(session_adapter);
 
         setupBarButtons(getString(R.string.open), getString(R.string.closed));
 
@@ -52,19 +52,21 @@ public class List_Sessions extends Fragment_TopList {
 
     @Override
     public void refreshDetails() {
-        session_adapter.clear();
         List<Session> sessions = getSessions();
 
+        session_list.clear();
         for (Session s : sessions) {
-            session_adapter.add(new Item_Session(s.getId(), s.getName(), s.getSessionType(),
+            session_list.add(new Item_Session(s.getId(), s.getName(), s.getSessionType(),
                     s.getIsFavorite()));
         }
+        session_adapter.notifyDataSetChanged();
     }
 
-    private AdapterView.OnItemClickListener lvItemClicked = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String sId = session_list.get(position).getId();
-            SessionType session_type = session_list.get(position).getSessionType();
+    private View.OnClickListener lvItemClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String sId = (String) view.getTag();
+            SessionType session_type = Session.getFromId(database(), sId).getSessionType();
             mNav.viewSessionDetails(sId, session_type);
         }
     };
@@ -72,7 +74,7 @@ public class List_Sessions extends Fragment_TopList {
     private View.OnClickListener cbClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            String sId = (String) view.getTag();
+            String sId = (String) ((View) view.getParent()).getTag();
 
             Session s = Session.getFromId(database(), sId);
             s.setIsFavorite(((CheckBox) view).isChecked());
