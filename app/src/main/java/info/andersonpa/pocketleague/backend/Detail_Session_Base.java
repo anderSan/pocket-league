@@ -121,8 +121,8 @@ public abstract class Detail_Session_Base extends Fragment_Detail {
 			case R.id.action_match:
 				if (mInfo.getCreatable()) {
 					createMatch();
-				} else if (mInfo.getViewable()) {
-					loadMatch(mInfo.getGameId());
+//				} else if (mInfo.getViewable()) {
+//					loadMatch(mInfo.getGameId());
 				}
 				mode.finish();
 				return true;
