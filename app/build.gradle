@@ -11,6 +11,7 @@ android {
         targetSdkVersion 25
         versionCode 3
         versionName "0.2.2"
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     testOptions { // <-- You need this

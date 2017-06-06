@@ -54,7 +54,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                app:srcCompat="@android:drawable/ic_dialog_email"
+                app:srcCompat="@drawable/ic_add_black_24dp"
+                android:tint="@color/White"
                 app:fabSize="mini"/>
         </LinearLayout>
 
@@ -80,7 +81,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                app:srcCompat="@drawable/basketball"
+                app:srcCompat="@drawable/ic_play_arrow_black_24dp"
+                android:tint="@color/White"
                 app:fabSize="mini"/>
         </LinearLayout>
 
@@ -107,8 +109,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                app:srcCompat="@drawable/ic_star"
-                android:tint="@android:color/white"
+                app:srcCompat="@drawable/ic_star_border_black_24dp"
+                android:tint="@color/White"
                 app:fabSize="mini"/>
         </LinearLayout>
 
@@ -129,7 +131,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:gravity="center_vertical"
-                app:srcCompat="@drawable/ic_action_search"
+                app:srcCompat="@drawable/ic_settings_black_24dp"
+                android:tint="@color/White"
                 app:fabSize="normal"/>
         </LinearLayout>
 
