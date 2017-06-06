@@ -88,6 +88,9 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
                 if (f instanceof Fragment_Base) {
                     ((Fragment_Base) f).closeContextualActionBar();
                 }
+                if (f instanceof Fragment_TopList) {
+                    ((Fragment_TopList) f).closeFABMenu();
+                }
                 getSupportActionBar().setTitle(mDrawerTitle);
                 getSupportActionBar().setSubtitle("");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
