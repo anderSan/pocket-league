@@ -30,6 +30,7 @@ public class List_Teams extends Fragment_TopList {
         setAddClicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                closeFABMenu();
                 mNav.modifyTeam(null);
             }
         });
@@ -44,13 +45,32 @@ public class List_Teams extends Fragment_TopList {
 		team_adapter = new ListAdapter_Team(context, team_list, lvItemClicked, cbClicked);
 		rv.setAdapter(team_adapter);
 
-        setupBarButtons();
+        setupFabButtons("Add new team", "Show inactive teams", "Favorites only");
 
         return rootView;
 	}
 
     @Override
 	public void refreshDetails() {
+        String title = "";
+        if (show_favorites) {
+            title += "Favorite ";
+            changeFabTitle(3, "Show all");
+            changeFabIcon(3, R.drawable.ic_star_border_black_24dp);
+        } else {
+            changeFabTitle(3, "Favorites only");
+            changeFabIcon(3, R.drawable.ic_star_black_24dp);
+        }
+        if (show_actives) {
+            changeFabTitle(2, "Show inactive teams");
+            changeFabIcon(2, R.drawable.ic_people_outline_black_24dp);
+        } else {
+            title += "Inactive ";
+            changeFabTitle(2, "Show active teams");
+            changeFabIcon(2, R.drawable.ic_people_black_24dp);
+        }
+        mNav.setTitle(title + "Teams");
+
 		List<Team> teams = getTeams();
 
         team_list.clear();

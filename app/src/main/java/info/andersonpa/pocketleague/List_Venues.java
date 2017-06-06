@@ -30,6 +30,7 @@ public class List_Venues extends Fragment_TopList {
         setAddClicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                closeFABMenu();
                 mNav.modifyVenue(null);
             }
         });
@@ -44,13 +45,32 @@ public class List_Venues extends Fragment_TopList {
         venue_adapter = new ListAdapter_Venue(context, venue_list, lvItemClicked, cbClicked);
         rv.setAdapter(venue_adapter);
 
-        setupBarButtons(getString(R.string.open), getString(R.string.closed));
+        setupFabButtons("Add new venue", "Show closed venues", "Favorites only");
 
 		return rootView;
 	}
 
     @Override
 	public void refreshDetails() {
+        String title = "";
+        if (show_favorites) {
+            title += "Favorite ";
+            changeFabTitle(3, "Show all");
+            changeFabIcon(3, R.drawable.ic_star_border_black_24dp);
+        } else {
+            changeFabTitle(3, "Favorites only");
+            changeFabIcon(3, R.drawable.ic_star_black_24dp);
+        }
+        if (show_actives) {
+            changeFabTitle(2, "Show closed venues");
+            changeFabIcon(2, R.drawable.ic_location_off_black_24dp);
+        } else {
+            title += "Closed ";
+            changeFabTitle(2, "Show open venues");
+            changeFabIcon(2, R.drawable.ic_location_on_black_24dp);
+        }
+        mNav.setTitle(title + "Venues");
+
         List<Venue> venues = getVenues();
 
         venue_list.clear();

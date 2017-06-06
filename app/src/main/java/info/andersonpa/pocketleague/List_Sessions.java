@@ -31,6 +31,7 @@ public class List_Sessions extends Fragment_TopList {
         setAddClicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                closeFABMenu();
                 mNav.modifySession(null);
             }
         });
@@ -45,13 +46,32 @@ public class List_Sessions extends Fragment_TopList {
         session_adapter = new ListAdapter_Session(context, session_list, lvItemClicked, cbClicked);
         rv.setAdapter(session_adapter);
 
-        setupBarButtons(getString(R.string.open), getString(R.string.closed));
+        setupFabButtons("Add new session", "Show closed sessions", "Favorites only");
 
         return rootView;
     }
 
     @Override
     public void refreshDetails() {
+        String title = "";
+        if (show_favorites) {
+            title += "Favorite ";
+            changeFabTitle(3, "Show all");
+            changeFabIcon(3, R.drawable.ic_star_border_black_24dp);
+        } else {
+            changeFabTitle(3, "Favorites only");
+            changeFabIcon(3, R.drawable.ic_star_black_24dp);
+        }
+        if (show_actives) {
+            changeFabTitle(2, "Show closed sessions");
+            changeFabIcon(2, R.drawable.ic_event_busy_black_24dp);
+        } else {
+            title += "Closed ";
+            changeFabTitle(2, "Show open sessions");
+            changeFabIcon(2, R.drawable.ic_event_available_black_24dp);
+        }
+        mNav.setTitle(title + "Sessions", "for " + mData.getCurrentGameType().toString());
+
         List<Session> sessions = getSessions();
 
         session_list.clear();

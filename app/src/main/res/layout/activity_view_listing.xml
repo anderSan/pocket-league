@@ -3,21 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent" >
 
-    <include
-        android:id="@+id/listing_nav_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/nav_bar_list"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentBottom="true"/>
-
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/listing_nav_bar">
+        android:layout_height="match_parent" >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/dbListing"
@@ -36,18 +26,18 @@
             android:id="@+id/fabLayout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/standard_23"
             android:padding="@dimen/standard_12"
             android:clipToPadding="false"
+            android:layout_marginEnd="@dimen/standard_23"
             android:gravity="center_vertical"
             android:layout_marginBottom="@dimen/standard_23"
             android:layout_gravity="bottom|end"
             android:visibility="gone">
 
             <TextView
+                android:id="@+id/fabTitle1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="FabTitle1"/>
+                android:layout_height="wrap_content" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab1"
@@ -72,16 +62,16 @@
             android:visibility="gone">
 
             <TextView
+                android:id="@+id/fabTitle2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="FabTitle2"/>
+                android:layout_height="wrap_content" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                app:srcCompat="@drawable/ic_play_arrow_black_24dp"
+                app:srcCompat="@drawable/ic_stop_black_24dp"
                 android:tint="@color/White"
                 app:fabSize="mini"/>
         </LinearLayout>
@@ -100,16 +90,16 @@
             android:visibility="gone">
 
             <TextView
+                android:id="@+id/fabTitle3"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="FabTitle3"/>
+                android:layout_height="wrap_content" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                app:srcCompat="@drawable/ic_star_border_black_24dp"
+                app:srcCompat="@drawable/ic_star_black_24dp"
                 android:tint="@color/White"
                 app:fabSize="mini"/>
         </LinearLayout>

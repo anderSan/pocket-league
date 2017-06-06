@@ -30,6 +30,7 @@ public class List_Players extends Fragment_TopList {
         setAddClicked(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                closeFABMenu();
                 mNav.modifyPlayer(null);
             }
         });
@@ -44,13 +45,32 @@ public class List_Players extends Fragment_TopList {
         player_adapter = new ListAdapter_Player(context, player_list, lvItemClicked, cbClicked);
         rv.setAdapter(player_adapter);
 
-        setupBarButtons();
+        setupFabButtons("Add new player", "Show inactive players", "Favorites only");
 
         return rootView;
     }
 
     @Override
     public void refreshDetails() {
+        String title = "";
+        if (show_favorites) {
+            title += "Favorite ";
+            changeFabTitle(3, "Show all");
+            changeFabIcon(3, R.drawable.ic_star_border_black_24dp);
+        } else {
+            changeFabTitle(3, "Favorites only");
+            changeFabIcon(3, R.drawable.ic_star_black_24dp);
+        }
+        if (show_actives) {
+            changeFabTitle(2, "Show inactive players");
+            changeFabIcon(2, R.drawable.ic_person_outline_black_24dp);
+        } else {
+            title += "Inactive ";
+            changeFabTitle(2, "Show active players");
+            changeFabIcon(2, R.drawable.ic_person_black_24dp);
+        }
+        mNav.setTitle(title + "Players");
+
         List <Player> players = getPlayers();
 
         player_list.clear();

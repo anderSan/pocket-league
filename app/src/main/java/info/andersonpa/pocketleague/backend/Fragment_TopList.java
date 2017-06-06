@@ -2,20 +2,17 @@ package info.andersonpa.pocketleague.backend;
 
 import android.animation.Animator;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ToggleButton;
+import android.widget.TextView;
 
 import info.andersonpa.pocketleague.R;
 
 public abstract class Fragment_TopList extends Fragment_Base {
-    public ImageButton bar_add;
-    public ToggleButton bar_isFavorite;
-    public ToggleButton bar_isActive;
-
     FloatingActionButton fab, fab1, fab2, fab3;
     LinearLayout fabLayout1, fabLayout2, fabLayout3;
+    TextView fabText1, fabText2, fabText3;
     View fabBGLayout;
     boolean isFABOpen=false;
 
@@ -31,7 +28,8 @@ public abstract class Fragment_TopList extends Fragment_Base {
     View.OnClickListener favoriteClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            show_favorites = ((ToggleButton) v).isChecked();
+            show_favorites = !show_favorites;
+            closeFABMenu();
             refreshDetails();
         }
     };
@@ -39,7 +37,8 @@ public abstract class Fragment_TopList extends Fragment_Base {
     View.OnClickListener activeClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            show_actives = ((ToggleButton) v).isChecked();
+            show_actives = !show_actives;
+            closeFABMenu();
             refreshDetails();
         }
     };
@@ -47,34 +46,6 @@ public abstract class Fragment_TopList extends Fragment_Base {
     @Override
     public void onResume() {
         super.onResume();
-
-        fabLayout1 = (LinearLayout) rootView.findViewById(R.id.fabLayout1);
-        fabLayout2 = (LinearLayout) rootView.findViewById(R.id.fabLayout2);
-        fabLayout3 = (LinearLayout) rootView.findViewById(R.id.fabLayout3);
-        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        fab1 = (FloatingActionButton) rootView.findViewById(R.id.fab1);
-        fab2 = (FloatingActionButton) rootView.findViewById(R.id.fab2);
-        fab3 = (FloatingActionButton) rootView.findViewById(R.id.fab3);
-        fabBGLayout = rootView.findViewById(R.id.fabBGLayout);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!isFABOpen){
-                    showFABMenu();
-                }else{
-                    closeFABMenu();
-                }
-            }
-        });
-
-        fabBGLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                closeFABMenu();
-            }
-        });
-
         refreshDetails();
     }
 
@@ -84,6 +55,9 @@ public abstract class Fragment_TopList extends Fragment_Base {
         fabLayout2.setVisibility(View.VISIBLE);
         fabLayout3.setVisibility(View.VISIBLE);
         fabBGLayout.setVisibility(View.VISIBLE);
+        fabText1.setVisibility(View.VISIBLE);
+        fabText2.setVisibility(View.VISIBLE);
+        fabText3.setVisibility(View.VISIBLE);
 
         fab.animate().rotationBy(180);
         fabLayout1.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
@@ -103,7 +77,11 @@ public abstract class Fragment_TopList extends Fragment_Base {
         fabLayout3.animate().translationY(0).setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-
+                if(!isFABOpen) {
+                    fabText1.setVisibility(View.GONE);
+                    fabText2.setVisibility(View.GONE);
+                    fabText3.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -129,24 +107,64 @@ public abstract class Fragment_TopList extends Fragment_Base {
         return true;
     }
 
-    public void setupBarButtons() {
-        setupBarButtons(null, null);
+    public void setupFabButtons(String title1, String title2, String title3) {
+        fabLayout1 = (LinearLayout) rootView.findViewById(R.id.fabLayout1);
+        fabLayout2 = (LinearLayout) rootView.findViewById(R.id.fabLayout2);
+        fabLayout3 = (LinearLayout) rootView.findViewById(R.id.fabLayout3);
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab1 = (FloatingActionButton) rootView.findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) rootView.findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) rootView.findViewById(R.id.fab3);
+        fabText1 = (TextView) rootView.findViewById(R.id.fabTitle1);
+        fabText2 = (TextView) rootView.findViewById(R.id.fabTitle2);
+        fabText3 = (TextView) rootView.findViewById(R.id.fabTitle3);
+        fabBGLayout = rootView.findViewById(R.id.fabBGLayout);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!isFABOpen){
+                    showFABMenu();
+                }else{
+                    closeFABMenu();
+                }
+            }
+        });
+
+        fabBGLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                closeFABMenu();
+            }
+        });
+
+        changeFabTitle(1, title1);
+        changeFabTitle(2, title2);
+        changeFabTitle(3, title3);
+        fab1.setOnClickListener(addClicked);
+        fab2.setOnClickListener(activeClicked);
+        fab3.setOnClickListener(favoriteClicked);
     }
 
-    public void setupBarButtons(String active_on, String active_off) {
-        bar_add = (ImageButton) rootView.findViewById(R.id.bar_add);
-        bar_add.setOnClickListener(addClicked);
-        bar_isFavorite = (ToggleButton) rootView.findViewById(R.id.bar_favorite);
-        bar_isFavorite.setOnClickListener(favoriteClicked);
-        bar_isFavorite.setChecked(show_favorites);
-        bar_isActive = (ToggleButton) rootView.findViewById(R.id.bar_active);
-        if (active_on != null) {
-            bar_isActive.setTextOn(active_on);
+    public void changeFabTitle(int which, String title) {
+        switch (which) {
+            case 1: fabText1.setText(title);
+                break;
+            case 2: fabText2.setText(title);
+                break;
+            case 3: fabText3.setText(title);
+                break;
         }
-        if (active_off != null) {
-            bar_isActive.setTextOff(active_off);
+    }
+
+    public void changeFabIcon(int which, int draw_id) {
+        switch (which) {
+            case 1: fab1.setImageDrawable(ContextCompat.getDrawable(getActivity(), draw_id));
+                break;
+            case 2: fab2.setImageDrawable(ContextCompat.getDrawable(getActivity(), draw_id));
+                break;
+            case 3: fab3.setImageDrawable(ContextCompat.getDrawable(getActivity(), draw_id));
+                break;
         }
-        bar_isActive.setOnClickListener(activeClicked);
-        bar_isActive.setChecked(show_actives);
     }
 }
