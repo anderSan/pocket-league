@@ -10,17 +10,17 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-import info.andersonpa.pocketleague.backend.Fragment_TopList;
+import java.util.ArrayList;
+import java.util.List;
+
+import info.andersonpa.pocketleague.backend.Fragment_Base;
 import info.andersonpa.pocketleague.backend.Item_GameType;
 import info.andersonpa.pocketleague.backend.ListAdapter_GameType;
 import info.andersonpa.pocketleague.gameslibrary.GameSubtype;
 import info.andersonpa.pocketleague.gameslibrary.GameType;
 
-import java.util.ArrayList;
-import java.util.List;
 
-
-public class List_GameTypes extends Fragment_TopList {
+public class List_GameTypes extends Fragment_Base {
     private GridView gv;
 	private ListAdapter_GameType gametype_adapter;
 	private List<Item_GameType> gametypes_list = new ArrayList<>();
@@ -43,6 +43,12 @@ public class List_GameTypes extends Fragment_TopList {
     @Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		refreshDetails();
 	}
 
 	public void refreshDetails() {

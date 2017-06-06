@@ -25,6 +25,7 @@ import java.util.List;
 
 import info.andersonpa.pocketleague.backend.Add_Teams;
 import info.andersonpa.pocketleague.backend.Fragment_Base;
+import info.andersonpa.pocketleague.backend.Fragment_TopList;
 import info.andersonpa.pocketleague.backend.NavDrawerAdapter;
 import info.andersonpa.pocketleague.backend.NavDrawerItem;
 import info.andersonpa.pocketleague.backend.NavigationInterface;
@@ -92,7 +93,7 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
             mFragmentManager.beginTransaction()
@@ -263,13 +264,19 @@ public class PocketLeague extends DataInterfaceActivity implements NavigationInt
 
     @Override
     public void onBackPressed() {
+        boolean fabmenu_closed = false;
+        if (getFragmentManager().findFragmentById(R.id.content_frame) instanceof Fragment_TopList) {
+            fabmenu_closed = ((Fragment_TopList) getFragmentManager()
+                    .findFragmentById(R.id.content_frame)).closeFABMenu();
+        }
+
         boolean cab_closed = false;
         if (getFragmentManager().findFragmentById(R.id.content_frame) instanceof Fragment_Base) {
             cab_closed = ((Fragment_Base) getFragmentManager()
                     .findFragmentById(R.id.content_frame)).closeContextualActionBar();
         }
 
-        if (!cab_closed) {
+        if (!fabmenu_closed && !cab_closed) {
             if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
                 mDrawerLayout.closeDrawer(mDrawerList);
             } else if (getFragmentManager().getBackStackEntryCount() > 0) {
