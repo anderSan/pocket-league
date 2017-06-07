@@ -12,7 +12,6 @@ import com.couchbase.lite.QueryRow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class Player extends Team { //implements Comparable<Player> {
@@ -76,14 +75,13 @@ public class Player extends Team { //implements Comparable<Player> {
     }
 
     public static Player findByName(Database database, String name) throws CouchbaseLiteException {
-        Query query = database.getView("player-names").createQuery();
-        query.setStartKey(name);
-        query.setEndKey(name);
-        QueryEnumerator result = query.run();
+        List<Object> key_filter = new ArrayList<>();
+        key_filter.add(Arrays.asList(true, name));
+        key_filter.add(Arrays.asList(false, name));
+        List<Player> result = getAll(database, key_filter);
 
-        assert (result.getCount() <= 1);
-        if (result.hasNext()) {
-            return Player.getFromId(database, result.next().getDocumentId());
+        if (result.size() == 1) {
+            return result.get(0);
         } else {
             return null;
         }
@@ -93,7 +91,7 @@ public class Player extends Team { //implements Comparable<Player> {
             throws CouchbaseLiteException {
         List<Player> players = new ArrayList<>();
 
-        Query query = database.getView("player-names").createQuery();
+        Query query = database.getView("players").createQuery();
         query.setKeys(key_filter);
         QueryEnumerator rows = query.run();
         for (; rows.hasNext();) {
@@ -109,19 +107,19 @@ public class Player extends Team { //implements Comparable<Player> {
 
     public static List<Player> getPlayers(Database database, boolean active, boolean only_favorite)
             throws CouchbaseLiteException {
-        List<Object> key_filter = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
 
-        Query query = database.getView("player-act.fav").createQuery();
-        query.setStartKey(Arrays.asList(active, only_favorite));
+        Query query = database.getView("players").createQuery();
+        query.setStartKey(Arrays.asList(active, ""));
         query.setEndKey(Arrays.asList(active, QUERY_END));
-        QueryEnumerator filter = query.run();
-        for (; filter.hasNext(); ) {
-            QueryRow row = filter.next();
-            // key_filter.add(row.getDocumentId());
-            String key_id = row.getDocumentId();
-            key_filter.add(getFromId(database, key_id).getName());
+        QueryEnumerator rows = query.run();
+        for (; rows.hasNext(); ) {
+            QueryRow row = rows.next();
+            if ((boolean) row.getValue() || !only_favorite) {
+                players.add(getFromId(database, row.getDocumentId()));
+            }
         }
-        return getAll(database, key_filter);
+        return players;
     }
 
     // Other methods
@@ -254,14 +252,6 @@ public class Player extends Team { //implements Comparable<Player> {
 //    }
 //
     public static boolean exists(Database database, String name) throws CouchbaseLiteException {
-        if (name == null) {
-            return false;
-        }
-        Query query = database.getView("player-names").createQuery();
-        query.setStartKey(name);
-        query.setEndKey(name);
-        QueryEnumerator result = query.run();
-
-        return result.hasNext();
+        return (name != null) && (findByName(database, name) != null);
     }
 }

@@ -79,8 +79,8 @@ public class DatabaseHelper {
     }
 
     private void createCouchViews() {
-        View cvPlayerNames = database.getView("player-names");
-        cvPlayerNames.setMap(mapField(Player.TYPE, null, Player.NAME), "1");
+        View cvPlayers = database.getView("players");
+        cvPlayers.setMap(mapPField(Player.TYPE, null, null), "1");
 
         View cvPlayerActFav = database.getView("player-act.fav");
         cvPlayerActFav.setMap(mapActFav(Player.TYPE), "1");
@@ -102,6 +102,26 @@ public class DatabaseHelper {
 
         View cvVenueActFav = database.getView("venue-act.fav");
         cvVenueActFav.setMapReduce(mapActFav(Venue.TYPE), null, "1");
+    }
+
+    private Mapper mapPField(final String type_string, final String alt_type, final String lead_key) {
+        return new Mapper() {
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter) {
+                String type = (String) document.get("type");
+                boolean matched = alt_type == null ? type_string.equals(type) :
+                        type_string.equals(type) || alt_type.equals(type);
+                if (matched) {
+                    List<Object> keys = new ArrayList<>();
+                    if (lead_key != null) {
+                        keys.add(document.get(lead_key));
+                    }
+                    keys.add(document.get("is_active"));
+                    keys.add(document.get("name"));
+                    emitter.emit(keys, document.get("is_favorite"));
+                }
+            }
+        };
     }
 
     private Mapper mapField(final String type_string, final String alt_type, final String field) {
