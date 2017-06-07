@@ -4,17 +4,17 @@ import info.andersonpa.pocketleague.gameslibrary.GameDescriptor;
 import info.andersonpa.pocketleague.gameslibrary.GameType;
 import info.andersonpa.pocketleague.gameslibrary.ScoreType;
 
-public class Undefined implements GameDescriptor {
+public class Badminton implements GameDescriptor {
     public GameType getGameType() {
-        return GameType.UNDEFINED;
+        return GameType.BADMINTON;
     }
 
 	public String getName() {
-		return "Undefined Game";
+		return "Badminton";
 	}
 
 	public String getDescription() {
-		return "N/A.";
+		return "Normal Badminton.";
 	}
 
 	public Integer min_number_teams() {
@@ -22,7 +22,7 @@ public class Undefined implements GameDescriptor {
 	}
 
 	public Integer max_number_teams() {
-		return null;
+		return 2;
 	}
 
 	public Integer min_team_size() {
@@ -30,7 +30,7 @@ public class Undefined implements GameDescriptor {
 	}
 
 	public Integer max_team_size() {
-		return null;
+		return 2;
 	}
 
 	public ScoreType getScoreType() {
@@ -38,6 +38,6 @@ public class Undefined implements GameDescriptor {
 	}
 
     public String actionString() {
-        return "info.andersonpa.undefined.PLAY_GAME";
+        return "info.andersonpa.badminton.PLAY_GAME";
     }
 }

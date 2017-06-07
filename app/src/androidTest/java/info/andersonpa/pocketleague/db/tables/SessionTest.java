@@ -24,7 +24,7 @@ public class SessionTest {
     @Before
     public void setUp() throws Exception {
         Venue venue = new Venue("Test Venue");
-        session = new Session("Session name", SessionType.OPEN, GameSubtype.EIGHTBALL, 3, venue);
+        session = new Session("Session name", SessionType.OPEN, GameSubtype.BILLIARDS_EIGHTBALL, 3, venue);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class SessionTest {
 
     @Test
     public void testGetGameSubtype() throws Exception {
-        assertEquals(session.getGameSubtype(), GameSubtype.EIGHTBALL);
+        assertEquals(session.getGameSubtype(), GameSubtype.BILLIARDS_EIGHTBALL);
     }
 
     @Test
@@ -72,6 +72,6 @@ public class SessionTest {
     public void testGetDescriptor() throws Exception {
         GameDescriptor gd = session.getDescriptor();
         assertEquals(gd.getName(), "8-ball");
-        assertEquals(gd.actionString(), "com.twobits.billiards.eightball.PLAY_GAME");
+        assertEquals(gd.actionString(), "info.andersonpa.billiards.eightball.PLAY_GAME");
     }
 }

@@ -5,15 +5,15 @@ import java.util.Collections;
 import java.util.List;
 
 public enum GameType {
-    BILLIARDS("Billiards", R.drawable.billiards, Arrays.asList(GameSubtype.EIGHTBALL,
-            GameSubtype.NINEBALL)),
-    CARDS("Cards", R.drawable.cards, Collections.singletonList(GameSubtype.SPADES)),
-    DARTS("Darts", R.drawable.darts, Collections.singletonList(GameSubtype.DARTS_CRICKET)),
+    BADMINTON("Badminton", R.drawable.badminton, Collections.singletonList(GameSubtype.BADMINTON)),
+    BILLIARDS("Billiards", R.drawable.billiards, Arrays.asList(GameSubtype.BILLIARDS_EIGHTBALL,
+            GameSubtype.BILLIARDS_NINEBALL)),
+    CARDS("Cards", R.drawable.cards, Arrays.asList(GameSubtype.CARDS_HEARTS, GameSubtype.CARDS_SPADES)),
+    DARTS("Darts", R.drawable.darts, Arrays.asList(GameSubtype.DARTS_CRICKET, GameSubtype.DARTS_FIVEZEROONE)),
     DISC_GOLF("Disc Golf", R.drawable.golf, Collections.singletonList(GameSubtype.DISC_GOLF)),
     GOLF("Golf", R.drawable.golf, Collections.singletonList(GameSubtype.GOLF)),
     POLISH_HORSESHOES("Polish Horseshoes", R.drawable.polishhorseshoes,
             Collections.singletonList(GameSubtype.POLISH_HORSESHOES)),
-    // TRIVIA("Trivia", R.drawable.test2, Arrays.asList()),
     UNDEFINED("Undefined", R.drawable.undefined, Collections.singletonList(GameSubtype.UNDEFINED));
 
     private String gametype_label;

@@ -1,28 +1,28 @@
-package info.andersonpa.pocketleague.gameslibrary.Descriptors;
+package info.andersonpa.pocketleague.gameslibrary.Descriptors.Darts;
 
 import info.andersonpa.pocketleague.gameslibrary.GameDescriptor;
 import info.andersonpa.pocketleague.gameslibrary.GameType;
 import info.andersonpa.pocketleague.gameslibrary.ScoreType;
 
-public class Undefined implements GameDescriptor {
+public class FiveZeroOne implements GameDescriptor {
     public GameType getGameType() {
-        return GameType.UNDEFINED;
+        return GameType.DARTS;
     }
 
 	public String getName() {
-		return "Undefined Game";
+		return "501";
 	}
 
 	public String getDescription() {
-		return "N/A.";
+		return "501 rules for darts.";
 	}
 
 	public Integer min_number_teams() {
-		return 1;
+		return 2;
 	}
 
 	public Integer max_number_teams() {
-		return null;
+		return 2;
 	}
 
 	public Integer min_team_size() {
@@ -30,14 +30,14 @@ public class Undefined implements GameDescriptor {
 	}
 
 	public Integer max_team_size() {
-		return null;
+		return 2;
 	}
 
 	public ScoreType getScoreType() {
-		return ScoreType.POINTS;
+		return ScoreType.POINTS_INVERSE;
 	}
 
     public String actionString() {
-        return "info.andersonpa.undefined.PLAY_GAME";
+        return "info.andersonpa.darts.fivezeroone.PLAY_GAME";
     }
 }

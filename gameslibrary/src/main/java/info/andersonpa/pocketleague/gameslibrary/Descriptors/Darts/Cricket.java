@@ -27,17 +27,17 @@ public class Cricket implements GameDescriptor {
 
 	public Integer min_team_size() {
 		return 1;
-	};
+	}
 
 	public Integer max_team_size() {
 		return 2;
-	};
+	}
 
 	public ScoreType getScoreType() {
 		return ScoreType.POINTS;
 	}
 
     public String actionString() {
-        return "com.twobits.darts.cricket.PLAY_GAME";
+        return "info.andersonpa.darts.cricket.PLAY_GAME";
     }
 }

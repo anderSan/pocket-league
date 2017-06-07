@@ -27,17 +27,17 @@ public class Spades implements GameDescriptor {
 
 	public Integer min_team_size() {
 		return 2;
-	};
+	}
 
 	public Integer max_team_size() {
 		return 2;
-	};
+	}
 
 	public ScoreType getScoreType() {
 		return ScoreType.POINTS;
 	}
 
     public String actionString() {
-        return "com.twobits.cards.spades.PLAY_GAME";
+        return "info.andersonpa.cards.spades.PLAY_GAME";
     }
 }

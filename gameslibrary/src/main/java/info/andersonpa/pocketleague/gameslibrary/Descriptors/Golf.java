@@ -27,17 +27,17 @@ public class Golf implements GameDescriptor {
 
 	public Integer min_team_size() {
 		return 1;
-	};
+	}
 
 	public Integer max_team_size() {
 		return 2;
-	};
+	}
 
 	public ScoreType getScoreType() {
 		return ScoreType.POINTS_INVERSE;
 	}
 
     public String actionString() {
-        return "com.twobits.golf.PLAY_GAME";
+        return "info.andersonpa.golf.PLAY_GAME";
     }
 }

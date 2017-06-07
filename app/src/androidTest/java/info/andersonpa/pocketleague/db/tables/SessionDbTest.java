@@ -50,7 +50,7 @@ public class SessionDbTest extends DbBaseTestCase {
         sm1 = new SessionMember(t1, 1, 2);
         sm2 = new SessionMember(t2, 2, 1);
 
-        s1 = new Session(database, "Session name", SessionType.OPEN, GameSubtype.EIGHTBALL, 3, v1);
+        s1 = new Session(database, "Session name", SessionType.OPEN, GameSubtype.BILLIARDS_EIGHTBALL, 3, v1);
         s1.update();
         s2 = new Session(database, "Other session name", SessionType.LADDER, GameSubtype.GOLF, 2,
                 v1, Arrays.asList(sm1, sm2), true);

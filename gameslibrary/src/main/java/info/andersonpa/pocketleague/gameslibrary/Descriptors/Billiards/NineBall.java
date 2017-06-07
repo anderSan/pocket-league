@@ -27,17 +27,17 @@ public class NineBall implements GameDescriptor {
 
 	public Integer min_team_size() {
 		return 1;
-	};
+	}
 
 	public Integer max_team_size() {
 		return 2;
-	};
+	}
 
 	public ScoreType getScoreType() {
 		return ScoreType.BINARY;
 	}
 
     public String actionString() {
-        return "com.twobits.billiards.nineball.PLAY_GAME";
+        return "info.andersonpa.billiards.nineball.PLAY_GAME";
     }
 }

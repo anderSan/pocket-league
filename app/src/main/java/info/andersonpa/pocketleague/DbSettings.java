@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -216,23 +217,23 @@ public class DbSettings extends Fragment_Base {
 	public void doPopulateTest() {
 		Player[] players = {
 				new Player(database(), "mike c", "Michael", "Cannamela", true, false, true, false,
-                        170, 70, getResources().getColor(R.color.SaddleBrown), true, null),
+                        170, 70, ContextCompat.getColor(context, R.color.SaddleBrown), true, null),
 				new Player(database(), "samu", "Erin", "Arai", true, false, true, false,
-						160, 50, getResources().getColor(R.color.BlanchedAlmond), false, null),
+						160, 50, ContextCompat.getColor(context, R.color.BlanchedAlmond), false, null),
 				new Player(database(), "king tut", "Matt", "Tuttle", true, false, true, false,
-                        182, 63, getResources().getColor(R.color.CornflowerBlue), false, null),
+                        182, 63, ContextCompat.getColor(context, R.color.CornflowerBlue), false, null),
 				new Player(database(), "dru", "andrew", "o'brien", true, false, true,
-						false, 182, 63, getResources().getColor(R.color.DarkOrange), false, null),
+						false, 182, 63, ContextCompat.getColor(context, R.color.DarkOrange), false, null),
 				new Player(database(), "murder", "matt", "miguez", true, false, true,
-						false, 182, 63, getResources().getColor(R.color.FireBrick), false, null),
+						false, 182, 63, ContextCompat.getColor(context, R.color.FireBrick), false, null),
 				new Player(database(), "juice", "julian", "spring", false, true, true,
-						false, 182, 63, getResources().getColor(R.color.Goldenrod), false, null),
+						false, 182, 63, ContextCompat.getColor(context, R.color.Goldenrod), false, null),
 				new Player(database(), "freeeedom", "mike", "freeman", true, false, true,
-						false, 182, 63, getResources().getColor(R.color.HotPink), false, null),
+						false, 182, 63, ContextCompat.getColor(context, R.color.HotPink), false, null),
 				new Player(database(), "pilip", "phillip", "anderson", false, true, true, false,
-						182, 63, getResources().getColor(R.color.Green), true, null),
+						182, 63, ContextCompat.getColor(context, R.color.Green), true, null),
 				new Player(database(), "sukes appeal", "jon", "sukovich", true, false, true, false,
-                        182, 63, getResources().getColor(R.color.Khaki), false, null)
+                        182, 63, ContextCompat.getColor(context, R.color.Khaki), false, null)
         };
         for (Player p : players) {
             p.update();
@@ -259,7 +260,7 @@ public class DbSettings extends Fragment_Base {
                 new Session(database(), "Test Single Elim Session", SessionType.SNGL_ELIM,
                         GameSubtype.POLISH_HORSESHOES, 1, venues[2], members, true),
                 new Session(database(), "Test Double Elim Session", SessionType.DBL_ELIM,
-                        GameSubtype.EIGHTBALL, 1, venues[0], members, false)
+                        GameSubtype.BILLIARDS_EIGHTBALL, 1, venues[0], members, false)
         };
         for (Session s : sessions) {
             s.update();
