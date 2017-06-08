@@ -71,13 +71,16 @@ public class Team extends CouchDocumentBase {
     }
 
     public static Team findByName(Database database, String name) throws CouchbaseLiteException {
-        Query query = database.getView("team-names").createQuery();
-        query.setStartKey(name);
-        query.setEndKey(name);
-        QueryEnumerator result = query.run();
+        List<Object> key_filter = new ArrayList<>();
+        for (int i : getTeamSizes(database)) {
+            key_filter.add(Arrays.asList(i, true, name));
+            key_filter.add(Arrays.asList(i, false, name));
+        }
 
-        if (result.hasNext()) {
-            return Team.getFromId(database, result.next().getDocumentId());
+        List<Team> result = getAll(database, key_filter);
+
+        if (result.size() == 1) {
+            return result.get(0);
         } else {
             return null;
         }
@@ -87,11 +90,11 @@ public class Team extends CouchDocumentBase {
             CouchbaseLiteException {
         List<Team> teams = new ArrayList<>();
 
-        Query query = database.getView("team-names").createQuery();
+        Query query = database.getView("teams").createQuery();
         query.setKeys(key_filter);
         QueryEnumerator rows = query.run();
-        for (Iterator<QueryRow> it = rows; it.hasNext();) {
-            QueryRow row = it.next();
+        for (; rows.hasNext();) {
+            QueryRow row = rows.next();
             teams.add(getFromId(database, row.getDocumentId()));
         }
         return teams;
@@ -101,21 +104,34 @@ public class Team extends CouchDocumentBase {
         return getAll(database, null);
     }
 
-    public static List<Team> getTeams(Database database, boolean active,
+    public static List<Team> getTeams(Database database, int team_size, boolean active,
                                       boolean only_favorite) throws CouchbaseLiteException {
-        List<Object> key_filter = new ArrayList<>();
+        List<Team> teams = new ArrayList<>();
 
-        Query query = database.getView("team-act.fav").createQuery();
-        query.setStartKey(Arrays.asList(active, only_favorite));
-        query.setEndKey(Arrays.asList(active, QUERY_END));
-        QueryEnumerator filter = query.run();
-        for (Iterator<QueryRow> it = filter; it.hasNext(); ) {
-            QueryRow row = it.next();
-            // key_filter.add(row.getDocumentId());
-            String key_id = row.getDocumentId();
-            key_filter.add(getFromId(database, key_id).getName());
+        Query query = database.getView("teams").createQuery();
+        query.setStartKey(Arrays.asList(team_size, active, ""));
+        query.setEndKey(Arrays.asList(team_size, active, QUERY_END));
+        QueryEnumerator rows = query.run();
+        for (; rows.hasNext(); ) {
+            QueryRow row = rows.next();
+            if ((boolean) row.getValue() || !only_favorite) {
+                teams.add(getFromId(database, row.getDocumentId()));
+            }
         }
-        return getAll(database, key_filter);
+        return teams;
+    }
+
+    public static List<Integer> getTeamSizes(Database database) throws CouchbaseLiteException {
+        List<Integer> team_sizes = new ArrayList<>();
+        Query query = database.getView("teams").createQuery();
+        query.setGroupLevel(1);
+        QueryEnumerator rows = query.run();
+        for (; rows.hasNext(); ) {
+            QueryRow row = rows.next();
+            team_sizes.add(((List<Integer>) row.getKey()).get(0));
+        }
+
+        return team_sizes;
     }
 
     // Other methods
@@ -172,14 +188,6 @@ public class Team extends CouchDocumentBase {
     }
 
     public static boolean exists(Database database, String name) throws CouchbaseLiteException {
-        if (name == null) {
-            return false;
-        }
-        Query query = database.getView("team-names").createQuery();
-        query.setStartKey(name);
-        query.setEndKey(name);
-        QueryEnumerator result = query.run();
-
-        return result.hasNext();
+        return (name != null) && (findByName(database, name) != null);
     }
 }

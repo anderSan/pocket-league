@@ -68,6 +68,14 @@ public class Player extends Team { //implements Comparable<Player> {
         super(document);
     }
 
+    @Override
+    public void update() {
+        if (getSize() == 0 && document != null) {
+            content.put(MEMBER_IDS, Arrays.asList(getId()));
+        }
+        super.update();
+    }
+
     // Static database methods
     public static Player getFromId(Database database, String id) {
         Document document = database.getDocument(id);
@@ -221,11 +229,6 @@ public class Player extends Team { //implements Comparable<Player> {
     // =========================================================================
     // Additional methods
     // =========================================================================
-
-    @Override
-    public int getSize() {
-        return 1;
-    }
 
     public String getDisplayName() {
         return getFirstName() + " \"" + getName() + "\" " + getLastName();

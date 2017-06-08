@@ -102,7 +102,7 @@ public class List_Teams extends Fragment_TopList {
     private List<Team> getTeams() {
         List<Team> teams = new ArrayList<>();
         try {
-            teams = Team.getTeams(database(), show_actives, show_favorites);
+            teams = Team.getTeams(database(), 1, show_actives, show_favorites);
         } catch (CouchbaseLiteException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             loge("Retrieval of teams failed. ", e);

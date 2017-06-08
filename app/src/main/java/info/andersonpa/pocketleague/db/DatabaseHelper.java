@@ -80,7 +80,7 @@ public class DatabaseHelper {
 
     private void createCouchViews() {
         View cvPlayers = database.getView("players");
-        cvPlayers.setMap(baseMap(Player.TYPE, null, null), "1");
+        cvPlayers.setMap(baseMap(Player.TYPE, null, "none"), "1");
 
         View cvSessionNames = database.getView("session-names");
         cvSessionNames.setMap(mapField(Session.TYPE, null, Session.NAME), "1");
@@ -88,14 +88,11 @@ public class DatabaseHelper {
         View cvSessionActFav = database.getView("session-act.fav");
         cvSessionActFav.setMap(mapGameActFav(Session.TYPE), "1");
 
-        View cvTeamNames = database.getView("team-names");
-        cvTeamNames.setMap(mapField(Team.TYPE, Player.TYPE, Team.NAME), "1");
-
-        View cvTeamActFav = database.getView("team-act.fav");
-        cvTeamActFav.setMap(mapActFav(Team.TYPE), "1");
+        View cvTeams = database.getView("teams");
+        cvTeams.setMap(baseMap(Team.TYPE, Player.TYPE, "team_size"), "1");
 
         View cvVenues = database.getView("venues");
-        cvVenues.setMap(baseMap(Venue.TYPE, null, null), "1");
+        cvVenues.setMap(baseMap(Venue.TYPE, null, "none"), "1");
     }
 
     private Mapper baseMap(final String type_string, final String alt_type, final String lead_key) {
@@ -107,8 +104,16 @@ public class DatabaseHelper {
                         type_string.equals(type) || alt_type.equals(type);
                 if (matched) {
                     List<Object> keys = new ArrayList<>();
-                    if (lead_key != null) {
-                        keys.add(document.get(lead_key));
+                    switch (lead_key) {
+                        case "team_size": {
+                            Integer team_size = ((List<String>) document.get(Team.MEMBER_IDS)).size() ;
+                            keys.add(team_size);
+                        }
+                        break;
+                        case "game_type": {
+//                            keys.add(document.get("is_active"));
+                        }
+                        break;
                     }
                     keys.add(document.get("is_active"));
                     keys.add(document.get("name"));
