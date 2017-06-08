@@ -26,6 +26,10 @@ import static org.junit.Assert.assertFalse;
 public class SessionDbTest extends DbBaseTestCase {
     private Session s1;
     private Session s2;
+    private Session s3;
+    private Session s4;
+    private Session s5;
+    private Session s6;
     private SessionMember sm1;
     private SessionMember sm2;
     private Team t1;
@@ -55,6 +59,16 @@ public class SessionDbTest extends DbBaseTestCase {
         s2 = new Session(database, "Other session name", SessionType.LADDER, GameSubtype.GOLF, 2,
                 v1, Arrays.asList(sm1, sm2), true);
         s2.update();
+        s3 = new Session(database, "Tourney", SessionType.SNGL_ELIM, GameSubtype.GOLF, 1, v1, Arrays.asList(sm1, sm2), false);
+        s3.setIsActive(false);
+        s3.update();
+        s4 = new Session(database, "Dbl Tourney", SessionType.DBL_ELIM, GameSubtype.GOLF, 1, v1, Arrays.asList(sm1, sm2), true);
+        s4.setIsActive(false);
+        s4.update();
+        s5 = new Session(database, "Laddie", SessionType.LADDER, GameSubtype.GOLF, 1, v1, Arrays.asList(sm1, sm2), true);
+        s5.update();
+        s6 = new Session(database, "TourneyGp", SessionType.GROUP_STAGE, GameSubtype.GOLF, 1, v1, Arrays.asList(sm1, sm2), false);
+        s6.update();
     }
 
     @Test
@@ -77,41 +91,75 @@ public class SessionDbTest extends DbBaseTestCase {
         assertEquals(2, members.size());
         assertEquals(t1, members.get(0).getTeam());
         assertEquals(t2, members.get(1).getTeam());
+        assertEquals("Other session name", s2.getName());
     }
 
     @Test
     public void testFindByName() throws Exception {
-        Session s = Session.findByName(database, "Bogus session name");
+        Session s = Session.findByName(database, GameSubtype.BADMINTON, "Bogus session name");
+        assertNull(s);
+        s = Session.findByName(database, GameSubtype.GOLF, "Bogus session name");
+        assertNull(s);
+        s = Session.findByName(database, GameSubtype.CARDS_SPADES, "Other session name");
         assertNull(s);
 
-        s = Session.findByName(database, "Session name");
+        s = Session.findByName(database, GameSubtype.GOLF, "Laddie");
         assertNotNull(s);
-        assertEquals(s.getId(), s1.getId());
-        assertEquals(s.document.getCurrentRevisionId(), s1.document.getCurrentRevisionId());
+        assertEquals(s5.getId(), s.getId());
+        assertEquals(s5.document.getCurrentRevisionId(), s.document.getCurrentRevisionId());
+        assertEquals("Laddie", s.getName());
     }
 
     @Test
     public void testGetAllSessions() throws Exception {
         List<Session> all_sessions = Session.getAllSessions(database);
-        assertEquals(2, all_sessions.size());
+        assertEquals(6, all_sessions.size());
     }
 
     @Test
     public void testGetSessions() throws Exception {
-        List<Session> all_sessions = Session.getSessions(database, GameType.GOLF, true, true);
-        assertEquals(1, all_sessions.size());
+        List<Session> all_sessions = Session.getSessions(database, GameSubtype.GOLF, false, false);
+        assertEquals(2, all_sessions.size());
         assertEquals(GameType.GOLF, all_sessions.get(0).getGameType());
-        assertTrue(all_sessions.get(0).getIsActive());
-        assertTrue(all_sessions.get(0).getIsFavorite());
+        assertEquals("Dbl Tourney", all_sessions.get(0).getName());
+        assertEquals("Tourney", all_sessions.get(1).getName());
 
-        all_sessions = Session.getSessions(database, GameType.BILLIARDS, true, true);
+        all_sessions = Session.getSessions(database, GameSubtype.BILLIARDS_EIGHTBALL, false, false);
         assertEquals(0, all_sessions.size());
+    }
 
-        all_sessions = Session.getSessions(database, GameType.BILLIARDS, true, false);
+    @Test
+    public void testGetSessionsActive() throws Exception {
+        List<Session> all_sessions = Session.getSessions(database, GameSubtype.GOLF, true, false);
+        assertEquals(3, all_sessions.size());
+        assertEquals("Laddie", all_sessions.get(0).getName());
+        assertEquals("Other session name", all_sessions.get(1).getName());
+        assertEquals("TourneyGp", all_sessions.get(2).getName());
+
+        all_sessions = Session.getSessions(database, GameSubtype.BILLIARDS_EIGHTBALL, true, false);
         assertEquals(1, all_sessions.size());
-        assertEquals(GameType.BILLIARDS, all_sessions.get(0).getGameType());
-        assertTrue(all_sessions.get(0).getIsActive());
-        assertFalse(all_sessions.get(0).getIsFavorite());
+        assertEquals("Session name", all_sessions.get(0).getName());
+    }
+
+    @Test
+    public void testGetSessionsFavorite() throws Exception {
+        List<Session> all_sessions = Session.getSessions(database, GameSubtype.GOLF, false, true);
+        assertEquals(1, all_sessions.size());
+        assertEquals("Dbl Tourney", all_sessions.get(0).getName());
+
+        all_sessions = Session.getSessions(database, GameSubtype.BILLIARDS_EIGHTBALL, false, true);
+        assertEquals(0, all_sessions.size());
+    }
+
+    @Test
+    public void testGetSessionsActiveFavorite() throws Exception {
+        List<Session> all_sessions = Session.getSessions(database, GameSubtype.GOLF, true, true);
+        assertEquals(2, all_sessions.size());
+        assertEquals("Laddie", all_sessions.get(0).getName());
+        assertEquals("Other session name", all_sessions.get(1).getName());
+
+        all_sessions = Session.getSessions(database, GameSubtype.BILLIARDS_EIGHTBALL, true, true);
+        assertEquals(0, all_sessions.size());
     }
 
     @Test

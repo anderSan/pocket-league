@@ -71,14 +71,14 @@ public class Session extends CouchDocumentBase {
         return new Session(document);
     }
 
-    static Session findByName(Database database, String name) throws CouchbaseLiteException {
-        Query query = database.getView("session-names").createQuery();
-        query.setStartKey(name);
-        query.setEndKey(name);
-        QueryEnumerator result = query.run();
+    static Session findByName(Database database, GameSubtype game_subtype, String name) throws CouchbaseLiteException {
+        List<Object> key_filter = new ArrayList<>();
+        key_filter.add(Arrays.asList(game_subtype, true, name));
+        key_filter.add(Arrays.asList(game_subtype, false, name));
+        List<Session> result = getAll(database, key_filter);
 
-        if (result.hasNext()) {
-            return Session.getFromId(database, result.next().getDocumentId());
+        if (result.size() == 1) {
+            return result.get(0);
         } else {
             return null;
         }
@@ -88,7 +88,7 @@ public class Session extends CouchDocumentBase {
             CouchbaseLiteException {
         List<Session> sessions = new ArrayList<>();
 
-        Query query = database.getView("session-names").createQuery();
+        Query query = database.getView("sessions").createQuery();
         query.setKeys(key_filter);
         QueryEnumerator rows = query.run();
         for (; rows.hasNext();) {
@@ -102,26 +102,22 @@ public class Session extends CouchDocumentBase {
         return getAll(database, null);
     }
 
-    public static List<Session> getSessions(Database database, GameType current_game_type,
+    public static List<Session> getSessions(Database database, GameSubtype game_subtype,
                                             boolean active, boolean only_favorite)
             throws CouchbaseLiteException {
-        List<Object> key_filter = new ArrayList<>();
+        List<Session> sessions = new ArrayList<>();
 
-        Query query = database.getView("session-act.fav").createQuery();
-        query.setStartKey(Arrays.asList(current_game_type.name(), active, only_favorite));
-        query.setEndKey(Arrays.asList(current_game_type.name(), active, QUERY_END));
-        QueryEnumerator filter = query.run();
-        for (; filter.hasNext(); ) {
-            QueryRow row = filter.next();
-            // key_filter.add(row.getDocumentId());
-            String key_id = row.getDocumentId();
-            key_filter.add(getFromId(database, key_id).getName());
+        Query query = database.getView("sessions").createQuery();
+        query.setStartKey(Arrays.asList(game_subtype, active, ""));
+        query.setEndKey(Arrays.asList(game_subtype, active, QUERY_END));
+        QueryEnumerator rows = query.run();
+        for (; rows.hasNext(); ) {
+            QueryRow row = rows.next();
+            if ((boolean) row.getValue() || !only_favorite) {
+                sessions.add(getFromId(database, row.getDocumentId()));
+            }
         }
-        if (key_filter.size() > 0) {
-            return getAll(database, key_filter);
-        } else {
-            return new ArrayList<>();
-        }
+        return sessions;
     }
 
     // Other methods

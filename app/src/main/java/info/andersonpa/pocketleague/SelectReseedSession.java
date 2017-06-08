@@ -47,7 +47,7 @@ public class SelectReseedSession extends Fragment_Edit {
         try {
             sessions.clear();
             sessionNames.clear();
-            sessions.addAll(Session.getSessions(database(), mData.getCurrentGameType(), true, false));
+            sessions.addAll(Session.getSessions(database(), mData.getCurrentGameSubtype(), true, false));
             for (Session s : sessions) {
                 sessionNames.add(s.getName());
             }

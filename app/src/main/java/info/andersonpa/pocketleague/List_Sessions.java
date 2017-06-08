@@ -105,7 +105,7 @@ public class List_Sessions extends Fragment_TopList {
     private List<Session> getSessions() {
         List<Session> sessions = new ArrayList<>();
         try {
-            sessions = Session.getSessions(database(), mData.getCurrentGameType(), show_actives, show_favorites);
+            sessions = Session.getSessions(database(), mData.getCurrentGameSubtype(), show_actives, show_favorites);
         } catch (CouchbaseLiteException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             loge("Retrieval of sessions failed. ", e);
