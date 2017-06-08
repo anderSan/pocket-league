@@ -80,10 +80,7 @@ public class DatabaseHelper {
 
     private void createCouchViews() {
         View cvPlayers = database.getView("players");
-        cvPlayers.setMap(mapPField(Player.TYPE, null, null), "1");
-
-        View cvPlayerActFav = database.getView("player-act.fav");
-        cvPlayerActFav.setMap(mapActFav(Player.TYPE), "1");
+        cvPlayers.setMap(baseMap(Player.TYPE, null, null), "1");
 
         View cvSessionNames = database.getView("session-names");
         cvSessionNames.setMap(mapField(Session.TYPE, null, Session.NAME), "1");
@@ -95,16 +92,13 @@ public class DatabaseHelper {
         cvTeamNames.setMap(mapField(Team.TYPE, Player.TYPE, Team.NAME), "1");
 
         View cvTeamActFav = database.getView("team-act.fav");
-        cvTeamActFav.setMapReduce(mapActFav(Team.TYPE), null, "1");
+        cvTeamActFav.setMap(mapActFav(Team.TYPE), "1");
 
-        View cvVenueNames = database.getView("venue-names");
-        cvVenueNames.setMapReduce(mapField(Venue.TYPE, null, Venue.NAME), null, "1");
-
-        View cvVenueActFav = database.getView("venue-act.fav");
-        cvVenueActFav.setMapReduce(mapActFav(Venue.TYPE), null, "1");
+        View cvVenues = database.getView("venues");
+        cvVenues.setMap(baseMap(Venue.TYPE, null, null), "1");
     }
 
-    private Mapper mapPField(final String type_string, final String alt_type, final String lead_key) {
+    private Mapper baseMap(final String type_string, final String alt_type, final String lead_key) {
         return new Mapper() {
             @Override
             public void map(Map<String, Object> document, Emitter emitter) {
