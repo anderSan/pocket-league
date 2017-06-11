@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
@@ -48,7 +49,7 @@ public class Game {
     public int ruleset_id;
 
     @DatabaseField(canBeNull = false)
-    public boolean first_on_top;
+    public boolean first_on_left;
 
     @DatabaseField(canBeNull = false)
     private Date date_played;
@@ -74,15 +75,10 @@ public class Game {
         this.member_2_id = member_2_id;
         this.ruleset_id = ruleset_id;
         this.date_played = date_played;
-
     }
 
     public Game(String pl_id, long member_1_id, long member_2_id, int ruleset_id) {
-        this.pocketleague_id = pl_id;
-        this.member_1_id = member_1_id;
-        this.member_2_id = member_2_id;
-        this.ruleset_id = ruleset_id;
-        this.date_played = new Date();
+        this(pl_id, member_1_id, member_2_id, ruleset_id, new Date());
     }
 
     public static Dao<Game, Long> getDao(Context context) {
@@ -109,8 +105,7 @@ public class Game {
         boolean isValid = true;
         int idx = t.throwIdx;
         switch (idx % 2) {
-            // TODO: do players need to be refreshed now that foreign variable is
-            // used?
+            // TODO: do players need to be refreshed now that foreign variable is used?
             // first player is on offense
             case 0:
                 isValid = isValid && (t.getOffensiveTeamId() == member_1_id);
@@ -282,7 +277,11 @@ public class Game {
         values.put("t1_score", member_1_score);
         values.put("t2_score", member_2_score);
 
-        context.getContentResolver().update(uri, values, null, null);
+        try {
+            context.getContentResolver().update(uri, values, null, null);
+        } catch (Exception e) {
+            Log.e("No Content Provider", "setIsComplete: ", e);
+        }
     }
 
     public void checkGameComplete(Context context) {

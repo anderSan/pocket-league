@@ -19,9 +19,7 @@ public final class RuleType {
     public static final int rs02 = 2;
 
     public static final Map<Integer, RuleSet> map = new HashMap<Integer, RuleSet>() {
-        /**
-         *
-         */
+
         private static final long serialVersionUID = 1L;
 
         {

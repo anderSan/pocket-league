@@ -13,5 +13,4 @@ public final class ThrowResult {
         return typeString[throwResult];
     }
 
-
 }

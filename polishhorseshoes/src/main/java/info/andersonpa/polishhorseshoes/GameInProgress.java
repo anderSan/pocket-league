@@ -30,6 +30,13 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.j256.ormlite.dao.Dao;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import info.andersonpa.polishhorseshoes.backend.ActiveGame;
 import info.andersonpa.polishhorseshoes.backend.Activity_Base;
 import info.andersonpa.polishhorseshoes.backend.ThrowTableFragment;
@@ -38,12 +45,6 @@ import info.andersonpa.polishhorseshoes.db.Throw;
 import info.andersonpa.polishhorseshoes.enums.DeadType;
 import info.andersonpa.polishhorseshoes.enums.ThrowResult;
 import info.andersonpa.polishhorseshoes.enums.ThrowType;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 public class GameInProgress extends Activity_Base implements ThrowTableFragment
         .OnTableRowClickedListener {
@@ -491,24 +492,33 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
                 .authority("info.andersonpa.pocketleague.provider").appendPath("game")
                 .appendPath(gId).build();
-        cursor = getContentResolver().query(pl_uri, null, null, null, null);
-        cursor.moveToFirst();
+        try {
+            cursor = getContentResolver().query(pl_uri, null, null, null, null);
+            cursor.moveToFirst();
+            session_name = cursor.getString(cursor.getColumnIndex("session_name"));
+            venue_name = cursor.getString(cursor.getColumnIndex("venue_name"));
 
-        session_name = cursor.getString(cursor.getColumnIndex("session_name"));
-        venue_name = cursor.getString(cursor.getColumnIndex("venue_name"));
+            cursor.close();
 
-        cursor.close();
+            pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+                    .authority("info.andersonpa.pocketleague.provider").appendPath("game_member")
+                    .appendPath(gId).build();
+            cursor = getContentResolver().query(pl_uri, null, null, null, null);
+            while (cursor.moveToNext()) {
+                gm_ids[cursor.getPosition()] = 0; //cursor.getLong(cursor.getColumnIndex("id"));
+                team_names[cursor.getPosition()] = cursor.getString(cursor.getColumnIndex("team_name"));
+            }
 
-        pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-                .authority("info.andersonpa.pocketleague.provider").appendPath("game_member")
-                .appendPath(gId).build();
-        cursor = getContentResolver().query(pl_uri, null, null, null, null);
-        while (cursor.moveToNext()) {
-            gm_ids[cursor.getPosition()] = 0; //cursor.getLong(cursor.getColumnIndex("id"));
-            team_names[cursor.getPosition()] = cursor.getString(cursor.getColumnIndex("team_name"));
+            cursor.close();
+        } catch (Exception e){
+            loge("No Content Provider: ", e);
+            session_name = "No session name";
+            venue_name = "No venue";
+            team_names[0] = "Team1";
+            team_names[1] = "Team2";
+            gm_ids[0] = 0;
+            gm_ids[1] = 0;
         }
-
-        cursor.close();
 
         int testRuleSetId = 1;
         ag = new ActiveGame(gId, gm_ids[0], gm_ids[1], this, testRuleSetId);
@@ -703,7 +713,6 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         refreshUI();
 
         int idx = ag.getActiveIdx();
-        assert idx == newActiveIdx; // validation
 
         // try to render the throw table
         try {
@@ -742,7 +751,7 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
             deadViews[uiThrow.deadType - 1].setBackgroundColor(Color.RED);
         }
 
-        TextView tv = null;
+        TextView tv;
         int hp1, hp2;
 
         hp1 = uiThrow.initialOffensivePlayerHitPoints;
