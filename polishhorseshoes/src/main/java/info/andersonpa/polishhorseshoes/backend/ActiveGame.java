@@ -34,21 +34,22 @@ public class ActiveGame {
         gDao = Game.getDao(context);
         tDao = Throw.getDao(context);
 
-        if (gId != "") {
+        if (gId.equals("")) {
             try {
-                g = gDao.queryBuilder().where().eq(Game.POCKETLEAGUE_ID, gId).queryForFirst();
+//                g = gDao.queryBuilder().where().eq(Game.POCKETLEAGUE_ID, gId).queryForFirst();
 
                 if (g == null) {
                     Log.i("ActiveGame", "No game found, creating a new one");
                     g = new Game(gId, p1Id, p2Id, testRuleSetId);
-                    gDao.create(g);
+//                    gDao.create(g);
                 } else {
                     Log.i("ActiveGame", "Game ID is:" + g.getPlId());
                 }
 
                 tArray = g.getThrowList(context);
             } catch (SQLException e) {
-                throw new RuntimeException("couldn't get throws for game " + g.getPlId() + ": ", e);
+//                throw new RuntimeException("couldn't get throws for game " + g.getPlId() + ": ", e);
+                throw new RuntimeException("couldn't get throws for game: ", e);
             }
 
             ruleSet = RuleType.map.get(g.ruleset_id);
@@ -112,7 +113,7 @@ public class ActiveGame {
 
     private ArrayList<Long> getThrowIds() {
         HashMap<String, Object> m;
-        List<Throw> tList = new ArrayList<>();
+        List<Throw> tList;
         ArrayList<Long> throwIds = new ArrayList<>();
         int cnt = 0;
         try {
@@ -144,12 +145,10 @@ public class ActiveGame {
             throw new RuntimeException("must have positive throw index, not: " + idx);
         } else if (idx >= 0 && idx < nThrows()) {
             t.throwIdx = idx;
-            assert g.isValidThrow(t) : "invalid throw for index " + idx;
             t = tArray.set(idx, t);
             saveThrow(t);
         } else if (idx == nThrows()) {
             t.throwIdx = idx;
-            assert g.isValidThrow(t) : "invalid throw for index " + idx;
             tArray.add(t);
             saveThrow(t);
         } else if (idx > nThrows()) {
@@ -236,7 +235,7 @@ public class ActiveGame {
     private void saveThrow(Throw t) {
         if (g != null) {
             HashMap<String, Object> m = t.getQueryMap();
-            List<Throw> tList = new ArrayList<>();
+            List<Throw> tList;
             try {
                 tList = tDao.queryForFieldValuesArgs(m);
             } catch (SQLException e) {
@@ -245,10 +244,8 @@ public class ActiveGame {
             }
             try {
                 if (tList.isEmpty()) {
-                    assert g.isValidThrow(t) : "invalid throw for index " + t.throwIdx + ", not saving";
                     tDao.create(t);
                 } else {
-                    assert g.isValidThrow(t) : "invalid throw for index " + t.throwIdx + ", not updating";
                     t.setId(tList.get(0).getId());
                     tDao.update(t);
                 }
@@ -289,11 +286,11 @@ public class ActiveGame {
 
     public void saveGame() {
         if (g != null) {
-            try {
-                gDao.update(g);
-            } catch (SQLException e) {
-                throw new RuntimeException("Could not save game " + g.getId());
-            }
+//            try {
+//                gDao.update(g);
+//            } catch (SQLException e) {
+//                throw new RuntimeException("Could not save game " + g.getId());
+//            }
         }
     }
 }

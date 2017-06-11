@@ -132,7 +132,7 @@ public class Throw implements Comparable<Throw> {
 
     public static Dao<Throw, Long> getDao(Context context) {
         DatabaseHelper helper = new DatabaseHelper(context);
-        Dao<Throw, Long> d = null;
+        Dao<Throw, Long> d;
         try {
             d = helper.getThrowDao();
         } catch (SQLException e) {

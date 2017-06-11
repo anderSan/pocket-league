@@ -748,7 +748,7 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
             vw.setBackgroundColor(Color.LTGRAY);
         }
         if (uiThrow.deadType > 0) {
-            deadViews[uiThrow.deadType - 1].setBackgroundColor(Color.RED);
+//            deadViews[uiThrow.deadType - 1].setBackgroundColor(Color.RED);
         }
 
         TextView tv;

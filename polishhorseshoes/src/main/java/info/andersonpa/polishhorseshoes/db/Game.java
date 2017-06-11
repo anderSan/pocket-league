@@ -83,7 +83,7 @@ public class Game {
 
     public static Dao<Game, Long> getDao(Context context) {
         DatabaseHelper helper = new DatabaseHelper(context);
-        Dao<Game, Long> d = null;
+        Dao<Game, Long> d;
         try {
             d = helper.getGameDao();
         } catch (SQLException e) {
@@ -153,7 +153,7 @@ public class Game {
             }
 
             // ensure throws in correct order and complete
-            Throw t = null;
+            Throw t;
             for (int i = 0; i <= maxThrowIndex; i++) {
                 t = throwMap.get(i);
                 // infill with a caught strike if necessary
@@ -269,28 +269,28 @@ public class Game {
 
     public void setIsComplete(Context context, boolean isComplete) {
         this.is_complete = isComplete;
-        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-                .authority("info.andersonpa.pocketleague.provider").appendPath("game")
-                .appendPath(String.valueOf(pocketleague_id)).build();
-        ContentValues values = new ContentValues();
-        values.put("is_complete", isComplete);
-        values.put("t1_score", member_1_score);
-        values.put("t2_score", member_2_score);
+//        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+//                .authority("info.andersonpa.pocketleague.provider").appendPath("game")
+//                .appendPath(String.valueOf(pocketleague_id)).build();
+//        ContentValues values = new ContentValues();
+//        values.put("is_complete", isComplete);
+//        values.put("t1_score", member_1_score);
+//        values.put("t2_score", member_2_score);
 
-        try {
-            context.getContentResolver().update(uri, values, null, null);
-        } catch (Exception e) {
-            Log.e("No Content Provider", "setIsComplete: ", e);
-        }
+//        try {
+//            context.getContentResolver().update(uri, values, null, null);
+//        } catch (Exception e) {
+//            Log.e("No Content Provider", "setIsComplete: ", e);
+//        }
     }
 
     public void checkGameComplete(Context context) {
         Integer s1 = getMember1Score();
         Integer s2 = getMember2Score();
         if (Math.abs(s1 - s2) >= 2 && (s1 >= 11 || s2 >= 11)) {
-            setIsComplete(context, true);
+//            setIsComplete(context, true);
         } else {
-            setIsComplete(context, false);
+//            setIsComplete(context, false);
         }
     }
 
