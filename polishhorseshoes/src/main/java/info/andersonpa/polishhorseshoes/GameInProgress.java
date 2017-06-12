@@ -3,8 +3,6 @@ package info.andersonpa.polishhorseshoes;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,9 +11,9 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,8 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.j256.ormlite.dao.Dao;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +35,8 @@ import java.util.Locale;
 
 import info.andersonpa.polishhorseshoes.backend.ActiveGame;
 import info.andersonpa.polishhorseshoes.backend.Activity_Base;
+import info.andersonpa.polishhorseshoes.backend.Adapter_Inning;
+import info.andersonpa.polishhorseshoes.backend.Item_Inning;
 import info.andersonpa.polishhorseshoes.backend.ThrowTableFragment;
 import info.andersonpa.polishhorseshoes.backend.ThrowTableRow;
 import info.andersonpa.polishhorseshoes.db.Throw;
@@ -46,11 +44,8 @@ import info.andersonpa.polishhorseshoes.enums.DeadType;
 import info.andersonpa.polishhorseshoes.enums.ThrowResult;
 import info.andersonpa.polishhorseshoes.enums.ThrowType;
 
-public class GameInProgress extends Activity_Base implements ThrowTableFragment
-        .OnTableRowClickedListener {
-    private FragmentArrayAdapter vpAdapter;
-    private List<ThrowTableFragment> fragmentArray = new ArrayList<>(0);
-    private ViewPager vp;
+public class GameInProgress extends Activity_Base {
+    private RecyclerView rv_throws;
 
     private View[] deadViews = new View[4];
     private ImageView ivHigh;
@@ -75,8 +70,9 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
     private String venue_name;
 
     public ActiveGame ag;
-    Dao<Throw, Long> tDao;
     Throw uiThrow;
+    Adapter_Inning inning_adapter;
+    List<Item_Inning> innings = new ArrayList<>();
 
     // LISTENERS ==============================================================
     private OnValueChangeListener resultNPChangeListener = new OnValueChangeListener() {
@@ -93,6 +89,11 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
                     break;
             }
             updateActiveThrow();
+        }
+    };
+
+    private View.OnClickListener onThrowClicked = new View.OnClickListener() {
+        public void onClick(View view) {
         }
     };
 
@@ -169,21 +170,13 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         }
     };
 
-    private class MyPageChangeListener extends ViewPager.SimpleOnPageChangeListener {
-        @Override
-        public void onPageSelected(int position) {
-            super.onPageSelected(position);
-            renderPage(position, false);
-        }
-    }
-
     public void onThrowClicked(int local_throw_idx) {
-        int global_throw_idx = ThrowTableFragment.localThrowIdxToGlobal(vp.getCurrentItem(),
-                local_throw_idx);
-        if (global_throw_idx > ag.nThrows() - 1) {
-            global_throw_idx = ag.nThrows() - 1;
-        }
-        gotoThrowIdx(global_throw_idx);
+//        int global_throw_idx = ThrowTableFragment.localThrowIdxToGlobal(vp.getCurrentItem(),
+//                local_throw_idx);
+//        if (global_throw_idx > ag.nThrows() - 1) {
+//            global_throw_idx = ag.nThrows() - 1;
+//        }
+//        gotoThrowIdx(global_throw_idx);
     }
 
     public void throwTypePressed(View view) {
@@ -286,70 +279,6 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
     }
 
     // INNER CLASSES ==========================================================
-    private class FragmentArrayAdapter extends FragmentPagerAdapter {
-
-        public FragmentArrayAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentArray.size();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragmentArray.get(position);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            // tv.setText("nThrows: "+ throwsList.size());
-
-            return "Page " + String.valueOf(position + 1);
-        }
-
-    }
-
-    public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
-        private float MIN_SCALE = 0.85f;
-        private float MIN_ALPHA = 0.5f;
-
-        public void transformPage(View view, float position) {
-            int pageWidth = view.getWidth();
-            int pageHeight = view.getHeight();
-
-            if (position < -1) { // [-Infinity,-1)
-                // This page is way off-screen to the left.
-                view.setAlpha(0);
-
-            } else if (position <= 1) { // [-1,1]
-                // Modify the default slide transition to shrink the page as
-                // well
-                float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
-                float vertMargin = pageHeight * (1 - scaleFactor) / 2;
-                float horzMargin = pageWidth * (1 - scaleFactor) / 2;
-                if (position < 0) {
-                    view.setTranslationX(horzMargin - vertMargin / 2);
-                } else {
-                    view.setTranslationX(-horzMargin + vertMargin / 2);
-                }
-
-                // Scale the page down (between MIN_SCALE and 1)
-                view.setScaleX(scaleFactor);
-                view.setScaleY(scaleFactor);
-
-                // Fade the page relative to its size.
-                view.setAlpha(MIN_ALPHA + (scaleFactor - MIN_SCALE) / (1 - MIN_SCALE) * (1 -
-                        MIN_ALPHA));
-
-            } else { // (1,+Infinity]
-                // This page is way off-screen to the right.
-                view.setAlpha(0);
-            }
-        }
-    }
-
     public void OwnGoalDialog(View view) {
         final boolean[] ownGoals = uiThrow.getOwnGoals();
 
@@ -469,11 +398,15 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_in_progress);
 
+        rv_throws = (RecyclerView) this.findViewById(R.id.rv_throws_table);
+        rv_throws.setLayoutManager(new LinearLayoutManager(this));
+
         Intent intent = getIntent();
         String gId = intent.getStringExtra("GID");
-        tDao = Throw.getDao(this);
-
         fetchGameDetails(gId);
+
+        inning_adapter = new Adapter_Inning(this, innings, onThrowClicked);
+        rv_throws.setAdapter(inning_adapter);
 
         uiThrow = ag.getActiveThrow();
 
@@ -512,10 +445,10 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
             cursor.close();
         } catch (Exception e){
             loge("No Content Provider: ", e);
-            session_name = "No session name";
+            session_name = "No session";
             venue_name = "No venue";
-            team_names[0] = "Team1";
-            team_names[1] = "Team2";
+            team_names[0] = "Team 1";
+            team_names[1] = "Team 2";
             gm_ids[0] = 0;
             gm_ids[1] = 0;
         }
@@ -550,7 +483,7 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
     @Override
     protected void onResume() {
         super.onResume();
-        log("onResume(): vp's adapter has " + vpAdapter.getCount() + " items");
+//        log("onResume(): vp's adapter has " + vpAdapter.getCount() + " items");
         gotoThrowIdx(ag.getActiveIdx());
     }
 
@@ -582,20 +515,20 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         tv.setTextColor(ThrowTableRow.tableTextColor);
         tv.setTextSize(ThrowTableRow.tableTextSize);
 
-        tv = (TextView) findViewById(R.id.hitpoints_p1);
-        tv.setText("hp");
-        tv.setTextColor(ThrowTableRow.tableTextColor);
-        tv.setTextSize(ThrowTableRow.tableTextSize);
+//        tv = (TextView) findViewById(R.id.hitpoints_p1);
+//        tv.setText("hp");
+//        tv.setTextColor(ThrowTableRow.tableTextColor);
+//        tv.setTextSize(ThrowTableRow.tableTextSize);
 
         tv = (TextView) findViewById(R.id.header_p2);
         tv.setText(team_names[1]);
         tv.setTextColor(ThrowTableRow.tableTextColor);
         tv.setTextSize(ThrowTableRow.tableTextSize);
 
-        tv = (TextView) findViewById(R.id.hitpoints_p2);
-        tv.setText("hp");
-        tv.setTextColor(ThrowTableRow.tableTextColor);
-        tv.setTextSize(ThrowTableRow.tableTextSize);
+//        tv = (TextView) findViewById(R.id.hitpoints_p2);
+//        tv.setText("hp");
+//        tv.setTextColor(ThrowTableRow.tableTextColor);
+//        tv.setTextSize(ThrowTableRow.tableTextSize);
     }
 
     private void initListeners() {
@@ -663,17 +596,18 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
     }
 
     private void initTableFragments() {
-        fragmentArray.clear();
+
+//        fragmentArray.clear();
 
         // ThrowTableFragment.N_ROWS = 10;
 
-        ThrowTableFragment frag = ThrowTableFragment.newInstance(0, getApplicationContext());
-        fragmentArray.add(frag);
+//        ThrowTableFragment frag = ThrowTableFragment.newInstance(0, getApplicationContext());
+//        fragmentArray.add(frag);
 
-        vpAdapter = new FragmentArrayAdapter(getFragmentManager());
-        vp = (ViewPager) findViewById(R.id.viewPager_throwsTables);
-        vp.setAdapter(vpAdapter);
-        vp.setOnPageChangeListener(new MyPageChangeListener());
+//        vpAdapter = new FragmentArrayAdapter(getFragmentManager());
+//        vp = (ViewPager) findViewById(R.id.viewPager_throwsTables);
+//        vp.setAdapter(vpAdapter);
+//        vp.setOnPageChangeListener(new MyPageChangeListener());
         // vp.setPageTransformer(true, new ZoomOutPageTransformer());
 
         // vp.setCurrentItem(0);
@@ -687,6 +621,7 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
     void updateActiveThrow() {
         log("updateThrow(): Updating throw at idx " + ag.getActiveIdx());
         ag.updateActiveThrow(uiThrow);
+
         renderPage(getPageIdx(ag.getActiveIdx()));
         refreshUI();
     }
@@ -717,6 +652,7 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
         // try to render the throw table
         try {
             renderPage(getPageIdx(idx));
+            rv_throws.scrollToPosition(newActiveIdx/2);
             log("gotoThrow() - Changed to page " + getPageIdx(idx) + ".");
         } catch (NullPointerException e) {
             loge("gotoThrow() - Failed to change to page " + getPageIdx(idx) + ".", e);
@@ -762,10 +698,10 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
             hp1 = hp2;
             hp2 = tmp;
         }
-        tv = (TextView) findViewById(R.id.hitpoints_p1);
-        tv.setText("" + hp1);
-        tv = (TextView) findViewById(R.id.hitpoints_p2);
-        tv.setText("" + hp2);
+//        tv = (TextView) findViewById(R.id.hitpoints_p1);
+//        tv.setText("" + hp1);
+//        tv = (TextView) findViewById(R.id.hitpoints_p2);
+//        tv.setText("" + hp2);
 
     }
 
@@ -861,31 +797,33 @@ public class GameInProgress extends Activity_Base implements ThrowTableFragment
     }
 
     private void renderPage(int pidx, boolean setVpItem) {
-        ThrowTableFragment frag;
-        while (pidx >= fragmentArray.size()) {
-            frag = ThrowTableFragment.newInstance(pidx, getApplicationContext());
-            fragmentArray.add(frag);
-            vpAdapter.notifyDataSetChanged();
-        }
-        if (setVpItem) {
-            vp.setCurrentItem(pidx);
-        }
-        logd("renderPage(): vp currentitem is " + vp.getCurrentItem() + " of " + vp.getChildCount
-                () + " children");
+//        ThrowTableFragment frag;
+//        while (pidx >= fragmentArray.size()) {
+//            frag = ThrowTableFragment.newInstance(pidx, getApplicationContext());
+//            fragmentArray.add(frag);
+//            vpAdapter.notifyDataSetChanged();
+//        }
+//        if (setVpItem) {
+//            vp.setCurrentItem(pidx);
+//        }
+//        logd("renderPage(): vp currentitem is " + vp.getCurrentItem() + " of " + vp.getChildCount
+//                () + " children");
 
-        frag = fragmentArray.get(pidx);
-        logd("renderPage() - got fragment");
-        int[] range = ThrowTableFragment.throwIdxRange(pidx);
-        logd("renderPage() - got throw range");
-        frag.renderAsPage(pidx, ag.getThrows(), ag.ruleSet);
-        log("renderPage() - rendered as page " + pidx);
-        frag.clearHighlighted();
-        logd("renderPage() - cleared highlighted");
-
-        int idx = ag.getActiveIdx();
-        if (idx >= range[0] && idx < range[1]) {
-            frag.highlightThrow(idx);
-        }
+//        frag = fragmentArray.get(pidx);
+//        logd("renderPage() - got fragment");
+//        int[] range = ThrowTableFragment.throwIdxRange(pidx);
+//        logd("renderPage() - got throw range");
+//        frag.renderAsPage(pidx, ag.getThrows(), ag.ruleSet);
+//        log("renderPage() - rendered as page " + pidx);
+//        frag.clearHighlighted();
+//        logd("renderPage() - cleared highlighted");
+        innings.clear();
+        innings.addAll(ag.getInnings());
+        inning_adapter.notifyDataSetChanged();
+//        int idx = ag.getActiveIdx();
+//        if (idx >= range[0] && idx < range[1]) {
+//            frag.highlightThrow(idx);
+//        }
     }
 
     public int getThrowResultFromNP() {

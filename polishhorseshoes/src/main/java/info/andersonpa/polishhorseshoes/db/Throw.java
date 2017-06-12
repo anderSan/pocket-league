@@ -85,22 +85,22 @@ public class Throw implements Comparable<Throw> {
     public boolean isDefensiveBreakError = false;
 
     @DatabaseField
-    public int offenseFireCount = 0;
+    public Integer offenseFireCount = 0;
 
     @DatabaseField
-    public int defenseFireCount = 0;
+    public Integer defenseFireCount = 0;
 
     @DatabaseField
-    public int initialOffensivePlayerScore = 0;
+    public Integer initialOffensivePlayerScore = 0;
 
     @DatabaseField
-    public int initialDefensivePlayerScore = 0;
+    public Integer initialDefensivePlayerScore = 0;
 
     @DatabaseField
-    public int initialOffensivePlayerHitPoints = 10;
+    public Integer initialOffensivePlayerHitPoints = 10;
 
     @DatabaseField
-    public int initialDefensivePlayerHitPoints = 10;
+    public Integer initialDefensivePlayerHitPoints = 10;
 
     public String invalidMessage = "";
 

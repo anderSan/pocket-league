@@ -1,5 +1,5 @@
 #
-# generated on 2017/06/10 10:14:38
+# generated on 2017/06/11 08:31:13
 #
 # --table-start--
 dataClass=info.andersonpa.polishhorseshoes.db.Game
