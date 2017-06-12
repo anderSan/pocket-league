@@ -37,12 +37,12 @@ import info.andersonpa.polishhorseshoes.backend.ActiveGame;
 import info.andersonpa.polishhorseshoes.backend.Activity_Base;
 import info.andersonpa.polishhorseshoes.backend.Adapter_Inning;
 import info.andersonpa.polishhorseshoes.backend.Item_Inning;
-import info.andersonpa.polishhorseshoes.backend.ThrowTableFragment;
 import info.andersonpa.polishhorseshoes.backend.ThrowTableRow;
 import info.andersonpa.polishhorseshoes.db.Throw;
 import info.andersonpa.polishhorseshoes.enums.DeadType;
 import info.andersonpa.polishhorseshoes.enums.ThrowResult;
 import info.andersonpa.polishhorseshoes.enums.ThrowType;
+import info.andersonpa.polishhorseshoes.rulesets.RuleSet01;
 
 public class GameInProgress extends Activity_Base {
     private RecyclerView rv_throws;
@@ -405,16 +405,13 @@ public class GameInProgress extends Activity_Base {
         String gId = intent.getStringExtra("GID");
         fetchGameDetails(gId);
 
-        inning_adapter = new Adapter_Inning(this, innings, onThrowClicked);
+        uiThrow = ag.getActiveThrow();
+        inning_adapter = new Adapter_Inning(this, innings, new RuleSet01(), onThrowClicked);
         rv_throws.setAdapter(inning_adapter);
 
-        uiThrow = ag.getActiveThrow();
 
         initMetadata();
         initListeners();
-
-        log("onCreate(): about to create fragments");
-        initTableFragments();
     }
 
     public void fetchGameDetails(String gId) {
@@ -515,20 +512,10 @@ public class GameInProgress extends Activity_Base {
         tv.setTextColor(ThrowTableRow.tableTextColor);
         tv.setTextSize(ThrowTableRow.tableTextSize);
 
-//        tv = (TextView) findViewById(R.id.hitpoints_p1);
-//        tv.setText("hp");
-//        tv.setTextColor(ThrowTableRow.tableTextColor);
-//        tv.setTextSize(ThrowTableRow.tableTextSize);
-
         tv = (TextView) findViewById(R.id.header_p2);
         tv.setText(team_names[1]);
         tv.setTextColor(ThrowTableRow.tableTextColor);
         tv.setTextSize(ThrowTableRow.tableTextSize);
-
-//        tv = (TextView) findViewById(R.id.hitpoints_p2);
-//        tv.setText("hp");
-//        tv.setTextColor(ThrowTableRow.tableTextColor);
-//        tv.setTextSize(ThrowTableRow.tableTextSize);
     }
 
     private void initListeners() {
@@ -592,29 +579,6 @@ public class GameInProgress extends Activity_Base {
         resultNp.setValue(1);
         resultNp.setDisplayedValues(catchText);
         resultNp.setOnValueChangedListener(resultNPChangeListener);
-
-    }
-
-    private void initTableFragments() {
-
-//        fragmentArray.clear();
-
-        // ThrowTableFragment.N_ROWS = 10;
-
-//        ThrowTableFragment frag = ThrowTableFragment.newInstance(0, getApplicationContext());
-//        fragmentArray.add(frag);
-
-//        vpAdapter = new FragmentArrayAdapter(getFragmentManager());
-//        vp = (ViewPager) findViewById(R.id.viewPager_throwsTables);
-//        vp.setAdapter(vpAdapter);
-//        vp.setOnPageChangeListener(new MyPageChangeListener());
-        // vp.setPageTransformer(true, new ZoomOutPageTransformer());
-
-        // vp.setCurrentItem(0);
-        // log("initTableFragments() - Viewpager has limit of " +
-        // vp.getOffscreenPageLimit());
-        // log("initTableFragments() - fragments created, adapter has " +
-        // vpAdapter.getCount() + " items");
     }
 
     // STATE LOGIC AND PROGRAM FLOW ===========================================
@@ -622,7 +586,7 @@ public class GameInProgress extends Activity_Base {
         log("updateThrow(): Updating throw at idx " + ag.getActiveIdx());
         ag.updateActiveThrow(uiThrow);
 
-        renderPage(getPageIdx(ag.getActiveIdx()));
+        renderPage();
         refreshUI();
     }
 
@@ -645,18 +609,14 @@ public class GameInProgress extends Activity_Base {
         ag.updateActiveThrow(uiThrow); // ui -> ag
         ag.setActiveIdx(newActiveIdx); // change index
         uiThrow = ag.getActiveThrow(); // ag -> ui
+
         refreshUI();
 
         int idx = ag.getActiveIdx();
 
         // try to render the throw table
-        try {
-            renderPage(getPageIdx(idx));
-            rv_throws.scrollToPosition(newActiveIdx/2);
-            log("gotoThrow() - Changed to page " + getPageIdx(idx) + ".");
-        } catch (NullPointerException e) {
-            loge("gotoThrow() - Failed to change to page " + getPageIdx(idx) + ".", e);
-        }
+        renderPage();
+        rv_throws.scrollToPosition(newActiveIdx/2);
         ag.saveGame(); // save the game
     }
 
@@ -687,9 +647,7 @@ public class GameInProgress extends Activity_Base {
 //            deadViews[uiThrow.deadType - 1].setBackgroundColor(Color.RED);
         }
 
-        TextView tv;
         int hp1, hp2;
-
         hp1 = uiThrow.initialOffensivePlayerHitPoints;
         hp2 = uiThrow.initialDefensivePlayerHitPoints;
 
@@ -698,11 +656,8 @@ public class GameInProgress extends Activity_Base {
             hp1 = hp2;
             hp2 = tmp;
         }
-//        tv = (TextView) findViewById(R.id.hitpoints_p1);
-//        tv.setText("" + hp1);
-//        tv = (TextView) findViewById(R.id.hitpoints_p2);
-//        tv.setText("" + hp2);
 
+        inning_adapter.setCurrent_throw(uiThrow);
     }
 
     private void setThrowButtonState(int throwType, ImageView iv) {
@@ -792,38 +747,10 @@ public class GameInProgress extends Activity_Base {
         }
     }
 
-    private void renderPage(int pidx) {
-        renderPage(pidx, true);
-    }
-
-    private void renderPage(int pidx, boolean setVpItem) {
-//        ThrowTableFragment frag;
-//        while (pidx >= fragmentArray.size()) {
-//            frag = ThrowTableFragment.newInstance(pidx, getApplicationContext());
-//            fragmentArray.add(frag);
-//            vpAdapter.notifyDataSetChanged();
-//        }
-//        if (setVpItem) {
-//            vp.setCurrentItem(pidx);
-//        }
-//        logd("renderPage(): vp currentitem is " + vp.getCurrentItem() + " of " + vp.getChildCount
-//                () + " children");
-
-//        frag = fragmentArray.get(pidx);
-//        logd("renderPage() - got fragment");
-//        int[] range = ThrowTableFragment.throwIdxRange(pidx);
-//        logd("renderPage() - got throw range");
-//        frag.renderAsPage(pidx, ag.getThrows(), ag.ruleSet);
-//        log("renderPage() - rendered as page " + pidx);
-//        frag.clearHighlighted();
-//        logd("renderPage() - cleared highlighted");
+    private void renderPage() {
         innings.clear();
         innings.addAll(ag.getInnings());
         inning_adapter.notifyDataSetChanged();
-//        int idx = ag.getActiveIdx();
-//        if (idx >= range[0] && idx < range[1]) {
-//            frag.highlightThrow(idx);
-//        }
     }
 
     public int getThrowResultFromNP() {
@@ -876,25 +803,5 @@ public class GameInProgress extends Activity_Base {
         } else {
             ag.ruleSet.setThrowResult(uiThrow, ThrowResult.BROKEN);
         }
-    }
-
-    int getPageIdxMax() {
-        return ag.nThrows() / (2 * ThrowTableFragment.N_ROWS);
-    }
-
-    int getPageIdx() {
-        return getPageIdx(ag.nThrows());
-    }
-
-    int getPageIdx(int throwIdx) {
-        if (throwIdx > ag.nThrows()) {
-            throwIdx = ag.nThrows();
-        }
-        int pidx = (throwIdx) / (2 * ThrowTableFragment.N_ROWS);
-        if (pidx < 0) {
-            pidx = 0;
-        }
-        log("getPageIdx(int): Index is " + pidx + ".");
-        return pidx;
     }
 }

@@ -23,7 +23,7 @@
 		<TableRow>
 			<TextView
 				android:id="@+id/header_inning"
-				android:layout_width="50sp"
+				android:layout_width="58sp"
 				android:layout_height="fill_parent"
 				android:paddingLeft="1dp"
 				android:paddingRight="1dp"
@@ -33,21 +33,19 @@
 
 			<TextView
 				android:id="@+id/header_p1"
-				android:layout_width="75dp"
+				android:layout_width="wrap_content"
 				android:layout_margin="1dp"
+                android:layout_weight="1"
 				android:background="#fff"
 				android:gravity="center_horizontal" />
 
             <TextView
 				android:id="@+id/header_p2"
-				android:layout_width="75dp"
+				android:layout_width="wrap_content"
 				android:layout_margin="1dp"
+                android:layout_weight="1"
 				android:background="#fff"
 				android:gravity="center_horizontal" />
-
-            <TextView
-				android:gravity="center_horizontal"
-				android:layout_margin="1dp" />
 		</TableRow>
 	</TableLayout>
 
@@ -55,6 +53,7 @@
         android:id="@+id/rv_throws_table"
         android:layout_width="match_parent"
         android:layout_height="160dp"
+        android:layout_marginBottom="5dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/scoreTable_header"
         />
