@@ -122,7 +122,7 @@ public class ThrowTableRow extends TableRow {
         // inning
         updateInning(t);
         // p1 throw
-        if (t.throwIdx % 2 == 0) {
+        if (t.getThrowIdx() % 2 == 0) {
             updateP1Text(t, rs);
         }
         // p2 throw
@@ -134,7 +134,7 @@ public class ThrowTableRow extends TableRow {
     protected void updateInning(Throw t) {
         NumberFormat formatter = new DecimalFormat("   ");
         // String inning = formatter.format(t.getThrowIdx()/2 + 1);
-        String inning = String.valueOf(t.throwIdx / 2 + 1);
+        String inning = String.valueOf(t.getThrowIdx() / 2 + 1);
         getInningView().setText(inning);
     }
 

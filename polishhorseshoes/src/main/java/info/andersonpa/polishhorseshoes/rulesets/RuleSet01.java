@@ -98,7 +98,7 @@ public class RuleSet01 extends RuleSet00 {
 
         // defensive error will also quench
         boolean quenches = isDefensiveError(t) || fireHit || broken || defFail;
-        Log.i("QuenchDefense", "throw: " + t.throwIdx + ": fireHit: " + fireHit + ", " +
+        Log.i("QuenchDefense", "throw: " + t.getThrowIdx() + ": fireHit: " + fireHit + ", " +
                 "broken: " + broken + ", defFail: " + defFail + ", quenches: " + quenches);
         return quenches;
     }

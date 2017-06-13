@@ -103,7 +103,7 @@ public class Game {
 
     public boolean isValidThrow(Throw t) {
         boolean isValid = true;
-        int idx = t.throwIdx;
+        int idx = t.getThrowIdx();
         switch (idx % 2) {
             // TODO: do players need to be refreshed now that foreign variable is used?
             // first player is on offense
@@ -136,7 +136,7 @@ public class Game {
             Collections.sort(dbThrows);
 
             for (Throw t : dbThrows) {
-                tidx = t.throwIdx;
+                tidx = t.getThrowIdx();
 
                 // purge any throws with negative index
                 if (tidx < 0) {
@@ -191,7 +191,7 @@ public class Game {
         this.id = id;
     }
 
-    public String getPlId() {
+    public String getPocketLeagueId() {
         return pocketleague_id;
     }
 

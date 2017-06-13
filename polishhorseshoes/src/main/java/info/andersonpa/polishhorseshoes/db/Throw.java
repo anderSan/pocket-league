@@ -22,7 +22,7 @@ public class Throw implements Comparable<Throw> {
     private long id;
 
     @DatabaseField(canBeNull = false, uniqueCombo = true)
-    public int throwIdx;
+    private int throwIdx;
 
     @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true)
     private Game game;
@@ -154,6 +154,15 @@ public class Throw implements Comparable<Throw> {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Integer getThrowIdx() {
+        return throwIdx;
+    }
+
+    @Deprecated
+    public void setThrowIndex(int idx) {
+        throwIdx = idx;
     }
 
     public Game getGame() {

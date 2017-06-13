@@ -442,7 +442,7 @@ public class RuleSet00 implements RuleSet {
     public boolean isValid(Throw t) {
         boolean valid = true;
         t.invalidMessage = "(gameId=%d, throwIdx=%d) ";
-        t.invalidMessage = String.format(t.invalidMessage, t.getGame().getId(), t.throwIdx);
+        t.invalidMessage = String.format(t.invalidMessage, t.getGame().getId(), t.getThrowIdx());
         if (isOnFire(t)) {
             if (t.throwResult != ThrowResult.NA && t.throwResult != ThrowResult.BROKEN) {
                 valid = false;
