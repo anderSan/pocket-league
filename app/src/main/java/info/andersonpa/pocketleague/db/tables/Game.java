@@ -13,6 +13,7 @@ import java.util.Map;
 public class Game extends CouchDocumentBase {
     public static final String TYPE = "game";
     public static final String ID_IN_SESSION = "id_in_session";
+    public static final String RULESET_ID = "ruleset_id";
     public static final String SESSION_ID = "session_id";
     public static final String VENUE_ID = "venue_id";
     public static final String DATE_PLAYED = "date_played";

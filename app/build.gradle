@@ -58,6 +58,9 @@ dependencies {
 
     compile files('libs/dropbox-sync-sdk-android.jar')
     compile 'com.couchbase.lite:couchbase-lite-android:1.4.0'
+    compile ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.6@aar'){
+        transitive=true
+    }
     compile group: 'commons-io', name: 'commons-io', version: '2.0.1'
     compile project(':colorpicker')
     compile project(':gameslibrary')
