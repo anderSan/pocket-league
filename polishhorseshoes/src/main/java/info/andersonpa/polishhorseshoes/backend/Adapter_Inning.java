@@ -62,6 +62,11 @@ public class Adapter_Inning extends RecyclerView.Adapter<Adapter_Inning.ViewHold
             viewHolder.pr_pts.setText(String.valueOf(this_inning.getPR_throw().initialOffensivePlayerScore));
             rs.setThrowDrawable(this_inning.getPR_throw(), viewHolder.pr_throw);
             viewHolder.pr_marks.setText(rs.getSpecialString(this_inning.getPR_throw()));
+        } else {
+            viewHolder.pr_hp.setText("");
+            viewHolder.pr_pts.setText("");
+            viewHolder.pr_throw.setImageDrawable(null);
+            viewHolder.pr_marks.setText("");
         }
         if (this_inning.getPL_throw() == current_throw) {
             viewHolder.pl_hp.setBackgroundColor(Color.LTGRAY);
