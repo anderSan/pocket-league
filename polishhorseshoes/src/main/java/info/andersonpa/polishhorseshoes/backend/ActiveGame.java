@@ -4,10 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
-import info.andersonpa.polishhorseshoes.db.Game;
-import info.andersonpa.polishhorseshoes.db.Throw;
-import info.andersonpa.polishhorseshoes.enums.RuleType;
-import info.andersonpa.polishhorseshoes.rulesets.RuleSet;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,64 +11,105 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import info.andersonpa.polishhorseshoes.db.Game;
+import info.andersonpa.polishhorseshoes.db.Throw;
+import info.andersonpa.polishhorseshoes.enums.RuleType;
+import info.andersonpa.polishhorseshoes.rulesets.RuleSet;
+
 public class ActiveGame {
+    protected String LOGTAG = getClass().getSimpleName();
     private Context context;
     private int activeIdx;
-
     private Game g;
-
-    private ArrayList<Throw> throw_list;
+    private ArrayList<Throw> throws_list;
+    private RuleSet ruleSet;
     private List<Throw[]> innings_list = new ArrayList<>();
-
-    public RuleSet ruleSet;
-
+    private String[] team_names = new String[2];
+    private String session_name;
+    private String venue_name;
     private Dao<Game, Long> gDao;
     private Dao<Throw, Long> tDao;
 
-    public ActiveGame(String gId, long p1Id, long p2Id, Context context, int testRuleSetId) {
-        this.context = context;
+
+    public ActiveGame(Context context, String gId) {
         gDao = Game.getDao(context);
         tDao = Throw.getDao(context);
+        this.context = context;
+        g = retrieveOrCreateGame(gId);
+        ruleSet = RuleType.map.get(g.getRulesetId());
 
-        if (!"".equals(gId)) {
-            try {
-//                g = gDao.queryBuilder().where().eq(Game.POCKETLEAGUE_ID, gId).queryForFirst();
-
-                if (g == null) {
-                    Log.i("ActiveGame", "No game found, creating a new one");
-                    g = new Game(gId, p1Id, p2Id, testRuleSetId);
-//                    gDao.create(g);
-                } else {
-                    Log.i("ActiveGame", "Game ID is:" + g.getPlId());
-                }
-
-                throw_list = g.getThrowList(context);
-//                throwsToInnings(throw_list);
-            } catch (SQLException e) {
-//                throw new RuntimeException("couldn't get throws for game " + g.getPlId() + ": ", e);
-                throw new RuntimeException("couldn't get throws for game: ", e);
-            }
-
-            ruleSet = RuleType.map.get(g.ruleset_id);
-
+        try {
+            throws_list = g.getThrowList(context);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to retrieve throws for game " + g.getId() + ": ", e);
         }
 
-        activeIdx = 0;
-        if (throw_list.size() > 0) {
-            activeIdx = throw_list.size() - 1;
+        if (throws_list.size() > 0) {
+            activeIdx = throws_list.size() - 1;
+        } else {
+            activeIdx = 0;
         }
+
         updateScoresFrom(0);
     }
 
-//    private void throwsToInnings(ArrayList<Throw> throw_list) {
-//        List<Item_Inning> innings = new ArrayList<>();
-//        if (this.throw_list.size() > 0) {
-//            for (Integer i = 0; i >= this.throw_list.size() / 2; i++) {
-//                innings.add(new Item_Inning(i, this.throw_list.get(i), this.throw_list.get(i + 1)));
+    private Game retrieveOrCreateGame(String gId) {
+//        Uri pl_uri;
+//        Cursor cursor;
+        long[] gm_ids = new long[2];
+        int ruleset_id;
+
+//        pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+//                .authority("info.andersonpa.pocketleague.provider").appendPath("game")
+//                .appendPath(gId).build();
+//        try {
+//            cursor = context.getContentResolver().query(pl_uri, null, null, null, null);
+//            cursor.moveToFirst();
+//            String ruleset_str = cursor.getString(cursor.getColumnIndex("ruleset_id"));
+//            ruleset_id = Integer.valueOf(ruleset_str);
+//            session_name = cursor.getString(cursor.getColumnIndex("session_name"));
+//            venue_name = cursor.getString(cursor.getColumnIndex("venue_name"));
+//
+//            cursor.close();
+//
+//            pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+//                    .authority("info.andersonpa.pocketleague.provider").appendPath("game_member")
+//                    .appendPath(gId).build();
+//            cursor = context.getContentResolver().query(pl_uri, null, null, null, null);
+//            while (cursor.moveToNext()) {
+//                gm_ids[cursor.getPosition()] = 0; //cursor.getLong(cursor.getColumnIndex("id"));
+//                team_names[cursor.getPosition()] = cursor.getString(cursor.getColumnIndex("team_name"));
 //            }
+//            cursor.close();
+//        } catch (Exception e){
+//            loge("No Content Provider: ", e);
+            session_name = "No session";
+            venue_name = "No venue";
+            team_names[0] = "Team 1";
+            team_names[1] = "Team 2";
+            gm_ids[0] = 0;
+            gm_ids[1] = 1;
+            ruleset_id = 1;
 //        }
-//        return innings;
-//    }
+
+        try {
+            g = gDao.queryBuilder().where().eq(Game.POCKETLEAGUE_ID, gId).queryForFirst();
+        } catch (SQLException e) {
+            loge("Could not find  game: ", e);
+        }
+
+        if (g == null) {
+            try {
+                g = new Game(gId, gm_ids[0], gm_ids[1], ruleset_id);
+                gDao.create(g);
+            } catch (SQLException e) {
+                loge("Could not create game: ", e);
+            }
+        }
+
+        log("Game ID is:" + g.getPocketLeagueId());
+        return g;
+    }
 
     private Throw makeNextThrow() {
         return g.makeNewThrow(nThrows());
@@ -87,6 +124,28 @@ public class ActiveGame {
     private void setInitialScores(Throw t) {
         t.initialDefensivePlayerScore = 0;
         t.initialOffensivePlayerScore = 0;
+    }
+
+    public String getSessionName() {
+        return session_name;
+    }
+
+    public String getVenueName() {
+        return venue_name;
+    }
+
+    public String[] getTeamNames() {
+        return team_names;
+    }
+
+    public RuleSet getRuleSet() {
+        return ruleSet;
+    }
+
+    public void setRuleSet(RuleSet rs) {
+        // For testing purposes only.
+        ruleSet = rs;
+        g.setRulesetId(rs.getId());
     }
 
     public void updateScoresFrom(int idx) {
@@ -128,7 +187,7 @@ public class ActiveGame {
         ArrayList<Long> throwIds = new ArrayList<>();
         int cnt = 0;
         try {
-            for (Throw t : throw_list) {
+            for (Throw t : throws_list) {
                 m = t.getQueryMap();
                 tList = tDao.queryForFieldValuesArgs(m);
                 if (tList.isEmpty()) {
@@ -151,16 +210,24 @@ public class ActiveGame {
         setThrow(activeIdx, t);
     }
 
+    public Throw updateActiveThrowGetNext(Throw t) {
+        updateActiveThrow(t);
+        activeIdx++;
+        Throw u = getActiveThrow();
+        updateScoresFrom(activeIdx);
+        return u;
+    }
+
     public void setThrow(int idx, Throw t) {
         if (idx < 0) {
             throw new RuntimeException("must have positive throw index, not: " + idx);
         } else if (idx >= 0 && idx < nThrows()) {
-            t.throwIdx = idx;
-            t = throw_list.set(idx, t);
+            t.setThrowIndex(idx);
+            t = throws_list.set(idx, t);
             saveThrow(t);
         } else if (idx == nThrows()) {
-            t.throwIdx = idx;
-            throw_list.add(t);
+            t.setThrowIndex(idx);
+            throws_list.add(t);
             saveThrow(t);
         } else if (idx > nThrows()) {
             throw new RuntimeException("cannot set throw " + idx + " in the far future");
@@ -173,7 +240,7 @@ public class ActiveGame {
         if (idx < 0) {
             throw new RuntimeException("must have positive throw index, not: " + idx);
         } else if (idx >= 0 && idx < nThrows()) {
-            t = throw_list.get(idx);
+            t = throws_list.get(idx);
         } else if (idx == nThrows()) {
             t = makeNextThrow();
             if (idx == 0) {
@@ -183,7 +250,7 @@ public class ActiveGame {
                 setInitialScores(t, u);
             }
 
-            throw_list.add(t);
+            throws_list.add(t);
         } else if (idx > nThrows()) {
             throw new RuntimeException("cannot get throw " + idx + " from the far future");
         }
@@ -195,11 +262,11 @@ public class ActiveGame {
 
     public Throw getPreviousThrow(Throw t) {
         Throw u = null;
-        int idx = t.throwIdx;
+        int idx = t.getThrowIdx();
         if (idx <= 0) {
             throw new RuntimeException("throw " + idx + " has no predecessor");
         } else if (idx > 0 && idx <= nThrows()) {
-            u = throw_list.get(idx - 1);
+            u = throws_list.get(idx - 1);
         } else if (idx > nThrows()) {
             throw new RuntimeException("cannot get predecessor of throw " + idx + " from the far " +
                     "future");
@@ -211,21 +278,21 @@ public class ActiveGame {
     }
 
     public int nThrows() {
-        return throw_list.size();
+        return throws_list.size();
     }
 
     public ArrayList<Throw> getThrows() {
-        return throw_list;
+        return throws_list;
     }
 
     public List<Item_Inning> getInnings() {
         List<Item_Inning> innings = new ArrayList<>();
-        if (throw_list.size() > 0) {
-            for (Integer i = 0; i < throw_list.size() - 1; i=i+2) {
-                innings.add(new Item_Inning(i/2+1, throw_list.get(i), throw_list.get(i + 1)));
+        if (throws_list.size() > 0) {
+            for (Integer i = 0; i < throws_list.size() - 1; i=i+2) {
+                innings.add(new Item_Inning(i/2+1, throws_list.get(i), throws_list.get(i + 1)));
             }
-            if (throw_list.size() % 2 == 1) {
-                innings.add(new Item_Inning(throw_list.size()/2+1, throw_list.get(throw_list.size()-1), null));
+            if (throws_list.size() % 2 == 1) {
+                innings.add(new Item_Inning(throws_list.size()/2+1, throws_list.get(throws_list.size()-1), null));
             }
         }
         return innings;
@@ -288,9 +355,9 @@ public class ActiveGame {
 //                    public Void call() throws SQLException {
 //                        long id;
 //                        Throw t;
-//                        for (int i = 0; i < throw_list.size(); i++) {
+//                        for (int i = 0; i < throws_list.size(); i++) {
 //                            id = throwIds.get(i);
-//                            t = throw_list.get(i);
+//                            t = throws_list.get(i);
 //                            if (id == -1) {
 //                                tDao.create(t);
 //                            } else {
@@ -316,5 +383,17 @@ public class ActiveGame {
 //                throw new RuntimeException("Could not save game " + g.getId());
 //            }
         }
+    }
+
+    public void log(String msg) {
+        Log.i(LOGTAG, msg);
+    }
+
+    public void logd(String msg) {
+        Log.d(LOGTAG, msg);
+    }
+
+    public void loge(String msg, Exception e) {
+        Log.e(LOGTAG, msg + ": " + e.getMessage());
     }
 }

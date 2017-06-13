@@ -3,13 +3,10 @@ package info.andersonpa.polishhorseshoes;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
@@ -108,37 +105,37 @@ public class GameInProgress extends Activity_Base {
                 switch (buttonId) {
                     case R.id.gip_button_pole:
                         toggleBroken();
-                        ag.ruleSet.setThrowType(uiThrow, ThrowType.TRAP_REDEEMED);
+                        ag.getRuleSet().setThrowType(uiThrow, ThrowType.TRAP_REDEEMED);
                         break;
                     case R.id.gip_button_cup:
                         toggleBroken();
-                        ag.ruleSet.setThrowType(uiThrow, ThrowType.TRAP_REDEEMED);
+                        ag.getRuleSet().setThrowType(uiThrow, ThrowType.TRAP_REDEEMED);
                         break;
                     case R.id.gip_button_bottle:
                         toggleBroken();
-                        ag.ruleSet.setThrowType(uiThrow, ThrowType.TRAP_REDEEMED);
+                        ag.getRuleSet().setThrowType(uiThrow, ThrowType.TRAP_REDEEMED);
                         break;
                 }
             } else {
                 switch (buttonId) {
                     case R.id.gip_button_pole:
                         toggleBroken();
-                        ag.ruleSet.setThrowType(uiThrow, ThrowType.POLE);
+                        ag.getRuleSet().setThrowType(uiThrow, ThrowType.POLE);
                         break;
                     case R.id.gip_button_cup:
                         toggleBroken();
-                        ag.ruleSet.setThrowType(uiThrow, ThrowType.CUP);
+                        ag.getRuleSet().setThrowType(uiThrow, ThrowType.CUP);
                         break;
                     case R.id.gip_button_bottle:
                         toggleBroken();
-                        ag.ruleSet.setThrowType(uiThrow, ThrowType.BOTTLE);
+                        ag.getRuleSet().setThrowType(uiThrow, ThrowType.BOTTLE);
                         break;
                 }
             }
 
             switch (buttonId) {
                 case R.id.gip_button_strike:
-                    ag.ruleSet.setIsTipped(uiThrow, !uiThrow.isTipped);
+                    ag.getRuleSet().setIsTipped(uiThrow, !uiThrow.isTipped);
                     if (uiThrow.isTipped) {
                         ivStrike.getDrawable().setLevel(2);
                     } else {
@@ -186,53 +183,53 @@ public class GameInProgress extends Activity_Base {
         if (uiThrow.throwType == ThrowType.TRAP || uiThrow.throwType == ThrowType.TRAP_REDEEMED) {
             switch (buttonId) {
                 case R.id.gip_button_trap:
-                    ag.ruleSet.setThrowResult(uiThrow, getThrowResultFromNP());
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.NOT_THROWN);
+                    ag.getRuleSet().setThrowResult(uiThrow, getThrowResultFromNP());
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.NOT_THROWN);
                     ((ImageView) view).getDrawable().setLevel(0);
                     break;
                 case R.id.gip_button_bottle:
                 case R.id.gip_button_pole:
                 case R.id.gip_button_cup:
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.TRAP_REDEEMED);
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.TRAP_REDEEMED);
                     confirmThrow();
                     break;
                 default:
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.TRAP);
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.TRAP);
                     confirmThrow();
                     break;
             }
         } else {
             switch (buttonId) {
                 case R.id.gip_button_high:
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.BALL_HIGH);
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.BALL_HIGH);
                     break;
                 case R.id.gip_button_low:
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.BALL_LOW);
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.BALL_LOW);
                     break;
                 case R.id.gip_button_left:
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.BALL_LEFT);
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.BALL_LEFT);
                     break;
                 case R.id.gip_button_right:
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.BALL_RIGHT);
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.BALL_RIGHT);
                     break;
                 case R.id.gip_button_trap:
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.TRAP);
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.TRAP);
                     ((ImageView) view).getDrawable().setLevel(2);
                     break;
                 case R.id.gip_button_short:
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.SHORT);
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.SHORT);
                     break;
                 case R.id.gip_button_strike:
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.STRIKE);
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.STRIKE);
                     break;
                 case R.id.gip_button_bottle:
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.BOTTLE);
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.BOTTLE);
                     break;
                 case R.id.gip_button_pole:
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.POLE);
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.POLE);
                     break;
                 case R.id.gip_button_cup:
-                    ag.ruleSet.setThrowType(uiThrow, ThrowType.CUP);
+                    ag.getRuleSet().setThrowType(uiThrow, ThrowType.CUP);
                     break;
             }
 
@@ -249,14 +246,14 @@ public class GameInProgress extends Activity_Base {
             uiThrow.offenseFireCount = 3;
             uiThrow.defenseFireCount = 0;
             if (uiThrow.throwResult != ThrowResult.BROKEN) {
-                ag.ruleSet.setThrowResult(uiThrow, ThrowResult.NA);
+                ag.getRuleSet().setThrowResult(uiThrow, ThrowResult.NA);
             }
             if (uiThrow.throwType == ThrowType.FIRED_ON) {
-                ag.ruleSet.setThrowType(uiThrow, ThrowType.NOT_THROWN);
+                ag.getRuleSet().setThrowType(uiThrow, ThrowType.NOT_THROWN);
             }
         } else {
             uiThrow.offenseFireCount = 0;
-            ag.ruleSet.setThrowResult(uiThrow, getThrowResultFromNP());
+            ag.getRuleSet().setThrowResult(uiThrow, getThrowResultFromNP());
         }
         log("fire checked changed");
         updateActiveThrow();
@@ -268,12 +265,12 @@ public class GameInProgress extends Activity_Base {
         if (uiThrow.defenseFireCount == 0) {
             uiThrow.defenseFireCount = 3;
             uiThrow.offenseFireCount = 0;
-            ag.ruleSet.setThrowType(uiThrow, ThrowType.FIRED_ON);
+            ag.getRuleSet().setThrowType(uiThrow, ThrowType.FIRED_ON);
             confirmThrow();
         } else {
             uiThrow.defenseFireCount = 0;
-            ag.ruleSet.setThrowType(uiThrow, ThrowType.NOT_THROWN);
-            ag.ruleSet.setThrowResult(uiThrow, getThrowResultFromNP());
+            ag.getRuleSet().setThrowType(uiThrow, ThrowType.NOT_THROWN);
+            ag.getRuleSet().setThrowResult(uiThrow, getThrowResultFromNP());
             updateActiveThrow();
         }
     }
@@ -415,43 +412,8 @@ public class GameInProgress extends Activity_Base {
     }
 
     public void fetchGameDetails(String gId) {
-        Uri pl_uri;
-        Cursor cursor;
-        long[] gm_ids = new long[2];
 
-        pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-                .authority("info.andersonpa.pocketleague.provider").appendPath("game")
-                .appendPath(gId).build();
-        try {
-            cursor = getContentResolver().query(pl_uri, null, null, null, null);
-            cursor.moveToFirst();
-            session_name = cursor.getString(cursor.getColumnIndex("session_name"));
-            venue_name = cursor.getString(cursor.getColumnIndex("venue_name"));
-
-            cursor.close();
-
-            pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-                    .authority("info.andersonpa.pocketleague.provider").appendPath("game_member")
-                    .appendPath(gId).build();
-            cursor = getContentResolver().query(pl_uri, null, null, null, null);
-            while (cursor.moveToNext()) {
-                gm_ids[cursor.getPosition()] = 0; //cursor.getLong(cursor.getColumnIndex("id"));
-                team_names[cursor.getPosition()] = cursor.getString(cursor.getColumnIndex("team_name"));
-            }
-
-            cursor.close();
-        } catch (Exception e){
-            loge("No Content Provider: ", e);
-            session_name = "No session";
-            venue_name = "No venue";
-            team_names[0] = "Team 1";
-            team_names[1] = "Team 2";
-            gm_ids[0] = 0;
-            gm_ids[1] = 0;
-        }
-
-        int testRuleSetId = 1;
-        ag = new ActiveGame(gId, gm_ids[0], gm_ids[1], this, testRuleSetId);
+        ag = new ActiveGame(this, gId);
     }
 
     @Override
@@ -559,7 +521,7 @@ public class GameInProgress extends Activity_Base {
 
         tbFire = (ToggleButton) findViewById(R.id.gip_toggle_fire);
 
-        if (ag.ruleSet.useAutoFire()) {
+        if (ag.getRuleSet().useAutoFire()) {
             tbFire.setVisibility(View.GONE);
             Button bFiredOn = (Button) findViewById(R.id.gip_button_fired_on);
             bFiredOn.setVisibility(View.GONE);
@@ -791,17 +753,17 @@ public class GameInProgress extends Activity_Base {
 
     public void toggleDeadType(int deadType) {
         if (uiThrow.deadType == deadType) {
-            ag.ruleSet.setDeadType(uiThrow, DeadType.ALIVE);
+            ag.getRuleSet().setDeadType(uiThrow, DeadType.ALIVE);
         } else {
-            ag.ruleSet.setDeadType(uiThrow, deadType);
+            ag.getRuleSet().setDeadType(uiThrow, deadType);
         }
     }
 
     public void toggleBroken() {
         if (uiThrow.throwResult == ThrowResult.BROKEN) {
-            ag.ruleSet.setThrowResult(uiThrow, getThrowResultFromNP());
+            ag.getRuleSet().setThrowResult(uiThrow, getThrowResultFromNP());
         } else {
-            ag.ruleSet.setThrowResult(uiThrow, ThrowResult.BROKEN);
+            ag.getRuleSet().setThrowResult(uiThrow, ThrowResult.BROKEN);
         }
     }
 }
