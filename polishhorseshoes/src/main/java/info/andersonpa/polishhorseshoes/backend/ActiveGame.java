@@ -19,7 +19,7 @@ import info.andersonpa.polishhorseshoes.rulesets.RuleSet;
 public class ActiveGame {
     protected String LOGTAG = getClass().getSimpleName();
     private Context context;
-    private int activeIdx;
+    private int active_idx;
     private Game g;
     private ArrayList<Throw> throws_list;
     private RuleSet rs;
@@ -46,9 +46,9 @@ public class ActiveGame {
         }
 
         if (throws_list.size() > 0) {
-            activeIdx = throws_list.size() - 1;
+            active_idx = throws_list.size() - 1;
         } else {
-            activeIdx = 0;
+            active_idx = 0;
         }
 
         updateScoresFrom(0);
@@ -112,21 +112,6 @@ public class ActiveGame {
         return g;
     }
 
-    private Throw makeNextThrow() {
-        return g.makeNewThrow(nThrows());
-    }
-
-    private void setInitialScores(Throw t, Throw previousThrow) {
-        int[] scores = rs.getFinalScores(previousThrow);
-        t.initialDefensivePlayerScore = scores[0];
-        t.initialOffensivePlayerScore = scores[1];
-    }
-
-    private void setInitialScores(Throw t) {
-        t.initialDefensivePlayerScore = 0;
-        t.initialOffensivePlayerScore = 0;
-    }
-
     public String getSessionName() {
         return session_name;
     }
@@ -147,6 +132,21 @@ public class ActiveGame {
         // For testing purposes only.
         this.rs = rs;
         g.setRulesetId(rs.getId());
+    }
+
+    private Throw makeNextThrow() {
+        return g.makeNewThrow(nThrows());
+    }
+
+    private void setInitialScores(Throw t, Throw previousThrow) {
+        int[] scores = rs.getFinalScores(previousThrow);
+        t.initialDefensivePlayerScore = scores[0];
+        t.initialOffensivePlayerScore = scores[1];
+    }
+
+    private void setInitialScores(Throw t) {
+        t.initialDefensivePlayerScore = 0;
+        t.initialOffensivePlayerScore = 0;
     }
 
     public void updateScoresFrom(int idx) {
@@ -204,18 +204,18 @@ public class ActiveGame {
     }
 
     public Throw getActiveThrow() {
-        return getThrow(activeIdx);
+        return getThrow(active_idx);
     }
 
     public void updateActiveThrow(Throw t) {
-        setThrow(activeIdx, t);
+        setThrow(active_idx, t);
     }
 
     public Throw updateActiveThrowGetNext(Throw t) {
         updateActiveThrow(t);
-        activeIdx++;
+        active_idx++;
         Throw u = getActiveThrow();
-        updateScoresFrom(activeIdx);
+        updateScoresFrom(active_idx);
         return u;
     }
 
@@ -300,11 +300,11 @@ public class ActiveGame {
     }
 
     public int getActiveIdx() {
-        return activeIdx;
+        return active_idx;
     }
 
-    public void setActiveIdx(int activeIdx) {
-        this.activeIdx = activeIdx;
+    public void setActiveIdx(int idx) {
+        this.active_idx = idx;
     }
 
     public Game getGame() {

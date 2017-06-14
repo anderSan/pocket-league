@@ -19,7 +19,7 @@ public class RuleSet01 extends RuleSet00 {
 
     @Override
     public String getDescription() {
-        return "Standard ruleset with coercion and autofire";
+        return "Standard ruleset with coercion and autofire.";
     }
 
     @Override

@@ -35,7 +35,7 @@ public class RuleSet00 implements RuleSet {
     }
 
     public String getDescription() {
-        return "Standard ruleset with no coercion";
+        return "Standard ruleset with no coercion.";
     }
 
     public boolean useAutoFire() {
