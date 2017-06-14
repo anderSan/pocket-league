@@ -39,7 +39,6 @@ import info.andersonpa.polishhorseshoes.db.Throw;
 import info.andersonpa.polishhorseshoes.enums.DeadType;
 import info.andersonpa.polishhorseshoes.enums.ThrowResult;
 import info.andersonpa.polishhorseshoes.enums.ThrowType;
-import info.andersonpa.polishhorseshoes.rulesets.RuleSet01;
 
 public class GameInProgress extends Activity_Base {
     private RecyclerView rv_throws;
@@ -403,7 +402,7 @@ public class GameInProgress extends Activity_Base {
         fetchGameDetails(gId);
 
         uiThrow = ag.getActiveThrow();
-        inning_adapter = new Adapter_Inning(this, innings, new RuleSet01(), onThrowClicked);
+        inning_adapter = new Adapter_Inning(this, innings, ag.getRuleSet(), onThrowClicked);
         rv_throws.setAdapter(inning_adapter);
 
 
@@ -606,7 +605,7 @@ public class GameInProgress extends Activity_Base {
             vw.setBackgroundColor(Color.LTGRAY);
         }
         if (uiThrow.deadType > 0) {
-//            deadViews[uiThrow.deadType - 1].setBackgroundColor(Color.RED);
+            deadViews[uiThrow.deadType - 1].setBackgroundColor(Color.RED);
         }
 
         int hp1, hp2;

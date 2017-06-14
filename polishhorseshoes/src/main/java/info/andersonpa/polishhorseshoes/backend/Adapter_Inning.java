@@ -50,23 +50,30 @@ public class Adapter_Inning extends RecyclerView.Adapter<Adapter_Inning.ViewHold
     @Override
     public void onBindViewHolder(Adapter_Inning.ViewHolder viewHolder, int position) {
         Item_Inning this_inning = inning_list.get(position);
+        int[] scores;
 
         viewHolder.inning.setText(String.valueOf(this_inning.getInning()));
 
-        viewHolder.pl_hp.setText(String.valueOf(this_inning.getPL_throw().initialDefensivePlayerHitPoints));
-        viewHolder.pl_pts.setText(String.valueOf(this_inning.getPL_throw().initialDefensivePlayerScore));
         viewHolder.pl_marks.setText(rs.getSpecialString(this_inning.getPL_throw()));
         rs.setThrowDrawable(this_inning.getPL_throw(), viewHolder.pl_throw);
-        if (this_inning.pr_throw != null) {
-            viewHolder.pr_hp.setText(String.valueOf(this_inning.getPR_throw().initialOffensivePlayerHitPoints));
-            viewHolder.pr_pts.setText(String.valueOf(this_inning.getPR_throw().initialOffensivePlayerScore));
-            rs.setThrowDrawable(this_inning.getPR_throw(), viewHolder.pr_throw);
-            viewHolder.pr_marks.setText(rs.getSpecialString(this_inning.getPR_throw()));
-        } else {
-            viewHolder.pr_hp.setText("");
+        if (this_inning.pr_throw == null) {
+            scores = rs.getFinalScores(this_inning.pl_throw);
+            viewHolder.pl_pts.setText(String.valueOf(scores[0]));
+            viewHolder.pl_hp.setText(String.valueOf(this_inning.getPL_throw().initialOffensivePlayerHitPoints));
+
             viewHolder.pr_pts.setText("");
+            viewHolder.pr_hp.setText("");
             viewHolder.pr_throw.setImageDrawable(null);
             viewHolder.pr_marks.setText("");
+        } else {
+            scores = rs.getFinalScores(this_inning.pr_throw);
+            viewHolder.pl_pts.setText(String.valueOf(scores[1]));
+            viewHolder.pr_pts.setText(String.valueOf(scores[0]));
+
+            viewHolder.pr_hp.setText(String.valueOf(this_inning.getPR_throw().initialOffensivePlayerHitPoints));
+            viewHolder.pl_hp.setText(String.valueOf(this_inning.getPR_throw().initialDefensivePlayerHitPoints));
+            rs.setThrowDrawable(this_inning.getPR_throw(), viewHolder.pr_throw);
+            viewHolder.pr_marks.setText(rs.getSpecialString(this_inning.getPR_throw()));
         }
         if (this_inning.getPL_throw() == current_throw) {
             viewHolder.pl_hp.setBackgroundColor(Color.LTGRAY);

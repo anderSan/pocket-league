@@ -8,6 +8,8 @@ import info.andersonpa.polishhorseshoes.db.Throw;
 public interface RuleSet {
     int getId();
 
+    void setContext(Context context);
+
     String getDescription();
 
     boolean useAutoFire();
@@ -28,7 +30,11 @@ public interface RuleSet {
     // Scores and UI ==========================================================
     int[] getScoreDifferentials(Throw t);
 
+    int[] getHitPointDifferentials(Throw t);
+
     int[] getFinalScores(Throw t);
+
+    int[] getFinalHitPoints(Throw t);
 
     String getSpecialString(Throw t);
 

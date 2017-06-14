@@ -37,6 +37,7 @@ public class ActiveGame {
         this.context = context;
         g = retrieveOrCreateGame(gId);
         ruleSet = RuleType.map.get(g.getRulesetId());
+        ruleSet.setContext(context);
 
         try {
             throws_list = g.getThrowList(context);

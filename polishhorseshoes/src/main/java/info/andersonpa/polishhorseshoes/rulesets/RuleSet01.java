@@ -12,9 +12,6 @@ public class RuleSet01 extends RuleSet00 {
      * Standard rules with coercion and autofire.
      */
 
-    public RuleSet01() {
-    }
-
     @Override
     public int getId() {
         return 1;
