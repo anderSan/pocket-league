@@ -42,31 +42,31 @@ public class RuleSet00 implements RuleSet {
         return false;
     }
 
-    public void setThrowType(Throw t, int throwType) {
-        t.throwType = throwType;
-        if (throwType == ThrowType.FIRED_ON) {
+    public void setThrowType(Throw t, int throw_type) {
+        t.throwType = throw_type;
+        if (throw_type == ThrowType.FIRED_ON) {
             setThrowResult(t, ThrowResult.NA);
         }
     }
 
-    public void setThrowResult(Throw t, int throwResult) {
-        t.throwResult = throwResult;
+    public void setThrowResult(Throw t, int throw_result) {
+        t.throwResult = throw_result;
     }
 
-    public void setDeadType(Throw t, int deadType) {
-        t.deadType = deadType;
+    public void setDeadType(Throw t, int dead_type) {
+        t.deadType = dead_type;
     }
 
-    public void setIsTipped(Throw t, boolean isTipped) {
-        t.isTipped = isTipped;
+    public void setIsTipped(Throw t, boolean is_tipped) {
+        t.isTipped = is_tipped;
     }
 
-    public void setOwnGoals(Throw t, boolean[] ownGoals) {
-        t.setOwnGoals(ownGoals);
+    public void setOwnGoals(Throw t, boolean[] own_goals) {
+        t.setOwnGoals(own_goals);
     }
 
-    public void setDefErrors(Throw t, boolean[] defErrors) {
-        t.setDefErrors(defErrors);
+    public void setDefErrors(Throw t, boolean[] def_errors) {
+        t.setDefErrors(def_errors);
     }
 
     public int[] getScoreDifferentials(Throw t) {
@@ -449,7 +449,7 @@ public class RuleSet00 implements RuleSet {
         }
     }
 
-    public void setFireCounts(Throw t, Throw previousThrow) {
+    public void setFireCounts(Throw t, Throw previous_throw) {
     }
 
     public boolean isValid(Throw t, Context context) {

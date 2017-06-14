@@ -15,17 +15,17 @@ public interface RuleSet {
     boolean useAutoFire();
 
     // Primary setting functions ==============================================
-    void setThrowType(Throw t, int throwType);
+    void setThrowType(Throw t, int throw_type);
 
-    void setThrowResult(Throw t, int throwResult);
+    void setThrowResult(Throw t, int throw_result);
 
-    void setDeadType(Throw t, int deadType);
+    void setDeadType(Throw t, int dead_type);
 
-    void setIsTipped(Throw t, boolean isTipped);
+    void setIsTipped(Throw t, boolean is_tipped);
 
-    void setOwnGoals(Throw t, boolean[] ownGoals);
+    void setOwnGoals(Throw t, boolean[] own_goals);
 
-    void setDefErrors(Throw t, boolean[] defErrors);
+    void setDefErrors(Throw t, boolean[] def_errors);
 
     // Scores and UI ==========================================================
     int[] getScoreDifferentials(Throw t);
@@ -47,7 +47,7 @@ public interface RuleSet {
 
     boolean isOnFire(Throw t);
 
-    void setFireCounts(Throw t, Throw previousThrow);
+    void setFireCounts(Throw t, Throw previous_throw);
 
     // Validation =============================================================
     boolean isValid(Throw t, Context context);
