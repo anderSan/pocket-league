@@ -61,10 +61,6 @@ public class GameInProgress extends Activity_Base {
     private View naViewR;
     NumberPicker resultNp;
 
-    private String session_name;
-    private String[] team_names = new String[2];
-    private String venue_name;
-
     public ActiveGame ag;
     Throw uiThrow;
     Adapter_Inning inning_adapter;
@@ -350,18 +346,18 @@ public class GameInProgress extends Activity_Base {
 
         // players
         tv = (TextView) fView.findViewById(R.id.gInfo_p1);
-        tv.setText(team_names[0]);
+        tv.setText(ag.getTeamNames()[0]);
 
         tv = (TextView) fView.findViewById(R.id.gInfo_p2);
-        tv.setText(team_names[1]);
+        tv.setText(ag.getTeamNames()[1]);
 
         // // session
         tv = (TextView) fView.findViewById(R.id.gInfo_session);
-        tv.setText(session_name);
+        tv.setText(ag.getSessionName());
 
         // venue
         tv = (TextView) fView.findViewById(R.id.gInfo_venue);
-        tv.setText(venue_name);
+        tv.setText(ag.getVenueName());
 
         // date
         tv = (TextView) fView.findViewById(R.id.gInfo_date);
@@ -469,12 +465,12 @@ public class GameInProgress extends Activity_Base {
 
         // table header
         tv = (TextView) findViewById(R.id.header_p1);
-        tv.setText(team_names[0]);
+        tv.setText(ag.getTeamNames()[0]);
         tv.setTextColor(ThrowTableRow.tableTextColor);
         tv.setTextSize(ThrowTableRow.tableTextSize);
 
         tv = (TextView) findViewById(R.id.header_p2);
-        tv.setText(team_names[1]);
+        tv.setText(ag.getTeamNames()[1]);
         tv.setTextColor(ThrowTableRow.tableTextColor);
         tv.setTextSize(ThrowTableRow.tableTextSize);
     }
@@ -606,16 +602,6 @@ public class GameInProgress extends Activity_Base {
         }
         if (uiThrow.deadType > 0) {
             deadViews[uiThrow.deadType - 1].setBackgroundColor(Color.RED);
-        }
-
-        int hp1, hp2;
-        hp1 = uiThrow.initialOffensivePlayerHitPoints;
-        hp2 = uiThrow.initialDefensivePlayerHitPoints;
-
-        if (!uiThrow.isP1Throw()) {
-            int tmp = hp1;
-            hp1 = hp2;
-            hp2 = tmp;
         }
 
         inning_adapter.setCurrent_throw(uiThrow);
