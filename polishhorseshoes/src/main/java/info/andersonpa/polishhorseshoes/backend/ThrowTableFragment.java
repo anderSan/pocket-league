@@ -153,7 +153,7 @@ public class ThrowTableFragment extends Fragment {
     public void renderAsPage(int page_idx, List<Throw> throwsList, RuleSet rs) {
         Throw t;
         int nThrows = throwsList.size();
-        log("nThrows = " + nThrows);
+        log("getThrowCount = " + nThrows);
         int[] range = ThrowTableFragment.throwIdxRange(page_idx);
 
         log("Page's idx range: " + range[0] + "-" + range[1]);

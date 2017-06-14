@@ -219,7 +219,7 @@
         android:contentDescription="bottle" />
     
 	<ImageView 
-    	android:id="@+id/gip_na_indicatorL"
+    	android:id="@+id/gip_top_na_ind"
     	android:layout_height="4dp"
     	android:layout_width = "120dp"
     	android:layout_toEndOf="@id/gip_dead_right"
@@ -232,7 +232,7 @@
      <NumberPicker
          android:id="@+id/numPicker_catch"
          android:layout_toEndOf="@id/gip_dead_right"
-         android:layout_below="@+id/gip_na_indicatorL"
+         android:layout_below="@+id/gip_top_na_ind"
          android:layout_width="205dp"
          android:layout_height="120dp"
          android:layout_marginLeft="10dp"
@@ -241,7 +241,7 @@
          android:layout_marginBottom="25dp" />
      
      <ImageView 
-    	android:id="@+id/gip_na_indicatorR"
+    	android:id="@+id/gip_btm_na_ind"
     	android:layout_height="4dp"
     	android:layout_width = "120dp"
     	android:layout_toEndOf="@id/gip_dead_right"
@@ -254,7 +254,7 @@
     <Button
         android:id="@+id/gip_ownGoal"
         android:layout_toEndOf="@id/gip_dead_right"
-        android:layout_below="@id/gip_na_indicatorR"
+        android:layout_below="@id/gip_btm_na_ind"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -265,7 +265,7 @@
     <Button
         android:id="@+id/gip_playerError"
         android:layout_toEndOf="@id/gip_ownGoal"
-        android:layout_below="@id/gip_na_indicatorR"
+        android:layout_below="@id/gip_btm_na_ind"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"

@@ -55,6 +55,7 @@ public class Adapter_Inning extends RecyclerView.Adapter<Adapter_Inning.ViewHold
         viewHolder.inning.setText(String.valueOf(this_inning.getInning()));
 
         viewHolder.pl_marks.setText(rs.getSpecialString(this_inning.getPL_throw()));
+        viewHolder.pl_throw.setTag(this_inning.getPL_throw().getThrowIdx());
         rs.setThrowDrawable(this_inning.getPL_throw(), viewHolder.pl_throw);
         if (this_inning.pr_throw == null) {
             scores = rs.getFinalScores(this_inning.pl_throw);
@@ -63,6 +64,7 @@ public class Adapter_Inning extends RecyclerView.Adapter<Adapter_Inning.ViewHold
 
             viewHolder.pr_pts.setText("");
             viewHolder.pr_hp.setText("");
+            viewHolder.pr_throw.setTag(this_inning.getPL_throw().getThrowIdx());
             viewHolder.pr_throw.setImageDrawable(null);
             viewHolder.pr_marks.setText("");
         } else {
@@ -72,9 +74,12 @@ public class Adapter_Inning extends RecyclerView.Adapter<Adapter_Inning.ViewHold
 
             viewHolder.pr_hp.setText(String.valueOf(this_inning.getPR_throw().initialOffensivePlayerHitPoints));
             viewHolder.pl_hp.setText(String.valueOf(this_inning.getPR_throw().initialDefensivePlayerHitPoints));
+            viewHolder.pr_throw.setTag(this_inning.getPR_throw().getThrowIdx());
             rs.setThrowDrawable(this_inning.getPR_throw(), viewHolder.pr_throw);
             viewHolder.pr_marks.setText(rs.getSpecialString(this_inning.getPR_throw()));
         }
+
+        // Highlighting for active throw.
         if (this_inning.getPL_throw() == current_throw) {
             viewHolder.pl_hp.setBackgroundColor(Color.LTGRAY);
             viewHolder.pl_pts.setBackgroundColor(Color.LTGRAY);
@@ -99,7 +104,7 @@ public class Adapter_Inning extends RecyclerView.Adapter<Adapter_Inning.ViewHold
         }
     }
 
-    public void setCurrent_throw(Throw t) {
+    public void setCurrentThrow(Throw t) {
         current_throw = t;
     }
 

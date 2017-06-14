@@ -171,7 +171,7 @@
         android:contentDescription="bottle" />
     
 	<ImageView 
-    	android:id="@+id/gip_na_indicatorL"
+    	android:id="@+id/gip_top_na_ind"
     	android:layout_height="120dp"
     	android:layout_width = "4dp"
     	android:layout_alignParentLeft="true"
@@ -183,7 +183,7 @@
 	
      <NumberPicker
          android:id="@+id/numPicker_catch"
-         android:layout_toRightOf="@id/gip_na_indicatorL"
+         android:layout_toRightOf="@id/gip_top_na_ind"
          android:layout_below="@+id/gip_button_bottle"
          android:layout_width="205dp"
          android:layout_height="120dp"
@@ -193,7 +193,7 @@
          android:layout_marginBottom="25dp" />
      
      <ImageView 
-    	android:id="@+id/gip_na_indicatorR"
+    	android:id="@+id/gip_btm_na_ind"
     	android:layout_height="120dp"
     	android:layout_width = "4dp"
     	android:layout_toRightOf="@id/numPicker_catch"

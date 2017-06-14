@@ -135,7 +135,7 @@ public class ActiveGame {
     }
 
     private Throw makeNextThrow() {
-        return g.makeNewThrow(nThrows());
+        return g.makeNewThrow(getThrowCount());
     }
 
     private void setInitialScores(Throw t, Throw previousThrow) {
@@ -151,7 +151,7 @@ public class ActiveGame {
 
     public void updateScoresFrom(int idx) {
         Throw t, u;
-        for (int i = idx; i < nThrows(); i++) {
+        for (int i = idx; i < getThrowCount(); i++) {
             t = getThrow(i);
             if (i == 0) {
                 setInitialScores(t);
@@ -168,8 +168,8 @@ public class ActiveGame {
 
     private void updateGameScore() {
         int[] scores = {0, 0};
-        if (nThrows() > 0) {
-            Throw lastThrow = getThrow(nThrows() - 1);
+        if (getThrowCount() > 0) {
+            Throw lastThrow = getThrow(getThrowCount() - 1);
             if (Throw.isP1Throw(lastThrow)) {
                 scores = rs.getFinalScores(lastThrow);
             } else {
@@ -180,6 +180,26 @@ public class ActiveGame {
         }
         g.setMember1Score(context, scores[0]);
         g.setMember2Score(context, scores[1]);
+    }
+
+    public void setThrowType(Throw t, int t_type) {
+        rs.setThrowType(t, t_type);
+    }
+
+    public void setThrowResult(Throw t, int t_result) {
+        rs.setThrowResult(t, t_result);
+    }
+
+    public void setDeadType(Throw t, int dead_type) {
+        rs.setDeadType(t, dead_type);
+    }
+
+    public void setIsTipped(Throw t) {
+        rs.setIsTipped(t, !t.isTipped);
+    }
+
+    public boolean usesAutoFire() {
+        return rs.useAutoFire();
     }
 
     private ArrayList<Long> getThrowIds() {
@@ -222,15 +242,15 @@ public class ActiveGame {
     public void setThrow(int idx, Throw t) {
         if (idx < 0) {
             throw new RuntimeException("must have positive throw index, not: " + idx);
-        } else if (idx >= 0 && idx < nThrows()) {
+        } else if (idx >= 0 && idx < getThrowCount()) {
             t.setThrowIndex(idx);
             t = throws_list.set(idx, t);
             saveThrow(t);
-        } else if (idx == nThrows()) {
+        } else if (idx == getThrowCount()) {
             t.setThrowIndex(idx);
             throws_list.add(t);
             saveThrow(t);
-        } else if (idx > nThrows()) {
+        } else if (idx > getThrowCount()) {
             throw new RuntimeException("cannot set throw " + idx + " in the far future");
         }
         updateScoresFrom(idx);
@@ -240,9 +260,9 @@ public class ActiveGame {
         Throw t = null;
         if (idx < 0) {
             throw new RuntimeException("must have positive throw index, not: " + idx);
-        } else if (idx >= 0 && idx < nThrows()) {
+        } else if (idx >= 0 && idx < getThrowCount()) {
             t = throws_list.get(idx);
-        } else if (idx == nThrows()) {
+        } else if (idx == getThrowCount()) {
             t = makeNextThrow();
             if (idx == 0) {
                 setInitialScores(t);
@@ -252,7 +272,7 @@ public class ActiveGame {
             }
 
             throws_list.add(t);
-        } else if (idx > nThrows()) {
+        } else if (idx > getThrowCount()) {
             throw new RuntimeException("cannot get throw " + idx + " from the far future");
         }
         if (t == null) {
@@ -266,9 +286,9 @@ public class ActiveGame {
         int idx = t.getThrowIdx();
         if (idx <= 0) {
             throw new RuntimeException("throw " + idx + " has no predecessor");
-        } else if (idx > 0 && idx <= nThrows()) {
+        } else if (idx > 0 && idx <= getThrowCount()) {
             u = throws_list.get(idx - 1);
-        } else if (idx > nThrows()) {
+        } else if (idx > getThrowCount()) {
             throw new RuntimeException("cannot get predecessor of throw " + idx + " from the far " +
                     "future");
         }
@@ -278,7 +298,7 @@ public class ActiveGame {
         return u;
     }
 
-    public int nThrows() {
+    public int getThrowCount() {
         return throws_list.size();
     }
 
