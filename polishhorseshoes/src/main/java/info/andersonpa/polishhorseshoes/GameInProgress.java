@@ -43,23 +43,23 @@ import info.andersonpa.polishhorseshoes.enums.ThrowType;
 public class GameInProgress extends Activity_Base {
     private RecyclerView rv_throws;
 
-    private View[] deadViews = new View[4];
-    private ImageView ivHigh;
-    private ImageView ivLow;
-    private ImageView ivLeft;
-    private ImageView ivRight;
-    private ImageView ivTrap;
-    private ImageView ivShort;
-    private ImageView ivStrike;
-    private ImageView ivBottle;
-    private ImageView ivCup;
-    private ImageView ivPole;
-    private TextView tvOwnGoal;
-    private TextView tvDefErr;
-    private ToggleButton tbFire;
-    private View naViewL;
-    private View naViewR;
-    NumberPicker resultNp;
+    private View[] dead_views = new View[4];
+    private ImageView iv_high;
+    private ImageView iv_low;
+    private ImageView iv_left;
+    private ImageView iv_right;
+    private ImageView iv_trap;
+    private ImageView iv_short;
+    private ImageView iv_strike;
+    private ImageView iv_bottle;
+    private ImageView iv_cup;
+    private ImageView iv_pole;
+    private TextView tv_own_goal;
+    private TextView tv_def_err;
+    private ToggleButton tb_fire;
+    private View v_na_top;
+    private View v_na_btm;
+    NumberPicker np_result;
 
     public ActiveGame ag;
     Throw uiThrow;
@@ -132,9 +132,9 @@ public class GameInProgress extends Activity_Base {
                 case R.id.gip_button_strike:
                     ag.getRuleSet().setIsTipped(uiThrow, !uiThrow.isTipped);
                     if (uiThrow.isTipped) {
-                        ivStrike.getDrawable().setLevel(2);
+                        iv_strike.getDrawable().setLevel(2);
                     } else {
-                        ivStrike.getDrawable().setLevel(0);
+                        iv_strike.getDrawable().setLevel(0);
                     }
                     break;
                 case R.id.gip_button_high:
@@ -437,7 +437,6 @@ public class GameInProgress extends Activity_Base {
     @Override
     protected void onResume() {
         super.onResume();
-//        log("onResume(): vp's adapter has " + vpAdapter.getCount() + " items");
         gotoThrowIdx(ag.getActiveIdx());
     }
 
@@ -476,66 +475,66 @@ public class GameInProgress extends Activity_Base {
     }
 
     private void initListeners() {
-        deadViews[0] = findViewById(R.id.gip_dead_high);
-        deadViews[1] = findViewById(R.id.gip_dead_right);
-        deadViews[2] = findViewById(R.id.gip_dead_low);
-        deadViews[3] = findViewById(R.id.gip_dead_left);
+        dead_views[0] = findViewById(R.id.gip_dead_high);
+        dead_views[1] = findViewById(R.id.gip_dead_right);
+        dead_views[2] = findViewById(R.id.gip_dead_low);
+        dead_views[3] = findViewById(R.id.gip_dead_left);
 
-        ivHigh = (ImageView) findViewById(R.id.gip_button_high);
-        ivHigh.setOnLongClickListener(mLongClickListener);
+        iv_high = (ImageView) findViewById(R.id.gip_button_high);
+        iv_high.setOnLongClickListener(mLongClickListener);
 
-        ivLeft = (ImageView) findViewById(R.id.gip_button_left);
-        ivLeft.setOnLongClickListener(mLongClickListener);
+        iv_left = (ImageView) findViewById(R.id.gip_button_left);
+        iv_left.setOnLongClickListener(mLongClickListener);
 
-        ivRight = (ImageView) findViewById(R.id.gip_button_right);
-        ivRight.setOnLongClickListener(mLongClickListener);
+        iv_right = (ImageView) findViewById(R.id.gip_button_right);
+        iv_right.setOnLongClickListener(mLongClickListener);
 
-        ivLow = (ImageView) findViewById(R.id.gip_button_low);
-        ivLow.setOnLongClickListener(mLongClickListener);
+        iv_low = (ImageView) findViewById(R.id.gip_button_low);
+        iv_low.setOnLongClickListener(mLongClickListener);
 
-        ivTrap = (ImageView) findViewById(R.id.gip_button_trap);
-        ivTrap.setOnLongClickListener(mLongClickListener);
+        iv_trap = (ImageView) findViewById(R.id.gip_button_trap);
+        iv_trap.setOnLongClickListener(mLongClickListener);
 
-        ivShort = (ImageView) findViewById(R.id.gip_button_short);
-        ivShort.setOnLongClickListener(mLongClickListener);
+        iv_short = (ImageView) findViewById(R.id.gip_button_short);
+        iv_short.setOnLongClickListener(mLongClickListener);
 
-        ivStrike = (ImageView) findViewById(R.id.gip_button_strike);
-        ivStrike.setOnLongClickListener(mLongClickListener);
+        iv_strike = (ImageView) findViewById(R.id.gip_button_strike);
+        iv_strike.setOnLongClickListener(mLongClickListener);
 
-        ivPole = (ImageView) findViewById(R.id.gip_button_pole);
-        ivPole.setOnLongClickListener(mLongClickListener);
+        iv_pole = (ImageView) findViewById(R.id.gip_button_pole);
+        iv_pole.setOnLongClickListener(mLongClickListener);
 
-        ivCup = (ImageView) findViewById(R.id.gip_button_cup);
-        ivCup.setOnLongClickListener(mLongClickListener);
+        iv_cup = (ImageView) findViewById(R.id.gip_button_cup);
+        iv_cup.setOnLongClickListener(mLongClickListener);
 
-        ivBottle = (ImageView) findViewById(R.id.gip_button_bottle);
-        ivBottle.setOnLongClickListener(mLongClickListener);
+        iv_bottle = (ImageView) findViewById(R.id.gip_button_bottle);
+        iv_bottle.setOnLongClickListener(mLongClickListener);
 
-        tvOwnGoal = (TextView) findViewById(R.id.gip_ownGoal);
-        tvDefErr = (TextView) findViewById(R.id.gip_playerError);
+        tv_own_goal = (TextView) findViewById(R.id.gip_ownGoal);
+        tv_def_err = (TextView) findViewById(R.id.gip_playerError);
 
-        tbFire = (ToggleButton) findViewById(R.id.gip_toggle_fire);
+        tb_fire = (ToggleButton) findViewById(R.id.gip_toggle_fire);
 
         if (ag.getRuleSet().useAutoFire()) {
-            tbFire.setVisibility(View.GONE);
+            tb_fire.setVisibility(View.GONE);
             Button bFiredOn = (Button) findViewById(R.id.gip_button_fired_on);
             bFiredOn.setVisibility(View.GONE);
         }
 
-        naViewL = findViewById(R.id.gip_na_indicatorL);
-        naViewR = findViewById(R.id.gip_na_indicatorR);
+        v_na_top = findViewById(R.id.gip_na_indicatorL);
+        v_na_btm = findViewById(R.id.gip_na_indicatorR);
 
-        resultNp = (NumberPicker) findViewById(R.id.numPicker_catch);
-        resultNp.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        np_result = (NumberPicker) findViewById(R.id.numPicker_catch);
+        np_result.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         String[] catchText = new String[3];
         catchText[0] = getString(R.string.gip_drop);
         catchText[1] = getString(R.string.gip_catch);
         catchText[2] = getString(R.string.gip_stalwart);
-        resultNp.setMinValue(0);
-        resultNp.setMaxValue(2);
-        resultNp.setValue(1);
-        resultNp.setDisplayedValues(catchText);
-        resultNp.setOnValueChangedListener(resultNPChangeListener);
+        np_result.setMinValue(0);
+        np_result.setMaxValue(2);
+        np_result.setValue(1);
+        np_result.setDisplayedValues(catchText);
+        np_result.setOnValueChangedListener(resultNPChangeListener);
     }
 
     // STATE LOGIC AND PROGRAM FLOW ===========================================
@@ -580,28 +579,28 @@ public class GameInProgress extends Activity_Base {
     // UI =====================================================================
     private void refreshUI() {
         setThrowResultToNP(uiThrow.throwResult);
-        setThrowButtonState(ThrowType.BALL_HIGH, ivHigh);
-        setThrowButtonState(ThrowType.BALL_LOW, ivLow);
-        setThrowButtonState(ThrowType.BALL_LEFT, ivLeft);
-        setThrowButtonState(ThrowType.BALL_RIGHT, ivRight);
-        setThrowButtonState(ThrowType.TRAP, ivTrap);
-        setThrowButtonState(ThrowType.SHORT, ivShort);
-        setThrowButtonState(ThrowType.STRIKE, ivStrike);
-        setThrowButtonState(ThrowType.BOTTLE, ivBottle);
-        setThrowButtonState(ThrowType.POLE, ivPole);
-        setThrowButtonState(ThrowType.CUP, ivCup);
+        setThrowButtonState(ThrowType.BALL_HIGH, iv_high);
+        setThrowButtonState(ThrowType.BALL_LOW, iv_low);
+        setThrowButtonState(ThrowType.BALL_LEFT, iv_left);
+        setThrowButtonState(ThrowType.BALL_RIGHT, iv_right);
+        setThrowButtonState(ThrowType.TRAP, iv_trap);
+        setThrowButtonState(ThrowType.SHORT, iv_short);
+        setThrowButtonState(ThrowType.STRIKE, iv_strike);
+        setThrowButtonState(ThrowType.BOTTLE, iv_bottle);
+        setThrowButtonState(ThrowType.POLE, iv_pole);
+        setThrowButtonState(ThrowType.CUP, iv_cup);
         setBrokenButtonState();
         setExtrasButtonState();
 
         if (uiThrow.isTipped) {
-            ivStrike.getDrawable().setLevel(3);
+            iv_strike.getDrawable().setLevel(3);
         }
 
-        for (View vw : deadViews) {
+        for (View vw : dead_views) {
             vw.setBackgroundColor(Color.LTGRAY);
         }
         if (uiThrow.deadType > 0) {
-            deadViews[uiThrow.deadType - 1].setBackgroundColor(Color.RED);
+            dead_views[uiThrow.deadType - 1].setBackgroundColor(Color.RED);
         }
 
         inning_adapter.setCurrent_throw(uiThrow);
@@ -618,9 +617,9 @@ public class GameInProgress extends Activity_Base {
     }
 
     private void setBrokenButtonState() {
-        Drawable poleDwl = ivPole.getDrawable();
-        Drawable cupDwl = ivCup.getDrawable();
-        Drawable bottleDwl = ivBottle.getDrawable();
+        Drawable poleDwl = iv_pole.getDrawable();
+        Drawable cupDwl = iv_cup.getDrawable();
+        Drawable bottleDwl = iv_bottle.getDrawable();
 
         if (uiThrow.throwResult == ThrowResult.BROKEN) {
             switch (uiThrow.throwType) {
@@ -674,23 +673,23 @@ public class GameInProgress extends Activity_Base {
     }
 
     private void setExtrasButtonState() {
-        tvOwnGoal.setTextColor(Color.BLACK);
-        tvDefErr.setTextColor(Color.BLACK);
+        tv_own_goal.setTextColor(Color.BLACK);
+        tv_def_err.setTextColor(Color.BLACK);
         for (boolean og : uiThrow.getOwnGoals()) {
             if (og) {
-                tvOwnGoal.setTextColor(Color.RED);
+                tv_own_goal.setTextColor(Color.RED);
             }
         }
         for (boolean de : uiThrow.getDefErrors()) {
             if (de) {
-                tvDefErr.setTextColor(Color.RED);
+                tv_def_err.setTextColor(Color.RED);
             }
         }
 
         if (uiThrow.offenseFireCount >= 3) {
-            tbFire.setChecked(true);
+            tb_fire.setChecked(true);
         } else {
-            tbFire.setChecked(false);
+            tb_fire.setChecked(false);
         }
     }
 
@@ -702,7 +701,7 @@ public class GameInProgress extends Activity_Base {
 
     public int getThrowResultFromNP() {
         int theResult = 0;
-        switch (resultNp.getValue()) {
+        switch (np_result.getValue()) {
             case 0:
                 theResult = ThrowResult.DROP;
                 break;
@@ -717,21 +716,21 @@ public class GameInProgress extends Activity_Base {
     }
 
     public void setThrowResultToNP(int result) {
-        naViewL.setBackgroundColor(Color.LTGRAY);
-        naViewR.setBackgroundColor(Color.LTGRAY);
+        v_na_top.setBackgroundColor(Color.LTGRAY);
+        v_na_btm.setBackgroundColor(Color.LTGRAY);
         switch (result) {
             case ThrowResult.DROP:
-                resultNp.setValue(0);
+                np_result.setValue(0);
                 break;
             case ThrowResult.CATCH:
-                resultNp.setValue(1);
+                np_result.setValue(1);
                 break;
             case ThrowResult.STALWART:
-                resultNp.setValue(2);
+                np_result.setValue(2);
                 break;
             case ThrowResult.NA:
-                naViewL.setBackgroundColor(Color.RED);
-                naViewR.setBackgroundColor(Color.RED);
+                v_na_top.setBackgroundColor(Color.RED);
+                v_na_btm.setBackgroundColor(Color.RED);
                 break;
         }
     }

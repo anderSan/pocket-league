@@ -22,22 +22,22 @@ public class ActiveGame {
     private int activeIdx;
     private Game g;
     private ArrayList<Throw> throws_list;
-    private RuleSet ruleSet;
+    private RuleSet rs;
     private List<Throw[]> innings_list = new ArrayList<>();
     private String[] team_names = new String[2];
     private String session_name;
     private String venue_name;
-    private Dao<Game, Long> gDao;
-    private Dao<Throw, Long> tDao;
+    private Dao<Game, Long> g_dao;
+    private Dao<Throw, Long> t_dao;
 
 
     public ActiveGame(Context context, String gId) {
-        gDao = Game.getDao(context);
-        tDao = Throw.getDao(context);
+        g_dao = Game.getDao(context);
+        t_dao = Throw.getDao(context);
         this.context = context;
         g = retrieveOrCreateGame(gId);
-        ruleSet = RuleType.map.get(g.getRulesetId());
-        ruleSet.setContext(context);
+        rs = RuleType.map.get(g.getRulesetId());
+        rs.setContext(context);
 
         try {
             throws_list = g.getThrowList(context);
@@ -94,7 +94,7 @@ public class ActiveGame {
 //        }
 
         try {
-            g = gDao.queryBuilder().where().eq(Game.POCKETLEAGUE_ID, gId).queryForFirst();
+            g = g_dao.queryBuilder().where().eq(Game.POCKETLEAGUE_ID, gId).queryForFirst();
         } catch (SQLException e) {
             loge("Could not find  game: ", e);
         }
@@ -102,7 +102,7 @@ public class ActiveGame {
         if (g == null) {
             try {
                 g = new Game(gId, gm_ids[0], gm_ids[1], ruleset_id);
-                gDao.create(g);
+                g_dao.create(g);
             } catch (SQLException e) {
                 loge("Could not create game: ", e);
             }
@@ -117,7 +117,7 @@ public class ActiveGame {
     }
 
     private void setInitialScores(Throw t, Throw previousThrow) {
-        int[] scores = ruleSet.getFinalScores(previousThrow);
+        int[] scores = rs.getFinalScores(previousThrow);
         t.initialDefensivePlayerScore = scores[0];
         t.initialOffensivePlayerScore = scores[1];
     }
@@ -140,12 +140,12 @@ public class ActiveGame {
     }
 
     public RuleSet getRuleSet() {
-        return ruleSet;
+        return rs;
     }
 
     public void setRuleSet(RuleSet rs) {
         // For testing purposes only.
-        ruleSet = rs;
+        this.rs = rs;
         g.setRulesetId(rs.getId());
     }
 
@@ -160,7 +160,7 @@ public class ActiveGame {
             } else {
                 u = getPreviousThrow(t);
                 setInitialScores(t, u);
-                ruleSet.setFireCounts(t, u);
+                rs.setFireCounts(t, u);
             }
         }
         updateGameScore();
@@ -171,9 +171,9 @@ public class ActiveGame {
         if (nThrows() > 0) {
             Throw lastThrow = getThrow(nThrows() - 1);
             if (Throw.isP1Throw(lastThrow)) {
-                scores = ruleSet.getFinalScores(lastThrow);
+                scores = rs.getFinalScores(lastThrow);
             } else {
-                int[] tmp = ruleSet.getFinalScores(lastThrow);
+                int[] tmp = rs.getFinalScores(lastThrow);
                 scores[1] = tmp[0];
                 scores[0] = tmp[1];
             }
@@ -190,7 +190,7 @@ public class ActiveGame {
         try {
             for (Throw t : throws_list) {
                 m = t.getQueryMap();
-                tList = tDao.queryForFieldValuesArgs(m);
+                tList = t_dao.queryForFieldValuesArgs(m);
                 if (tList.isEmpty()) {
                     throwIds.add((long) -1);
                 } else {
@@ -329,17 +329,17 @@ public class ActiveGame {
 //            HashMap<String, Object> m = t.getQueryMap();
 //            List<Throw> tList;
 //            try {
-//                tList = tDao.queryForFieldValuesArgs(m);
+//                tList = t_dao.queryForFieldValuesArgs(m);
 //            } catch (SQLException e) {
 //                throw new RuntimeException("could not query for throw " + t.throwIdx + ", " +
 //                        "game " + t.getGame().getId());
 //            }
 //            try {
 //                if (tList.isEmpty()) {
-//                    tDao.create(t);
+//                    t_dao.create(t);
 //                } else {
 //                    t.setId(tList.get(0).getId());
-//                    tDao.update(t);
+//                    t_dao.update(t);
 //                }
 //            } catch (SQLException e) {
 //                throw new RuntimeException("could not create/update throw " + t.throwIdx + ", game " + t.getGame().getId());
@@ -352,7 +352,7 @@ public class ActiveGame {
 //        if (g != null) {
 //            final ArrayList<Long> throwIds = getThrowIds();
 //            try {
-//                tDao.callBatchTasks(new Callable<Void>() {
+//                t_dao.callBatchTasks(new Callable<Void>() {
 //                    public Void call() throws SQLException {
 //                        long id;
 //                        Throw t;
@@ -360,10 +360,10 @@ public class ActiveGame {
 //                            id = throwIds.get(i);
 //                            t = throws_list.get(i);
 //                            if (id == -1) {
-//                                tDao.create(t);
+//                                t_dao.create(t);
 //                            } else {
 //                                t.setId(id);
-//                                tDao.update(t);
+//                                t_dao.update(t);
 //                            }
 //                        }
 //                        return null;
@@ -379,7 +379,7 @@ public class ActiveGame {
     public void saveGame() {
         if (g != null) {
 //            try {
-//                gDao.update(g);
+//                g_dao.update(g);
 //            } catch (SQLException e) {
 //                throw new RuntimeException("Could not save game " + g.getId());
 //            }
