@@ -2,20 +2,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:orientation="horizontal"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".GameInProgress" >
+    tools:context=".GameInProgress">
+
+	<TableLayout
+		android:id="@+id/scoreTable_header"
+		android:layout_alignParentStart="true"
+		android:layout_alignParentTop="true"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="3dp"
+		android:layout_margin="4dp"
+		android:background="#013567" >
+		<TableRow>
+			<TextView
+				android:id="@+id/header_inning"
+				android:layout_width="58sp"
+				android:layout_height="fill_parent"
+				android:paddingLeft="1dp"
+				android:paddingRight="1dp"
+				android:gravity="center"
+				android:background="#fff"
+				android:text="inning" />
+
+			<TextView
+				android:id="@+id/header_p1"
+				android:layout_width="wrap_content"
+				android:layout_margin="1dp"
+                android:layout_weight="1"
+				android:background="#fff"
+				android:gravity="center_horizontal" />
+
+            <TextView
+				android:id="@+id/header_p2"
+				android:layout_width="wrap_content"
+				android:layout_margin="1dp"
+                android:layout_weight="1"
+				android:background="#fff"
+				android:gravity="center_horizontal" />
+		</TableRow>
+	</TableLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_throws_table"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/scoreTable_header"
+        />
 
     <ImageView 
     	android:id="@+id/gip_dead_high"
     	android:layout_height="4dp"
     	android:layout_width = "185dp"
-    	android:layout_alignParentLeft="true"
-    	android:layout_alignParentTop="true"
+    	android:layout_alignParentStart="true"
+    	android:layout_below="@id/rv_throws_table"
     	android:layout_marginLeft="24dp"
 		android:layout_marginRight="24dp"
     	android:background="#00FF00"
@@ -25,7 +73,7 @@
     	android:id="@+id/gip_dead_left"
     	android:layout_height="210dp"
     	android:layout_width = "4dp"
-    	android:layout_alignParentLeft="true"
+    	android:layout_alignParentStart="true"
     	android:layout_below="@id/gip_dead_high"
     	android:layout_marginTop="20dp"
     	android:layout_marginBottom="20dp"
@@ -37,10 +85,10 @@
         android:src="@drawable/btn_high"
         android:layout_width="150dp"
         android:layout_height="75dp"
-        android:layout_toRightOf="@id/gip_dead_left"
+        android:layout_toEndOf="@id/gip_dead_left"
         android:layout_below="@id/gip_dead_high"
         android:onClick="throwTypePressed"
-        android:paddingLeft="85dp"
+        android:paddingStart="85dp"
         android:contentDescription="high" />
     
     <ImageButton
@@ -48,7 +96,7 @@
         android:src="@drawable/btn_trap"
         android:layout_width="65dp"
         android:layout_height="75dp"
-        android:layout_toRightOf="@id/gip_button_high"
+        android:layout_toEndOf="@id/gip_button_high"
         android:layout_below="@id/gip_dead_high"
         android:onClick="throwTypePressed"
         android:padding="10dp"
@@ -57,7 +105,7 @@
     <ImageButton
         android:id="@+id/gip_button_left"
         android:src="@drawable/btn_left"
-        android:layout_toRightOf="@id/gip_dead_left"
+        android:layout_toEndOf="@id/gip_dead_left"
         android:layout_below="@id/gip_button_high"
         android:layout_width="75dp"
         android:layout_height="100dp"
@@ -70,7 +118,7 @@
     <ImageButton
         android:id="@+id/gip_button_strike"
         android:src="@drawable/btn_strike"
-        android:layout_toRightOf="@id/gip_button_left"
+        android:layout_toEndOf="@id/gip_button_left"
         android:layout_below="@id/gip_button_high"
         android:layout_width="75dp"
         android:layout_height="100dp"
@@ -84,7 +132,7 @@
     <ImageButton
         android:id="@+id/gip_button_right"
         android:src="@drawable/btn_right"
-        android:layout_toRightOf="@id/gip_button_strike"
+        android:layout_toEndOf="@id/gip_button_strike"
         android:layout_below="@id/gip_button_high"
         android:layout_width="65dp"
         android:layout_height="100dp"
@@ -97,18 +145,18 @@
     <ImageButton
         android:id="@+id/gip_button_low"
         android:src="@drawable/btn_low"
-        android:layout_toRightOf="@id/gip_dead_left"
+        android:layout_toEndOf="@id/gip_dead_left"
         android:layout_below="@id/gip_button_strike"
         android:layout_width="150dp"
         android:layout_height="75dp"
-        android:paddingLeft="85dp"
+        android:paddingStart="85dp"
         android:onClick="throwTypePressed"
         android:contentDescription="low" />
     
     <ImageButton
         android:id="@+id/gip_button_short"
         android:src="@drawable/btn_short"
-        android:layout_toRightOf="@id/gip_button_low"
+        android:layout_toEndOf="@id/gip_button_low"
         android:layout_below="@id/gip_button_strike"
         android:layout_width="65dp"
         android:layout_height="75dp"
@@ -120,11 +168,11 @@
     	android:id="@+id/gip_dead_right"
     	android:layout_height="210dp"
     	android:layout_width = "4dp"
-    	android:layout_toRightOf="@id/gip_button_right"
+    	android:layout_toEndOf="@id/gip_button_right"
     	android:layout_below="@id/gip_dead_high"
     	android:layout_marginTop="20dp"
     	android:layout_marginBottom="20dp"
-    	android:layout_marginRight="10dp"
+    	android:layout_marginEnd="10dp"
     	android:background="#00FF00"
     	/>
     
@@ -132,7 +180,7 @@
     	android:id="@+id/gip_dead_low"
     	android:layout_height="4dp"
     	android:layout_width = "185dp"
-    	android:layout_alignParentLeft="true"
+    	android:layout_alignParentStart="true"
     	android:layout_below="@id/gip_button_low"
     	android:layout_marginLeft="24dp"
     	android:layout_marginRight="24dp"
@@ -143,7 +191,7 @@
     <ImageButton
         android:id="@+id/gip_button_pole"
         android:src="@drawable/btn_pole"
-        android:layout_toRightOf="@id/gip_dead_left"
+        android:layout_toEndOf="@id/gip_dead_left"
         android:layout_below="@id/gip_dead_low"
         android:layout_width="75dp"
         android:layout_height="75dp"
@@ -153,7 +201,7 @@
     <ImageButton
         android:id="@+id/gip_button_cup"
         android:src="@drawable/btn_cup"
-        android:layout_toRightOf="@id/gip_button_pole"
+        android:layout_toEndOf="@id/gip_button_pole"
         android:layout_below="@id/gip_dead_low"
         android:layout_width="75dp"
         android:layout_height="75dp"
@@ -163,7 +211,7 @@
 	<ImageButton
         android:id="@+id/gip_button_bottle"
         android:src="@drawable/btn_bottle"
-        android:layout_toRightOf="@id/gip_button_cup"
+        android:layout_toEndOf="@id/gip_button_cup"
         android:layout_below="@id/gip_dead_low"
         android:layout_width="65dp"
         android:layout_height="75dp"
@@ -171,11 +219,11 @@
         android:contentDescription="bottle" />
     
 	<ImageView 
-    	android:id="@+id/gip_na_indicatorL"
-    	android:layout_height="120dp"
-    	android:layout_width = "4dp"
-    	android:layout_alignParentLeft="true"
-    	android:layout_below="@id/gip_button_bottle"
+    	android:id="@+id/gip_top_na_ind"
+    	android:layout_height="4dp"
+    	android:layout_width = "120dp"
+    	android:layout_toEndOf="@id/gip_dead_right"
+    	android:layout_below="@id/rv_throws_table"
     	android:layout_marginTop="25dp"
         android:layout_marginBottom="25dp"
     	android:background="#00FF00"
@@ -183,8 +231,8 @@
 	
      <NumberPicker
          android:id="@+id/numPicker_catch"
-         android:layout_toRightOf="@id/gip_na_indicatorL"
-         android:layout_below="@+id/gip_button_bottle"
+         android:layout_toEndOf="@id/gip_dead_right"
+         android:layout_below="@+id/gip_top_na_ind"
          android:layout_width="205dp"
          android:layout_height="120dp"
          android:layout_marginLeft="10dp"
@@ -193,11 +241,11 @@
          android:layout_marginBottom="25dp" />
      
      <ImageView 
-    	android:id="@+id/gip_na_indicatorR"
-    	android:layout_height="120dp"
-    	android:layout_width = "4dp"
-    	android:layout_toRightOf="@id/numPicker_catch"
-    	android:layout_below="@id/gip_button_bottle"
+    	android:id="@+id/gip_btm_na_ind"
+    	android:layout_height="4dp"
+    	android:layout_width = "120dp"
+    	android:layout_toEndOf="@id/gip_dead_right"
+    	android:layout_below="@id/numPicker_catch"
     	android:layout_marginTop="25dp"
         android:layout_marginBottom="25dp"
     	android:background="#00FF00"
@@ -205,9 +253,9 @@
 
     <Button
         android:id="@+id/gip_ownGoal"
-        android:layout_toRightOf="@id/gip_dead_left"
-        android:layout_below="@id/numPicker_catch"
-        android:layout_width="100dp"
+        android:layout_toEndOf="@id/gip_dead_right"
+        android:layout_below="@id/gip_btm_na_ind"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:onClick="OwnGoalDialog"
@@ -216,9 +264,9 @@
     
     <Button
         android:id="@+id/gip_playerError"
-        android:layout_toLeftOf="@id/gip_dead_right"
-        android:layout_below="@id/numPicker_catch"
-        android:layout_width="100dp"
+        android:layout_toEndOf="@id/gip_ownGoal"
+        android:layout_below="@id/gip_btm_na_ind"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:onClick="PlayerErrorDialog"
@@ -227,12 +275,12 @@
     
     <ToggleButton
         android:id="@+id/gip_toggle_fire"
-        android:layout_width="100dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/gip_ownGoal"
-        android:layout_alignRight="@id/gip_ownGoal"
+        android:layout_alignStart="@id/gip_ownGoal"
+        android:layout_alignEnd="@id/gip_ownGoal"
         android:layout_below="@id/gip_ownGoal"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="17dp"
         android:text="Fire"
         android:textOff="Fire"
         android:textOn="Fire"
@@ -240,85 +288,13 @@
 
     <Button
         android:id="@+id/gip_button_fired_on"
-        android:layout_width="100dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/gip_toggle_fire"
-        android:layout_alignBottom="@id/gip_toggle_fire"
-        android:layout_alignLeft="@id/gip_playerError"
-        android:layout_alignRight="@id/gip_playerError"
+        android:layout_alignStart="@id/gip_playerError"
+        android:layout_alignEnd="@id/gip_playerError"
+        android:layout_below="@id/gip_playerError"
         android:onClick="firedOnPressed"
+        android:layout_marginTop="17dp"
         android:text="Fired On" />
-  
-    <TableLayout
-		android:id="@+id/scoreTable_header"
-		android:layout_toRightOf="@id/gip_dead_right"
-		android:layout_alignParentTop="true"
-		android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
-		android:layout_marginRight="4dp"
-		android:background="#013567" >
-	  	<TableRow>
-			<TextView
-			    android:id="@+id/header_inning"
-				android:layout_width="50sp"
-				android:layout_height="fill_parent"
-				android:paddingLeft="1dp"
-				android:paddingRight="1dp"
-				android:gravity="center"
-				android:background="#fff"
-				android:text="inning" />
-
-			<TextView
-			    android:id="@+id/header_p1"
-			    android:layout_width="75dp"
-			    android:layout_margin="1dp"
-			    android:background="#fff"
-			    android:gravity="center_horizontal" />
-			<TextView
-			    android:id="@+id/hitpoints_p1"
-			    android:layout_width="25dp"
-			    android:layout_margin="1dp"
-			    android:background="#fff"
-			    android:gravity="center_horizontal" />
-
-			<TextView
-			    android:id="@+id/header_p2"
-			    android:layout_width="75dp"
-			    android:layout_margin="1dp"
-			    android:background="#fff"
-			    android:gravity="center_horizontal" />
-			<TextView
-			    android:id="@+id/hitpoints_p2"
-			    android:layout_width="25dp"
-			    android:layout_margin="1dp"
-			    android:background="#fff"
-			    android:gravity="center_horizontal" />
-
-			<TextView
-				android:gravity="center_horizontal"
-				android:layout_margin="1dp" />
-		</TableRow>
-	</TableLayout>
-	
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager_throwsTables"
-	    android:layout_toRightOf="@id/gip_dead_right"
-		android:layout_below="@+id/scoreTable_header"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:gravity="top" >
-	    
-	    <android.support.v4.view.PagerTitleStrip
-			android:id="@+id/pager_title_strip"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="bottom"
-			android:background="#33b5e5"
-			android:paddingBottom="4dp"
-			android:paddingTop="4dp"
-			android:textColor="#fff" />
-	    
-	    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

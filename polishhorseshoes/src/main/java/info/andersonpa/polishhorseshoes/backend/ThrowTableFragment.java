@@ -153,7 +153,7 @@ public class ThrowTableFragment extends Fragment {
     public void renderAsPage(int page_idx, List<Throw> throwsList, RuleSet rs) {
         Throw t;
         int nThrows = throwsList.size();
-        log("nThrows = " + nThrows);
+        log("getThrowCount = " + nThrows);
         int[] range = ThrowTableFragment.throwIdxRange(page_idx);
 
         log("Page's idx range: " + range[0] + "-" + range[1]);
@@ -169,7 +169,7 @@ public class ThrowTableFragment extends Fragment {
                 break;
             }
             t = throwsList.get(i);
-            logd("Retrieved throw " + throwsList.get(i).throwIdx);
+            logd("Retrieved throw " + throwsList.get(i).getThrowIdx());
             renderThrow(t, rs);
         }
     }
@@ -178,9 +178,9 @@ public class ThrowTableFragment extends Fragment {
         try {
             ThrowTableRow tr = getTableRow(t);
             tr.updateText(t, rs);
-            logd("renderThrow(): Rendered throw at idx " + t.throwIdx);
+            logd("renderThrow(): Rendered throw at idx " + t.getThrowIdx());
         } catch (IndexOutOfBoundsException e) {
-            loge("renderThrow(): Throw idx " + t.throwIdx + " has no view on this page", e);
+            loge("renderThrow(): Throw idx " + t.getThrowIdx() + " has no view on this page", e);
             return;
         }
     }
@@ -226,7 +226,7 @@ public class ThrowTableFragment extends Fragment {
     }
 
     public ThrowTableRow getTableRow(Throw t) {
-        return getTableRow(t.throwIdx);
+        return getTableRow(t.getThrowIdx());
     }
 
     public ThrowTableRow getTableRow(int throwIdx) {

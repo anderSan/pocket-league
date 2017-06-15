@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
@@ -48,7 +49,7 @@ public class Game {
     public int ruleset_id;
 
     @DatabaseField(canBeNull = false)
-    public boolean first_on_top;
+    public boolean first_on_left;
 
     @DatabaseField(canBeNull = false)
     private Date date_played;
@@ -74,20 +75,15 @@ public class Game {
         this.member_2_id = member_2_id;
         this.ruleset_id = ruleset_id;
         this.date_played = date_played;
-
     }
 
     public Game(String pl_id, long member_1_id, long member_2_id, int ruleset_id) {
-        this.pocketleague_id = pl_id;
-        this.member_1_id = member_1_id;
-        this.member_2_id = member_2_id;
-        this.ruleset_id = ruleset_id;
-        this.date_played = new Date();
+        this(pl_id, member_1_id, member_2_id, ruleset_id, new Date());
     }
 
     public static Dao<Game, Long> getDao(Context context) {
         DatabaseHelper helper = new DatabaseHelper(context);
-        Dao<Game, Long> d = null;
+        Dao<Game, Long> d;
         try {
             d = helper.getGameDao();
         } catch (SQLException e) {
@@ -107,10 +103,9 @@ public class Game {
 
     public boolean isValidThrow(Throw t) {
         boolean isValid = true;
-        int idx = t.throwIdx;
+        int idx = t.getThrowIdx();
         switch (idx % 2) {
-            // TODO: do players need to be refreshed now that foreign variable is
-            // used?
+            // TODO: do players need to be refreshed now that foreign variable is used?
             // first player is on offense
             case 0:
                 isValid = isValid && (t.getOffensiveTeamId() == member_1_id);
@@ -141,7 +136,7 @@ public class Game {
             Collections.sort(dbThrows);
 
             for (Throw t : dbThrows) {
-                tidx = t.throwIdx;
+                tidx = t.getThrowIdx();
 
                 // purge any throws with negative index
                 if (tidx < 0) {
@@ -158,7 +153,7 @@ public class Game {
             }
 
             // ensure throws in correct order and complete
-            Throw t = null;
+            Throw t;
             for (int i = 0; i <= maxThrowIndex; i++) {
                 t = throwMap.get(i);
                 // infill with a caught strike if necessary
@@ -196,7 +191,7 @@ public class Game {
         this.id = id;
     }
 
-    public String getPlId() {
+    public String getPocketLeagueId() {
         return pocketleague_id;
     }
 
@@ -274,24 +269,28 @@ public class Game {
 
     public void setIsComplete(Context context, boolean isComplete) {
         this.is_complete = isComplete;
-        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-                .authority("info.andersonpa.pocketleague.provider").appendPath("game")
-                .appendPath(String.valueOf(pocketleague_id)).build();
-        ContentValues values = new ContentValues();
-        values.put("is_complete", isComplete);
-        values.put("t1_score", member_1_score);
-        values.put("t2_score", member_2_score);
+//        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+//                .authority("info.andersonpa.pocketleague.provider").appendPath("game")
+//                .appendPath(String.valueOf(pocketleague_id)).build();
+//        ContentValues values = new ContentValues();
+//        values.put("is_complete", isComplete);
+//        values.put("t1_score", member_1_score);
+//        values.put("t2_score", member_2_score);
 
-        context.getContentResolver().update(uri, values, null, null);
+//        try {
+//            context.getContentResolver().update(uri, values, null, null);
+//        } catch (Exception e) {
+//            Log.e("No Content Provider", "setIsComplete: ", e);
+//        }
     }
 
     public void checkGameComplete(Context context) {
         Integer s1 = getMember1Score();
         Integer s2 = getMember2Score();
         if (Math.abs(s1 - s2) >= 2 && (s1 >= 11 || s2 >= 11)) {
-            setIsComplete(context, true);
+//            setIsComplete(context, true);
         } else {
-            setIsComplete(context, false);
+//            setIsComplete(context, false);
         }
     }
 

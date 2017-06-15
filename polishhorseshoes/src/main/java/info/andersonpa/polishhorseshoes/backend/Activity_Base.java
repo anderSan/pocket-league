@@ -1,14 +1,16 @@
 package info.andersonpa.polishhorseshoes.backend;
 
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 import info.andersonpa.polishhorseshoes.db.DatabaseHelper;
 
-public class Activity_Base extends ActionBarActivity {
+
+public class Activity_Base extends AppCompatActivity {
     protected String LOGTAG = getClass().getSimpleName();
     private DatabaseHelper databaseHelper = null;
 

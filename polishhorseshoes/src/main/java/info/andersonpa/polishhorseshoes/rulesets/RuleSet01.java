@@ -12,9 +12,6 @@ public class RuleSet01 extends RuleSet00 {
      * Standard rules with coercion and autofire.
      */
 
-    public RuleSet01() {
-    }
-
     @Override
     public int getId() {
         return 1;
@@ -22,7 +19,7 @@ public class RuleSet01 extends RuleSet00 {
 
     @Override
     public String getDescription() {
-        return "Standard ruleset with coercion and autofire";
+        return "Standard ruleset with coercion and autofire.";
     }
 
     @Override
@@ -31,18 +28,18 @@ public class RuleSet01 extends RuleSet00 {
     }
 
     @Override
-    public void setThrowType(Throw t, int throwType) {
+    public void setThrowType(Throw t, int throw_type) {
         if (t.defenseFireCount >= 3) {
             t.throwType = ThrowType.FIRED_ON;
             setThrowResult(t, ThrowResult.NA);
             setDeadType(t, DeadType.ALIVE);
         } else {
-            t.throwType = throwType;
+            t.throwType = throw_type;
 
             if (t.offenseFireCount >= 3) {
                 setThrowResult(t, ThrowResult.NA);
             } else {
-                switch (throwType) {
+                switch (throw_type) {
                     case ThrowType.BALL_HIGH:
                     case ThrowType.BALL_RIGHT:
                     case ThrowType.BALL_LOW:
@@ -98,22 +95,22 @@ public class RuleSet01 extends RuleSet00 {
 
         // defensive error will also quench
         boolean quenches = isDefensiveError(t) || fireHit || broken || defFail;
-        Log.i("QuenchDefense", "throw: " + t.throwIdx + ": fireHit: " + fireHit + ", " +
+        Log.i("QuenchDefense", "throw: " + t.getThrowIdx() + ": fireHit: " + fireHit + ", " +
                 "broken: " + broken + ", defFail: " + defFail + ", quenches: " + quenches);
         return quenches;
     }
 
     @Override
-    public void setFireCounts(Throw t, Throw previousThrow) {
-        int prevOffCount = previousThrow.offenseFireCount;
-        int prevDefCount = previousThrow.defenseFireCount;
+    public void setFireCounts(Throw t, Throw previous_throw) {
+        int prevOffCount = previous_throw.offenseFireCount;
+        int prevDefCount = previous_throw.defenseFireCount;
 
-        if (stokesOffensiveFire(previousThrow)) {
+        if (stokesOffensiveFire(previous_throw)) {
             prevOffCount++;
         } else {
             prevOffCount = 0;
         }
-        if (quenchesDefensiveFire(previousThrow)) {
+        if (quenchesDefensiveFire(previous_throw)) {
             prevDefCount = 0;
         }
 

@@ -3,9 +3,12 @@ package info.andersonpa.polishhorseshoes.rulesets;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import info.andersonpa.polishhorseshoes.BuildConfig;
 import info.andersonpa.polishhorseshoes.R;
 import info.andersonpa.polishhorseshoes.db.Throw;
 import info.andersonpa.polishhorseshoes.enums.DeadType;
@@ -16,51 +19,54 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RuleSet00 implements RuleSet {
+    protected String LOGTAG = getClass().getSimpleName();
+    private Context context;
     /**
      * Standard rules without coercion.
      * TODO: remove fire rules, add in manual fire controls?
      */
 
-    public RuleSet00() {
-    }
-
     public int getId() {
         return 0;
     }
 
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     public String getDescription() {
-        return "Standard ruleset with no coercion";
+        return "Standard ruleset with no coercion.";
     }
 
     public boolean useAutoFire() {
         return false;
     }
 
-    public void setThrowType(Throw t, int throwType) {
-        t.throwType = throwType;
-        if (throwType == ThrowType.FIRED_ON) {
+    public void setThrowType(Throw t, int throw_type) {
+        t.throwType = throw_type;
+        if (throw_type == ThrowType.FIRED_ON) {
             setThrowResult(t, ThrowResult.NA);
         }
     }
 
-    public void setThrowResult(Throw t, int throwResult) {
-        t.throwResult = throwResult;
+    public void setThrowResult(Throw t, int throw_result) {
+        t.throwResult = throw_result;
     }
 
-    public void setDeadType(Throw t, int deadType) {
-        t.deadType = deadType;
+    public void setDeadType(Throw t, int dead_type) {
+        t.deadType = dead_type;
     }
 
-    public void setIsTipped(Throw t, boolean isTipped) {
-        t.isTipped = isTipped;
+    public void setIsTipped(Throw t, boolean is_tipped) {
+        t.isTipped = is_tipped;
     }
 
-    public void setOwnGoals(Throw t, boolean[] ownGoals) {
-        t.setOwnGoals(ownGoals);
+    public void setOwnGoals(Throw t, boolean[] own_goals) {
+        t.setOwnGoals(own_goals);
     }
 
-    public void setDefErrors(Throw t, boolean[] defErrors) {
-        t.setDefErrors(defErrors);
+    public void setDefErrors(Throw t, boolean[] def_errors) {
+        t.setDefErrors(def_errors);
     }
 
     public int[] getScoreDifferentials(Throw t) {
@@ -87,6 +93,12 @@ public class RuleSet00 implements RuleSet {
 
         handleExtra(t, diffs);
 
+        return diffs;
+    }
+
+    public int[] getHitPointDifferentials(Throw t) {
+        int[] diffs = {0, 0};
+        // TODO: Fill this out to handle hitpoint logic.
         return diffs;
     }
 
@@ -215,9 +227,14 @@ public class RuleSet00 implements RuleSet {
 
     public int[] getFinalScores(Throw t) {
         int[] diff = getScoreDifferentials(t);
-        int[] finalScores = {t.initialOffensivePlayerScore + diff[0],
+        return new int[] {t.initialOffensivePlayerScore + diff[0],
                 t.initialDefensivePlayerScore + diff[1]};
-        return finalScores;
+    }
+
+    public int[] getFinalHitPoints(Throw t) {
+        int[] diff = getHitPointDifferentials(t);
+        return new int[] {t.initialOffensivePlayerHitPoints + diff[0],
+                t.initialDefensivePlayerHitPoints + diff[1]};
     }
 
     public String getSpecialString(Throw t) {
@@ -291,53 +308,53 @@ public class RuleSet00 implements RuleSet {
         List<Drawable> boxIconLayers = new ArrayList<>();
 
         if (!isValid(t, iv.getContext())) {
-            boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_badthrow));
+            boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_badthrow));
         }
         switch (t.throwType) {
             case ThrowType.BOTTLE:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_under_bottle));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_under_bottle));
                 break;
             case ThrowType.CUP:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_under_cup));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_under_cup));
                 break;
             case ThrowType.POLE:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_under_pole));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_under_pole));
                 break;
             case ThrowType.STRIKE:
                 if (t.throwResult == ThrowResult.CATCH || isOnFire(t)) {
-                    boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_under_strike));
+                    boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_under_strike));
                 }
                 break;
             case ThrowType.BALL_HIGH:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_under_high));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_under_high));
                 break;
             case ThrowType.BALL_RIGHT:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_under_right));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_under_right));
                 break;
             case ThrowType.BALL_LOW:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_under_low));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_under_low));
                 break;
             case ThrowType.BALL_LEFT:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_under_left));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_under_left));
                 break;
             case ThrowType.SHORT:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_under_short));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_under_short));
                 break;
             case ThrowType.TRAP:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_under_trap));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_under_trap));
                 break;
             case ThrowType.TRAP_REDEEMED:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_under_trap));
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_over_drop));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_under_trap));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_over_drop));
                 break;
             case ThrowType.NOT_THROWN:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_notthrown));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_notthrown));
                 break;
             case ThrowType.FIRED_ON:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_under_firedon));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_under_firedon));
                 break;
             default:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_oops));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_oops));
                 break;
         }
 
@@ -345,43 +362,43 @@ public class RuleSet00 implements RuleSet {
             case ThrowResult.DROP:
                 if (t.throwType != ThrowType.BALL_HIGH && t.throwType != ThrowType.BALL_RIGHT &&
                         t.throwType != ThrowType.BALL_LOW && t.throwType != ThrowType.BALL_LEFT)
-                    boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_over_drop));
+                    boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_over_drop));
                 break;
             case ThrowResult.STALWART:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_over_stalwart));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_over_stalwart));
                 break;
             case ThrowResult.BROKEN:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_over_break));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_over_break));
                 break;
         }
 
         switch (t.deadType) {
             case DeadType.HIGH:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_dead_high));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_dead_high));
                 break;
             case DeadType.RIGHT:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_dead_right));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_dead_right));
                 break;
             case DeadType.LOW:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_dead_low));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_dead_low));
                 break;
             case DeadType.LEFT:
-                boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_dead_left));
+                boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_dead_left));
                 break;
         }
 
         if (isOnFire(t)) {
-            boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_over_fire));
+            boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_over_fire));
         }
         if (t.isTipped) {
-            boxIconLayers.add(iv.getResources().getDrawable(R.drawable.bxs_over_tipped));
+            boxIconLayers.add(ContextCompat.getDrawable(context, R.drawable.bxs_over_tipped));
         }
 
         iv.setImageDrawable(new LayerDrawable(boxIconLayers.toArray(new Drawable[0])));
     }
 
     public boolean isOffenseOnHill(Throw t) {
-        boolean isBlocked = false;
+        boolean isBlocked;
         int oScore = t.initialOffensivePlayerScore;
         int dScore = t.initialDefensivePlayerScore;
 
@@ -396,7 +413,7 @@ public class RuleSet00 implements RuleSet {
     }
 
     public boolean isDefenseOnHill(Throw t) {
-        boolean isBlocked = false;
+        boolean isBlocked;
         int oScore = t.initialOffensivePlayerScore;
         int dScore = t.initialDefensivePlayerScore;
 
@@ -412,7 +429,9 @@ public class RuleSet00 implements RuleSet {
 
     public boolean isFiredOn(Throw t) {
         if (t.defenseFireCount >= 3) {
-            assert t.offenseFireCount < 3 : "both players cant be on fire";
+            if (BuildConfig.DEBUG && t.offenseFireCount >= 3) {
+                logw("Both players cannot be on fire simultaneously.");
+            }
             return true;
         } else {
             return false;
@@ -421,14 +440,16 @@ public class RuleSet00 implements RuleSet {
 
     public boolean isOnFire(Throw t) {
         if (t.offenseFireCount >= 3) {
-            assert t.defenseFireCount < 3 : "both players cant be on fire";
+            if (BuildConfig.DEBUG && t.defenseFireCount >= 3) {
+                logw("Both players cannot be on fire simultaneously.");
+            }
             return true;
         } else {
             return false;
         }
     }
 
-    public void setFireCounts(Throw t, Throw previousThrow) {
+    public void setFireCounts(Throw t, Throw previous_throw) {
     }
 
     public boolean isValid(Throw t, Context context) {
@@ -442,7 +463,7 @@ public class RuleSet00 implements RuleSet {
     public boolean isValid(Throw t) {
         boolean valid = true;
         t.invalidMessage = "(gameId=%d, throwIdx=%d) ";
-        t.invalidMessage = String.format(t.invalidMessage, t.getGame().getId(), t.throwIdx);
+        t.invalidMessage = String.format(t.invalidMessage, t.getGame().getId(), t.getThrowIdx());
         if (isOnFire(t)) {
             if (t.throwResult != ThrowResult.NA && t.throwResult != ThrowResult.BROKEN) {
                 valid = false;
@@ -581,13 +602,23 @@ public class RuleSet00 implements RuleSet {
 
     public boolean isOffensiveError(Throw t) {
         return (t.isOffensiveBottleKnocked || t.isOffensivePoleKnocked ||
-                t.isOffensivePoleKnocked || t.isOffensiveBreakError || t.isOffensiveDrinkDropped
-                || t.isLineFault);
+                t.isOffensiveBreakError || t.isOffensiveDrinkDropped || t.isLineFault);
     }
 
     public boolean isDefensiveError(Throw t) {
         return (t.isDefensiveBottleKnocked || t.isDefensivePoleKnocked ||
-                t.isDefensivePoleKnocked || t.isDefensiveBreakError || t.isDefensiveDrinkDropped
-                || t.isDrinkHit);
+                t.isDefensiveBreakError || t.isDefensiveDrinkDropped || t.isDrinkHit);
+    }
+
+    public void log(String msg) {
+        Log.i(LOGTAG, msg);
+    }
+
+    public void logw(String msg) {
+        Log.d(LOGTAG, msg);
+    }
+
+    public void loge(String msg, Exception e) {
+        Log.e(LOGTAG, msg + ": " + e.getMessage());
     }
 }

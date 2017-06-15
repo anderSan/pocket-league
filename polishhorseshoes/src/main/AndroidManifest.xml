@@ -25,6 +25,15 @@
         </activity>
 
         <activity
+            android:name=".GameTracker"
+            android:label="@string/title_activity_game_in_progress">
+            <intent-filter>
+                <action android:name="info.andersonpa.polishhorseshoes.PLAY_GAME"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name="info.andersonpa.polishhorseshoes.Detail_Game"
             android:label="@string/title_activity_detail_game">
         </activity>

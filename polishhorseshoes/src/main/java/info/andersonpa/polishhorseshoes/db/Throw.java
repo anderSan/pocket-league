@@ -22,7 +22,7 @@ public class Throw implements Comparable<Throw> {
     private long id;
 
     @DatabaseField(canBeNull = false, uniqueCombo = true)
-    public int throwIdx;
+    private int throwIdx;
 
     @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true)
     private Game game;
@@ -85,22 +85,22 @@ public class Throw implements Comparable<Throw> {
     public boolean isDefensiveBreakError = false;
 
     @DatabaseField
-    public int offenseFireCount = 0;
+    public Integer offenseFireCount = 0;
 
     @DatabaseField
-    public int defenseFireCount = 0;
+    public Integer defenseFireCount = 0;
 
     @DatabaseField
-    public int initialOffensivePlayerScore = 0;
+    public Integer initialOffensivePlayerScore = 0;
 
     @DatabaseField
-    public int initialDefensivePlayerScore = 0;
+    public Integer initialDefensivePlayerScore = 0;
 
     @DatabaseField
-    public int initialOffensivePlayerHitPoints = 10;
+    public Integer initialOffensivePlayerHitPoints = 10;
 
     @DatabaseField
-    public int initialDefensivePlayerHitPoints = 10;
+    public Integer initialDefensivePlayerHitPoints = 10;
 
     public String invalidMessage = "";
 
@@ -132,7 +132,7 @@ public class Throw implements Comparable<Throw> {
 
     public static Dao<Throw, Long> getDao(Context context) {
         DatabaseHelper helper = new DatabaseHelper(context);
-        Dao<Throw, Long> d = null;
+        Dao<Throw, Long> d;
         try {
             d = helper.getThrowDao();
         } catch (SQLException e) {
@@ -154,6 +154,15 @@ public class Throw implements Comparable<Throw> {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Integer getThrowIdx() {
+        return throwIdx;
+    }
+
+    @Deprecated
+    public void setThrowIndex(int idx) {
+        throwIdx = idx;
     }
 
     public Game getGame() {

@@ -1,5 +1,5 @@
 #
-# generated on 2015/03/12 11:23:19
+# generated on 2017/06/11 08:31:13
 #
 # --table-start--
 dataClass=info.andersonpa.polishhorseshoes.db.Game
@@ -27,7 +27,7 @@ fieldName=ruleset_id
 canBeNull=false
 # --field-end--
 # --field-start--
-fieldName=first_on_top
+fieldName=first_on_left
 canBeNull=false
 # --field-end--
 # --field-start--
