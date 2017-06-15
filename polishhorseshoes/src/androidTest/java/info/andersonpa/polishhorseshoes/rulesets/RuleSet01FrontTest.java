@@ -10,9 +10,11 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +22,7 @@ import org.junit.runner.RunWith;
 import info.andersonpa.polishhorseshoes.GameInProgress;
 import info.andersonpa.polishhorseshoes.R;
 import info.andersonpa.polishhorseshoes.backend.ActiveGame;
+import info.andersonpa.polishhorseshoes.db.DatabaseHelper;
 import info.andersonpa.polishhorseshoes.db.Throw;
 import info.andersonpa.polishhorseshoes.enums.DeadType;
 import info.andersonpa.polishhorseshoes.enums.RuleType;
@@ -36,6 +39,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class RuleSet01FrontTest {
+    private Context targetContext;
     private ActiveGame ag;
 
     private ImageView vwDeadHigh;
@@ -49,18 +53,26 @@ public class RuleSet01FrontTest {
             GameInProgress.class) {
         @Override
         protected Intent getActivityIntent() {
-            Context targetContext = InstrumentationRegistry.getInstrumentation()
-                    .getTargetContext();
+            targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
             Intent result = new Intent(targetContext, GameInProgress.class);
-            result.putExtra("GID", "testgame");
+            result.putExtra("GID", "test_game");
             result.putExtra("RSID", RuleType.rs01);
             return result;
         }
     };
 
+    @BeforeClass
+    public static void clearDB() {
+        DatabaseHelper db_helper = OpenHelperManager
+                .getHelper(InstrumentationRegistry.getTargetContext(), DatabaseHelper.class);
+        db_helper.clearAll();
+        OpenHelperManager.releaseHelper();
+    }
+
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         ag = mActivityRule.getActivity().ag;
+        ag.setSaveToDB(false);
 
         vwDeadHigh = (ImageView) mActivityRule.getActivity()
                 .findViewById(info.andersonpa.polishhorseshoes.R.id.gip_dead_high);

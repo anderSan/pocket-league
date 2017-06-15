@@ -1,50 +1,45 @@
 package info.andersonpa.polishhorseshoes.rulesets;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.NumberPicker;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import info.andersonpa.polishhorseshoes.GameInProgress;
-import info.andersonpa.polishhorseshoes.R;
 import info.andersonpa.polishhorseshoes.backend.ActiveGame;
-import info.andersonpa.polishhorseshoes.db.Game;
+import info.andersonpa.polishhorseshoes.db.DatabaseHelper;
 import info.andersonpa.polishhorseshoes.db.Throw;
 import info.andersonpa.polishhorseshoes.enums.DeadType;
-import info.andersonpa.polishhorseshoes.enums.RuleType;
 import info.andersonpa.polishhorseshoes.enums.ThrowResult;
 import info.andersonpa.polishhorseshoes.enums.ThrowType;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.swipeUp;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class RuleSet01BackTest {
 	private ActiveGame ag;
     private RuleSet rs = new RuleSet01();
-	private String gId = "0";
+	private String gId = "test_game";
     private Throw ui_throw;
 
+	@BeforeClass
+	public static void clearDB() {
+		DatabaseHelper db_helper = OpenHelperManager
+                .getHelper(InstrumentationRegistry.getTargetContext(), DatabaseHelper.class);
+        db_helper.clearAll();
+        OpenHelperManager.releaseHelper();
+	}
+
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		Context context = InstrumentationRegistry.getTargetContext();
 		ag = new ActiveGame(context, gId);
+        ag.setSaveToDB(false);
         ag.setRuleSet(new RuleSet01());
         ui_throw = ag.getActiveThrow();
 	}

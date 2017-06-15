@@ -1,6 +1,9 @@
 package info.andersonpa.polishhorseshoes.backend;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
@@ -10,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import info.andersonpa.polishhorseshoes.db.Game;
 import info.andersonpa.polishhorseshoes.db.Throw;
@@ -29,6 +33,7 @@ public class ActiveGame {
     private String venue_name;
     private Dao<Game, Long> g_dao;
     private Dao<Throw, Long> t_dao;
+    private boolean save_to_db;
 
 
     public ActiveGame(Context context, String gId) {
@@ -54,36 +59,40 @@ public class ActiveGame {
         updateScoresFrom(0);
     }
 
+    public void setSaveToDB(boolean save_to_db) {
+        this.save_to_db = save_to_db;
+    }
+
     private Game retrieveOrCreateGame(String gId) {
-//        Uri pl_uri;
-//        Cursor cursor;
+        Uri pl_uri;
+        Cursor cursor;
         long[] gm_ids = new long[2];
         int ruleset_id;
 
-//        pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-//                .authority("info.andersonpa.pocketleague.provider").appendPath("game")
-//                .appendPath(gId).build();
-//        try {
-//            cursor = context.getContentResolver().query(pl_uri, null, null, null, null);
-//            cursor.moveToFirst();
-//            String ruleset_str = cursor.getString(cursor.getColumnIndex("ruleset_id"));
-//            ruleset_id = Integer.valueOf(ruleset_str);
-//            session_name = cursor.getString(cursor.getColumnIndex("session_name"));
-//            venue_name = cursor.getString(cursor.getColumnIndex("venue_name"));
-//
-//            cursor.close();
-//
-//            pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-//                    .authority("info.andersonpa.pocketleague.provider").appendPath("game_member")
-//                    .appendPath(gId).build();
-//            cursor = context.getContentResolver().query(pl_uri, null, null, null, null);
-//            while (cursor.moveToNext()) {
-//                gm_ids[cursor.getPosition()] = 0; //cursor.getLong(cursor.getColumnIndex("id"));
-//                team_names[cursor.getPosition()] = cursor.getString(cursor.getColumnIndex("team_name"));
-//            }
-//            cursor.close();
-//        } catch (Exception e){
-//            loge("No Content Provider: ", e);
+        pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+                .authority("info.andersonpa.pocketleague.provider").appendPath("game")
+                .appendPath(gId).build();
+        try {
+            cursor = context.getContentResolver().query(pl_uri, null, null, null, null);
+            cursor.moveToFirst();
+            String ruleset_str = cursor.getString(cursor.getColumnIndex("ruleset_id"));
+            ruleset_id = Integer.valueOf(ruleset_str);
+            session_name = cursor.getString(cursor.getColumnIndex("session_name"));
+            venue_name = cursor.getString(cursor.getColumnIndex("venue_name"));
+
+            cursor.close();
+
+            pl_uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+                    .authority("info.andersonpa.pocketleague.provider").appendPath("game_member")
+                    .appendPath(gId).build();
+            cursor = context.getContentResolver().query(pl_uri, null, null, null, null);
+            while (cursor.moveToNext()) {
+                gm_ids[cursor.getPosition()] = 0; //cursor.getLong(cursor.getColumnIndex("id"));
+                team_names[cursor.getPosition()] = cursor.getString(cursor.getColumnIndex("team_name"));
+            }
+            cursor.close();
+        } catch (Exception e){
+            loge("No Content Provider: ", e);
             session_name = "No session";
             venue_name = "No venue";
             team_names[0] = "Team 1";
@@ -91,7 +100,7 @@ public class ActiveGame {
             gm_ids[0] = 0;
             gm_ids[1] = 1;
             ruleset_id = 1;
-//        }
+        }
 
         try {
             g = g_dao.queryBuilder().where().eq(Game.POCKETLEAGUE_ID, gId).queryForFirst();
@@ -228,7 +237,20 @@ public class ActiveGame {
     }
 
     public void updateActiveThrow(Throw t) {
-        setThrow(active_idx, t);
+        if (active_idx < 0) {
+            throw new RuntimeException("must have positive throw index, not: " + active_idx);
+        } else if (active_idx >= 0 && active_idx < getThrowCount()) {
+            t.setThrowIndex(active_idx);
+            t = throws_list.set(active_idx, t);
+            saveThrow(t);
+        } else if (active_idx == getThrowCount()) {
+            t.setThrowIndex(active_idx);
+            throws_list.add(t);
+            saveThrow(t);
+        } else if (active_idx > getThrowCount()) {
+            throw new RuntimeException("cannot set throw " + active_idx + " in the far future");
+        }
+        updateScoresFrom(active_idx);
     }
 
     public Throw updateActiveThrowGetNext(Throw t) {
@@ -237,23 +259,6 @@ public class ActiveGame {
         Throw u = getActiveThrow();
         updateScoresFrom(active_idx);
         return u;
-    }
-
-    public void setThrow(int idx, Throw t) {
-        if (idx < 0) {
-            throw new RuntimeException("must have positive throw index, not: " + idx);
-        } else if (idx >= 0 && idx < getThrowCount()) {
-            t.setThrowIndex(idx);
-            t = throws_list.set(idx, t);
-            saveThrow(t);
-        } else if (idx == getThrowCount()) {
-            t.setThrowIndex(idx);
-            throws_list.add(t);
-            saveThrow(t);
-        } else if (idx > getThrowCount()) {
-            throw new RuntimeException("cannot set throw " + idx + " in the far future");
-        }
-        updateScoresFrom(idx);
     }
 
     public Throw getThrow(int idx) {
@@ -345,64 +350,63 @@ public class ActiveGame {
 
     /* Saving functions */
     private void saveThrow(Throw t) {
-//        if (g != null) {
-//            HashMap<String, Object> m = t.getQueryMap();
-//            List<Throw> tList;
-//            try {
-//                tList = t_dao.queryForFieldValuesArgs(m);
-//            } catch (SQLException e) {
-//                throw new RuntimeException("could not query for throw " + t.throwIdx + ", " +
-//                        "game " + t.getGame().getId());
-//            }
-//            try {
-//                if (tList.isEmpty()) {
-//                    t_dao.create(t);
-//                } else {
-//                    t.setId(tList.get(0).getId());
-//                    t_dao.update(t);
-//                }
-//            } catch (SQLException e) {
-//                throw new RuntimeException("could not create/update throw " + t.throwIdx + ", game " + t.getGame().getId());
-//            }
-//        }
+        if (save_to_db && g != null) {
+            HashMap<String, Object> m = t.getQueryMap();
+            List<Throw> tList;
+            try {
+                tList = t_dao.queryForFieldValuesArgs(m);
+            } catch (SQLException e) {
+                throw new RuntimeException("could not query for throw " + t.getThrowIdx() + ", " +
+                        "game " + t.getGame().getId());
+            }
+            try {
+                if (tList.isEmpty()) {
+                    t_dao.create(t);
+                } else {
+                    t.setId(tList.get(0).getId());
+                    t_dao.update(t);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("could not create/update throw " + t.getThrowIdx() + ", game " + t.getGame().getId());
+            }
+        }
     }
 
     public void saveAllThrows() {
-//        updateScoresFrom(0);
-//        if (g != null) {
-//            final ArrayList<Long> throwIds = getThrowIds();
-//            try {
-//                t_dao.callBatchTasks(new Callable<Void>() {
-//                    public Void call() throws SQLException {
-//                        long id;
-//                        Throw t;
-//                        for (int i = 0; i < throws_list.size(); i++) {
-//                            id = throwIds.get(i);
-//                            t = throws_list.get(i);
-//                            if (id == -1) {
-//                                t_dao.create(t);
-//                            } else {
-//                                t.setId(id);
-//                                t_dao.update(t);
-//                            }
-//                        }
-//                        return null;
-//                    }
-//                });
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-
+        updateScoresFrom(0);
+        if (save_to_db && g != null) {
+            final ArrayList<Long> throwIds = getThrowIds();
+            try {
+                t_dao.callBatchTasks(new Callable<Void>() {
+                    public Void call() throws SQLException {
+                        long id;
+                        Throw t;
+                        for (int i = 0; i < throws_list.size(); i++) {
+                            id = throwIds.get(i);
+                            t = throws_list.get(i);
+                            if (id == -1) {
+                                t_dao.create(t);
+                            } else {
+                                t.setId(id);
+                                t_dao.update(t);
+                            }
+                        }
+                        return null;
+                    }
+                });
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public void saveGame() {
-        if (g != null) {
-//            try {
-//                g_dao.update(g);
-//            } catch (SQLException e) {
-//                throw new RuntimeException("Could not save game " + g.getId());
-//            }
+        if (save_to_db && g != null) {
+            try {
+                g_dao.update(g);
+            } catch (SQLException e) {
+                throw new RuntimeException("Could not save game " + g.getId());
+            }
         }
     }
 

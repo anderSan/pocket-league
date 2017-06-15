@@ -87,7 +87,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             createAll(getConnectionSource());
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.toString(), e.getMessage());
-            throw new RuntimeException("could not create tables", e);
+            throw new RuntimeException("Could not create tables: ", e);
         }
     }
 
@@ -96,37 +96,52 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             dropAll(getConnectionSource());
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.toString(), e.getMessage());
-            throw new RuntimeException("could not drop tables", e);
+            throw new RuntimeException("Could not drop tables: ", e);
         }
     }
 
-    protected void createAll(ConnectionSource connectionSource) throws SQLException {
+    public void clearAll() {
+        try {
+            clearAll(getConnectionSource());
+        } catch (SQLException e) {
+            Log.e(DatabaseHelper.class.toString(), e.getMessage());
+            throw new RuntimeException("Could not clear tables: ", e);
+        }
+    }
+
+    private void createAll(ConnectionSource connectionSource) throws SQLException {
         for (Class c : tableClasses) {
             TableUtils.createTableIfNotExists(connectionSource, c);
         }
     }
 
-    protected void dropAll(ConnectionSource connectionSource) throws SQLException {
+    private void dropAll(ConnectionSource connectionSource) throws SQLException {
         for (Class c : tableClasses) {
             TableUtils.dropTable(connectionSource, c, true);
         }
     }
 
-    public Dao<TeamStats, Long> getTeamStatsDao() throws SQLException {
+    private void clearAll(ConnectionSource connectionSource) throws SQLException {
+        for (Class c : tableClasses) {
+            TableUtils.clearTable(connectionSource, c);
+        }
+    }
+
+    Dao<TeamStats, Long> getTeamStatsDao() throws SQLException {
         if (teamStatsDao == null) {
             teamStatsDao = getDao(TeamStats.class);
         }
         return teamStatsDao;
     }
 
-    public Dao<Game, Long> getGameDao() throws SQLException {
+    Dao<Game, Long> getGameDao() throws SQLException {
         if (gameDao == null) {
             gameDao = getDao(Game.class);
         }
         return gameDao;
     }
 
-    public Dao<Throw, Long> getThrowDao() throws SQLException {
+    Dao<Throw, Long> getThrowDao() throws SQLException {
         if (throwDao == null) {
             throwDao = getDao(Throw.class);
         }
