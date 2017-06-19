@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
@@ -21,6 +22,7 @@ import info.andersonpa.pocketleague.db.tables.Team;
 
 public class List_Teams extends Fragment_TopList {
     private RecyclerView rv;
+    private SeekBar sb;
     private ListAdapter_Team team_adapter;
     private List<Item_Team> team_list = new ArrayList<>();
 
@@ -38,6 +40,21 @@ public class List_Teams extends Fragment_TopList {
         mNav.setTitle("Teams");
         mNav.setDrawerItemChecked(4);
 		rootView = inflater.inflate(R.layout.activity_view_listing, container, false);
+
+        sb = (SeekBar) rootView.findViewById(R.id.seekBar);
+        sb.setVisibility(View.VISIBLE);
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                refreshDetails();
+            }
+        });
 
 		rv = (RecyclerView) rootView.findViewById(R.id.dbListing);
         rv.setLayoutManager(new LinearLayoutManager(context));
@@ -69,7 +86,7 @@ public class List_Teams extends Fragment_TopList {
             changeFabTitle(2, "Show active teams");
             changeFabIcon(2, R.drawable.ic_people_black_24dp);
         }
-        mNav.setTitle(title + "Teams");
+        mNav.setTitle(title + "Teams", "with " + String.valueOf(sb.getProgress() + 2) + " members.");
 
 		List<Team> teams = getTeams();
 
@@ -102,7 +119,7 @@ public class List_Teams extends Fragment_TopList {
     private List<Team> getTeams() {
         List<Team> teams = new ArrayList<>();
         try {
-            teams = Team.getTeams(database(), 1, show_actives, show_favorites);
+            teams = Team.getTeams(database(), sb.getProgress() + 2, show_actives, show_favorites);
         } catch (CouchbaseLiteException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             loge("Retrieval of teams failed. ", e);
