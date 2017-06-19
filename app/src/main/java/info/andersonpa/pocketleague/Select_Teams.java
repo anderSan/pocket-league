@@ -51,7 +51,6 @@ public class Select_Teams extends Fragment_Edit {
         try {
             teams.clear();
             teamNames.clear();
-            teams.addAll(Player.getPlayers(database(), true, false));
             teams.addAll(Team.getTeams(database(), 1, true, false));
             for (Team t : teams) {
                 teamNames.add(t.getName());
